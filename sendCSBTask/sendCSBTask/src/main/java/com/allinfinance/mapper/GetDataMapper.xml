@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.allinfinance.mapper.GetDataMapper" >
+<select id="selectGetCardInfo" parameterType="Map" resultType="com.allinfinance.model.GetCardInfo">
+select t3.order_id||seq serialNo,T3.face_value/100 cardMon,T3.card_no cardNo,t4.act_date,t4.valid_date expiryDate,t3.CREATE_TIME applyTime from(
+SELECT
+distinct
+   card_no,face_value,ORDER_CARD_LIST_ID as seq,t2.CREATE_TIME,t1.order_id
+FROM
+    TB_SELL_ORDER_CARD_LIST t1,
+    TB_SELL_ORDER t2
+WHERE
+    t1.ORDER_ID=t2.ORDER_ID and  t2.order_type=#{orderType} and t2.order_state=#{orderState} and t2.data_state='1' 
+    
+    ) T3 
+    left join tb_acc_card_info t4  on T3.card_no=t4.card_no  left join TB_SELL_ORDER_FLOW T5 on(T3.order_id=t5.order_id)
+    where  SUBSTR(t5.CREATE_TIME,1,8) = #{startTime} and T5.ORDER_FLOW_NODE='12'
+</select>
+<select id="selectSingleTxnInfo" parameterType="Map" resultType="com.allinfinance.model.RechargeTxnInfo">
+select T.SERIALNO,T.CARDNO,T.CHARGEMON,T.ACCOUNT_NO,T.EXPIRYDATE, T.CHARGETIME ,T.BEGINDATE ,T.TXNTYPE ,T.ONYMOUMSTATE ,T.CARDBALANCE from  
+(select t1.SEQ_NO serialNo,t1.CARD_NO cardNo,t1.TXN_AMT chargeMon,t2.ACCOUNT_NO,t3.VALID_DATE expiryDate,t1.DATE_TXN||t1.TIME_TXN as chargeTime ,
+t3.CREATE_DATE beginDate,t1.TXN_TYPE txnType,t4.ONYMOUS_STAT onymoumState,t1.acc_bal/100  cardBalance
+from TB_ACC_TXN_HIS t1 left join tb_acc_rel_card_account t2 on (t1.CARD_NO=t2.card_no)
+left join tb_acc_card_info t3 on (t1.CARD_NO=t3.card_no) left join tb_product t4 on(t3.PRODUCT_ID=t4.PRODUCT_ID)
+ where  t1.TXN_TYPE in (${txnCode}) and t1.DATE_TXN =#{txnDate} and
+ t1.resp_code='00' and t1.cancel_flag='0' and t1.txn_stat='1')T ,tb_acc_account_info T2 where T.ACCOUNT_NO=T2.ACCOUNT_NO
+
+</select>
+
+<select id="selectTransaction" parameterType="Map" resultType="com.allinfinance.model.SingleTransactionInfo">
+select T.SERIALNO, T.CARDNO,  T.TRANBALANCE, T.ACCOUNT_NO ,T.TRANTIME ,T.TXNTYPE ,T.cardBalance from  
+(select t1.SEQ_NO serialNo,t1.CARD_NO cardNo,t1.TXN_AMT tranBalance,t2.ACCOUNT_NO,t1.DATE_TXN||t1.TIME_TXN as tranTime ,acc_bal/100  cardBalance,
+t1.TXN_TYPE txnType
+from TB_ACC_TXN_HIS t1 left join tb_acc_rel_card_account t2 on (t1.CARD_NO=t2.card_no)
+left join tb_acc_card_info t3 on (t1.CARD_NO=t3.card_no)
+ where  t1.TXN_TYPE in (${txnCode}) and t1.DATE_TXN =#{txnDate} and
+ t1.resp_code='00' and t1.cancel_flag='0' and t1.txn_stat='1')T ,tb_acc_account_info T2 where T.ACCOUNT_NO=T2.ACCOUNT_NO
+<!--  and t1.DATE_TXN =#{txnDate} -->
+</select>
+
+<select id="selectHistory" parameterType="Map" resultType="com.allinfinance.model.HistoryCardInfo">
+select t3.*,t4.VALID_DATE validDate,t6.ACC_BAL/100 accBal  from (
+   select t2.card_no cardNo,t1.ORDER_TYPE orderType,SUBSTR(t1.create_time,1,8) createTime from  tb_sell_order t1 right join TB_SELL_ORDER_CARD_LIST t2 
+  on(  t1.ORDER_ID=t2.ORDER_ID) where t1.ORDER_TYPE in(${orderType})
+and t1.ORDER_STATE='32' and t1.data_state='1' 
+and SUBSTR(t1.create_time,1,8) &gt; #{startDate} and SUBSTR(t1.create_time,1,8) &lt; #{endDate}
+) t3 left join TB_ACC_CARD_INFO t4 on (t3.cardNo=t4.CARD_NO) 
+
+left join tb_acc_rel_card_account t5 on (t3.cardNo=t5.CARD_NO) left join TB_ACC_ACCOUNT_INFO t6 on(t5.ACCOUNT_NO=t6.ACCOUNT_NO) 
+
+</select>
+
+
+
+</mapper>
