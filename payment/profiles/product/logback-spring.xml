@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+    <!--日志格式定义-->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--日志格式采用springboot配置的logging.pattern格式-->
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <!--日志文件采用springboot配置的logging.file的文件,如果未配置则使用mytestlog.log作为默认日志文件-->
+        <file>
+            ${LOG_FILE:-mytestlog.log}
+        </file>
+        <!--滚动文件的策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--按照小时切割-->
+            <fileNamePattern>${LOG_FILE}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!--最大保存时间，单位天-->
+            <maxHistory>20</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <!--日志级别-->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
