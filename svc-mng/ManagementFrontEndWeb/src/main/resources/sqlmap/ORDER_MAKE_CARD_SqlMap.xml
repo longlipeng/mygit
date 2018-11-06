@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="ORDER_MAKE_CARD" >
+    <select id="inqueryOrderForCardCompany" parameterClass="com.huateng.accorecard.customerorder.dto.CustomerOrderQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+        <include refid="Commons.prefixSql" />
+        select
+            *
+        from
+            TB_ENT_CARD_COMPANY T6,
+            (select
+                T1.ORDER_ID as "orderId",
+                T1.CUSTOMER_ID as "customerId",
+                T1.ORDER_TYPE as "orderType",
+                T1.ORDER_DATE as "orderDate",
+                T1.ISSUER_ID as "issuerId",
+                T1.CARD_QUANTITY as "cardQuantity",
+                T1.FACE_VALUE /100   as "faceValue",
+                T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+                T8.USER_NAME   as "createCardFileUserName",
+                T1.IS_CREATE_PIN_FILE  as "isCreatePinFile",
+                T1.CREATE_USER as "createUser",
+                T1.ORDER_STATE as "orderState",
+                T1.ORDER_PRIORITY as "orderPriority",
+                T1.MODIFY_TIME   as "modifyTime",
+                T2.CUSTOMER_NAME as "customerName",
+                T3.USER_NAME AS "userName",
+                T4.ISSUER_NAME AS "issuerName",
+                T5.PRODUCT_NAME as "productName",
+                T5.CARD_TYPE as "cardType",
+                T9.RULE_FOMULA as "ruleFomula"
+            from
+                TB_ENT_CUSTOMER_ORDER T1,
+                TB_ENT_CUSTOMER T2,
+                TB_ENT_USER T3,
+                TB_ENT_ISSUER T4,
+                TB_ENT_PRODUCT T5,
+                TB_ENT_USER T8,
+                TB_CARD_DET T9
+            where
+                T1.DATA_STATE='1'
+                AND T1.CUSTOMER_ID = T2.CUSTOMER_ID(+)
+                AND T1.CREATE_USER = T3.USER_ID(+)
+                AND T1.ISSUER_ID = T4.ISSUER_ID(+)
+                AND T1.PRODUCT_ID = T5.PRODUCT_ID(+)
+                AND T1.IS_CREATE_CARD_FILE=T8.USER_ID(+)
+                AND T1.ISSUER_ID = T9.ISSUER_ID(+)
+            <dynamic>
+                <isNotNull prepend="and" property="issuerGroupId">
+					T1.ISSUER_GROUP_ID =#issuerGroupId:DECIMAL#
+				</isNotNull>
+                <isNotNull prepend="and" property="issuerId">
+                    T1.ISSUER_ID = #issuerId:DECIMAL#
+                </isNotNull>
+                
+                <isNotEmpty prepend="and" property="customerName">
+                    T2.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+                </isNotEmpty>
+                <isNotNull prepend="and" property="orderState">
+                    T1.ORDER_STATE = #orderState:DECIMAL#
+                </isNotNull>
+                <isNotNull prepend="and" property="customerId">
+                    T1.CUSTOMER_ID = #customerId:DECIMAL#
+                </isNotNull>
+                <isNotNull prepend="and" property="orderId">
+                    T1.ORDER_ID = #orderId:DECIMAL#
+                </isNotNull>
+                <isNotNull prepend="and" property="orderType">
+                    T1.ORDER_TYPE = #orderType:DECIMAL#
+                </isNotNull>
+                <isNotNull prepend="and" property="createUser">
+                    T1.CREATE_USER = #createUser:DECIMAL#
+                </isNotNull>
+                <isNotEmpty prepend="and" property="orderStateArray">
+                    T1.ORDER_STATE in ($orderStateArray$)
+                </isNotEmpty>
+                <isEqual prepend="and" property="isMakeCard" compareValue="1">
+				(T1.PAYMENT_STATE=1 or T1.PAYMENT_TERM!=1 or T1.ORDER_TYPE=3) 
+				</isEqual>
+            </dynamic>) T7
+        where
+            T6.CARD_COMPANY_ID = #cardCompanyId:DECIMAL#
+            and ((T6.IS_IC_CARD = 1 and T7."cardType" = 1) or (T6.IS_MS_CARD = 1 and T7."cardType" = 2))
+        <include refid="Commons.suffixSql" />
+    </select>
+</sqlMap>

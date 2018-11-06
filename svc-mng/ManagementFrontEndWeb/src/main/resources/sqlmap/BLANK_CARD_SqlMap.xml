@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="BLANK_CARD" >
+  <select id="selectBlankCardsByDTO" parameterClass="com.huateng.accor.blankcard.dto.BlankCardQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.CARD_COMPANY as "cardCompany",
+        T1.CARD_LAYOUT as "cardLayout",
+        T1.CARD_AMOUNT as "cardAmount"
+    from
+        TB_ENT_BLANK_CARD T1
+    where
+        T1.DATA_STATE = '1'
+    <dynamic>
+      <isNotNull prepend="and" property="cardCompany">
+        T1.CARD_COMPANY = #cardCompany:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="cardLayout">
+        T1.CARD_LAYOUT = #cardLayout:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectBlankCardOperatersByDTO" parameterClass="com.huateng.accor.blankcard.dto.BlankCardQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.OPERATER_ID as "operaterId",
+        T1.REF_ID as "refId",
+        T1.CARD_COMPANY as "cardCompany",
+        T1.CARD_LAYOUT as "cardLayout",
+        T1.CARD_AMOUNT as "cardAmount",
+        T1.OPERATER_TYPE as "operaterType",
+        T1.STOCK_IN_TYPE as "stockInType",
+        T1.STOCK_OUT_TYPE as "stockOutType",
+        T1.MEMO as "memo",
+        T1.CREATE_TIME as "createTime"
+    from
+        TB_ENT_BLANK_CARD_OPERATER T1
+    where
+        T1.DATA_STATE = '1'
+        and T1.CARD_COMPANY = #cardCompany:DECIMAL#
+        and T1.CARD_LAYOUT = #cardLayout:DECIMAL#
+    <include refid="Commons.suffixSql"/>
+  </select>
+
+  <select id="viewBlankCardByDTO" parameterClass="com.huateng.accor.blankcard.dto.BlankCardDTO" resultClass="com.huateng.accor.blankcard.dto.BlankCardDTO">
+    select
+        T1.CARD_COMPANY as "cardCompany",
+        T1.CARD_LAYOUT as "cardLayout",
+        T1.CARD_AMOUNT as "cardAmount",
+        T2.BAD_CARD_AMOUNT as "badCardAmount"
+    from
+        TB_ENT_BLANK_CARD T1,
+        (
+            select
+                sum(CARD_AMOUNT) as BAD_CARD_AMOUNT
+            from
+                TB_ENT_BLANK_CARD_OPERATER T3
+            where
+                T3.DATA_STATE = '1'
+                and T3.STOCK_IN_TYPE = 3
+                and T3.CARD_COMPANY = #cardCompany:DECIMAL#
+                and T3.CARD_LAYOUT = #cardLayout:DECIMAL#
+        ) T2
+    where
+        T1.DATA_STATE = '1'
+        and T1.CARD_COMPANY = #cardCompany:DECIMAL#
+        and T1.CARD_LAYOUT = #cardLayout:DECIMAL#
+  </select>
+</sqlMap>

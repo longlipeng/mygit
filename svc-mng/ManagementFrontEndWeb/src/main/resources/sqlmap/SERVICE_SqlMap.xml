@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SERVICE">
+<!--	<select id="selectAccType" resultClass="java.util.HashMap"-->
+<!--		parameterClass="com.huateng.accor.acctype.dto.AccTypeQueryDTO"-->
+<!--		remapResults="true">-->
+<!--		<include refid="Commons.prefixSql" />-->
+<!--		select T2.ACC_TYPE_ID as "accTypeId", T2.ACC_TYPE_NAME as-->
+<!--		"accTypeName",-->
+<!--		DECODE(T2.ISSUER_ID,0,T3.ISSUER_GROUP_NAME,T1.ISSUER_NAME) as-->
+<!--		"issuerName" from TB_ENT_ISSUER T1, TB_ENT_ACCTYPE T2,-->
+<!--		TB_ENT_ISSUER_GROUP T3 where T1.ISSUER_ID(+)=T2.ISSUER_ID and-->
+<!--		T3.ISSUER_GROUP_ID(+)=T2.ISSUER_GROUP_ID and T2.DATA_STATE = 1-->
+<!--		<dynamic>-->
+<!--			<isNotNull prepend="and" property="accTypeId">-->
+<!--				ACC_TYPE_ID = #accTypeId:DECIMAL#-->
+<!--			</isNotNull>-->
+<!---->
+<!--			<isNotEmpty prepend="and" property="accTypeName">-->
+<!--				UPPER(ACC_TYPE_NAME) like UPPER('%'||#accTypeName:VARCHAR#||'%')-->
+<!--			</isNotEmpty>-->
+<!--			<isNull prepend="and" property="issuerId">-->
+<!--				<isNotEqual property="defaultIssuerId"-->
+<!--					compareValue="0">-->
+<!--					T2.ISSUER_ID = #defaultIssuerId:DECIMAL#-->
+<!--				</isNotEqual>-->
+<!--			</isNull>-->
+<!--			<isNull prepend="and" property="issuerGroupId">-->
+<!--				T2.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#-->
+<!--			</isNull>-->
+<!--			<isNotNull prepend="and" property="issuerId">-->
+<!--				T2.ISSUER_ID = #issuerId:DECIMAL#-->
+<!--			</isNotNull>-->
+<!--			<isNotNull prepend="and" property="issuerGroupId">-->
+<!--				T2.ISSUER_GROUP_ID = #issuerGroupId:DECIMAL#-->
+<!--			</isNotNull>-->
+<!--			<isNotNull prepend="and" property="productId">-->
+<!--				T2.ACC_TYPE_ID not in( select ACC_TYPE_ID from-->
+<!--				TB_REL_PROD_ACCTYPE where PRODUCT_ID=#productId:DECIMAL#-->
+<!--				)-->
+<!--			</isNotNull>-->
+<!--			<isNotNull prepend="and" property="accTypeGroupId">-->
+<!--				T2.ACC_TYPE_ID not in( select ACC_TYPE_ID from-->
+<!--				TB_REL_ACCTYPE_GROUP where-->
+<!--				ACC_TYPE_GROUP_ID=#accTypeGroupId:DECIMAL# )-->
+<!--			</isNotNull>-->
+<!--		</dynamic>-->
+<!--		<include refid="Commons.suffixSql" />-->
+<!--	</select>-->
+<!---->
+<!--	<select id="mchntContractSelectAccType"-->
+<!--		resultClass="java.util.HashMap"-->
+<!--		parameterClass="com.huateng.accor.acctype.dto.AccTypeQueryForMchntContractDTO"-->
+<!--		remapResults="true">-->
+<!--		<include refid="Commons.prefixSql" />-->
+<!--		select distinct T2.ACC_TYPE_ID as "accTypeId", T2.ACC_TYPE_NAME-->
+<!--		as "accTypeName",-->
+<!--		DECODE(T2.ISSUER_ID,0,T3.ISSUER_GROUP_NAME,T1.ISSUER_NAME) as-->
+<!--		"issuerName" from TB_ENT_ISSUER T1, TB_ENT_ACCTYPE T2,-->
+<!--		TB_ENT_ISSUER_GROUP T3 where T2.DATA_STATE = 1-->
+<!--		<dynamic>-->
+<!--			<isNotNull prepend="and" property="accTypeId">-->
+<!--				ACC_TYPE_ID = #accTypeId:DECIMAL#-->
+<!--			</isNotNull>-->
+<!---->
+<!--			<isNotEmpty prepend="and" property="accTypeName">-->
+<!--				UPPER(ACC_TYPE_NAME) like UPPER('%'||#accTypeName:VARCHAR#||'%')-->
+<!--			</isNotEmpty>-->
+<!---->
+<!--			<isEqual prepend="and" property="defaultIssuerId"-->
+<!--				compareValue="0">-->
+<!--				(T2.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL# and-->
+<!--				t2.ISSUER_ID = 0 and t2.ISSUER_GROUP_ID =-->
+<!--				t3.ISSUER_GROUP_ID)-->
+<!--			</isEqual>-->
+<!---->
+<!--			<isNotEqual prepend="and" property="defaultIssuerId"-->
+<!--				compareValue="0">-->
+<!--				((T2.ISSUER_ID = #defaultIssuerId:DECIMAL# and-->
+<!--				t2.ISSUER_ID = t1.ISSUER_ID)or( t2.issuer_group_id =-->
+<!--				#defaultIssuerGroupId:DECIMAL# and t2.issuer_id = 0 and-->
+<!--				t2.issuer_group_id = t3.issuer_group_id))-->
+<!--			</isNotEqual>-->
+<!---->
+<!--			<isNotNull prepend="and" property="mchntContractId">-->
+<!--				T2.ACC_TYPE_ID not in( select ACC_TYPE_ID from-->
+<!--				TB_ENT_MCHNT_ACCTYPE_CONTRACT where-->
+<!--				MERCHANT_CONTRACT_ID=#mchntContractId:DECIMAL# and-->
+<!--				DATA_STATE = 1 )-->
+<!--			</isNotNull>-->
+<!--			-->
+<!--		</dynamic>-->
+<!--		<include refid="Commons.suffixSql" />-->
+<!--	</select>-->
+	
+	<select id="selectAccTypetest" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.issuer.dto.service.ServiceQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT SERVICE.SERVICE_ID as "serviceId", 
+		       SERVICE.SERVICE_NAME as "serviceName",
+			   SERVICE.DEFAULT_RATE as "serviceFee",
+		       ISSUER.ISSUER_NAME as "entityName"
+         FROM TB_SERVICE SERVICE, TB_ISSUER ISSUER
+        WHERE SERVICE.ENTITY_ID = ISSUER.ENTITY_ID
+          AND SERVICE.DATA_STATE = '1'
+          AND ISSUER.DATA_STATE = '1'
+		  AND SERVICE.ENTITY_ID=#defaultEntityId:DECIMAL#		 
+		<isNotNull prepend="and" property="entityIdStr">
+		  SERVICE.ENTITY_ID =#entityIdStr:DECIMAL#
+		</isNotNull>
+		<isNotNull prepend="and" property="expiryDate">
+			 SERVICE.EXPIRY_DATE>#expiryDate#
+		</isNotNull>
+		<isNotNull prepend="and" property="serviceId">
+		  SERVICE.SERVICE_ID = #serviceId:DECIMAL#
+		</isNotNull>
+		<isNotEmpty prepend="and" property="serviceName">
+			UPPER(SERVICE.SERVICE_NAME) like UPPER('%'||#serviceName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotNull prepend="and" property="productId">
+				SERVICE.SERVICE_ID NOT IN( SELECT SERVICE_ID FROM
+				TB_REL_PRODUCT_SERVICE WHERE PRODUCT_ID=#productId:DECIMAL#
+				)
+		</isNotNull>
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="selectIssuerInfoList" parameterClass="com.allinfinance.univer.issuer.dto.service.ServiceQueryDTO" resultClass="com.allinfinance.univer.issuer.dto.service.ServiceQueryDTO">	
+ 		  SELECT I.ENTITY_ID AS "entityIdStr",
+ 		         I.ISSUER_NAME AS "entityName"
+ 		    FROM  TB_ISSUER I 
+ 		   WHERE  I.DATA_STATE='1'
+ 		  <dynamic>
+ 		    <isNotEmpty prepend="and" property="entityIdStr">
+      	     (I.ENTITY_ID =#entityIdStr:DECIMAL# or I.FATHER_ENTITY_ID =#entityIdStr:DECIMAL#)
+      	   </isNotEmpty>
+ 		  </dynamic>
+ 	</select>
+	
+	
+	
+	
+</sqlMap>

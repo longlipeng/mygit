@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TB_CARDNOS_TMP">
+<resultMap class="com.allinfinance.service.uploadFile.dto.UploadCardFileDTO" id="CardNos">
+	<result column="CARD_NO" jdbcType="VARCHAR" property="cardNo" />
+	<result column="ORDER_ID" jdbcType="VARCHAR" property="orderId" />
+</resultMap>
+  <insert id="insertCardNo"  parameterClass="com.allinfinance.service.uploadFile.dto.UploadCardFileDTO">
+  	insert into  TB_CATDNO_TMP	(CARD_NO,ORDER_ID) values(#cardNo:varchar#,#orderId:varchar#)
+  </insert>
+  <select id="selectCardNos" parameterClass="com.allinfinance.service.uploadFile.dto.UploadCardFileDTO"  resultMap="CardNos">
+  select CARD_NO,ORDER_ID from TB_CATDNO_TMP where ORDER_ID =#orderId:varchar#
+  </select>
+  <delete id="deleteCardNos" parameterClass="com.allinfinance.service.uploadFile.dto.UploadCardFileDTO">
+  delete from TB_CATDNO_TMP where order_id = #orderId:varchar#
+  </delete>
+  
+   <delete id="deleteAll" parameterClass="com.allinfinance.service.uploadFile.dto.UploadCardFileDTO">
+  delete from TB_CATDNO_TMP where CARD_NO = #cardNo:varchar#
+  </delete>
+</sqlMap>

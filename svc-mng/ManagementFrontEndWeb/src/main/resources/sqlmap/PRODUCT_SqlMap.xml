@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PRODUCT">
+	<select id="selectProduct" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.issuer.dto.product.ProductQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+	  select 
+			T1.PRODUCT_ID as "productId", 
+			T1.PRODUCT_NAME as "productName",
+			decode(T1.Card_Type,'1','IC卡','磁条卡') as "cardType", 
+			t3.dict_name as "productType",
+			decode(T1.PROD_STAT,'1','可用','不可用') as "prodStat" ,
+			T2.ISSUER_NAME as "defineIssuerName",
+			T4.ISSUER_NAME as "entityName",
+			T2.ENTITY_ID   as "defineIssuerId"
+		from 
+			TB_PRODUCT T1 left join
+			TB_ISSUER T2 on T1.PRODUCT_DEFINE_ISSUER=T2.ENTITY_ID left join
+			TB_ENTITY_DICT_INFO T3 on T3.ENTITY_ID = T1.PRODUCT_DEFINE_ISSUER and 
+			T1.PRODUCT_TYPE = T3.DICT_CODE ,
+			TB_ISSUER T4 
+		where
+			T1.DATA_STATE='1'
+	    AND 
+	       T3.DICT_TYPE_CODE= '815'        
+		AND 
+			T2.DATA_STATE='1'
+		AND
+			T3.DICT_STATE='1'
+		AND
+		    T1.ENTITY_ID=T4.ENTITY_ID
+		<dynamic>
+			<isNotNull prepend="and" property="productId">
+				T1.PRODUCT_ID = #productId:DECIMAL#
+			</isNotNull>
+		
+			<isNotEmpty prepend="and" property="productName">
+				UPPER(T1.PRODUCT_NAME) like  UPPER('%'||#productName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotNull prepend="and" property="cardType">
+				T1.CARD_TYPE = #cardType:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="productType">
+				T1.PRODUCT_TYPE = #productType:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="prodStat">
+				T1.PROD_STAT = #prodStat:DECIMAL#
+			</isNotNull>
+			<isNotEmpty prepend="and" property="defaultEntityId">
+      	 <!--     T1.PRODUCT_DEFINE_ISSUER in (-->  
+      	  <!--      SELECT I.ENTITY_ID -->  
+ 		 <!--           FROM TB_ISSUER I -->  
+ 		   <!--      WHERE I.DATA_STATE=1 -->  
+ 		    <!--        and (I.entity_id=#defaultEntityId:DECIMAL# -->  
+ 		  <!--           or I.father_entity_id=#defaultEntityId:DECIMAL#)-->  
+      	  <!--        )-->  
+      	  (	T1.PRODUCT_DEFINE_ISSUER = #defaultEntityId:VARCHAR#
+      	  	 OR  T1.ENTITY_ID= #defaultEntityId:VARCHAR# )
+      	     </isNotEmpty>
+			 <isNotNull prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:DECIMAL#
+			 </isNotNull>
+			
+<!--			<isNotNull prepend="and" property="issuerId">-->
+<!--				T1.PRODUCT_ID-->
+<!--					not in(-->
+<!--						select -->
+<!--							PRODUCT_ID-->
+<!--						from-->
+<!--							TB_REL_ISSUER_PRODUCT-->
+<!--						where-->
+<!--							ISSUER_ID=#issuerId:DECIMAL#-->
+<!--					)-->
+<!--			</isNotNull>-->
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="selectProductInf" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+	  select 
+			T1.PRODUCT_ID as "productId", 
+			T1.PRODUCT_NAME as "productName",
+			T3.dict_name as "productType"	
+		from 
+			TB_PRODUCT T1 right join TB_ENTITY_DICT_INFO T3 on 
+			T3.ENTITY_ID = T1.PRODUCT_DEFINE_ISSUER and T1.PRODUCT_TYPE = T3.DICT_CODE,
+			TB_ENTITY_STOCK T4
+			
+		where
+			T1.DATA_STATE='1'
+	    AND 
+	       T3.DICT_TYPE_CODE= '815'        
+		AND 
+			T4.DATA_STATE='1'
+		AND
+			T3.DICT_STATE='1'
+		AND
+		   T1.PRODUCT_ID=T4.PRODUCT_ID
+		<dynamic>
+			<isNotNull prepend="and" property="cardNo">
+				T4.CARD_NO = #cardNo:VARCHAR#
+			</isNotNull>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectProductForStockOrder" resultClass="com.allinfinance.univer.issuer.dto.product.ProductDTO"
+		parameterClass="java.lang.String" >
+	  select 
+		T2.PRODUCT_ID as "productId",
+		T2.PRODUCT_NAME as "productName",
+		T2.PRODUCT_ENGLISH_NAME as "productEnglishName",
+		T2.ENTITY_ID as "entityId",
+		T2.CARD_TYPE as "cardType",
+		T2.PRODUCT_TYPE as "productType",
+		T2.VALIDITY_PERIOD as "validityPeriod",
+		T2.START_DATE as "startDate",
+		T2.END_TIME as "endTime",
+		T2.CARD_FEE as "cardFee",
+		T2.REPLACE_FEE as "replaceFee",
+		T2.ANNUAL_FEE as "annualFee",
+		T2.MAX_BALANCE as "maxBalance",
+		T2.SUPPL_STAT as "supplStat",
+		T2.CONSUMER_TIMES as "consumerTimes",
+		T2.RECHARGE_TIMES as "rechargeTimes",
+		T2.PIN_STAT as "pinStat",
+		T2.INIT_ACT_STAT as "initActStat",
+		T2.PIN_DELIV_MEANS as "pinDelivMeans",
+		T2.SMS_SVC_STAT as "smsSvcStat",
+		T2.EMAIL_SVC_STAT as "emailSvcStat",
+		T2.MONSTMT_SVC_STAT as "monstmtSvcStat",
+		T2.WEB_PAY_STAT as "webPayStat",
+		T2.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+		T2.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+		T2.PRE_AUTH_STAT as "preAuthStat",
+		T2.IVR_SVC_STAT as "ivrSvcStat",
+		T2.ONYMOUS_STAT as "onymousStat",
+		T2.AVAILABLE_ORDER as "availableOrder",
+		T2.AVAILABLE_STOCK as "availableStock",
+		T2.PROD_STAT as "prodStat",
+		T2.PRODUCT_DEFINE_ISSUER as "productDefineIssuer"
+		FROM 
+			TB_PRODUCT T2
+		WHERE T2.PRODUCT_ID IN(
+		  SELECT T1.PRODUCT_ID 
+		  FROM TB_LOYALTY_PROD_CONTRACT T1 
+		  WHERE T1.LOYALTY_CONTRACT_ID 
+		  IN (
+		         SELECT T.LOYALTY_CONTRACT_ID
+		           FROM TB_LOYALTY_CONTRACT T
+		          WHERE T.CONTRACT_BUYER = #entityId:VARCHAR#
+		          AND T.DATA_STATE='1'
+		          AND T.CONTRACT_STATE='1'
+		  )
+		  AND T1.DATA_STATE='1'
+		)
+		AND T2.DATA_STATE='1'
+		AND T2.ONYMOUS_STAT in('2','3')
+		AND T2.PROD_STAT='1'
+		
+		UNION 
+		
+		SELECT 
+			T3.PRODUCT_ID as "productId",
+			T3.PRODUCT_NAME as "productName",
+			T3.PRODUCT_ENGLISH_NAME as "productEnglishName",
+			T3.ENTITY_ID as "entityId",
+			T3.CARD_TYPE as "cardType",
+			T3.PRODUCT_TYPE as "productType",
+			T3.VALIDITY_PERIOD as "validityPeriod",
+			T3.START_DATE as "startDate",
+			T3.END_TIME as "endTime",
+			T3.CARD_FEE as "cardFee",
+			T3.REPLACE_FEE as "replaceFee",
+			T3.ANNUAL_FEE as "annualFee",
+			T3.MAX_BALANCE as "maxBalance",
+			T3.SUPPL_STAT as "supplStat",
+			T3.CONSUMER_TIMES as "consumerTimes",
+			T3.RECHARGE_TIMES as "rechargeTimes",
+			T3.PIN_STAT as "pinStat",
+			T3.INIT_ACT_STAT as "initActStat",
+			T3.PIN_DELIV_MEANS as "pinDelivMeans",
+			T3.SMS_SVC_STAT as "smsSvcStat",
+			T3.EMAIL_SVC_STAT as "emailSvcStat",
+			T3.MONSTMT_SVC_STAT as "monstmtSvcStat",
+			T3.WEB_PAY_STAT as "webPayStat",
+			T3.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+			T3.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+			T3.PRE_AUTH_STAT as "preAuthStat",
+			T3.IVR_SVC_STAT as "ivrSvcStat",
+			T3.ONYMOUS_STAT as "onymousStat",
+			T3.AVAILABLE_ORDER as "availableOrder",
+			T3.AVAILABLE_STOCK as "availableStock",
+			T3.PROD_STAT as "prodStat",
+			T3.PRODUCT_DEFINE_ISSUER as "productDefineIssuer"
+		FROM TB_PRODUCT T3
+		WHERE  T3.PRODUCT_DEFINE_ISSUER=#entityId:VARCHAR#
+		AND T3.DATA_STATE='1'
+		AND T3.ONYMOUS_STAT in('2','3')
+	</select>
+	
+	<select id="selectProductForUnsignOrder" resultClass="com.allinfinance.univer.issuer.dto.product.ProductDTO"
+		parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO" >
+	  select 
+		T2.PRODUCT_ID as "productId",
+		T2.PRODUCT_NAME as "productName",
+		T2.PRODUCT_ENGLISH_NAME as "productEnglishName",
+		T2.ENTITY_ID as "entityId",
+		T2.CARD_TYPE as "cardType",
+		T2.PRODUCT_TYPE as "productType",
+		T2.VALIDITY_PERIOD as "validityPeriod",
+		T2.START_DATE as "startDate",
+		T2.END_TIME as "endTime",
+		T2.CARD_FEE as "cardFee",
+		T2.REPLACE_FEE as "replaceFee",
+		T2.ANNUAL_FEE as "annualFee",
+		T2.MAX_BALANCE as "maxBalance",
+		T2.SUPPL_STAT as "supplStat",
+		T2.CONSUMER_TIMES as "consumerTimes",
+		T2.RECHARGE_TIMES as "rechargeTimes",
+		T2.PIN_STAT as "pinStat",
+		T2.INIT_ACT_STAT as "initActStat",
+		T2.PIN_DELIV_MEANS as "pinDelivMeans",
+		T2.SMS_SVC_STAT as "smsSvcStat",
+		T2.EMAIL_SVC_STAT as "emailSvcStat",
+		T2.MONSTMT_SVC_STAT as "monstmtSvcStat",
+		T2.WEB_PAY_STAT as "webPayStat",
+		T2.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+		T2.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+		T2.PRE_AUTH_STAT as "preAuthStat",
+		T2.IVR_SVC_STAT as "ivrSvcStat",
+		T2.ONYMOUS_STAT as "onymousStat",
+		T2.AVAILABLE_ORDER as "availableOrder",
+		T2.AVAILABLE_STOCK as "availableStock",
+		T2.PROD_STAT as "prodStat",
+		T2.PRODUCT_DEFINE_ISSUER as "productDefineIssuer"
+		FROM 
+			TB_PRODUCT T2
+		WHERE  T2.DATA_STATE='1'
+		AND T2.ONYMOUS_STAT ='2'
+		AND T2.PROD_STAT='1'
+		and t2.PRODUCT_ID in (select sellProd.PRODUCT_ID from TB_SELL_PROD_CONTRACT sellProd where sellProd.SELL_CONTRACT_ID=(
+        select tcon.SELL_CONTRACT_ID from TB_SELL_CONTRACT tcon where  tcon.CONTRACT_BUYER=#firstEntityId:VARCHAR#) GROUP by sellProd.PRODUCT_ID ) 
+        
+		UNION 
+		
+		SELECT 
+			T3.PRODUCT_ID as "productId",
+			T3.PRODUCT_NAME as "productName",
+			T3.PRODUCT_ENGLISH_NAME as "productEnglishName",
+			T3.ENTITY_ID as "entityId",
+			T3.CARD_TYPE as "cardType",
+			T3.PRODUCT_TYPE as "productType",
+			T3.VALIDITY_PERIOD as "validityPeriod",
+			T3.START_DATE as "startDate",
+			T3.END_TIME as "endTime",
+			T3.CARD_FEE as "cardFee",
+			T3.REPLACE_FEE as "replaceFee",
+			T3.ANNUAL_FEE as "annualFee",
+			T3.MAX_BALANCE as "maxBalance",
+			T3.SUPPL_STAT as "supplStat",
+			T3.CONSUMER_TIMES as "consumerTimes",
+			T3.RECHARGE_TIMES as "rechargeTimes",
+			T3.PIN_STAT as "pinStat",
+			T3.INIT_ACT_STAT as "initActStat",
+			T3.PIN_DELIV_MEANS as "pinDelivMeans",
+			T3.SMS_SVC_STAT as "smsSvcStat",
+			T3.EMAIL_SVC_STAT as "emailSvcStat",
+			T3.MONSTMT_SVC_STAT as "monstmtSvcStat",
+			T3.WEB_PAY_STAT as "webPayStat",
+			T3.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+			T3.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+			T3.PRE_AUTH_STAT as "preAuthStat",
+			T3.IVR_SVC_STAT as "ivrSvcStat",
+			T3.ONYMOUS_STAT as "onymousStat",
+			T3.AVAILABLE_ORDER as "availableOrder",
+			T3.AVAILABLE_STOCK as "availableStock",
+			T3.PROD_STAT as "prodStat",
+			T3.PRODUCT_DEFINE_ISSUER as "productDefineIssuer"
+		FROM TB_PRODUCT T3
+		WHERE  T3.PRODUCT_DEFINE_ISSUER=#defaultEntityId:VARCHAR#
+		AND T3.DATA_STATE='1'
+		AND T3.ONYMOUS_STAT ='2'
+		and t3.PRODUCT_ID in (select sellProd.PRODUCT_ID from TB_SELL_PROD_CONTRACT sellProd where sellProd.SELL_CONTRACT_ID=(
+        select tcon.SELL_CONTRACT_ID from TB_SELL_CONTRACT tcon where  tcon.CONTRACT_BUYER=#firstEntityId:VARCHAR#) GROUP by sellProd.PRODUCT_ID )
+		</select>
+	
+	
+	<select id="selectIssuerInfoList" parameterClass="com.allinfinance.univer.issuer.dto.product.ProductQueryDTO" resultClass="com.allinfinance.univer.issuer.dto.product.ProductQueryDTO">	
+ 		  SELECT I.ENTITY_ID AS "entityId",
+ 		         I.ISSUER_NAME AS "entityName"
+ 		    FROM  TB_ISSUER I 
+ 		   WHERE  I.DATA_STATE='1'
+ 		  <dynamic>
+ 		    <isNotEmpty prepend="and" property="entityId">
+      	      (I.ENTITY_ID =#entityId:DECIMAL# or I.FATHER_ENTITY_ID =#entityId:DECIMAL#)
+      	   </isNotEmpty>
+ 		  </dynamic>
+ 	</select>
+	
+	
+	
+
+	<select id="selectAcctype"
+		parameterClass="com.allinfinance.univer.issuer.dto.product.ProductDTO"
+		resultClass="com.allinfinance.univer.issuer.dto.service.ServiceDTO">
+		SELECT S.SERVICE_ID as "serviceId", 
+               S.SERVICE_NAME as "serviceName", 
+			   S.EXPIRY_DATE as "expiryDate",
+			   S.IS_AGENT as "isAgent",
+			   S.ENTITY_ID as "entityId",
+               R.SERVICE_FEE as "defaultRate", 
+               R.DEFAULT_FLAG as "defaultFlag",
+               I.ISSUER_NAME as "entityName"
+         FROM TB_ISSUER I,TB_PRODUCT T, TB_REL_PRODUCT_SERVICE R, TB_SERVICE S
+        WHERE T.DATA_STATE = '1'
+          AND S.DATA_STATE = '1'
+          AND I.DATA_STATE = '1'
+          AND T.PRODUCT_ID = R.PRODUCT_ID
+          AND R.SERVICE_ID = S.SERVICE_ID
+          AND S.ENTITY_ID = I.ENTITY_ID
+		<dynamic>
+			<isNotNull prepend="and" property="productId">
+				T.PRODUCT_ID = #productId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+		ORDER BY R.default_flag desc
+	</select>
+	
+	<select id="selectCardLayOut"
+		parameterClass="com.allinfinance.univer.issuer.dto.product.ProductDTO"
+		resultClass="com.allinfinance.univer.issuer.dto.cardLayOut.CardLayoutDTO">
+		SELECT L.REL_ID as "relId", 
+		       L.CARD_LAYOUT_ID as "cardLayoutId", 
+		       C.CARD_LAYOUT_NAME as "cardName"
+          FROM TB_REL_PROD_LAYOUT L, TB_CARD_LAYOUT C
+         WHERE L.CARD_LAYOUT_ID = C.CARD_LAYOUT_ID
+           AND C.DATA_STATE = '1'
+		<dynamic>
+			<isNotNull prepend="and" property="productId">
+				L.PRODUCT_ID = #productId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<select id="selectPackage"
+		parameterClass="com.allinfinance.univer.issuer.dto.product.ProductDTO"
+		resultClass="com.allinfinance.univer.issuer.dto.procuctPackage.PackageDTO">
+		 SELECT P.PACKAGE_ID as "packageId", 
+		       TO_CHAR(P.PACKAGE_FEE/100, '9999999999990.00')  as "packageFee",
+		        P.PACKAGE_NAME as "packageName",
+		        R.REL_ID  as "relId"
+          FROM TB_REL_PRODUCT_PACKAGE R, TB_PACKAGE P
+         WHERE R.PACKAGE_ID = P.PACKAGE_ID
+           AND P.DATA_STATE = '1'
+		<dynamic>
+			<isNotNull prepend="and" property="productId">
+				  R.PRODUCT_ID = #productId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	
+	<select id="getProductService"
+		parameterClass="com.allinfinance.univer.issuer.dto.product.ProdServiceDTO"
+		resultClass="com.allinfinance.univer.issuer.dto.product.ProdServiceDTO">
+		 SELECT S.SERVICE_NAME as "serviceName" ,
+                 SERVICE.PRODUCT_ID as "productId",
+                 SERVICE.SERVICE_ID as "serviceId",
+                 SERVICE.MAX_TXN_AMT as "maxTxnAmt",
+                 SERVICE.MAX_DAY_TXN_AMT as "maxDayTxnAmt",
+                 SERVICE.WEB_MAX_TXN_AMT as "webMaxTxnAmt",
+                 SERVICE.WEB_MAX_DAY_TXN_AMT as "webMaxDayTxnAmt",
+                 SERVICE.SERVICE_FEE as "serviceFee",
+                 SERVICE.REL_ID as "relId",
+                 SERVICE.DEFAULT_FLAG as "defaultFlag"
+            FROM TB_REL_PRODUCT_SERVICE SERVICE, TB_SERVICE S
+           WHERE SERVICE.SERVICE_ID = S.SERVICE_ID
+             AND S.DATA_STATE = '1'
+		<dynamic>
+			<isNotNull prepend="and" property="productId">
+				SERVICE.PRODUCT_ID = #productId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="serviceId">
+				SERVICE.SERVICE_ID = #serviceId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<select id="deleteProductService"
+		parameterClass="com.allinfinance.univer.issuer.dto.product.ProdServiceDTO"
+		resultClass="com.allinfinance.univer.issuer.dto.product.ProdServiceDTO">
+		 DELETE  FROM TB_REL_PRODUCT_SERVICE S 
+		<dynamic>
+			<isNotNull prepend="and" property="productId">
+				SERVICE.PRODUCT_ID = #productId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="serviceId">
+				SERVICE.SERVICE_ID = #serviceId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+	<select id="selectCardBinByProductId" 
+			parameterClass="java.lang.String" 
+			resultClass="com.allinfinance.univer.issuer.dto.product.ProductCardBinDTO">
+	SELECT
+    T.PRODUCT_ID    AS "productId",
+    T.CARD_BIN      AS "cardBin",
+    T.EFFECT        AS "effect",
+    T.REAL_CARD_BIN AS "realCardBin",
+    B.BIN_TYPE      AS "binType"
+   
+FROM
+    TB_PRODUCT_CARD_BIN T,TB_PRODUCT P,TB_CARD_SERIAL_NUMBER B
+   
+   where T.PRODUCT_ID = P.PRODUCT_ID and B.ISSUER_ID=P.ENTITY_ID AND B.CARD_BIN = T.REAL_CARD_BIN and  
+			T.PRODUCT_ID = #productId:VARCHAR#
+		AND T.DATA_STATE = '1'
+	</select>
+	
+	
+	<select id="selectCardBinForProduct" resultClass="java.util.HashMap" 
+			parameterClass="com.allinfinance.univer.issuer.dto.product.ProductQueryDTO" remapResults="true">
+		<include refid="Commons.prefixSql" />
+	   		SELECT 
+	   			T.CARD_BIN AS "cardBin",
+       			T.SERIAL_NUMBER AS "serialNumber"    
+			FROM
+				TB_CARD_SERIAL_NUMBER T 
+			WHERE 
+				T.ISSUER_ID=#defaultEntityId:VARCHAR#
+			AND T.CARD_BIN NOT IN (
+			    SELECT 
+			    	T1.CARD_BIN 
+			    FROM 
+			    	TB_PRODUCT_CARD_BIN T1 
+			    WHERE 
+			    	T1.PRODUCT_ID = #productId:VARCHAR#
+			    AND 
+			    	T1.DATA_STATE = '1'
+			)
+			AND T.DATA_STATE = '1'
+	    <include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="selectCardBinDTOForProduct" resultClass="com.allinfinance.univer.issuer.dto.product.ProductCardBinDTO" 
+			parameterClass="com.allinfinance.univer.issuer.dto.product.ProductDTO" remapResults="true">
+	   		SELECT 
+	   			T.CARD_BIN AS "cardBin",
+       			T.SERIAL_NUMBER AS "serialNumber",
+       			T.BIN_TYPE AS "binType"
+			FROM
+				TB_CARD_SERIAL_NUMBER T 
+			WHERE 
+				T.ISSUER_ID=#defaultEntityId:VARCHAR#
+			AND T.CARD_BIN NOT IN (
+			    SELECT 
+			    	T1.CARD_BIN 
+			    FROM 
+			    	TB_PRODUCT_CARD_BIN T1 
+			    WHERE 
+			    	T1.PRODUCT_ID = #productId:VARCHAR#
+			    AND 
+			    	T1.DATA_STATE = '1'
+			)
+			AND T.DATA_STATE = '1'
+	</select>
+	
+	
+	<!-- 锁定产品卡BIN流水 ,行级锁-->
+	<select id="getProductCardBinSerialNumberForLock" 
+			parameterClass="java.lang.String"
+			resultClass="com.huateng.framework.ibatis.model.ProductCardBin">
+		SELECT 
+		  T.PRODUCT_ID AS "productId",
+		  T.CARD_BIN AS "cardBin",
+		  T.EFFECT AS "effect",
+		  T.SERIAL_NUMBER AS "serialNumber",
+		  T.REAL_CARD_BIN AS	"realCardBin"
+		FROM TB_PRODUCT_CARD_BIN T
+		WHERE 
+		     T.PRODUCT_ID = #productId:VARCHAR#
+      	FOR UPDATE with RS
+	</select>
+	
+	<select id="selectProductsBySellId" resultClass="com.allinfinance.univer.issuer.dto.product.ProductDTO" 
+			parameterClass="java.lang.String">
+	   	select 
+	   		distinct
+	   		t2.product_id as productId,
+       		t2.product_name as productName
+  		from tb_sell_prod_contract t1, tb_product t2, tb_sell_contract t3
+ 		where t1.product_id = t2.product_id
+   		and t1.sell_contract_id = t3.sell_contract_id
+   		and t3.contract_buyer=#sellId:varchar#
+	</select>
+	
+	<!-- 选择服务对应的卡BIN-->
+	<select id="selectCardBinByServiceId" resultClass="java.util.HashMap" 
+			parameterClass="java.lang.String">
+			select 
+				t1.card_bin "cardBin",t2.service_id "serviceId" 
+			from TB_PRODUCT_CARD_BIN t1, (select product_id,service_id from TB_REL_PRODUCT_SERVICE where service_id = #serviceId:VARCHAR#) t2 
+			where t1.product_id = t2.product_id
+	</select>	
+	
+	<!-- 通过发行机构查找关联了产品，且状态正常的服务-->
+	<select id="selectServiceIdRelWithProductByIssuerId" resultClass="java.util.HashMap" 
+			parameterClass="java.lang.String">
+			select distinct t1.service_id "serviceId" 
+			  from tb_service t1, tb_rel_product_service t2
+			 where t1.service_id = t2.service_id
+			 and t1.entity_id = #issuerId:VARCHAR#
+			 and t1.data_state = '1'
+	</select>
+	<!-- 根据卡号获得产品信息 -->
+ 	<select id="selectProductInfoByCardNo" resultClass="java.util.HashMap" parameterClass="java.lang.String">
+			
+			SELECT 
+			     info.CARD_NO AS "cardNO",
+				 t.PRODUCT_ID AS "id",
+				 t.PRODUCT_NAME AS "name",
+				 to_char(decode((T1.ACC_BAL),'','0',null,'0',(cast(cast(T1.ACC_BAL as bigint) as DECIMAL(9,2))))) as "amount",
+				 info.VALID_DATE AS "validityperiod"
+			FROM 
+				SVC_ACC.TB_ACC_CARD_INFO info 
+				LEFT JOIN SVC_ACC.TB_PRODUCT t ON info.PRODUCT_ID=t.PRODUCT_ID
+				LEFT JOIN TB_ACC_REL_CARD_ACCOUNT account ON account.CARD_NO= info.CARD_NO
+				LEFT JOIN TB_ACC_ACCOUNT_INFO T1 ON T1.ACCOUNT_NO= account.ACCOUNT_NO
+			WHERE
+			 	info.CARD_NO= #card_NO:VARCHAR#	
+	</select> 
+</sqlMap>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SerialNumber">
+	<select id="selectSerialNumber" resultClass="String" >
+		select replace(char(current_date),'-','') || right(digits($sequenceName$.nextval),$length$) from (values 1)
+	</select>
+	<select id="getSequence" resultClass="Long" >
+        select $sequenceName$.nextval from (values 1)
+    </select>
+</sqlMap>

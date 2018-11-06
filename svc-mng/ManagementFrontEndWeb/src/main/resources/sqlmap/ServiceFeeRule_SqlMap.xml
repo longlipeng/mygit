@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ServiceFeeRule">
+  <select id="selectRulesByDTOs" parameterClass="com.allinfinance.univer.servicefeerule.dto.ServiceFeeRuleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select distinct
+        (T1.RULE_NO) as "ruleNo",
+        T1.RULE_NAME as "ruleName",
+        TO_CHAR(TO_DATE(T1.MODIFY_TIME,'yyyy-MM-dd hh24miss'),'yyyy-MM-dd') AS "modifyTime",
+        decode(T1.STATE,'1','新建','2','启用','0','删除') as "state",
+        T1.ENTITY_ID as "entityId"
+    from
+        TB_SERIVCE_FEE_RULE T1
+    where
+        1=1
+    <dynamic>
+      <isNotEmpty prepend="and" property="ruleNo">
+        T1.RULE_NO like '%'||#ruleNo:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleName">
+        T1.RULE_NAME like '%'||#ruleName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="state">
+        T1.STATE = #state:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleType">
+        T1.RULE_TYPE = #ruleType:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="entityId">
+        T1.ENTITY_ID = #entityId:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectRulesByEntityId" parameterClass="com.allinfinance.univer.servicefeerule.dto.ServiceFeeRuleQueryDTO" resultClass="com.allinfinance.univer.servicefeerule.dto.ServiceFeeRuleDTO">
+    select distinct
+        (T1.RULE_NO) as "ruleNo",
+        T1.RULE_NAME as "ruleName",
+        decode(T1.CALC_TYPE,'1','把本金按照分段规则拆分计算后汇总','0','按照本金落在的分段统一计算') as "calcType",
+        decode(T1.STATE,'1','新建','2','启用','0','删除') as "state",
+        T1.ENTITY_ID as "entityId"
+    from
+        TB_SERIVCE_FEE_RULE T1
+    where
+        1=1
+    <dynamic>
+      <isNotEmpty prepend="and" property="ruleNo">
+        T1.RULE_NO like '%'||#ruleNo:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleName">
+        T1.RULE_NAME like '%'||#ruleName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="state">
+        T1.STATE = #state:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleType">
+        T1.RULE_TYPE = #ruleType:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="entityId">
+        T1.ENTITY_ID = #entityId:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+  </select>
+</sqlMap>

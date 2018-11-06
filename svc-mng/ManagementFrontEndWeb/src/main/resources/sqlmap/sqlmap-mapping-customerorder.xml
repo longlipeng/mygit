@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TB_ENT_CUSTOMER_ORDER">
+	<!-- <select id="selectCustomerOrder" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.huateng.accorecard.customerorder.dto.CustomerOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select
+		T1.ORDER_ID as "orderId",
+		T1.CUSTOMER_ID as "customerId",
+		T1.ORDER_TYPE as "orderType",
+		T1.ORDER_DATE as "orderDate",
+		T1.ISSUER_ID as "issuerId",
+		T1.CREATE_USER as "createUser",
+		T1.CREATE_TIME as "createTime",
+		T1.ORDER_STATE as "orderState",
+		T1.ORDER_PRIORITY as "orderPriority",
+		T1.CARD_ISSUE_FEE/100 as "cardIssueFee",
+		T1.CARD_QUANTITY as "cardQuantity",
+		T1.REAL_CARD_QUANTITY as "realCardQuantity",
+		T1.FACE_VALUE /100   as "faceValue",
+		T1.TOTAL_PRICE/100   as "totalPrice",
+		T1.MODIFY_TIME   as "modifyTime",
+		T2.CUSTOMER_NAME as "customerName",
+		T3.USER_NAME AS "userName",
+		T4.ISSUER_NAME AS "issuerName",
+		T1.PRODUCT_ID as "productId",
+		T5.PRODUCT_NAME as "productName",
+		T5.CARD_TYPE as "productCardType",
+		T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+		T6.USER_NAME   as "createCardFileUserName"
+		from
+		TB_ENT_CUSTOMER_ORDER T1,
+		TB_ENT_CUSTOMER T2,
+		TB_ENT_USER T3,
+		TB_ENT_ISSUER T4,
+		TB_ENT_PRODUCT T5,
+		TB_ENT_USER T6
+		where
+		T1.DATA_STATE=1
+		AND T1.CUSTOMER_ID = T2.CUSTOMER_ID(+)
+		AND T1.CREATE_USER = T3.USER_ID(+)
+		AND T1.ISSUER_ID = T4.ISSUER_ID(+)
+		AND T1.PRODUCT_ID=T5.PRODUCT_ID(+)
+		AND T1.IS_CREATE_CARD_FILE=T6.USER_ID(+)
+		<dynamic>
+			<isNotNull prepend="and" property="issuerGroupId">
+				T1.ISSUER_GROUP_ID =#issuerGroupId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="issuerId">
+				T1.ISSUER_ID =#issuerId:DECIMAL#
+			</isNotNull>
+			<isNotEmpty prepend="and" property="customerName">
+				T2.CUSTOMER_NAME like
+				'%'||#customerName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotNull prepend="and" property="orderState">
+				T1.ORDER_STATE =
+				#orderState:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="customerId">
+				T1.CUSTOMER_ID =#customerId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="orderId">
+				T1.ORDER_ID =#orderId:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="orderType">
+				T1.ORDER_TYPE =#orderType:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="createUser">
+				T1.CREATE_USER =#createUser:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="and" property="createTime">
+				to_char(T1.CREATE_TIME,'yyyy-MM-dd')
+				>=to_char(#createTime:DATE#,'yyyy-MM-dd') 
+			</isNotNull>
+			<isNotNull prepend="and" property="endCreateTime">
+				<![CDATA[
+					to_char(T1.CREATE_TIME,'yyyy-MM-dd')<=to_char(#endCreateTime:DATE#,'yyyy-MM-dd') 
+				 ]]>
+			</isNotNull>
+			<isNotEmpty prepend="and" property="orderStateArray">
+				T1.ORDER_STATE in
+				($orderStateArray$)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE in
+				($orderTypeArray$)
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE in ($orderTypeArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderPayment">
+				T1.PAYMENT_STATE=0 AND T1.ORDER_STATE not in(0,1,2,17)
+            </isNotEmpty>
+			<isEqual prepend="and" property="blockFlag" compareValue="1">
+				((T1.PAYMENT_TERM=1 AND T1.ORDER_STATE=3)
+				OR (T1.PAYMENT_TERM=2 AND
+				T1.ORDER_STATE=29)
+				OR (T1.PAYMENT_TERM=5 AND T1.ORDER_STATE=15)
+				OR
+				(T1.PAYMENT_TERM=3 AND T1.ORDER_STATE IN (32,34,36)))
+				AND
+				T1.PAYMENT_STATE=0 
+			</isEqual>
+			<isEqual prepend="and" property="isMakeCard" compareValue="1">
+				(T1.PAYMENT_STATE=1 or T1.PAYMENT_TERM!=1 or T1.ORDER_TYPE=3) 
+			</isEqual>
+			<isEqual prepend="and" property="orderInvoice" compareValue="1">
+				T1.ORDER_TYPE != 3
+			</isEqual>
+			<isNotEmpty prepend="and" property="cardNo">
+				T1.ORDER_ID  in (SELECT T8.ORDER_ID FROM TB_ENT_ORDER_CARD_LIST T8 WHERE T8.CARD_NO =#cardNo:VARCHAR#)
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="orderStateNotInArray">
+				T1.ORDER_STATE not   in ($orderStateNotInArray$)
+            </isNotEmpty>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="getCustomerOrderById"
+		resultClass="com.huateng.accorecard.customerorder.dto.CustomerOrderDTO"
+		parameterClass="java.lang.Long">
+		SELECT
+		T.ORDER_ID as orderId,
+		T.ORDER_TYPE as orderType,
+		T.ORDER_DATE as orderDate,
+		T.ORDER_BARCODE as orderBarcode,
+		T.ISSUER_GROUP_ID as issuerGroupId,
+		T.ISSUER_ID as issuerId,
+		T3.ISSUER_NAME as issuerName,
+		T.CUSTOMER_ID as customerId,
+		T1.CUSTOMER_NAME as customerName,
+		T1.TELEPHONE     as telephone,
+		T1.CUSTOMER_ADDRESS as customerAddress,
+		T.CARD_VALIDITY_PERIOD as cardValidityPeriod,
+		T.PRODUCT_ID as productId,
+		T2.PRODUCT_NAME as productName,
+		T2.CARD_TYPE as productCardType,
+		T.CARD_LAYOUT_ID as cardLayoutId,
+		T4.CARD_NAME as cardLayoutName,
+		T.PACKAGE_ID as packageId,
+		T5.PACKAGE_NAME as packageName,
+		T.PACKAGE_FEE/100 as packageFee,
+		T.MAKE_CARD_REASON as makeCardReason,
+		T.CHANGE_CARD_FEE/100 as changeCardFee,
+		T.IS_INNER_DEDUCT as isInnerDeduct,
+		T.CARD_ISSUE_FEE/100 as cardIssueFee,
+		T.ANNUAL_FEE/100 as annualFee,
+		T.DELIVERY_MEANS as deliveryMeans,
+		T.DELIVERY_FEE/100 as deliveryFee,
+		T.DELIVERY_POINT as deliveryPoint,
+		T6.DELIVERY_POINT_NAME as deliveryPointName,
+		T.ORDER_CONTACT as orderContact,
+		T14.RECIPIENT as orderContactName,
+		T.ORDER_PRIORITY as orderPriority,
+		T.INVOICE_ITEM_ID as invoiceItemId,
+		T.INVOICE_COMPANY_NAME as invoiceCompanyName,
+		T10.INVOICE_COMPANY_NAME as invoiceCompanyNameDis,
+		T.INVOICE_ADDRESSES as invoiceAddresses,
+		T8.INVOICE_ADDRESS as invoiceAddressDis,
+		T.INVOICE_ITEM as invoiceItem,
+		T.INVOICE_DATE as invoiceDate,
+		T.PAYMENT_TERM as paymentTerm,
+		T.PAYMENT_DELAY as paymentDelay,
+		T.PAYMENT_STATE as paymentState,
+		T.PAYMENT_DATE as paymentDate,
+		T.DISCOUNT_FEE/100 as discountFee,
+		T.ADDITIONAL_FEE/100 as additionalFee,
+		T.TOTAL_PRICE/100 as totalPrice,
+		T.ORDER_STATE as orderState,
+		T.ORDER_SOURCE as orderSource,
+		T.REF_ORDER as refOrder,
+		T.EXTERNAL_ID as externalId,
+		T.MEMO as memo,
+		T.ORDER_INFO as orderInfo,
+		T.ACC_TYPE_ID as accTypeId,
+		T9.ACC_TYPE_NAME as accTypeName,
+		T.SERVICE_FEE as serviceFee,
+		T.FORECAST_CREDIT_DATE as forecastCreditDate,
+		T.REAL_CREDIT_DATE as realCreditDate,
+		T.CARD_QUANTITY as cardQuantity,
+		T.REAL_CARD_QUANTITY as realCardQuantity,
+		T.CARD_COMPANY_ID as cardCompanyId,
+		T12.CARD_COMPANY_KEY as cardCompanyKey,
+		T.CREATE_USER as createUser,
+		T11.USER_NAME as createUserName,
+		T.CREATE_TIME as createTime,
+		T.MODIFY_USER as modifyUser,
+		T.MODIFY_TIME as modifyTime,
+		T.DATA_STATE as dataState,
+		T.FACE_VALUE_TYPE as faceValueType,
+		T.FACE_VALUE/100 as faceValue,
+		T.CARD_TYPE as cardType,
+		T.IS_IMPORT_CARD_FILE as isImportCardFile,
+		T.IS_CREATE_CARD_FILE as isCreateCardFile,
+		T.IS_CREATE_PIN_FILE  as isCreatePinFile,
+		T.ORDER_BATCH_CEASE as orderBatchCease,
+		T.ORDER_BATCH_BLOCK as orderBatchBlock,
+		T.SALE_USER_ID      as saleUserId,
+		T13.USER_NAME       as saleUserName
+		FROM
+		TB_ENT_CUSTOMER_ORDER T,
+		TB_ENT_CUSTOMER T1,
+		TB_ENT_PRODUCT T2,
+		TB_ENT_ACCTYPE T9,
+		TB_ENT_ISSUER T3,
+		TB_ENT_CARD_LAYOUT T4,
+		TB_ENT_PACKAGE T5,
+		TB_ENT_DELIVERY_POINT T6,
+		TB_ENT_CONTACT T7,
+		TB_ENT_INVOICE_ADDRESS T8,
+		TB_ENT_INVOICE_COMPANY T10,
+		TB_ENT_USER T11,
+		TB_ENT_CARD_COMPANY T12,
+		TB_ENT_USER T13,
+		TB_ENT_DELIVERY_RECIPIENT T14
+
+		WHERE
+		T.CUSTOMER_ID=T1.CUSTOMER_ID(+)
+		AND T.PRODUCT_ID=T2.PRODUCT_ID(+)
+		AND T.ACC_TYPE_ID=T9.ACC_TYPE_ID(+)
+		AND T.ISSUER_ID=T3.ISSUER_ID(+)
+		AND T.CARD_LAYOUT_ID=T4.CARD_LAYOUT_ID(+)
+		AND T.PACKAGE_ID=T5.PACKAGE_ID(+)
+		AND T.DELIVERY_POINT=T6.DELIVERY_POINT_ID(+)
+		AND T.ORDER_CONTACT=T7.CONTACT_ID(+)
+		AND T.INVOICE_ADDRESSES=T8.INVOICE_ADDRESS_ID(+)
+		AND T.INVOICE_COMPANY_NAME=T10.INVOICE_COMPANY_ID(+)
+		AND T.CREATE_USER=T11.USER_ID(+)
+		AND T.CARD_COMPANY_ID=T12.CARD_COMPANY_ID(+)
+		AND T.SALE_USER_ID=T13.USER_ID(+)
+		AND T.ORDER_CONTACT=T14.RECIPIENT_ID(+)
+		AND T.ORDER_ID=#orderId#
+	</select>
+
+
+	<select id="selectOrderList" resultClass="java.util.HashMap"
+		parameterClass="com.huateng.accorecard.customerorder.dto.CustomerOrderListQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T1.ORDER_LIST_ID as "orderListId",
+		T1.ORDER_ID as "orderId",
+		T1.CARDHOLDER_ID as "cardholderId",
+		T1.CARDHOLDER_NAME as "cardholderName",
+		T1.EXTERNAL_ID as "externalId",
+		T1.CARD_STATE as "cardState",
+		T1.CREDIT_PRICE/100 as "creditPrice",
+		T1.CARD_LAYOUT_ID as "cardlayoutId",
+		T2.CARD_NAME as "cardLayoutName",
+		T1.FACE_VALUE_TYPE as "faceValueType",
+		T1.FACE_VALUE/100 as "faceValue",
+		T1.VALIDITY_PERIOD as "validityPeriod",
+		T1.CARD_AMOUNT as "cardAmount",
+		T1.REAL_AMOUNT as "realAmount",
+		T1.CARD_ISSUE_FEE/100 as "cardIssueFee",
+		T1.CARD_NO as "cardNo",
+		T1.CARD_PIN_STATE as "cardPinState",
+		T1.LEG_CARD_NO as "legCardNo",
+		T1.PACKAGE_FEE/100 as "packageFee"
+		from
+		TB_ENT_ORDER_LIST T1,
+		TB_ENT_CARD_LAYOUT T2
+		where
+		T1.CARD_LAYOUT_ID=t2.CARD_LAYOUT_ID(+)
+		and
+		T1.ORDER_ID = #orderId:DECIMAL#
+		and
+		T1.DATA_STATE = 1
+		<dynamic>
+			<isNotEmpty prepend="and" property="externalId">
+				EXTERNAL_ID = #externalId:VARCHAR#
+      </isNotEmpty>
+
+			<isNotEmpty prepend="and" property="cardholderName">
+				CARDHOLDER_NAME like '%'||#cardholderName:VARCHAR#||'%'
+      </isNotEmpty>
+
+		</dynamic> order by T1.CARD_NO asc
+		<include refid="Commons.suffixSql" />
+	</select> -->
+	<!-- 根据包条形码查询包卡片信-->
+	<!-- <select id="selectCardByPackageBarCode" resultClass="com.huateng.accorecard.stock.dto.StockCardDTO"
+		parameterClass="com.huateng.accorecard.stock.dto.StockCardDTO"
+		remapResults="true">
+		SELECT
+			T1.PACKAGE_BARCODE as packageBarcode,
+			T1.CARD_NO as cardNo,
+			T2.PRODUCT_ID as productId,
+			T2.CARD_LAYOUT_ID as cardLayout,
+			T2.FACE_VALUE_TYPE as faceValueType,
+			T2.FACE_VALUE as faceValue,
+			T2.CARD_VALID_DATE as cardValidDate
+		FROM
+			TB_ENT_CARD_PACKAGE T,
+			TB_REL_PACKAGE_CARD T1,
+			TB_ENT_ISSUER_STOCK T2
+		WHERE
+			T.PACKAGE_BARCODE=T1.PACKAGE_BARCODE
+		AND T1.CARD_NO = T2.CARD_NO
+		AND T.BARCODE_STATE=1
+		AND T.PACKAGE_BARCODE=#packageBarcode:VARCHAR#
+		AND T2.ISSUER_ID= #defaultIssuerId:DECIMAL#
+  </select>-->
+
+	<!-- 
+	<select id="selectOrderPackageList" resultClass="java.util.HashMap"
+		parameterClass="com.huateng.accorecard.customerorder.dto.OrderPackageQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT
+		T.ORDER_ID as "orderId",
+		T.PACKAGE_BARCODE as "packageBarcode"
+		FROM TB_REL_ORDER_PACKAGE T
+		WHERE
+		T.ORDER_ID = #orderId:DECIMAL#
+		AND
+		T.DATA_STATE = 1
+		<include refid="Commons.suffixSql" />
+	</select>
+	 -->
+	<!-- 查询订单库存 -->
+	<!--<select id="selectIssuerStock" resultClass="java.util.HashMap"
+		parameterClass="com.huateng.accorecard.stock.dto.StockQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT T1.CARD_LAYOUT_ID as "cardLayoutId",
+		T2.CARD_NAME as "cardName",
+		T1.FACE_VALUE_TYPE as "faceValueType",
+		T1.FACE_VALUE/100 as "faceValue",
+		to_char(T1.CARD_VALID_DATE,'yyyy-MM-dd') as "cardValidDate",
+		COUNT(*) as "countRecord"
+		FROM TB_ENT_ISSUER_STOCK T1,
+		TB_ENT_CARD_LAYOUT T2
+		WHERE
+		T1.DATA_STATE=1
+		AND T1.CARD_STOCK_STATE=2
+		AND T1.CARD_LAYOUT_ID = T2.CARD_LAYOUT_ID
+		AND T1.ISSUER_ID = #issuerId:DECIMAL#
+		AND T1.PRODUCT_ID = #productId:DECIMAL#
+		GROUP BY T1.CARD_LAYOUT_ID,
+		T2.CARD_NAME,
+		T1.FACE_VALUE_TYPE ,
+		T1.FACE_VALUE,
+		T1.CARD_VALID_DATE
+		<include refid="Commons.suffixSql" />
+	</select>
+ -->
+	<!-- 查询客户订单持卡人信�?-->
+	<!--<select id="selectCardholder" resultClass="java.util.HashMap"
+		parameterClass="com.huateng.accorecard.customerorder.dto.CardholderQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT DISTINCT
+		T2.CARDHOLDER_ID as "cardholderId",
+		T2.CARDHOLDER_NAME as "cardholderName",
+		T2.EXTERNAL_ID as "externalId",
+		T2.MOBILE as "mobile",
+		T2.SEGMENT as "segment"
+		<isEqual property="productExistFlag" compareValue="2">
+			,T3.CARD_NO as "cardNo"
+		</isEqual>
+		FROM
+		TB_ENT_CUSTOMER T1,
+		TB_ENT_CARDHOLDER T2,
+		TB_ENT_CARDHOLDER_CARDLIST T3
+		WHERE
+		T1.CUSTOMER_ID = T2.CUSTOMER_ID(+)
+		AND T2.CARDHOLDER_ID=T3.CARDHOLDER_ID(+)
+		AND T2.DATA_STATE=1
+		<isEqual property="productExistFlag" compareValue="0">
+		AND T2.CARDHOLDER_ID  NOT IN (SELECT DISTINCT  T4.CARDHOLDER_ID
+          	  							FROM TB_ENT_CARDHOLDER_CARDLIST T4
+         							WHERE 
+         								T4.PRODUCT_ID = #productId:DECIMAL#
+           							AND T4.CARD_STATE != 0)
+ 		 </isEqual>
+		<isEqual property="productExistFlag" compareValue="1">
+			AND T3.PRODUCT_ID=#productId:DECIMAL#
+			AND T3.CARD_STATE != 0
+ 		 </isEqual>
+		<isEqual property="productExistFlag" compareValue="2">
+			AND T3.PRODUCT_ID=#productId:DECIMAL#
+			AND T3.CARD_STATE =9
+ 		 </isEqual>
+		AND T1.CUSTOMER_ID=#customerId:DECIMAL#
+		AND T2.CARDHOLDER_ID NOT IN (SELECT T4.CARDHOLDER_ID FROM
+		TB_ENT_ORDER_LIST T4 WHERE T4.ORDER_ID=#orderId:DECIMAL# )
+
+		<isNotEmpty prepend="and" property="externalId">
+			T2.EXTERNAL_ID=#externalId:DECIMAL#
+ 		</isNotEmpty>
+
+		<isNotNull prepend="and" property="departmentId">
+			T2.DEPARTMENT_ID=#departmentId:DECIMAL#
+ 		</isNotNull>
+		<isNotEmpty prepend="and" property="cardholderName">
+			T2.CARDHOLDER_NAME=#cardholderName:VARCHAR#
+ 		</isNotEmpty>
+		<isNotNull prepend="and" property="segment">
+			T2.SEGMENT=#segment:DECIMAL#
+ 		</isNotNull>
+		<include refid="Commons.suffixSql" />
+	</select>
+-->
+
+	<!-- 查询持卡人持卡信息列�?-->
+	<!--<select id="selectCardholderCardlist"
+		parameterClass="com.huateng.accorecard.customerorder.dto.CardholderQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+				SELECT	T2.CUSTOMER_NAME as "customerName",
+						T1.CARDHOLDER_ID as "cardholderId",
+						T1.CARDHOLDER_NAME as "cardholderName",
+						T1.EXTERNAL_ID as "externalId",
+						T3.CARD_NO     as "cardNo"
+				FROM 	TB_ENT_CARDHOLDER T1,
+						TB_ENT_CUSTOMER T2,
+						TB_ENT_CARDHOLDER_CARDLIST T3
+				WHERE
+						T1.CUSTOMER_ID=T2.CUSTOMER_ID
+				AND 	T1.CARDHOLDER_ID=T3.CARDHOLDER_ID
+				AND 	T3.CARD_STATE=9
+			<dynamic>
+				<isNotNull prepend="and" property="defaultIssuerId">
+					T2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+				</isNotNull>
+				<isNotEmpty prepend="and" property="customerName">
+					T2.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="externalId">
+					T1.EXTERNAL_ID =  #externalId:VARCHAR#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="cardNo">
+					T3.CARD_NO = #cardNo:VARCHAR#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="cardholderName">
+					T1.CARDHOLDER_NAME like '%'||#cardholderName:VARCHAR#||'%'
+				</isNotEmpty>
+			</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	-->
+	<!-- 根据卡号查询该卡出库订单 -->
+	
+	<!-- <select id="getCustomerOrderByCardNo"
+		parameterClass="java.util.Map"
+		resultClass="java.util.HashMap" remapResults="true">
+			SELECT  
+					T1.ORDER_ID as "orderId"  
+			FROM 	
+					TB_ENT_ORDER_CARD_LIST T1 ,
+					TB_ENT_CUSTOMER_ORDER T2
+			WHERE 	T1.ORDER_ID=T2.ORDER_ID
+			AND     T2.ORDER_STATE=32
+			AND 	T1.CARD_NO=#cardNo:VARCHAR#
+			AND 	T2.ORDER_TYPE IN ($orderType$)
+	</select>
+	
+	<select id="getCardholderId" parameterClass="com.huateng.accorecard.customerorder.dto.CardholderQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+			SELECT 
+					T1.CARDHOLDER_ID as "cardholderId"
+  			FROM 
+  					TB_ENT_CARDHOLDER T1,
+  					TB_ENT_CARDHOLDER_CARDLIST T2
+ 			WHERE 
+ 					T1.CARDHOLDER_ID = T2.CARDHOLDER_ID
+ 			AND		T2.CARD_STATE != 0
+ 			<dynamic>
+ 				<isNotNull prepend="and" property="cardholderId">
+	   				T1.CARDHOLDER_ID=#cardholderId:DECIMAL#
+	   			</isNotNull>
+	 			<isNotNull prepend="and" property="customerId">
+	   				T1.CUSTOMER_ID=#customerId:DECIMAL#
+	   			</isNotNull>
+	   			<isNotNull prepend="and" property="productId">
+   					T2.PRODUCT_ID=#productId:DECIMAL#
+   				</isNotNull>
+   				<isNotNull prepend="and" property="externalId">
+   					T1.EXTERNAL_ID =#externalId:VARCHAR#
+   				</isNotNull>
+   				<isNull prepend="and" property="externalId">
+   					T1.EXTERNAL_ID IS NULL
+   				</isNull>
+   				<isNotNull prepend="and" property="cardholderName">
+   					T1.CARDHOLDER_NAME =#cardholderName:VARCHAR#
+   				</isNotNull>
+   			</dynamic>
+	</select>
+	
+	<select id="queryPackageBarcode" parameterClass="com.huateng.accorecard.customerorder.dto.OrderPackageQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+			select 
+					t1.package_barcode as "packageBarcode",
+       				t1.product_name as "productName",
+       				t1.face_value / 100 as "faceValue",
+       				t1.card_valid_date as "cardValidDate",
+       				t1.card_amount as "cardAmount",
+       				t1.card_type as "cardType"
+  			from 
+  					tb_ent_card_package t1, 
+  					tb_rel_order_package t2
+ 			where 
+ 					t1.package_barcode = t2.package_barcode
+ 			<dynamic>
+ 				<isNotNull prepend="and" property="orderId">
+	   				t2.order_id = #orderId:DECIMAL#
+	   			</isNotNull>
+   				<isNotEmpty prepend="and" property="packageBarcode">
+   					t1.package_barcode =#packageBarcode:VARCHAR#
+   				</isNotEmpty>
+   			</dynamic>
+   		<include refid="Commons.suffixSql" />
+  </select> 
+  -->
+  <!-- 凭证打印查询售卡订单信息 -->
+  <select id="querySellOrderForCertPrint" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+  	 select ord.order_id as "orderId",
+  	 	ord.order_type as "orderType",
+        to_char(to_date(ord.ORDER_DATE, 'yyyyMMdd'), 'yyyy-MM-dd') as "orderDate",
+        ord.order_state as "orderState",
+        prod.product_name as "productName",
+        ord.total_price / 100 as "totalPrice",
+        ord.card_quantity as "cardQuantity",
+        ord.face_value / 100 as "faceValue",
+        seller.seller_name as "processEntityName",
+        cus.customer_name as "firstEntityName",
+        cus.customer_address as "invoiceAddresses",
+        cus.customer_telephone as "cusContactWay",
+        ord.package_fee / 100 as "packageFee",
+        (ord.card_issue_fee * ord.card_quantity) / 100 as "cardIssueFee",
+        (ord.annual_fee * ord.card_quantity) / 100 as "annualFee",
+        ord.delivery_fee / 100 as "deliveryFee",
+        ord.additional_fee / 100 as "additionalFee",
+        ord.discount_fee / 100 as "discountFee",
+        bcStatement.dict_name as "buyStatement",
+        ord.contact_id as "contactId",
+        ord.service_fee as "serviceFee",
+        ord.payment_amount/100 as "paymentAmount"
+   from tb_sell_order       ord,
+        tb_customer         cus,
+        tb_seller           seller,
+        tb_product          prod,
+        tb_entity_dict_info bcStatement
+  where prod.product_id = ord.product_id
+    and cus.entity_id = ord.first_entity_id
+    and seller.entity_id = ord.process_entity_id
+    and bcStatement.entity_id = ord.process_entity_id
+    and bcStatement.dict_type_code = '111'
+    and ord.order_id = #orderId:VARCHAR#
+  </select>
+  
+   <!--打印凭证查询充值订单基本信息-->
+  <select id="queryCreditOrderForCertPrint" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+   select t1.order_id as "orderId",
+           t1.order_type as "orderType",
+           to_char(to_date(t1.ORDER_DATE, 'yyyyMMdd'), 'yyyy-MM-dd') as "orderDate",
+           t1.order_state as "orderState",
+           t1.data_state as "dataState",
+           t4.product_name as "productName",
+           t1.total_price/100 as "totalPrice",
+           t1.service_fee as "serviceFee",
+           t1.card_quantity as "cardQuantity",
+           t3.seller_name as "processEntityName",
+           t2.customer_name as "firstEntityName",
+           t2.customer_address as "invoiceAddresses",
+           t2.customer_telephone as "cusContactWay",
+           t5.dict_name as "buyStatement",
+           t1.contact_id as "contactId",
+			t1.payment_amount/100 as "paymentAmount"
+    from tb_sell_order t1,
+         tb_customer t2,
+         tb_seller t3,
+         tb_product t4,
+         tb_entity_dict_info t5
+    where t1.product_id=t4.product_id
+      and t1.first_entity_id=t2.entity_id
+      and t1.process_entity_id=t3.entity_id
+      and t1.process_entity_id=t5.entity_id
+      and t5.dict_type_code='113'
+      and t1.order_id = #orderId:VARCHAR#  
+  </select>
+  <!--打印凭证查询换卡订单基本信息-->
+  <select id="queryCCOrderForCertPrint" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+  	select 
+		ord.order_id as "orderId",
+		ord.order_type as "orderType",
+		to_char(to_date(ord.ORDER_DATE,'yyyyMMdd'),'yyyy-MM-dd') as "orderDate",
+		ord.order_state as "orderState",
+		ord.total_price/100 as "totalPrice",
+		ord.card_quantity as "cardQuantity",
+		seller.seller_name as "processEntityName",
+		cus.customer_name as "firstEntityName",
+		cus.customer_address as "invoiceAddresses",
+		cus.customer_telephone as "cusContactWay",
+		ord.origcard_totalamt/100 as "origCardTotalAmt",
+		ord.newcard_totalamt/100 as "newCardTotalAmt",
+		ord.origcard_quantity as "origCardQuantity",
+		ord.additional_fee/100 as "additionalFee",
+		bcStatement.dict_name as "buyStatement",
+		ord.contact_id as "contactId",
+		ord.payment_amount/100 as "paymentAmount"
+	from 
+		tb_sell_order ord,
+		tb_customer cus,
+		tb_seller seller,
+		tb_entity_dict_info bcStatement
+	where
+		ord.first_entity_id=cus.entity_id
+		and
+		ord.process_entity_id=seller.entity_id
+		and
+		bcStatement.entity_id=ord.process_entity_id
+		and
+		bcStatement.dict_type_code='112'
+		and
+		ord.order_id=#orderId:VARCHAR#
+  </select>
+  
+  <select id="getTotalCreditAmount" parameterClass="java.lang.String" resultClass="java.lang.String">
+  	select sum(credit_amount)/100 from tb_sell_order_card_list where order_id=#orderId:VARCHAR# and data_state='1'  	
+  </select>
+  <select id="getCreditAmountSection" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.seller.order.dto.CardNoSectionDTO">
+  	select t1.credit_amount as "faceValue",count(*) as "cardQuantity" from tb_sell_order_card_list t1,tb_sell_order t2 
+	where t1.order_id=t2.order_id  
+	and t2.order_id=#orderId:VARCHAR# and t1.data_state='1' and t2.data_state='1' group by t1.credit_amount
+  	
+  </select>
+</sqlMap>

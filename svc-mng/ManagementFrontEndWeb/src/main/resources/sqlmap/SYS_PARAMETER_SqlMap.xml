@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TERPARAMETER">
+ 	<select id="selecTerparameter" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.consumer.pos.dto.PosParameterQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+			   select
+			   		t.PRM_VERSION  as "prmVersion",
+			   	    t.prm_id   as "prmId",
+  					t.prm_type   as "prmType",
+   					t.prm_name   as "prmName",
+ 					t.prm_val    as "prmValue",
+   					decode(t.prm_stat,'1','无效','有效')   as "prmState"
+ 				from tb_pos_parameter t 
+			where 1=1
+			and t.prm_type in ('10001','10002','10003')
+			and t.CONSUMER_ID=#defaultEntityId:VARCHAR#
+		<dynamic>
+			<isNotEmpty prepend="and" property="prmId">
+					 t.prm_id =#prmId:INTEGER#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="prmType">
+					 t.prm_type =#prmType:INTEGER#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="prmName">
+					 UPPER(t.prm_name) like UPPER('%'||#prmName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="prmStat">
+					 t.prm_stat =#prmStat:INTEGER#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="prmVersion">
+					 t.PRM_VERSION=#prmVersion:INTEGER#
+			</isNotEmpty>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="selectVersion1" resultClass="java.util.HashMap"	 parameterClass="com.allinfinance.univer.consumer.pos.dto.PosInfoDTO"	remapResults="true">
+		select t.prm_version as "prmVersion"
+		from tb_pos_parameter t 
+		where t.prm_type=10001
+		and t.CONSUMER_ID=#defaultEntityId:VARCHAR# 
+		group by t.prm_version
+	</select>
+	
+	<select id="selectVersion2" resultClass="java.util.HashMap"	parameterClass="com.allinfinance.univer.consumer.pos.dto.PosInfoDTO"	remapResults="true">
+		select t.prm_version as "prmVersion"
+		from tb_pos_parameter t 
+		where t.prm_type=10002
+		and t.CONSUMER_ID=#defaultEntityId:VARCHAR# 
+		group by t.prm_version
+	</select>
+	
+	<select id="selectVersion3" resultClass="java.util.HashMap"	parameterClass="com.allinfinance.univer.consumer.pos.dto.PosInfoDTO"	remapResults="true">
+		select t.prm_version as "prmVersion"
+		from tb_pos_parameter t 
+		where t.prm_type=10003
+		and t.CONSUMER_ID=#defaultEntityId:VARCHAR# 
+		group by t.prm_version
+	
+	</select>
+	<insert id="insert_default" parameterClass="com.huateng.framework.ibatis.model.PosParamenter" >
+    insert into TB_POS_PARAMETER (PRM_ID, PRM_TYPE, PRM_VERSION, PRM_STAT, PRM_NAME, PRM_DESC,
+      PRM_VAL, PRM_LEN,CONSUMER_ID)
+     select PRM_ID,PRM_TYPE,PRM_VERION,PRM_STAT,PRM_NAME,PRM_DESC,PRM_VAL,PRM_LEN,#consumerId:VARCHAR# from TB_POS_PARAMETER_DEFAULT
+  </insert>
+</sqlMap>
