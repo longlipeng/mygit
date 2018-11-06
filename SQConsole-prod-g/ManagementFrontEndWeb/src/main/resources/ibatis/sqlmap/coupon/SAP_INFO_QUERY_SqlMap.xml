@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SAP_INFO_QUERY">
+
+	<select id="querySapInfoForPage" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.svc.coupon.dto.SapInfoQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT
+		ID as "id",
+		TRANS_TYPE as "transType",
+		TRANS_SEQ as "transSeq",
+		TRANS_DT as "transDt",
+		TRANS_COMPANY as "transCompany",
+		PAYMENT as "payment",
+		AMOUNT as "amount",
+		RATE_AMOUNT as "rateAmount",
+		RE_AMOUNT as "reAmount",
+		VENDOR as "vendor",
+		SALE_COMPANY as "saleCompany",
+		SERVICE_TYPE as "serviceType",
+		SERVICE_SUBTYPE as "serviceSubtype",
+		PUB_PVT_INT_FLAG as "pubPvtIntFlag",
+		DOC_NO as "docNo",
+		CURRENCY_CODE as "currencyCode",
+		PAYMT_TYPE as "paymtType",
+		PAYMT_FLAG as "paymtFlag",
+		NEED_RECEIPT as "needReceipt",
+		FLAG as "flag",
+		CREATED_TIME as "createdTime",
+		UPDATED_TIME as "updatedTime"
+		FROM
+		TBL_SAP_INFO
+		WHERE 1=1
+		<dynamic>
+			<isNotEmpty prepend="and" property="transType">
+				TRANS_TYPE = #transType:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="transDt">
+				TRANS_DT = #transDt:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="transCompany">
+				TRANS_COMPANY = #transCompany:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="vendor">
+				VENDOR = #vendor:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="payment">
+				PAYMENT = #payment:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="flag">
+				FLAG = #flag:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<sql id="selectAccountingRecords">
+		SELECT * FROM
+		TBL_SAP_INFO
+		WHERE
+		FLAG = '0' or
+		(FLAG = '1' and UPDATED_TIME &lt; #lastUpdatedTime:TIMESTAMP#)
+	</sql>
+
+	<select id="countAccountingRecords" resultClass="java.lang.Long"
+		parameterClass="java.util.HashMap">
+		SELECT count(*) FROM (
+			<include refid="selectAccountingRecords" />
+		)
+	</select>
+
+	<select id="selectAccountingRecordsForPage" resultMap="TBL_SAP_INFO.abatorgenerated_SapInfoResult"
+		parameterClass="java.util.HashMap">
+		SELECT * FROM (
+			SELECT row_.*, rownum as rownum_ FROM (
+					<include refid="selectAccountingRecords" />
+				)row_
+		) WHERE rownum_ >= #firstCursorPosition# and rownum_ &lt;= #lastCursorPosition#
+	</select>
+
+</sqlMap>

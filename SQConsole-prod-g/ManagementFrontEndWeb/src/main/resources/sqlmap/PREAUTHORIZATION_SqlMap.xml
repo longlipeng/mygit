@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PREAUTHORIZATION">
+	<select id="selectPreAuthorization" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.huateng.accor.phoneplace.dto.PreAuthorizationQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select 
+			T1.PRE_AUTHORIZATION_ID as "preAuthorizationId",
+			T1.CARD_NO as "cardNo", 
+			T1.CARDHOLDER_NAME as "cardholderName", 
+			T1.CARDHOLDER_PHONE as "cardholderPhone",
+			T1.MERCHANT_ID as "merchantId", 
+			T2.MERCHANT_NAME as"merchantName", 
+			T1.PRE_AUTHORIZATION_Code as"preAuthorizationCode",
+			T1.PRE_AUTHORIZATION_AMOUNT as"preAuthorizationAmount", 
+			T1.PRE_AUTHORIZATION_STATE as "preAuthorizationState", 
+			T1.MODIFY_TIME as"modifyTime", 
+			T3.USER_NAME as "modifyUser" 
+		from
+			TB_ENT_PRE_AUTHORIZATION T1, 
+			TB_ENT_MERCHANT T2,
+			TB_ENT_USER T3
+		where
+			T1.MERCHANT_ID=T2.MERCHANT_ID 
+		and 
+			T1.DATA_STATE='1'
+		and
+			T1.MODIFY_USER=T3.USER_ID
+		<dynamic>
+			<isNotEmpty property="cardNo" prepend="and">
+				T1.CARD_NO like '%'||#cardNo:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="preAuthorizationCode" prepend="and">
+				T1.PRE_AUTHORIZATION_CODE=#preAuthorizationCode:varchar#
+			</isNotEmpty>
+			<isNotEmpty property="merchantId" prepend="and">
+				T1.MERCHANT_ID like '%'||#merchantId:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty property="merchantName" prepend="and">
+				T2.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotNull property="preAuthorizationState" prepend="and">
+				T1.PRE_AUTHORIZATION_STATE=#preAuthorizationState:DECIMAL#
+			</isNotNull>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	  <select id="selectMerchantByDTO" parameterClass="com.huateng.accor.merchant.dto.MerchantQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select distinct
+        T1.MERCHANT_GROUP_ID as "merchantGrpId",
+        T2.MERCHANT_GRP_NAME as "merchantGrpName",
+        T1.MERCHANT_ID as "merchantId",
+        T1.MERCHANT_NAME as "merchantName",
+        T1.ENGLISH_NAME as "englishName",
+        T1.EXTERNAL_ID as "externalId",
+        T3.ISSUER_NAME as "issuerName",
+        decode(T1.STATE,'1','有效','0','无效') as "state"
+    from
+        TB_ENT_MERCHANT T1,
+        TB_ENT_MERCHANT_GROUP T2,
+        TB_ENT_ISSUER T3,
+        TB_ENT_MCHNT_ACCTYPE_CONTRACT T4,
+        TB_REL_CARD_ACCOUNT T5
+    where
+        T2.MERCHANT_GRP_ID(+) = T1.MERCHANT_GROUP_ID
+        AND T3.ISSUER_ID = T1.ISSUER_ID
+        AND T1.DATA_STATE = '1'
+        AND T2.DATA_STATE(+) = '1'
+        AND T3.DATA_STATE = '1'
+        AND T5.ACC_TYPE=T4.ACC_TYPE_ID
+        AND T1.MERCHANT_ID=T4.MERCHANT_ID
+    <dynamic>
+      <isNotEmpty prepend="and" property="merchantGrpId">
+        T1.MERCHANT_GROUP_ID = #merchantGrpId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantGrpName">
+        T2.MERCHANT_GRP_NAME like '%'||#merchantGrpName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantId">
+        T1.MERCHANT_ID = #merchantId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        T1.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotNull prepend="and" property="issuerId">
+        T1.ISSUER_ID = #issuerId:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="and" property="externalId">
+        T1.EXTERNAL_ID= #externalId:VARCHAR#
+      </isNotEmpty>
+      <isNotNull prepend="and" property="state">
+        T1.STATE = #state:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="and" property="cardNo">
+      	T5.CARD_NO = #cardNo:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

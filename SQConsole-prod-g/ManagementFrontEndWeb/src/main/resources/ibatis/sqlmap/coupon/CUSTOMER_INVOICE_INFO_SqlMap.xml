@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CUSTOMER_INVOICE_INFO">
+	<select id="selectCustomerInvoiceInfo" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.svc.coupon.dto.CustomerInvoiceInfoQueryDTO" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT I.ID as "id",
+		C.CUSTOMER_NAME as "customerName",
+		C.CUSTOMER_CODE as "customerCode",
+		I.CUSTOMER_ENTITY_ID as "customerEntityId",
+		I.FATHER_ENTITY_ID as "fatherEntityId",
+		I.TAX_CODE as "taxCode",
+		I.INVOICE_TYPE as "invoiceType",
+		I.INVOICE_ITEM as "invoiceItem",
+		I.TAKER_NAME as "takerName",
+		I.BRANCH_BANK_NAME as "branchBankName",
+		I.COMPANY_NAME as "companyName"
+		FROM TB_CUSTOMER_INVOICE_INFO I
+		LEFT JOIN TB_CUSTOMER C
+		ON C.ENTITY_ID = I.CUSTOMER_ENTITY_ID
+		AND
+		C.FATHER_ENTITY_ID = I.FATHER_ENTITY_ID
+		WHERE 1=1
+		<dynamic>
+			<isNotEmpty prepend="and" property="customerCode">
+				I.CUSTOMER_ENTITY_ID = #customerCode:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="customerName">
+				C.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="companyName">
+				I.COMPANY_NAME like '%'||#companyName:VARCHAR#||'%'
+			</isNotEmpty>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="selectCustomerInvoiceInfoById" resultClass="com.allinfinance.svc.coupon.dto.CustomerInvoiceInfoDTO"
+		parameterClass="java.lang.Long">
+		SELECT
+		C.CUSTOMER_NAME as"customerName",
+		C.CUSTOMER_CODE as "customerCode",
+		C.CUSTOMER_ADDRESS as "customerAddress",
+		C.CUSTOMER_POSTCODE as "customerPostcode",
+		C.CUSTOMER_TELEPHONE as "customerTelephone",
+		C.CUSTOMER_FAX as "customerFax",
+		C.LICENSE_ID as "licenseId",
+		C.REGI_CAPITAL as"regiCapital",
+		C.LICENSE_STA_VALIDITY as "licenseStaValidity",
+		C.LICENSE_END_VALIDITY as "licenseEndValidity",
+		C.CORP_NAME as "corpName",
+		C.CORP_CRED_ID as "corpCredId",
+		I.ID as "id",
+		I.CUSTOMER_ENTITY_ID as "customerEntityId",
+		I.FATHER_ENTITY_ID as "fatherEntityId",
+		I.COMPANY_NAME as "companyName",
+		I.INVOICE_ITEM as "invoiceItem",
+		I.ADDRESS_TEL as "addressTel",
+		I.TAX_TYPE_CODE as "taxTypeCode",
+		I.TAX_TYPE_DESC as "taxTypeDesc",
+		I.TAX_CODE as "taxCode",
+		I.TAX_NO_TYPE as "taxNoType",
+		I.REG_ADDRESS as "regAddress",
+		I.INVOICE_TYPE as "invoiceType",
+		I.TAKER_ADDRESS as "takerAddress",
+		I.BRANCH_BANK_NAME as "branchBankName",
+		I.BANK_ACCT_CODE as "bankAcctCode",
+		I.TAKER_NAME as "takerName",
+		I.TAKER_TEL as "takerTel",
+		I.TAKER_DEPT as "takerDept",
+		I.PAYMENT_TYPE_DESC as "paymentTypeDesc",
+		I.CITY_POST_CODE as "cityPostCode",
+		I.MAIL_BOX as "mailBox",
+		I.CO_TYPE_CODE as "coTypeCode"
+		FROM TB_CUSTOMER_INVOICE_INFO I
+		LEFT JOIN TB_CUSTOMER C
+		ON C.ENTITY_ID = I.CUSTOMER_ENTITY_ID
+		AND
+		C.FATHER_ENTITY_ID = I.FATHER_ENTITY_ID
+		WHERE
+		I.ID = #id:BIGINT#
+	</select>
+</sqlMap>

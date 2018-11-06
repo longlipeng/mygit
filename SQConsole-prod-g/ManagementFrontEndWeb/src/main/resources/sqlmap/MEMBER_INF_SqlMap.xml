@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MEMBER_INF">
+<select id="selectAllMember" parameterClass="com.allinfinance.univer.seller.member.MemberQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+  	<include refid="Commons.prefixSql"/>
+  	 select  T1.REAL_NM as "memName",
+      T1.EMAIL as "memEmail",
+      T1.SEX as "memGener",
+      T1.BIRTHDAY as "memBirthday",
+      decode(T1.CERT_TP,'00','身份证','01','护照','10','出生证','11','工作证') as "certTp",
+      T1.CERT_NO as "certNo",
+      T1.MOBILE as "mobile",
+      T1.REG_CARD_TP as "regCardTp",
+      to_char(T1.REC_CRT_TS,'yyyy/MM/dd HH:mm:ss') as "creatDate"
+       from TBL_HSA_USER_INF T1 
+       	where 
+        t1.user_id in (select user_id from tbl_hsa_user_card_rlt t2 where t2.ISS_INS_CD =#entityId# 
+        	<isNotEmpty property="cardNo" prepend="and">
+      			t2.card_no=#cardNo#
+      			</isNotEmpty>
+            )
+  		<dynamic>
+      			<isNotEmpty property="realNm" prepend="and">
+      			T1.REAL_NM=#realNm#
+      			</isNotEmpty>
+      			<isNotEmpty property="email" prepend="and">
+  					T1.EMAIL =#email#
+  				</isNotEmpty>
+  				<isNotEmpty property="certTp" prepend="and">
+  					T1.CERT_TP=#certTp#
+  				</isNotEmpty>
+  				<isNotEmpty property="certNo" prepend="and">
+      				T1.CERT_NO =#certNo#
+      			</isNotEmpty>
+      			<isNotEmpty property="mobile" prepend="and">
+      				T1.MOBILE=#mobile#
+      			</isNotEmpty>
+      			<isNotEmpty property="corpNm" prepend="and">
+      				T1.CORP_NM=#corpNm#
+      			</isNotEmpty>
+      			
+      			<isNotEmpty property="regCardTp" prepend="and">
+      				T1.REG_CARD_TP=#regCardTp#
+      			</isNotEmpty>
+  		</dynamic>
+  		
+  	<include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectMemberDetail" parameterClass="com.allinfinance.univer.seller.member.MemberQueryDTO" resultClass="com.allinfinance.univer.seller.member.MemberQueryDTO">
+  	 select
+  	    T1.USER_ID as "userId",
+  		T1.REAL_NM as "realNm",
+  		T1.EMAIL as "email",
+  		T1.SEX as "sex",
+  		T1.BIRTHDAY as "birthday",
+  		decode(T1.CERT_TP,'00','身份证','01','护照','10','出身证','11','工作证') as "certTp",
+  		T1.CERT_NO as "certNo",
+  		T1.MOBILE as "mobile",
+  		T1.REG_CARD_TP as "regCardTp",
+  		to_char(T1.REC_CRT_TS,'yyyy/MM/dd HH:mm:ss') as  "recCrtTs",
+  		T1.NICK_NM as "nickNm",
+        T1.ADDRESS as "address",
+        T1.ZIP_CD as "zipCd", 
+        T1.CORP_NM as "corpNm",
+        T1.CORP_ADDR as "corpAddr", 
+        T1.CORP_ZIP_CD as "corpZipCd", 
+        T1.CORP_TEL as "corpTel",
+        T1.RCV_IN as "rcvIn"
+  	from
+  		TBL_HSA_USER_INF T1
+  	where 1=1
+  		<dynamic>
+      			<isNotEmpty property="email" prepend="and">
+  					T1.EMAIL =#email#
+  				</isNotEmpty>
+
+  		</dynamic>
+ 
+  </select>
+<select id="selectMemberRltCard" parameterClass="com.allinfinance.univer.seller.member.MemberQueryDTO" resultClass="com.allinfinance.univer.seller.member.MemberQueryDTO">
+  	 select
+  	    T1.USER_ID as "userId",
+  		T1.CARD_NO as "cardNo",
+  		T1.CARD_NM as "productNm"
+  	from
+  		TBL_HSA_USER_CARD_RLT T1
+  	where 1=1
+  		<dynamic>
+      			<isNotEmpty property="userId" prepend="and">
+  					T1.USER_ID =#userId#
+  				</isNotEmpty>
+
+  		</dynamic>
+ 
+  </select>
+
+</sqlMap>

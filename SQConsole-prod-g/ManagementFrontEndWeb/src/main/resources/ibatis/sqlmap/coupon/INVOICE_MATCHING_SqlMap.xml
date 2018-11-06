@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="INVOICE_MATCHING">
+	<select id="queryInvoiceRequire" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto">
+		<include refid="Commons.prefixSql" />
+			select o.ID as "id",o.FATHER_ENTITY_ID as "fatherEntityId",o.CUSTOMER_ENTITY_ID as "entityId",e.CUSTOMER_NAME as "customerName", 
+            d.BANK_ACCT_CODE as "bankAcctCode",d.TAX_CODE as "taxCode",d.INVOICE_TYPE as "invoiceType",o.CREATED_TIME as "createTime",
+            case when c.AMOUNT is null then o.WAIT_AMOUNT  else o.WAIT_AMOUNT-c.AMOUNT end  as "amount"
+			from TB_INVOICE_REQUIREMENT o left join  
+            (select  a.INVOICE_REQUIRE_ID ,sum(a.amount) amount 
+            from TB_INVOICE_REQUIREMENT_TEMP a  
+            left join TB_INVOICE_TEMP b
+            on a.INVOICETMP_ID = b.id
+            where b.SETTLEMENT_ID= #settlementId:BIGINT#
+            group by a.INVOICE_REQUIRE_ID ) c on o.id = c.INVOICE_REQUIRE_ID 
+            left join TB_CUSTOMER_INVOICE_INFO d on d.FATHER_ENTITY_ID = o.FATHER_ENTITY_ID and d.CUSTOMER_ENTITY_ID = o.CUSTOMER_ENTITY_ID
+            left join TB_CUSTOMER  e on e.ENTITY_ID = o.CUSTOMER_ENTITY_ID and e.FATHER_ENTITY_ID = o.FATHER_ENTITY_ID
+            where o.status = '0'  and o.ASPECT = '1'  and (c.amount != o.WAIT_AMOUNT or c.amount is null)
+		<isNotEmpty prepend="and" property="entityId">
+			o.CUSTOMER_ENTITY_ID like
+				'%'||#entityId:VARCHAR#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="customerName">
+			e.CUSTOMER_NAME like
+				'%'||#customerName:VARCHAR#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="taxCode">
+			d.TAX_CODE =
+			#taxCode:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="startTime">
+		to_char(o.CREATED_TIME,'yyyy-MM-dd') &gt;= #startTime#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="stopTime">
+		to_char(o.CREATED_TIME,'yyyy-MM-dd') &lt;= #stopTime#
+		</isNotEmpty>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="queryInvoiceRequireTemp" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireTempQueryDto">
+		<include refid="Commons.prefixSql" />
+			select  a.CUSTOMER_ENTITY_ID as  "customerEntityId",a.CUSTOMER_NAME as "customerName",
+			a.AMOUNT as "amount",d.BANK_ACCT_CODE as "bankAcctCode",d.TAX_CODE as "taxCode",d.INVOICE_TYPE as "invoiceType" 
+			from TB_INVOICE_REQUIREMENT_TEMP a  
+            left join TB_INVOICE_TEMP b on b.ID = a.INVOICETMP_ID 
+            left join TB_CUSTOMER_INVOICE_INFO d on d.FATHER_ENTITY_ID = b.FATHER_ENTITY_ID and d.CUSTOMER_ENTITY_ID = b.CUSTOMER_ENTITY_ID
+            where b.SETTLEMENT_ID= #settlementId:BIGINT#
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="queryInvoiceTemp" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.allinfinance.svc.coupon.dto.InvoiceTempQueryDto">
+		<include refid="Commons.prefixSql" />
+			select b.id as "id" , b.CUSTOMER_ENTITY_ID as  "customerEntityId",b.CUSTOMER_NAME as "customerName",
+			b.AMOUNT as "amount",d.BANK_ACCT_CODE as "bankAcctCode",d.TAX_CODE as "taxCode",d.INVOICE_TYPE as "invoiceType" ,b.INVOICE_PROJECT as "invoiceProject" 
+            from  TB_INVOICE_TEMP b 
+            left join TB_CUSTOMER_INVOICE_INFO d on d.FATHER_ENTITY_ID = b.FATHER_ENTITY_ID and d.CUSTOMER_ENTITY_ID = b.CUSTOMER_ENTITY_ID
+            where b.SETTLEMENT_ID= #settlementId:BIGINT#
+		<include refid="Commons.suffixSql" />
+	</select>
+	<insert id="invoiceRequirementref_insert" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    
+    INSERT INTO TB_INVOICE_REQUIREMENT_REF(REQUIRE_ID, INVOICE_ID, AMOUNT) 
+select b.INVOICE_REQUIRE_ID,b.INVOICETMP_ID,b.AMOUNT from TB_INVOICE_TEMP a,TB_INVOICE_REQUIREMENT_TEMP b 
+where a.id = b.INVOICETMP_ID and a.SETTLEMENT_ID = #settlementId:BIGINT#
+	</insert>
+	<insert id="settlementInvoiceRef_insert" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+   
+    INSERT INTO TB_SETTLEMENT_INVOICE_REF(BALANCE_ID, BALANCE_TYPE, INVOICE_ID) 
+    select a.SETTLEMENT_ID,'0',a.id from TB_INVOICE_TEMP a where a.SETTLEMENT_ID = #settlementId:BIGINT#
+	</insert>
+	<update id="invoiceRequirement_updateBysettlementId" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    update TB_INVOICE_REQUIREMENT c  set c.YET_AMOUNT =  c.YET_AMOUNT + (select  sum(b.AMOUNT) from TB_INVOICE_TEMP a,TB_INVOICE_REQUIREMENT_TEMP b
+    where a.id = b.INVOICETMP_ID and b.INVOICE_REQUIRE_ID = c.id and a.SETTLEMENT_ID = #settlementId:BIGINT# ),c.WAIT_AMOUNT = c.WAIT_AMOUNT - (select  sum(b.AMOUNT) from TB_INVOICE_TEMP a,TB_INVOICE_REQUIREMENT_TEMP b
+    where a.id = b.INVOICETMP_ID and b.INVOICE_REQUIRE_ID = c.id and a.SETTLEMENT_ID = #settlementId:BIGINT# ),c.UPDATED_TIME = #newDate:TIMESTAMP#  where ID in (select INVOICE_REQUIRE_ID from TB_INVOICE_TEMP e, TB_INVOICE_REQUIREMENT_TEMP f
+    where e.id = f.INVOICETMP_ID and e.SETTLEMENT_ID = #settlementId:BIGINT#)
+   
+	</update>
+	<update id="sttlement_updateBysettlementId" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    
+    update TB_SETTLEMENT c set RECEIVED_INVOINCE_AMOUNT = RECEIVED_INVOINCE_AMOUNT + (select sum(a.AMOUNT) from TB_INVOICE_TEMP a 
+    where a.SETTLEMENT_ID = c.id and a.SETTLEMENT_ID = #settlementId:BIGINT#),
+    WAIT_IVC_AMOUNT = WAIT_IVC_AMOUNT - (select sum(a.AMOUNT) from TB_INVOICE_TEMP a where a.SETTLEMENT_ID = c.id and a.SETTLEMENT_ID = #settlementId:BIGINT#) 
+    where c.ID = #settlementId:BIGINT#
+   
+	</update>
+	<delete id="invoiceTemp_deleteByPrimaryKey" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    delete from TB_INVOICE_TEMP b where b.SETTLEMENT_ID = #settlementId:BIGINT#
+		<isNotEmpty prepend="AND" property="invoiceTmpIds">
+			b.id IN (
+			<iterate property="invoiceTmpIds" conjunction="," >
+          		$invoiceTmpIds[]$
+			</iterate>)
+		</isNotEmpty> 
+	</delete>
+	<delete id="invoiceRequireTemp_deleteByPrimaryKey" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    delete from TB_INVOICE_REQUIREMENT_TEMP a  where a.INVOICETMP_ID in 
+    (select distinct b.id from TB_INVOICE_TEMP b,TB_INVOICE_REQUIREMENT_TEMP c 
+    where b.id = c.INVOICETMP_ID and b.SETTLEMENT_ID=#settlementId:BIGINT#
+		<isNotEmpty prepend="AND" property="invoiceTmpIds">
+			b.id IN (
+			<iterate property="invoiceTmpIds" conjunction="," >
+          		$invoiceTmpIds[]$
+			</iterate>)
+		</isNotEmpty> 
+		)
+	</delete>
+	
+	<select id="settelment_selectByPrimaryKey" resultClass="com.allinfinance.svc.coupon.dto.SettlementInfoDto" parameterClass="com.allinfinance.svc.coupon.dto.SettlementInfoDto" >
+    select ID as "id", SETTLE_NO as "settleNo", SETTLE_BATCH_ID as "settleBatchId", 
+    MCHT_CODE as "mchtCode", BEGIN_DATE as "beginDate", END_DATE as "endDate", TOTAL_AMOUNT as "totalAmount",
+      COMMISSION_AMOUNT as "commissionAmount", RECEIVED_INVOINCE_AMOUNT as "receivedInvoinceAmount", WAIT_IVC_AMOUNT as "waitIvcAmount", 
+      STATUS as "status", CREATED_TIME as "createdTime",
+      UPDATED_TIME as "updatedTime"
+    from TB_SETTLEMENT
+    where ID = #id:BIGINT#
+	</select>
+	<select id="invoiceRequire_selectBySettlementId" resultClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentDto" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    select t.INVOICE_REQUIRE_ID as "id",t.sumamount as "amount",r.WAIT_AMOUNT as "waitAmount" from 
+(SELECT  a.INVOICE_REQUIRE_ID,sum(a.AMOUNT) sumamount  FROM TB_INVOICE_REQUIREMENT_TEMP  a,TB_INVOICE_TEMP b 
+where a.INVOICETMP_ID = b.id and b.SETTLEMENT_ID = #settlementId:BIGINT#
+group by a.INVOICE_REQUIRE_ID)  t
+left join TB_INVOICE_REQUIREMENT  r  on t.INVOICE_REQUIRE_ID = r.id
+    
+	</select>
+	<update id="invoiceRequire_updateStatus" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    
+    update TB_INVOICE_REQUIREMENT  r set r.STATUS = 1 where r.ID in 
+(SELECT  a.INVOICE_REQUIRE_ID FROM TB_INVOICE_REQUIREMENT_TEMP  a,TB_INVOICE_TEMP b 
+where a.INVOICETMP_ID = b.id and b.SETTLEMENT_ID = #settlementId:BIGINT#
+group by a.INVOICE_REQUIRE_ID) and r.WAIT_AMOUNT = 0
+   
+	</update>
+	<!-- 单条插入结算发票关系表 -->
+	<insert id="settlementInvRef_insert" parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto" >
+    INSERT INTO TB_SETTLEMENT_INVOICE_REF(BALANCE_ID, BALANCE_TYPE, INVOICE_ID) 
+    VALUES(#settlementId:BIGINT#, '0', #invoiceId:BIGINT#)
+	</insert>
+	<!-- 根据结算单号查询发票信息-->
+	<select id="queryInvoiceBySettleId" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto">
+		<include refid="Commons.prefixSql" />
+		select t.ID as "id",t.NAME as "name",t.AMOUNT as "amount",t.OPEN_INVOICER as "openInvoicer",t.TYPE as "type",
+		t.STATUS as "status",t.ASSIGNER as "assigner",t.ASSIGNED_TIME as "assignedTime",t.TYPE as "invoiceType",
+		t.CHECK_INVOICER as "checkInvoicer",t.CHECKED_TIME as "checkedTime",t.HAND_INVOICER as "handInvoicer",t.HANDED_TIME as "handedTime",
+		t.CREATED_TIME as "createdTime",t.UPDATED_TIME as "updatedTime"
+		from TB_INVOICE t ,TB_SETTLEMENT_INVOICE_REF b where t.id = b.INVOICE_ID and 
+	     b.BALANCE_ID= #settlementId:BIGINT#
+		<include refid="Commons.suffixSql" />
+	</select>
+	<insert id="invoiceMatching_insert" parameterClass="java.util.HashMap">
+		INSERT INTO TB_INVOICE_REQUIREMENT_REF(REQUIRE_ID, INVOICE_ID, AMOUNT)
+		values (#requireId:BIGINT#, #invoiceId:BIGINT#,#amount:VARCHAR#)
+	</insert>
+	<!-- 字典表查询开票项目-->
+	<select id="queryInvoiceProject" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentDto">
+		select t.DICT_CODE as "dictCode",t.DICT_NAME as "dictName" from TB_ENTITY_DICT_INFO t 
+		where t.ENTITY_ID = '5101' and t.DICT_STATE = 1 and t.DICT_TYPE_CODE = #dictTypeCode:VARCHAR# 
+		<isNotEmpty prepend="AND" property="items">
+			t.DICT_CODE IN (
+			<iterate property="items" conjunction="," >
+          		$items[]$
+			</iterate>)
+		</isNotEmpty>
+	</select>
+	<!-- 查询发票临时表金额小计-->
+	<select id="querySumAmount" resultClass="java.lang.Long"
+		remapResults="true"
+		parameterClass="com.allinfinance.svc.coupon.dto.InvoiceRequireMentQueryDto">
+		select sum(b.AMOUNT) as "sumAmount"
+            from  TB_INVOICE_TEMP b 
+            where b.SETTLEMENT_ID= #settlementId:BIGINT#
+	</select>
+	<!-- 根据结算单号查询发票信息-->
+	<select id="selectSettlementInvoice" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="java.lang.Long">
+select c.mcht_entity_id as mchtentityid,
+       nvl(e.merchant_name, '') as merchantname,
+       c.customer_entity_id as customerentityid,
+       c.name as name,
+       c.amount as amount,
+       nvl(e.merchant_name, '') as developer,
+       nvl(d.customer_name, '') as receiver,
+       nvl(f.tax_code, '') as taxcode,
+       nvl(f.reg_address, '') as regaddress,
+       nvl(f.address_tel, '') as addresstel,
+       nvl(f.branch_bank_name, '') as branchbankname,
+       nvl(f.bank_acct_code, '') as bankacctcode,
+       decode(c.status, '0', '已匹配', '1', '已收票', '2', '已交票') as status
+  from tb_settlement a
+  inner join tb_settlement_invoice_ref b
+    on a.id = b.balance_id
+  inner join tb_invoice c
+    on c.id = b.invoice_id
+  left join tb_customer d
+    on c.customer_entity_id = d.entity_id
+   and c.father_entity_id = d.father_entity_id
+  left join tb_merchant e
+    on e.entity_id = a.mcht_entity_id
+   and e.father_entity_id = a.father_entity_id
+  left join tb_customer_invoice_info f
+    on f.father_entity_id = c.father_entity_id
+   and f.customer_entity_id = c.customer_entity_id
+ where a.father_entity_id = '5101'
+   and a.id = #id:BIGINT#
+	</select>
+</sqlMap>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CalculateWithMerchantDetailReprt">
+	<select id="CalculateWithMerchantDetailReprt" resultClass="com.allinfinance.service.consumer.calculateWithMerchantDetail.dto.CalculateWithMerchantDetailDTO"
+		parameterClass="com.allinfinance.service.consumer.calculateWithMerchantDetail.dto.CalculateWithMerchantDetailDTO">
+select to_date(t1.settle_dt,'yyyyMMdd') as settleDt,
+       substr(t1.dms_related_key, 1, 12) as dmsRelatedKey,
+       t3.shop_id as shopId,
+       t3.shop_name as shopName,
+       t1.term_id as termId,
+      substr(t1.pri_acct_no,3,4)||'**********'||substr(t1.pri_acct_no,18,4) as priAcctNo,
+       case when T1.trans_id='G30' and T1.trans_chnl=1 then '退货'
+            when T1.Trans_Id='G30' and T1.TRANS_CHNL=0 then '退货（网关）'
+       else t4.trans_name
+       end  as transName,
+       trim(to_char(trans_at/100,'999999999990.99')) as transAmt,
+       trim(to_char(total_disc_at/100,'9999999990.99')) as discAmt,
+       rec_crt_ts
+  from tbl_trans_log_his t1, tb_shop_pos t2, tb_shop t3,tb_trans_type t4,tb_merchant t5
+ where  
+ 	   T5.merchant_code = T1.mchnt_cd
+   and T2.pos_barcode   = T1.term_id
+   and T2.shop_id       = T3.shop_id
+   and T1.trans_id      = T4.Trans_Code
+   and ((T1.term_id != '00000000' and T5.entity_id = T3.entity_id and T1.trans_id != 'S30') or  (T1.term_id = '00000000' and (t1.trans_id in ('S55','S66','G32') or (t1.trans_id='G22' and t1.msg_tp!='0003'))))
+   and fwd_proc_in ='1'
+   and rcv_proc_in ='1'
+   and resp_cd1='00'
+   and t5.merchant_code=#merchantCode:varchar#
+   and to_date(t1.settle_dt, 'yyyyMMdd') &gt;=
+       to_date(#startDate:varchar#, 'yyyy-MM-dd')
+   and to_date(t1.settle_dt, 'yyyyMMdd') &lt;=
+       to_date(#endDate:varchar#, 'yyyy-MM-dd')
+   order by rec_crt_ts
+	</select>
+</sqlMap>

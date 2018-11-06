@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sedimentation_funds">
+	<select id="sedimentation_funds"
+		resultClass="com.allinfinance.service.issueOperation.fundSubsideSum.dto.FundSubsideSumDTO"
+		parameterClass="com.allinfinance.service.issueOperation.fundSubsideSum.dto.FundSubsideSumDTO">
+		select  
+		distinct t2.SERVICE_NAME as accountName,
+		t3.PRODUCT_NAME as productName,
+		t1.NUMBER as cardNumber,
+		t1.SUM_AMT/100 as amt
+		from 
+		TB_ACC_SUMAMT t1,
+		TB_SERVICE t2,
+		TB_PRODUCT t3
+		where 
+			t1.TXN_TYPE = '1'
+		and issuer_id = #issuerId:varchar#
+		<isNotEmpty prepend="and" property="queryDate">
+			t1.TXN_DATE = #queryDate# 
+		</isNotEmpty>
+		and t2.SERVICE_ID = t1.ACCOUNT_TYPE
+		and t3.PRODUCT_ID = t1.PRODUCT_ID
+  </select>
+</sqlMap>

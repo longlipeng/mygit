@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" language="groovy" pageWidth="800" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="inStorageDataSet">
+		<parameter name="issuerId" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select to_date(t5.create_time,'yyyyMMddhh24miss') as datetime,
+       t4.product_name as productName,
+       sum(to_number(t1.face_value)/100) as faceValue,
+       count(t1.card_no) as amount,
+       t3.user_name as userName,
+       t5.operater_type as operType
+  from tb_entity_stock          t1,
+       tb_issuer                t2,
+       tb_ent_user              t3,
+       tb_product               t4,
+       tb_entity_stock_operater t5
+ where t1.entity_id = t2.entity_id
+   and t5.create_user = t3.user_id
+   and t1.product_id=t4.product_id
+   and t1.card_no=t5.card_no
+   group by t5.create_time,t4.product_name,t3.user_name,t5.operater_type
+   order by t5.create_time]]>
+		</queryString>
+		<field name="DATETIME" class="java.sql.Timestamp"/>
+		<field name="PRODUCTNAME" class="java.lang.String"/>
+		<field name="FACEVALUE" class="java.math.BigDecimal"/>
+		<field name="AMOUNT" class="java.math.BigDecimal"/>
+		<field name="USERNAME" class="java.lang.String"/>
+		<field name="OPERTYPE" class="java.lang.String"/>
+		<variable name="insumFaceValue" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{OPERTYPE}=="1"?$F{FACEVALUE}:new java.lang.Long("0")]]></variableExpression>
+			<initialValueExpression><![CDATA[]]></initialValueExpression>
+		</variable>
+		<variable name="inSumAmount" class="java.lang.Long" calculation="Sum">
+			<variableExpression><![CDATA[$F{OPERTYPE}=="1"?$F{AMOUNT}:new java.lang.Long("0")]]></variableExpression>
+		</variable>
+		<variable name="outSumFaceValue" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{OPERTYPE}=="2"?$F{FACEVALUE}:new java.lang.Long("0")]]></variableExpression>
+		</variable>
+		<variable name="outSumAmount" class="java.lang.Long" calculation="Sum">
+			<variableExpression><![CDATA[$F{OPERTYPE}=="2"?$F{AMOUNT}:new java.lang.Long("0")]]></variableExpression>
+		</variable>
+		<variable name="sumFaceValue" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{FACEVALUE}]]></variableExpression>
+		</variable>
+		<variable name="sumAmount" class="java.lang.Long" calculation="Sum">
+			<variableExpression><![CDATA[$F{AMOUNT}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="177">
+			<staticText>
+				<reportElement x="0" y="0" width="598" height="35"/>
+				<textElement textAlignment="Center">
+					<font fontName="宋体" size="24"/>
+				</textElement>
+				<text><![CDATA[库存总汇报表]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" x="0" y="35" width="598" height="80"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="inStorageDataSet"/>
+					<jr:column width="143">
+						<jr:tableHeader height="44" rowSpan="1">
+							<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+								<pen lineWidth="0.25"/>
+								<topPen lineWidth="0.25"/>
+								<leftPen lineWidth="0.25"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.25"/>
+							</box>
+							<staticText>
+								<reportElement key="" style="table" x="0" y="0" width="143" height="24"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[发卡机构代码：]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="table" x="0" y="24" width="143" height="20"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[发卡机构名称：]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnHeader style="table_CH" height="23" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="143" height="22" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[日期]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="61" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="143" height="20" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[入库总计]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="table_CH" x="0" y="20" width="143" height="20" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[出库总计]]></text>
+							</staticText>
+							<staticText>
+								<reportElement style="table_CH" x="0" y="40" width="143" height="20" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[库存总量]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
+								<reportElement style="table_TD" x="0" y="0" width="143" height="20"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.util.Date"><![CDATA[$F{DATETIME}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="100">
+						<jr:tableHeader height="44" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="100" height="24"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$P{issuerId}]]></textFieldExpression>
+							</textField>
+						</jr:tableHeader>
+						<jr:columnHeader style="table_CH" height="23" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="100" height="22" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[产品名称]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="61" rowSpan="1"/>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_TD" x="0" y="0" width="100" height="20"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{PRODUCTNAME}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="101">
+						<jr:columnHeader style="table_CH" height="23" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="100" height="22" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[面额]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="61" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_CH" x="0" y="0" width="101" height="20" backcolor="#FFFFFF"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{insumFaceValue}]]></textFieldExpression>
+							</textField>
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_CH" x="0" y="20" width="101" height="20" backcolor="#FFFFFF"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{outSumFaceValue}]]></textFieldExpression>
+							</textField>
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_CH" x="0" y="40" width="101" height="20" backcolor="#FFFFFF"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{sumFaceValue}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_TD" x="0" y="0" width="100" height="20"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{FACEVALUE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90">
+						<jr:columnHeader style="table_CH" height="23" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="90" height="22" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[卡数量]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table_CH" height="61" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_CH" x="0" y="0" width="90" height="20" backcolor="#FFFFFF"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$V{inSumAmount}]]></textFieldExpression>
+							</textField>
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_CH" x="0" y="20" width="90" height="20" backcolor="#FFFFFF"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$V{outSumAmount}]]></textFieldExpression>
+							</textField>
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_CH" x="0" y="40" width="90" height="20" backcolor="#FFFFFF"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$V{sumAmount}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_TD" x="0" y="0" width="90" height="20"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Long"><![CDATA[$F{AMOUNT}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90">
+						<jr:columnHeader style="table_CH" height="23" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="90" height="22" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[操作员]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="61" rowSpan="1"/>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_TD" x="0" y="0" width="90" height="20"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{USERNAME}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="95">
+						<jr:columnHeader style="table_CH" height="23" rowSpan="1">
+							<staticText>
+								<reportElement style="table_CH" x="0" y="0" width="95" height="22" backcolor="#FFFFFF"/>
+								<textElement textAlignment="Center">
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<text><![CDATA[操作类型]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="61" rowSpan="1"/>
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField isBlankWhenNull="true">
+								<reportElement style="table_TD" x="0" y="0" width="95" height="20"/>
+								<textElement>
+									<font fontName="宋体" size="14"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{OPERTYPE}=="1"?"入库":"出库"]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="93" splitType="Stretch"/>
+	</pageHeader>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

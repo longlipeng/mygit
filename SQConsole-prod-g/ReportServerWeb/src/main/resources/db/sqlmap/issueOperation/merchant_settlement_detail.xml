@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="merchant_settlement_detail">
+	<select id="merchant_settlement_detail" resultClass="com.allinfinance.service.sellOperation.merchantSettlementDetail.dto.MerchantSettlementDetailDTO"
+			parameterClass="com.allinfinance.service.sellOperation.merchantSettlementDetail.dto.MerchantSettlementDetailDTO">
+			
+		select
+	        x.merchant_code as "mchntCd",
+	        x.merchant_name as "merchantName",
+	        x.shop_code as "shopCode",
+	        x.shop_name as "shopName",
+	        x.term_id as "termId",
+	        p.card_no as "priAcctNo",
+	        x.txn_seq_no as "primaryKey",
+	        q.product_name as "primaryKey2",
+	        x.trans_nm as "transName",
+	        decode(x.trans_st,1,'成功',2,'失败') as "transSt",
+	        to_char(to_date(x.settle_dt,'yyyy-MM-dd'), 'yyyy-MM-dd') as "settleDT",
+	        x.trans_time as "transTime",
+	        decode(x.trans_at_sgl,null,0,x.trans_at_sgl)/100  as "transAt"
+	    from 	
+		(select
+	        T2.merchant_code,
+	        T2.merchant_name,
+	        T3.shop_code,
+	        T3.shop_name,
+	        T1.term_id,
+	        T1.pri_acct_no,
+	        T1.txn_seq_no,
+	        T1.trans_nm,
+	        T1.trans_st,
+	        T1.settle_dt,
+	        T1.trans_time,     
+	        T1.trans_at_sgl
+	    from  tb_settle_trans_pre T1,
+	           tb_merchant         T2,
+	           tb_shop         T3,
+	           tb_shop_pos     T4
+	    where T2.merchant_code = T1.mchnt_cd
+	    	and T4.pos_barcode = T1.term_id
+	    	and T4.shop_id = T3.shop_id
+	    	and ( (T3.shop_id != '0000' and T3.entity_id = T2.entity_Id) or T3.shop_id = '0000')
+	    	and T1.settle_flag = '1'
+	    	and T1.resp_cd = '00'
+	    	and substr(T1.rcv_ins_id_cd,3,length(trim(T1.rcv_ins_id_cd))-2)=#IssuerId#
+	    	and T2.father_entity_id = #IssuerId#
+            and T3.CONSUMER_ID = #IssuerId# 
+	    <isNotEmpty prepend="and" property="merchantNo">
+	    	T2.merchant_code = #merchantNo#
+	    </isNotEmpty> 
+	    and
+		   to_date(T1.settle_dt,'yyyyMMdd')&gt;=to_date(#startDate#,'yyyy-MM-dd')
+		and
+		   to_date(T1.settle_dt,'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+	   )    x  left join
+		  tb_acc_card_info p
+        on
+            substr(x.pri_acct_no,3, length(x.pri_acct_no)-2) = p.card_no
+        left join
+            tb_product q
+        on
+            p.product_id= q.product_id and q.ENTITY_ID=#IssuerId#
+            
+        order by x.merchant_code, x.settle_dt desc
+	    
+	</select>
+	
+	<select id="merchant_settlement_detail_count" resultClass="com.allinfinance.service.sellOperation.merchantSettlementDetail.dto.MerchantSettlementDetailDTO"
+			parameterClass="com.allinfinance.service.sellOperation.merchantSettlementDetail.dto.MerchantSettlementDetailDTO">
+			select 
+			    sum(a.trans_at_sum) / 100 as "transAtSum",
+			    sum(a.trans_at_in) / 100 as "transAtInSum",
+			    (sum(a.trans_at_sum) - sum(a.trans_at_in)) / 100 as "transFeeInSum"
+			from 
+			    tb_settl_bill a, tb_merchant b
+			where
+			    a.settle_obj_1 = b.entity_id
+			and 
+			    a.settle_types='0'
+			and 
+				to_date(substr(decode(a.last_date, '        ', '99991231',a.settle_date),1,8),'yyyyMMdd')&gt;=to_date(#startDate#,'yyyy-MM-dd')
+ 			and 
+ 				to_date(substr(decode(a.settle_date, '        ', '20010101',a.settle_date),1,8),'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+ 			and
+ 				a.settle_obj_2=#IssuerId#
+ 			and 
+ 				b.father_entity_id = #IssuerId#
+ 			<isNotEmpty prepend="and" property="merchantNo">
+		    	b.merchant_code =#merchantNo#
+		    </isNotEmpty> 
+			
+	</select>
+</sqlMap>

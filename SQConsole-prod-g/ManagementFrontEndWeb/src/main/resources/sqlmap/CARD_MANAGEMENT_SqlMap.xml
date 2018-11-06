@@ -1,0 +1,1523 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CARDMANAGEMENT">
+
+	<select id="selectCardOperateForSeller" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T1.CARD_MANAGEMENT_ID as "cardMangementId",
+		T1.CARD_NO as
+		"cardNo",
+		decode(T4.CARD_TYPE,'1','IC卡','磁条卡') as "cardType",
+		T1.CARD_VALIDITY_PERIOD as "cardValidityPeriod",
+		T1.EXTENSION_MONTH as
+		"extensionMonth",
+		T1.NEW_CARD_VALIDITY_PERIOD as
+		"newCardValidityPeriod",
+		to_char(T1.SERVICE_FEE/100,'9999999990.99') as "serviceFee",
+		T6.TRANS_NAME as "operationType",
+		to_char(to_date(T1.CREATE_TIME,
+		'yyyy-MM-dd hh24:mi:ss'),'YYYY-MM-DD HH24:MI:SS') as "modifyTime",
+		T5.USER_NAME as "userName",
+		T1.MEMO as "memo",
+		<!-- to_char(decode(T1.ADJUST_AMOUNT,null,0,'',0, T1.ADJUST_AMOUNT)/100,'9999999990.99') as -->
+		cast(decode(T1.ADJUST_AMOUNT,null,0,'',0, T1.ADJUST_AMOUNT)/100 as decimal(12,2)) as 
+		"adjustAmount"
+		from
+        TB_ENT_CARD_MANAGEMENT T1 left join tb_entity_stock T2 on T1.CARD_NO=T2.CARD_NO 
+        left join TB_PRODUCT T4 on T2.PRODUCT_ID=T4.PRODUCT_ID,
+		TB_ENT_USER T5,
+		Tb_Trans_Type t6
+		where
+		T1.MODIFY_USER=T5.USER_ID
+		and
+		T6.TRANS_CODE=T1.OPERATION_TYPE
+		and
+		T1.DATA_STATE = '1'
+		and t6.data_state='1'
+		and
+		T5.entity_id=#defaultEntityId:VARCHAR#
+		<dynamic>
+
+			<isNotEmpty property="cardNo" prepend="and">
+				T1.CARD_NO like
+				'%'||#cardNo:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotEmpty property="userName" prepend="and">
+				T5.USER_NAME like
+				'%'||#userName:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotNull property="starDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&gt;=to_date(#starDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="enDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&lt;=to_date(#enDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="operationType" prepend="and">
+				T1.OPERATION_TYPE=#operationType:VARCHAR#
+      	</isNotNull>
+		</dynamic>
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectCardOperateForIssuer" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T1.CARD_MANAGEMENT_ID as "cardMangementId",
+		T1.CARD_NO as
+		"cardNo",
+		decode(T4.CARD_TYPE,'1','IC卡','磁条卡') as "cardType",
+		T1.CARD_VALIDITY_PERIOD as "cardValidityPeriod",
+		T1.EXTENSION_MONTH as
+		"extensionMonth",
+		T1.NEW_CARD_VALIDITY_PERIOD as
+		"newCardValidityPeriod",
+		T1.SERVICE_FEE/100 as "serviceFee",
+		T6.TRANS_NAME as "operationType",
+		to_char(to_date(T1.CREATE_TIME,
+		'yyyy-MM-dd hh24:mi:ss'),'YYYY-MM-DD HH24:MI:SS') as "modifyTime",
+		T5.USER_NAME as "userName",
+		T1.MEMO as "memo",
+		T1.ADJUST_AMOUNT/100 as
+		"adjustAmount"
+		from
+        TB_ENT_CARD_MANAGEMENT T1 left join tb_entity_stock T2 on T1.CARD_NO=T2.CARD_NO 
+        left join TB_PRODUCT T4 on T2.PRODUCT_ID=T4.PRODUCT_ID,
+		TB_ENT_USER T5,
+		Tb_Trans_Type t6
+		where
+		T1.MODIFY_USER=T5.USER_ID
+		and
+		T6.TRANS_CODE=T1.OPERATION_TYPE
+		and
+		T1.DATA_STATE = '1'
+		and t6.data_state='1'
+		and
+		T2.PRODUCT_ID in (select
+		prodCon.Product_Id as "productId"
+		from
+		tb_loyalty_contract lc,
+		tb_loyalty_prod_contract prodCon
+		where
+		lc.contract_buyer=#defaultEntityId:VARCHAR#
+		and
+		lc.loyalty_contract_id=prodCon.Loyalty_Contract_Id
+		union
+		select
+		prod.product_id as "productId"
+		from
+		tb_product prod
+		where
+		prod.product_define_issuer=#defaultEntityId:VARCHAR#)
+		<dynamic>
+
+			<isNotEmpty property="cardNo" prepend="and">
+				T1.CARD_NO like
+				'%'||#cardNo:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotEmpty property="userName" prepend="and">
+				T5.USER_NAME like
+				'%'||#userName:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotNull property="starDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&gt;=to_date(#starDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="enDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&lt;=to_date(#enDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="operationType" prepend="and">
+				T1.OPERATION_TYPE=#operationType:VARCHAR#
+      	</isNotNull>
+		</dynamic>
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectSingleCardOperate" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T1.CARD_MANAGEMENT_ID as "cardMangementId",
+		T1.CARD_NO as
+		"cardNo",
+		T1.CARD_VALIDITY_PERIOD as "cardValidityPeriod",
+		T1.EXTENSION_MONTH as "extensionMonth",
+		T1.NEW_CARD_VALIDITY_PERIOD as
+		"newCardValidityPeriod",
+		T1.SERVICE_FEE/100 as "serviceFee",
+		T6.TRANS_NAME as "operationType",
+		to_char(to_date(T1.CREATE_TIME,
+		'yyyy-MM-dd hh24:mi:ss'),'YYYY-MM-DD HH24:MI:SS') as "modifyTime",
+		T5.USER_NAME as "userName",
+		T1.MEMO as "memo",
+		T1.ADJUST_AMOUNT/100 as
+		"adjustAmount"
+		from
+		TB_ENT_CARD_MANAGEMENT T1,
+		TB_ENT_USER T5,
+		Tb_Trans_Type t6,
+		tb_entity_stock T2
+		where
+		T2.CARD_NO=T1.CARD_NO
+		and
+		t6.TRANS_ID in('1012','1013','1007','1008','1005','1017','1018')
+		and
+		T1.MODIFY_USER=T5.USER_ID
+		and
+		T6.TRANS_CODE=T1.OPERATION_TYPE
+		and
+		T1.DATA_STATE = '1'
+		and t6.data_state='1'
+		and
+		T2.entity_id=#defaultEntityId:VARCHAR#
+		<dynamic>
+
+			<isNotEmpty property="cardNo" prepend="and">
+				T1.CARD_NO
+				=#cardNo:VARCHAR#
+      	</isNotEmpty>
+			<isNotEmpty property="userName" prepend="and">
+				T5.USER_NAME like
+				'%'||#userName:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotNull property="starDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&gt;=to_date(#starDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="enDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&lt;=to_date(#enDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="operationType" prepend="and">
+				T1.OPERATION_TYPE=#operationType:VARCHAR#
+      	</isNotNull>
+		</dynamic>
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectSingleCardOperateIssuer" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T1.CARD_MANAGEMENT_ID as "cardMangementId",
+		T1.CARD_NO as
+		"cardNo",
+		T1.CARD_VALIDITY_PERIOD as "cardValidityPeriod",
+		T1.EXTENSION_MONTH as "extensionMonth",
+		T1.NEW_CARD_VALIDITY_PERIOD as
+		"newCardValidityPeriod",
+		T1.SERVICE_FEE/100 as "serviceFee",
+		T6.TRANS_NAME as "operationType",
+		to_char(to_date(T1.CREATE_TIME,
+		'yyyy-MM-dd hh24:mi:ss'),'YYYY-MM-DD HH24:MI:SS') as "modifyTime",
+		T5.USER_NAME as "userName",
+		T1.MEMO as "memo",
+		T1.ADJUST_AMOUNT/100 as
+		"adjustAmount"
+		from
+		TB_ENT_CARD_MANAGEMENT T1,
+		TB_ENT_USER T5,
+		Tb_Trans_Type t6,
+		tb_entity_stock T2,
+		tb_issuer t3,
+        tb_seller t4
+		where
+		T2.CARD_NO=T1.CARD_NO
+		and
+		t6.TRANS_ID in('1012','1013','1007','1008','1005','1017','1018')
+		and
+		T1.MODIFY_USER=T5.USER_ID
+		and
+		T6.TRANS_CODE=T1.OPERATION_TYPE
+		and
+		T1.DATA_STATE = '1'
+		and t6.data_state='1'
+		and T2.ENTITY_ID = T4.ENTITY_ID
+        and T4.FATHER_ENTITY_ID = T3.ENTITY_ID
+		and T3.entity_id=#defaultEntityId:VARCHAR#
+		<dynamic>
+
+			<isNotEmpty property="cardNo" prepend="and">
+				T1.CARD_NO
+				=#cardNo:VARCHAR#
+      	</isNotEmpty>
+			<isNotEmpty property="userName" prepend="and">
+				T5.USER_NAME like
+				'%'||#userName:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotNull property="starDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&gt;=to_date(#starDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="enDate" prepend="and">
+				to_date(substr(T1.CREATE_TIME,1,8),
+				'yyyy-MM-dd')&lt;=to_date(#enDate:DATE#,'yyyy-MM-dd')
+      	</isNotNull>
+			<isNotNull property="operationType" prepend="and">
+				T1.OPERATION_TYPE=#operationType:VARCHAR#
+      	</isNotNull>
+		</dynamic>
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="selectHang"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T2.CARD_NO as "cardNo",
+		decode(T4.CARD_TYPE,'1','IC卡','磁条卡') as
+		"cardType",
+		T3.First_Name as "cardholderName",
+		T3.ID_NO as "idNo",
+		T3.Cardholder_Mobile as "mobile",
+		max(T1.CREATE_TIME) as "createTime"
+		from
+		TB_ENT_CARD_MANAGEMENT T1 right join
+		TB_CARDHOLDER_CARDLIST T2 on T2.CARD_NO = T1.CARD_NO left join
+		TB_CARDHOLDER T3 on T2.CARDHOLDER_ID=T3.CARDHOLDER_ID left join
+		TB_PRODUCT T4 on T2.PRODUCT_ID=T4.PRODUCT_ID
+		where
+		
+			T2.Card_State = '9'
+		and t2.data_state = '1'
+		<dynamic>
+			<isNotEmpty property="mobile" prepend="and">
+				T3.CARDHOLDER_MOBILE = #mobile:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="idNo" prepend="and">
+				T3.ID_NO =
+				#idNo:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="cardNo" prepend="and">
+				T2.CARD_NO
+				=#cardNo:VARCHAR#
+      	</isNotEmpty>
+			<isNotNull property="starDate" prepend="and">
+				T1.CREATE_TIME&gt;=#starDate:DATE#
+      	</isNotNull>
+			<isNotNull property="enDate" prepend="and">
+				T1.CREATE_TIME&lt;=#enDate:DATE#
+      	</isNotNull>
+			group by
+			T2.CARD_NO,T4.CARD_TYPE,T3.First_Name,T3.ID_NO,T3.CARDHOLDER_MOBILE
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectTxn" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T9.ACC_TYPE_NAME as "acctypeName",
+		T5.RETRIVL_REF as "ref",
+		T5.PAN as "cardNo",
+		T3.CARDHOLDER_NAME as "cardholderName",
+		T5.RETRIVL_REF as "sysSeqNum",
+		T6.DICT_NAME as "txnType",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T1.MERCHANT_NAME) as
+		"merchantName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T8.SHOP_NAME) as "shopName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T5.CARD_ACCP_TERM_ID) as
+		"cardAccpTermId",
+		T7.CUSTOMER_NAME as "customerName",
+		T7.CUSTOMER_ID as
+		"costomerId",
+		decode(rtrim(T5.AMT_TRANS),'','0',to_number(rtrim(T5.AMT_TRANS))) as
+		"txnAmt",
+		decode(rtrim(T5.ADDTNL_AMT),'','0',to_number(rtrim(T5.ADDTNL_AMT))) as
+		"addtnlAmt",
+		substr(INST_DATE,1,4)||'-'||substr(INST_DATE,5,2)||'-'||substr(INST_DATE,7,2)||'
+		'||substr(INST_TIME,1,2)||':'||substr(INST_TIME,3,2)||':'||substr(INST_TIME,5,2)
+		as "txnDate",
+		T5.RESP_CODE as "respCode"
+		from
+		TB_ENT_MERCHANT
+		T1,TB_CARD_INFO T2,TB_ENT_CARDHOLDER T3,TBL_TXN T5 ,tb_ent_dict_info
+		T6,TB_ENT_CUSTOMER T7,TB_ENT_SHOP T8 ,TB_ENT_ACCTYPE T9
+		where
+		T2.CARDHOLDER_ID=T3.CARDHOLDER_ID(+)
+		and
+		T3.CUSTOMER_ID=T7.CUSTOMER_ID(+)
+		and
+		T2.CARD_NO(+)=T5.PAN
+		and
+		T5.TXN_NUM=T6.dict_id(+)
+		and
+		decode(rtrim(T5.RCVG_CODE),'','0',rtrim(T5.RCVG_CODE))=T8.SHOP_ID(+)
+		and
+		T5.CARD_ACCP_ID=T1.MERCHANT_ID(+)
+		and
+		T5.TXN_NUM not in
+		('2015','4015','2105','4105','2095','4095','7010','1025','1325')
+		and
+		T5.REVSAL_FLAG=0
+		and
+		decode(replace(T5.ACCT_ID1,'
+		',''),'','0',substr(T5.ACCT_ID1,22,4))=to_char(T9.ACC_TYPE_ID(+))
+		and
+		T5.CARD_ACCP_TERM_ID !='99999941'
+		<dynamic>
+			<!--
+				<isNotNull property="defaultIssuerId" prepend="and"> T2.ISSUSER_ID =
+				#defaultIssuerId:DECIMAL# </isNotNull>
+			-->
+			<isNotEmpty property="cardNo" prepend="and">
+				T5.PAN =
+				#cardNo:VARCHAR#
+      	</isNotEmpty>
+			<isNotNull property="nstarDate" prepend="and">
+				T5.INST_DATE&gt;=#nstarDate:DECIMAL#
+      	</isNotNull>
+			<isNotNull property="nEnDate" prepend="and">
+				T5.INST_DATE&lt;=#nEnDate:DECIMAL#
+      	</isNotNull>
+
+		</dynamic>
+		order by T5.INST_DATE asc,T5.INST_TIME asc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectTxn1" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T9.ACC_TYPE_NAME as "acctypeName",
+		T5.RETRIVL_REF as "ref",
+		T5.PAN as "cardNo",
+		T3.CARDHOLDER_NAME as "cardholderName",
+		T5.RETRIVL_REF as "sysSeqNum",
+		T6.DICT_NAME as "txnType",
+		T7.CUSTOMER_ID as "costomerId",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T1.MERCHANT_NAME) as
+		"merchantName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T8.SHOP_NAME) as "shopName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T5.CARD_ACCP_TERM_ID) as
+		"cardAccpTermId",
+		T7.CUSTOMER_NAME as "customerName",
+		decode(rtrim(T5.AMT_TRANS),'','0',to_number(rtrim(T5.AMT_TRANS))) as
+		"txnAmt",
+		decode(rtrim(T5.ADDTNL_AMT),'','0',to_number(rtrim(T5.ADDTNL_AMT))) as
+		"addtnlAmt",
+		substr(INST_DATE,1,4)||'-'||substr(INST_DATE,5,2)||'-'||substr(INST_DATE,7,2)||'
+		'||substr(INST_TIME,1,2)||':'||substr(INST_TIME,3,2)||':'||substr(INST_TIME,5,2)
+		as "txnDate",
+		T5.RESP_CODE as "respCode"
+		from
+		TB_ENT_MERCHANT
+		T1,TB_CARD_INFO T2,TB_ENT_CARDHOLDER T3,TBL_TXN_HIS T5
+		,tb_ent_dict_info T6,TB_ENT_CUSTOMER T7,TB_ENT_SHOP T8 ,TB_ENT_ACCTYPE
+		T9
+		where
+
+		T2.CARDHOLDER_ID=T3.CARDHOLDER_ID(+)
+		and
+		T3.CUSTOMER_ID=T7.CUSTOMER_ID(+)
+		and
+		T2.CARD_NO(+)=T5.PAN
+		and
+		T5.TXN_NUM=T6.dict_id(+)
+		and
+
+		decode(rtrim(T5.RCVG_CODE),'','0',rtrim(T5.RCVG_CODE))=T8.SHOP_ID(+)
+		and
+		T5.CARD_ACCP_ID=T1.MERCHANT_ID(+)
+		and
+		T5.TXN_NUM not in
+		('2015','4015','2105','4105','2095','4095','7010','1025','1325')
+		and
+		T5.REVSAL_FLAG=0
+		and
+		decode(replace(T5.ACCT_ID1,'
+		',''),'','0',substr(T5.ACCT_ID1,22,4))=to_char(T9.ACC_TYPE_ID(+))
+		and
+		T5.CARD_ACCP_TERM_ID !='99999941'
+		<dynamic>
+			<!--
+				<isNotNull property="defaultIssuerId" prepend="and"> T2.ISSUSER_ID =
+				#defaultIssuerId:DECIMAL# </isNotNull>
+			-->
+			<isNotEmpty property="cardNo" prepend="and">
+				T5.PAN =
+				#cardNo:VARCHAR#
+      	</isNotEmpty>
+			<isNotNull property="nstarDate" prepend="and">
+				T5.INST_DATE&gt;=#nstarDate:DECIMAL#
+      	</isNotNull>
+			<isNotNull property="nEnDate" prepend="and">
+				T5.INST_DATE&lt;=#nEnDate:DECIMAL#
+      	</isNotNull>
+
+		</dynamic>
+		order by T5.INST_DATE asc,T5.INST_TIME asc
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="selectTxn2" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select * from
+		(
+		select
+		T9.ACC_TYPE_NAME as "acctypeName",
+		T5.RETRIVL_REF
+		as "ref",
+		T5.PAN as "cardNo",
+		T3.CARDHOLDER_NAME as "cardholderName",
+		T5.RETRIVL_REF as "sysSeqNum",
+		T6.DICT_NAME as "txnType",
+		T7.CUSTOMER_ID as "costomerId",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T1.MERCHANT_NAME) as
+		"merchantName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T8.SHOP_NAME) as "shopName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T5.CARD_ACCP_TERM_ID) as
+		"cardAccpTermId",
+		T7.CUSTOMER_ID as "customerId",
+		T7.CUSTOMER_NAME as
+		"customerName",
+		decode(rtrim(T5.AMT_TRANS),'','0',to_number(rtrim(T5.AMT_TRANS))) as
+		"txnAmt",
+		decode(rtrim(T5.ADDTNL_AMT),'','0',to_number(rtrim(T5.ADDTNL_AMT))) as
+		"addtnlAmt",
+		substr(INST_DATE,1,4)||'-'||substr(INST_DATE,5,2)||'-'||substr(INST_DATE,7,2)||'
+		'||substr(INST_TIME,1,2)||':'||substr(INST_TIME,3,2)||':'||substr(INST_TIME,5,2)
+		as "txnDate",
+		T5.RESP_CODE as "respCode"
+		from
+		TB_ENT_MERCHANT
+		T1,TB_CARD_INFO T2,TB_ENT_CARDHOLDER T3,TBL_TXN T5 ,tb_ent_dict_info
+		T6,TB_ENT_CUSTOMER T7,TB_ENT_SHOP T8 ,TB_ENT_ACCTYPE T9
+		where
+
+		T2.CARDHOLDER_ID=T3.CARDHOLDER_ID(+)
+		and
+		T3.CUSTOMER_ID=T7.CUSTOMER_ID(+)
+		and
+		T2.CARD_NO(+)=T5.PAN
+		and
+		T5.TXN_NUM=T6.dict_id(+)
+		and
+		decode(rtrim(T5.RCVG_CODE),'','0',rtrim(T5.RCVG_CODE))=T8.SHOP_ID(+)
+		and
+		T5.CARD_ACCP_ID=T1.MERCHANT_ID(+)
+		and
+		T5.REVSAL_FLAG=0
+		and
+		T5.TXN_NUM
+		not in
+		('2015','4015','2105','4105','2095','4095','7010','1025','1325')
+		and
+		decode(replace(T5.ACCT_ID1,'
+		',''),'','0',substr(T5.ACCT_ID1,22,4))=to_char(T9.ACC_TYPE_ID(+))
+		and
+		T5.CARD_ACCP_TERM_ID !='99999941'
+		<dynamic>
+			<!--
+				<isNotNull property="defaultIssuerId" prepend="and"> T2.ISSUSER_ID =
+				#defaultIssuerId:DECIMAL# </isNotNull>
+			-->
+			<isNotEmpty property="cardNo" prepend="and">
+				T5.PAN =
+				#cardNo:VARCHAR#
+      	</isNotEmpty>
+			<isNotNull property="nstarDate" prepend="and">
+				T5.INST_DATE&gt;=#nstarDate:DECIMAL#
+      	</isNotNull>
+			<isNotNull property="nEnDate" prepend="and">
+				T5.INST_DATE&lt;=#nEnDate:DECIMAL#
+      	</isNotNull>
+			<isNotEmpty property="txnAmt" prepend="and">
+				decode(rtrim(T5.AMT_TRANS),'','0',to_number(rtrim(T5.AMT_TRANS))) =
+				#txnAmt:VARCHAR#
+      	</isNotEmpty>
+			<!--
+				<isNotNull property="txnType" prepend="and"> T5.txn_num =
+				to_char(#txnType:DECIMAL#) </isNotNull>
+			-->
+			<isNotEmpty property="sysSeqNum" prepend="and">
+				T5.RETRIVL_REF =
+				#sysSeqNum:VARCHAR#
+      	</isNotEmpty>
+		</dynamic>
+		order by T5.INST_DATE asc,T5.INST_TIME asc
+		)
+		union all
+		select * from (
+		select
+		T9.ACC_TYPE_NAME as "acctypeName",
+		T5.RETRIVL_REF as "ref",
+		T5.PAN as "cardNo",
+		T3.CARDHOLDER_NAME as "cardholderName",
+		T5.RETRIVL_REF as "sysSeqNum",
+		T6.DICT_NAME as "txnType",
+		T7.CUSTOMER_ID as "costomerId",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T1.MERCHANT_NAME) as
+		"merchantName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T8.SHOP_NAME) as "shopName",
+		decode(T5.CARD_ACCP_TERM_ID,'88888888','',T5.CARD_ACCP_TERM_ID) as
+		"cardAccpTermId",
+		T7.CUSTOMER_ID as "customerId",
+		T7.CUSTOMER_NAME as
+		"customerName",
+		decode(rtrim(T5.AMT_TRANS),'','0',to_number(rtrim(T5.AMT_TRANS))) as
+		"txnAmt",
+		decode(rtrim(T5.ADDTNL_AMT),'','0',to_number(rtrim(T5.ADDTNL_AMT))) as
+		"addtnlAmt",
+		substr(INST_DATE,1,4)||'-'||substr(INST_DATE,5,2)||'-'||substr(INST_DATE,7,2)||'
+		'||substr(INST_TIME,1,2)||':'||substr(INST_TIME,3,2)||':'||substr(INST_TIME,5,2)
+		as "txnDate",
+		T5.RESP_CODE as "respCode"
+		from
+		TB_ENT_MERCHANT
+		T1,TB_CARD_INFO T2,TB_ENT_CARDHOLDER T3,TBL_TXN_HIS T5
+		,tb_ent_dict_info T6,TB_ENT_CUSTOMER T7,TB_ENT_SHOP T8 ,TB_ENT_ACCTYPE
+		T9
+		where
+
+		T2.CARDHOLDER_ID=T3.CARDHOLDER_ID(+)
+		and
+		T3.CUSTOMER_ID=T7.CUSTOMER_ID(+)
+		and
+		T2.CARD_NO(+)=T5.PAN
+		and
+		T5.TXN_NUM=T6.dict_id(+)
+		and
+		decode(rtrim(T5.RCVG_CODE),'','0',rtrim(T5.RCVG_CODE))=T8.SHOP_ID(+)
+		and
+		T5.CARD_ACCP_ID=T1.MERCHANT_ID(+)
+		and
+		T5.REVSAL_FLAG=0
+		and
+		T5.TXN_NUM
+		not in
+		('2015','4015','2105','4105','2095','4095','7010','1025','1325')
+		and
+		decode(replace(T5.ACCT_ID1,'
+		',''),'','0',substr(T5.ACCT_ID1,22,4))=to_char(T9.ACC_TYPE_ID(+))
+		and
+		T5.CARD_ACCP_TERM_ID !='99999941'
+		<dynamic>
+			<!--
+				<isNotNull property="defaultIssuerId" prepend="and"> T2.ISSUSER_ID =
+				#defaultIssuerId:DECIMAL# </isNotNull>
+			-->
+			<isNotEmpty property="cardNo" prepend="and">
+				T5.PAN =
+				#cardNo:VARCHAR#
+      	</isNotEmpty>
+			<isNotNull property="nstarDate" prepend="and">
+				T5.INST_DATE&gt;=#nstarDate:DECIMAL#
+      	</isNotNull>
+			<isNotNull property="nEnDate" prepend="and">
+				T5.INST_DATE&lt;=#nEnDate:DECIMAL#
+      	</isNotNull>
+			<isNotEmpty property="txnAmt" prepend="and">
+				decode(rtrim(T5.AMT_TRANS),'','0',to_number(rtrim(T5.AMT_TRANS))) =
+				#txnAmt:VARCHAR#
+      	</isNotEmpty>
+			<!--
+				<isNotNull property="txnType" prepend="and"> T5.txn_num =
+				to_char(#txnType:DECIMAL#) </isNotNull>
+			-->
+			<isNotEmpty property="sysSeqNum" prepend="and">
+				T5.RETRIVL_REF =
+				#sysSeqNum:VARCHAR#
+      	</isNotEmpty>
+		</dynamic>
+		order by T5.INST_DATE asc,T5.INST_TIME asc
+		)
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="selectCardNo" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select distinct
+		T2.CARD_NO as "cardNo",
+		T1.First_Name as
+		"cardholderName",
+		T4.CUSTOMER_NAME as "customerName",
+		T1.ID_NO as
+		"idNo",
+		T1.Cardholder_Mobile as "mobile"
+		from
+		TB_CARDHOLDER T1 right join
+		TB_CARDHOLDER_CARDLIST T2 on T1.CARDHOLDER_ID =T2.CARDHOLDER_ID left join
+		TB_PRODUCT T3 on T2.PRODUCT_ID=T3.PRODUCT_ID left join 
+		TB_CUSTOMER T4 on T1.entity_id=T4.entity_id
+		where
+		
+			t2.card_state = '9'
+		and
+			T3.PRODUCT_TYPE='1'
+		and
+		
+		t2.data_state = '1'
+		<dynamic>
+			<isEmpty property="check" prepend="and">
+				T3.PRODUCT_TYPE=1	
+			</isEmpty>
+			<isNotEmpty property="cardNo" prepend="and">
+				T2.CARD_NO =
+				#cardNo:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="mobile" prepend="and">
+				T1.Cardholder_Mobile = #mobile:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="idNo" prepend="and">
+				T1.ID_NO =
+				#idNo:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="customerName" prepend="and">
+				T4.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+      		</isNotEmpty>
+			<isNotEmpty property="cardholderName" prepend="and">
+				T1.First_Name like '%'||#cardholderName:VARCHAR#||'%'
+      		</isNotEmpty>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectCardInfo" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select distinct
+		T2.CARD_NO as "cardNo",
+		T1.CARDHOLDER_NAME as
+		"cardholderName",
+
+		T4.CUSTOMER_NAME as "customerName",
+		decode(T3.CARD_TYPE,'1','IC卡','磁条卡') as "cardType",
+		decode(T3.PRODUCT_TYPE,'1','充值卡','礼品卡') as "prodType",
+		T3.PRODUCT_NAME as
+		"prodName"
+		from
+		TB_ENT_CARDHOLDER T1,
+		TB_CARD_INFO T2,
+		TB_ENT_PRODUCT T3,
+		TB_ENT_CUSTOMER T4
+		where
+		T1.CARDHOLDER_ID(+)=T2.CARDHOLDER_ID
+		and
+		T2.PRODUCT_ID=T3.PRODUCT_ID(+)
+		and
+		T1.CUSTOMER_ID=T4.CUSTOMER_ID(+)
+		<dynamic>
+			<isNotEmpty property="cardNo" prepend="and">
+				T2.CARD_NO =
+				#cardNo:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="idNo" prepend="and">
+				T1.ID_NO =
+				#idNo:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="customerName" prepend="and">
+				T4.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+      		</isNotEmpty>
+			<isNotEmpty property="cardholderName" prepend="and">
+				T1.CARDHOLDER_NAME like '%'||#cardholderName:VARCHAR#||'%'
+				and
+				T1.CUSTOMER_ID=T4.CUSTOMER_ID
+      		</isNotEmpty>
+			<isNotEmpty property="cardType" prepend="and">
+				T3.CARD_TYPE=#cardType:DECIMAL#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="prodType">
+				T3.PRODUCT_TYPE=#prodType:DECIMAL#
+      		</isNotEmpty>
+			<isNotEqual prepend="and" property="defaultIssuerId"
+				compareValue="0">
+				T2.ISSUSER_ID = #defaultIssuerId:DECIMAL#
+      		</isNotEqual>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="viewTxn"
+		resultClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO">
+		select
+		distinct
+		*
+		from
+
+		(select
+		decode(rtrim(T1.RCVG_CODE),'','0',rtrim(T1.RCVG_CODE)) as "shopId",
+		T1.CARD_ACCP_ID as "merchantId",
+		T1.CARD_ACCP_TERM_ID as "postId",
+		SYS_SEQ_NUM as "sysSeqNum",
+		DICT_NAME as "txnType1",
+		TXN_NUM as
+		"txnNum",
+		decode(replace(AMT_TRANS,'
+		',''),'','0',to_number(rtrim(AMT_TRANS))) as "txnAmt",
+		decode(replace(AMT_TRANS_FEE,'
+		',''),'','0',to_number(rtrim(AMT_TRANS_FEE))) as "amtTransFee",
+		PAN as
+		"cardNo",
+		substr(INST_DATE,1,4)||'-'||substr(INST_DATE,5,2)||'-'||substr(INST_DATE,7,2)||'
+		'||substr(INST_TIME,1,2)||':'||substr(INST_TIME,3,2)||':'||substr(INST_TIME,5,2)
+		as "txnDate",
+		decode(rtrim(MISC_2),'','0',rtrim(MISC_2)) as misc
+		from
+		TBL_TXN T1,
+		tb_ent_dict_info T2
+		where
+		T1.TXN_NUM=T2.dict_id(+)
+		<dynamic>
+			<isNotEmpty property="sysSeqNum" prepend="and">
+				RETRIVL_REF =
+				#sysSeqNum:VARCHAR#
+      			</isNotEmpty>
+		</dynamic>
+
+
+		union all
+		select
+		decode(rtrim(T1.RCVG_CODE),'','0',rtrim(T1.RCVG_CODE))
+		as "shopId",
+		T1.CARD_ACCP_ID as "merchantId",
+		T1.CARD_ACCP_TERM_ID as
+		"postId",
+		SYS_SEQ_NUM as "sysSeqNum",
+		DICT_NAME as "txnType1",
+		TXN_NUM as
+		"txnNum",
+		decode(replace(AMT_TRANS,'
+		',''),'','0',to_number(rtrim(AMT_TRANS))) as "txnAmt",
+		decode(replace(AMT_TRANS_FEE,'
+		',''),'','0',to_number(rtrim(AMT_TRANS_FEE))) as "amtTransFee",
+		PAN as
+		"cardNo",
+		substr(INST_DATE,1,4)||'-'||substr(INST_DATE,5,2)||'-'||substr(INST_DATE,7,2)||'
+		'||substr(INST_TIME,1,2)||':'||substr(INST_TIME,3,2)||':'||substr(INST_TIME,5,2)
+		as "txnDate",
+		decode(rtrim(MISC_2),'','0',rtrim(MISC_2)) as misc
+		from
+		TBL_TXN_HIS T1,tb_ent_dict_info T2
+		where
+		T1.TXN_NUM=T2.dict_id(+)
+		<dynamic>
+			<isNotEmpty property="sysSeqNum" prepend="and">
+				RETRIVL_REF =
+				#sysSeqNum:VARCHAR#
+      			</isNotEmpty>
+		</dynamic>
+
+		)
+
+
+	</select>
+
+	<select id="selectAccount"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO"
+		resultClass="com.allinfinance.univer.cardmanagement.dto.AccountDTO">
+		select distinct
+		T2.ACCOUNT_NO as "accountNo",
+		T4.ACC_TYPE_NAME as
+		"accountType",
+		T2.ACC_TYPE as "accountType1",
+		T2.MAX_TXN_AMT as
+		"posSingleAmount",
+		T2.MAX_DAY_TXN_AMT as "posDailyAmount",
+		T2.MAX_TXN_AMT2 as "webSingleAmount",
+		T2.MAX_DAY_TXN_AMT2 as
+		"webDailyAmount",
+		T1.NOPIN_TXN_AMT as "withoutPinAmount",
+		T2.ACC_BAL as
+		"accBal",
+		T1.CARD_NO as "cardNo",
+		decode(replace(T2.FREESE_AMT,'
+		',''),'',0,T2.FREESE_AMT) as "congeal"
+		from
+		TB_CARD_INFO
+		T1,TB_ACCOUNT_INFO T2,TB_REL_CARD_ACCOUNT T3,TB_ENT_ACCTYPE T4
+		where
+		T1.CARD_NO=T3.CARD_NO
+		and
+		T2.ACCOUNT_NO=T3.ACCOUNT_NO
+		and
+		T2.ACC_TYPE=T4.ACC_TYPE_ID
+		<dynamic>
+			<isNotEmpty property="cardNo" prepend="and">
+				T1.CARD_NO
+				=#cardNo:varchar#
+  		</isNotEmpty>
+			<isNotEmpty prepend="and" property="accountId">
+				T2.ACCOUNT_NO=#accountId:varchar#
+  		</isNotEmpty>
+		</dynamic>
+	</select>
+	<update id="updateAccount"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO">
+		update
+		TB_ACCOUNT_INFO
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="posSingleAmount">
+				MAX_TXN_AMT =
+				#posSingleAmount:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="posDailyAmount">
+				MAX_DAY_TXN_AMT =
+				#posDailyAmount:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="webSingleAmount">
+				MAX_TXN_AMT2 =
+				#webSingleAmount:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="webDailyAmount">
+				MAX_DAY_TXN_AMT2 =
+				#webDailyAmount:DECIMAL#
+      </isNotNull>
+		</dynamic>
+		where
+		ACCOUNT_NO=#accountId:VARCHAR#
+	</update>
+
+	<select id="selectCardFreeze"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T2.CARD_NO as "cardNo",
+		decode(T4.CARD_TYPE,'1','IC卡','磁条卡') as
+		"cardType",
+		T3.First_Name as "cardholderName",
+		T3.ID_NO as "idNo",
+		T3.CARDHOLDER_MOBILE as "mobile"
+		from
+		TB_CARDHOLDER_CARDLIST T2 left join
+		TB_CARDHOLDER T3 on T2.CARDHOLDER_ID=T3.CARDHOLDER_ID left join 
+		TB_PRODUCT T4 on T2.PRODUCT_ID=T4.PRODUCT_ID
+		where
+			t2.card_state = 9
+		<dynamic>
+			<isNotEmpty property="mobile" prepend="and">
+				T3.MOBILE =
+				#mobile:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="idNo" prepend="and">
+				T3.ID_NO =
+				#idNo:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="cardholderName" prepend="and">
+				T3.First_Name ='%'||#cardholderName:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotEmpty property="cardNo" prepend="and">
+				T2.CARD_NO
+				=#cardNo:varchar#
+  		</isNotEmpty>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="selectLock"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T2.CARD_NO as "cardNo",
+		decode(T4.CARD_TYPE,'1','IC卡','磁条卡') as
+		"cardType",
+		T3.First_Name as "cardholderName",
+		T3.ID_NO as "idNo",
+		T3.CARDHOLDER_MOBILE as "mobile"
+		from
+		TB_CARDHOLDER_CARDLIST T2 left join
+		TB_CARDHOLDER T3 on T2.CARDHOLDER_ID=T3.CARDHOLDER_ID left join
+		TB_PRODUCT T4 on T2.PRODUCT_ID=T4.PRODUCT_ID
+		where
+		
+		t2.card_state = 9
+		<dynamic>
+			<isNotEmpty property="mobile" prepend="and">
+				T3.MOBILE =
+				#mobile:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="idNo" prepend="and">
+				T3.ID_NO =
+				#idNo:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty property="cardholderName" prepend="and">
+				T3.First_Name ='%'||#cardholderName:VARCHAR#||'%'
+      	</isNotEmpty>
+			<isNotEmpty property="cardNo" prepend="and">
+				T2.CARD_NO
+				=#cardNo:varchar#
+  		</isNotEmpty>
+
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectRisk"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T3.CARD_NO as "cardNo",
+		substr(TXN_DATE,1,4)||'-'||substr(TXN_DATE,5,2)||'-'||substr(TXN_DATE,7,2)
+		as "txnDate",
+		substr(TXN_TIME,1,2)||':'||substr(TXN_TIME,3,2)||':'||substr(TXN_TIME,5,2)
+		as "txnTime",
+		T2.DICT_NAME as "txnType",
+		substr(INSERT_TIME,1,4)||'-'||substr(INSERT_TIME,5,2)||'-'||substr(INSERT_TIME,7,2)||'
+		'||substr(INSERT_TIME,1,2)||':'||substr(INSERT_TIME,3,2)||':'||substr(INSERT_TIME,5,2)
+		as "insertTime",
+		SYS_SEQ as "sysSeq",
+		DECODE(MON_LEV,1,'通知',2,'警告',3,'严重警告',MON_LEV) as "monLev",
+		MON_STAT as
+		"monStat",
+		RSVD1 as "rsvd1"
+		from
+		TB_ENT_DICT_INFO T2,
+		TB_RISK_RECORD T3,
+		TB_ENT_MERCHANT T4
+		where
+		MON_STAT=0
+		and
+		T3.TXN_TYPE=T2.DICT_ID(+)
+		and
+		substr(T3.RSVD2,1,15)=T4.MERCHANT_ID
+		<dynamic>
+			<isNotEmpty property="cardNo" prepend="and">
+				T3.CARD_NO
+				=#cardNo:varchar#
+      		</isNotEmpty>
+			<isNotNull property="txnDate" prepend="and">
+				to_date(to_char(T3.TXN_DATE),'yyyyMMdd') &gt;= #txnDate:DATE#
+			</isNotNull>
+			<isNotNull property="enDate" prepend="and">
+				to_date(to_char(T3.TXN_DATE),'yyyyMMdd') &lt;= #enDate:DATE#
+			</isNotNull>
+			<isNotNull property="monLev" prepend="and">
+				MON_LEV=#monLev:DECIMAL#
+  			</isNotNull>
+			<isNotEqual prepend="and" property="defaultIssuerId"
+				compareValue="0">
+				T4.ISSUER_ID = #defaultIssuerId:DECIMAL#
+      		</isNotEqual>
+			<isEqual prepend="and" property="defaultIssuerGroupId"
+				compareValue="0">
+				T4.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+			</isEqual>
+		</dynamic>
+		order by
+		INSERT_TIME
+		desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="viewRisk"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO"
+		resultClass="com.allinfinance.univer.cardmanagement.dto.RiskDTO">
+		select
+		CARD_NO as "cardNo",
+		substr(TXN_DATE,1,4)||'-'||substr(TXN_DATE,5,2)||'-'||substr(TXN_DATE,7,2)
+		as "txnDate",
+		substr(decode(length(TXN_TIME),5,'0'||to_char(TXN_TIME),TXN_TIME),1,2)||':'||substr(decode(length(TXN_TIME),5,'0'||to_char(TXN_TIME),TXN_TIME),3,2)||':'||substr(decode(length(TXN_TIME),5,'0'||to_char(TXN_TIME),TXN_TIME),5,2)
+		as "txnTime",
+		T2.DICT_NAME as "txnType",
+		substr(INSERT_TIME,1,2)||':'||substr(INSERT_TIME,3,2)||':'||substr(INSERT_TIME,5,2)
+		as "insertTime",
+		SYS_SEQ as "sysSeqNum",
+		MON_REASON as "monReason",
+		DECODE(MON_LEV,1,'通知',2,'警告',3,'严重警告',MON_LEV) as "monLev",
+		RSVD1 as
+		"rsvd1",
+		RSVD2 as "rsvd2"
+		from
+		TB_ENT_DICT_INFO T2,
+		TB_RISK_RECORD T3
+		where
+		MON_STAT=0
+		and
+		T3.TXN_TYPE=T2.DICT_ID(+)
+		<dynamic>
+			<isNotEmpty property="sysSeqNum" prepend="and">
+				T3.SYS_SEQ
+				=#sysSeqNum:varchar#
+      			</isNotEmpty>
+			<isNotNull property="txnDaten" prepend="and">
+				to_date(to_char(T3.TXN_DATE),'yyyyMMdd') like #txnDaten:DATE#
+			</isNotNull>
+			<isNotEmpty property="cardNo" prepend="and">
+				CARD_NO
+				=#cardNo:varchar#
+      			</isNotEmpty>
+			<isNotEmpty property="rsvd1" prepend="and">
+				RSVD1 =
+				#rsvd1:varchar#
+      			</isNotEmpty>
+		</dynamic>
+		order by
+		INSERT_TIME
+		desc
+	</select>
+	<select id="selectRiskSvcCtrl"
+		resultClass="com.allinfinance.univer.cardmanagement.dto.RiskSvcCtrlDTO">
+		select
+		SHOWFLAG_RULE as "showflagRule",
+		MAX_AMT as "maxAmt",
+		MAX_CNT_FAIL as "maxCntFail",
+		MAX_CNT_ETIME as "maxCntEtime",
+		MAX_CNT_ECREAT as "maxCntEcteate",
+		MAX_CNT_EACT as "maxCntEact",
+		MAX_CNT_ELOCK as "maxCntElock",
+		MAX_CNT_ELOST as "maxCntElost",
+		MAX_PEROVER as "maxCntPerover",
+		MAX_CNT_ECVV as "maxCntEcvv",
+		MAX_CNT_ECVV2 as "maxCntEcvv2",
+		MAX_CNT_EPIN as "maxCntEpin",
+		MAX_CNT_UTIME as "maxCntUtime"
+
+		from
+		TB_RISK_SVC_CTRL
+  </select>
+	<update id="updateRiskSvcCtrl"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.RiskSvcCtrlDTO">
+		update
+		TB_RISK_SVC_CTRL
+		<dynamic prepend="set">
+			<isNotEmpty prepend="," property="showflagRule">
+				SHOWFLAG_RULE =
+				#showflagRule:VARCHAR#
+      </isNotEmpty>
+			<isNotNull prepend="," property="maxAmt">
+				MAX_AMT = #maxAmt:DECIMAL#
+			</isNotNull>
+			<isNotNull prepend="," property="maxCntFail">
+				MAX_CNT_FAIL =
+				#maxCntFail:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntEtime">
+				MAX_CNT_ETIME =
+				#maxCntEtime:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntEcteate">
+				MAX_CNT_ECREAT =
+				#maxCntEcteate:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntEact">
+				MAX_CNT_EACT =
+				#maxCntEact:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntElock">
+				MAX_CNT_ELOCK =
+				#maxCntElock:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntElost">
+				MAX_CNT_ELOST =
+				#maxCntElost:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntPerover">
+				MAX_PEROVER =
+				#maxCntPerover:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntEcvv">
+				MAX_CNT_ECVV =
+				#maxCntEcvv:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntEcvv2">
+				MAX_CNT_ECVV2 =
+				#maxCntEcvv2:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntEpin">
+				MAX_CNT_EPIN =
+				#maxCntEpin:DECIMAL#
+      </isNotNull>
+			<isNotNull prepend="," property="maxCntUtime">
+				MAX_CNT_UTIME =
+				#maxCntUtime:DECIMAL#
+      </isNotNull>
+		</dynamic>
+	</update>
+
+	<!--
+		<select id="selectMemberInfo"
+		parameterClass="com.huateng.accor.cardmanagement.dto.CardManagementQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true"> <include
+		refid="Commons.prefixSql"/> select decode(replace(RESV,'
+		',''),'',MEM_EMAIL,RESV) as "RESV", MEM_EMAIL as "memEmail", MEM_NAME
+		as "memName", decode(MEM_GENDER,'1','男','女') as "memGener",
+		substr(MEM_BIRTHDAY,1,4)||'-'||substr(MEM_BIRTHDAY,5,2)||'-'||substr(MEM_BIRTHDAY,7,2)
+		as "memBirthday", MEM_NATIONAL_ID as "memNationalId", MEM_CELL as
+		"memCell", POINTS as "points", CREAT_DATE as "creatDate" from
+		TB_MEMBER_INFO where 1=1 <dynamic> <isNotEmpty property="memEmail"
+		prepend="and"> decode(replace(RESV,' ',''),'',MEM_EMAIL,RESV)
+		=#memEmail:varchar# </isNotEmpty> <isNotEmpty property="memName"
+		prepend="and"> MEM_NAME =#memName:varchar# </isNotEmpty> <isNotEmpty
+		property="comName" prepend="and"> COM_NAME like
+		'%'||#comName:varchar#||'%' </isNotEmpty> <isNotEmpty
+		property="dyPwdAuth" prepend="and"> DYN_PWD_AUTH =#dyPwdAuth:varchar#
+		</isNotEmpty> </dynamic> <include refid="Commons.suffixSql"/>
+		</select>
+	-->
+	<select id="selectCurrDate" resultClass="java.lang.String">
+		select
+		CURR_DATE as
+		"currDate"
+		from
+		TB_BAT_CTRL
+  </select>
+
+	<!-- 查询会员信息 -->
+	<select id="selectMemberInfo"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		decode(replace(RESV,' ',''),'',t1.MEM_EMAIL,RESV) as "RESV",
+		t1.MEM_EMAIL as "memEmail",
+		t1.MEM_NAME as "memName",
+		t1.MEM_NATIONAL_ID as "memNationalId",
+		t1.MEM_CELL as "memCell",
+		t1.POINTS as "points",
+		t1.CREAT_DATE as "creatDate",
+		t2.card_no as
+		"cardNo",
+		to_char(T3.ACC_BAL/100, '9999999990.00') as "accBal"
+		from
+		TB_MEMBER_INFO t1,
+		tb_member_card_bind t2,
+		TB_ACCOUNT_INFO t3
+		where
+		t1.mem_email = t2.mem_email and
+		t3.account_no = t2.card_no || '0'
+		<dynamic>
+			<isNotEmpty property="cardNo" prepend="and">
+				t2.card_no
+				=#cardNo:varchar#
+  				</isNotEmpty>
+			<isNotEmpty property="memEmail" prepend="and">
+				decode(replace(RESV,' ',''),'',t1.MEM_EMAIL,RESV)
+				=#memEmail:varchar#
+      			</isNotEmpty>
+			<isNotEmpty property="memName" prepend="and">
+				t1.MEM_NAME
+				=#memName:varchar#
+  				</isNotEmpty>
+			<isNotEmpty property="memCell" prepend="and">
+				MEM_CELL
+				=#memCell:varchar#
+      			</isNotEmpty>
+			<isNotEmpty property="memNationalId" prepend="and">
+				MEM_NATIONAL_ID =#memNationalId:varchar#
+      			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startDate">
+				to_char(creat_date,'yyyy-MM-dd') >= #startDate:VARCHAR#
+			      </isNotEmpty>
+			<isNotEmpty prepend="and" property="endDate">
+				#endDate:VARCHAR# >=
+				to_char(creat_date,'yyyy-MM-dd')
+			      </isNotEmpty>
+		</dynamic>
+		order by t1.CREAT_DATE desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<!--
+		<select id="selectTxnType"
+		resultClass="com.huateng.accor.dictinfo.DictInfoDTO"> select t.dict_id
+		as "dictId", t.dict_type as "dictType", t.dict_name as "dictName" from
+		tb_ent_dict_info t where t.dict_id not in
+		('2015','4015','2105','4105','2095','4095','7010','1025','1325') and
+		t.dict_type=999 </select>
+	-->
+	<select id="selectCardOperater" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+		T1.CARD_MANAGEMENT_ID as "cardManagementId",
+		T1.CARD_NO as
+		"cardNo",
+		T1.OPERATION_TYPE as "operationtype",
+		T1.CARD_VALIDITY_PERIOD
+		as "cardValidityPeriod",
+		T1.EXTENSION_MONTH as "extensionMonth",
+		T1.NEW_CARD_VALIDITY_PERIOD as "newCardValidityPeriod",
+		T1.SERVICE_FEE
+		as "serviceFee",
+		T1.START_DATE as "startDate",
+		T1.END_DATE as "endDate",
+		T1.POS_SINGLE_AMOUNT as "posSingleAmount",
+		T1.POS_DAILY_AMOUNT as
+		"posDailyAmount",
+		T1.WEB_SINGLE_AMOUNT as "webSingleAmount",
+		T1.WEB_DAILY_AMOUNT as "webDailyAmount",
+		T1.WITHOUT_PIN_AMOUNT as
+		"withoutPinAmount",
+		T1.TXN_ID as "txnId",
+		T1.ADJUST_TYPE as
+		"adjustType",
+		T1.ADJUST_AMOUNT as "asjustAmount",
+		T1.MEMO as "memo",
+		T1.CREATE_USER as "createUser",
+		T1.CREATE_TIME as "createTime",
+		T1.MODIFY_USER as "modifyUser",
+		T1.MODIFY_TIME as "modifyTime",
+		T1.DATASTATE as "dataState"
+		FROM TB_ENT_CARD_MANAGEMENT T1
+		WHERE 1=1
+		<dynamic>
+			<isNotEmpty property="cardNo" prepend="and">
+				T1.CARD_NO =
+				#cardNo#
+    		</isNotEmpty>
+			<isNotEmpty property="createUser" prepend="and">
+				T1.CREATE_USER
+				=#"createUser"#
+    		</isNotEmpty>
+			<isNotEmpty property="startDate" prepend="and">
+				T1.START_DATE =
+				#startDate#
+    		</isNotEmpty>
+			<isNotEmpty property="endDate" prepend="and">
+				T1.END_DATE=
+				#endDate#
+    		</isNotEmpty>
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="viewOrderByCardNo"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO"
+		resultClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO">
+		select
+		t1.card_no as "transferOutCard",
+		decode(t3.product_type,'1','充值卡','礼品卡') as "prodType",
+		t3.product_name
+		as "prodName",
+		t2.order_id as "oldOrder",
+		t4.customer_name as
+		"customerName",
+		decode(t4.customer_type,'0','企业','个人') as
+		"customerType",
+		decode(t2.order_type,'10000001','销售记名卡订单（企业）','10000002','销售匿名卡订单（企业）','10000005','销售记名卡订单(散户)','10000006','销售不记名卡订单(散户)','10000011','销售记名卡订单（个人）','10000012','销售不记名卡订单（个人）')
+		as "orderType",
+		t5.contact_name as "operator",
+		t5.contact_mobile_phone
+		as "operatorTel",
+		to_char(to_date(t6.modify_time, 'yyyy-MM-dd
+		hh24:mi:ss'),'YYYY-MM-DD HH24:MI:SS') as "modifyTime",
+		decode(t2.pay_channel,'1','现金','2','支票','3','贷记划转','4','电汇','5','汇票','6','本票','7','刷卡','8','其他','9','银行转账')
+		as "payChannel",
+		t2.into_bank_id as "intoBankId",
+		t2.from_bank_id as
+		"fromBankId"
+		from tb_sell_order_card_list t1 join
+		tb_sell_order t2 on t1.order_id=t2.order_id join
+		tb_product t3 on t2.product_id=t3.product_id join
+		tb_customer t4 on t2.first_entity_id = t4.entity_id right join
+		tb_entity_contact t5 on t5.contact_id=t2.contact_id join
+		tb_sell_order_flow t6 on t2.order_id=t6.order_id
+		where
+		
+		   t6.order_flow_node='12'
+		and
+		t6.operate_type='1'
+		and t1.DATA_STATE= '1'
+		<isNotEmpty property="transferOutCard" prepend="and">
+			t1.card_no=
+			#transferOutCard#
+    		</isNotEmpty>
+	</select>
+
+	<select id="checkCardStock" parameterClass="java.lang.String"
+		resultClass="java.lang.String">
+		select t2.card_no from tb_sell_order
+		t1,tb_sell_order_card_list t2
+		where t1.order_id = t2.order_id and
+		t1.order_state='32'
+		and t1.data_state='1' and t2.data_state='1' and
+		card_no=#cardNo#
+  </select>
+  
+  <select id="selectTransactionInfo" resultClass="java.util.HashMap" remapResults="true" 
+		parameterClass="com.allinfinance.univer.manager.transactionQuery.dto.TransactionQueryDTO"
+		>
+		<include refid="Commons.prefixSql" />
+		select 
+		<!-- SEQ_NO as seqNo, -->
+		TXN_NAME as "transType",
+		CARD_NO as "cardNo",
+		CAST((to_number(decode(TXN_AMT,'','0',null,'0',TXN_AMT))/100)  AS decimal(12,2)) as "amt",
+		CAST((to_number(decode(FEE,'','0',null,'0',FEE))/100)  AS decimal(12,2)) as "fee",
+		RESP_STAT as "transState",
+		TERM_ID as "termId",
+		MCHNT_CD as "mchntCD",
+		 CAST((to_number(decode(ACC_BAL,'','0',null,'0',ACC_BAL))/100)  AS decimal(12,2)) as "accBal", 
+		decode(TXN_TYPE,'1105_1','D','1115','D','1105','D','1305','D','C')   as "debtOrCredit", 
+		TO_DATE (DATE_TXN,'YYYY-MM-DD HH24:MI:SS') as "dateTxn"  
+		from VI_TXN_RECORD_DETAIL 
+		where 
+		 RESP_CODE ='00'
+		<dynamic>
+			<isNotEmpty property="cardNo" prepend="and">
+				CARD_NO LIKE '%'||#cardNo:VARCHAR#||'%'
+      	</isNotEmpty>
+			
+		<isNotEmpty property="startDate" prepend="and">
+				to_date(substr(DATE_TXN,1,8),
+				'yyyy-MM-dd')&gt;=to_date(#startDate:DATE#,'yyyy-MM-dd')
+      	</isNotEmpty>
+			<isNotEmpty property="endDate" prepend="and">
+				to_date(substr(DATE_TXN,1,8),
+				'yyyy-MM-dd')&lt;=to_date(#endDate:DATE#,'yyyy-MM-dd')
+      	</isNotEmpty>
+			<isNotEmpty property="txnType" prepend="and">
+				TXN_TYPE=#txnType:VARCHAR#
+      	</isNotEmpty>
+      	<isEmpty property="txnType" prepend="and">
+      	TXN_TYPE  in ('1105','7225','3105','7125','0004','0005','1305','1306','1115','1105_1','0002','5205') 
+      	</isEmpty>
+      	order by DATE_TXN desc 
+		</dynamic>
+		<!--  -->
+		<include refid="Commons.suffixSql" />
+	</select>
+  	 <select id="selectProvisionsBanlance" resultClass="java.util.HashMap" remapResults="true" 
+		parameterClass="com.allinfinance.univer.manager.transactionQuery.dto.TransactionQueryDTO"
+		>
+		<include refid="Commons.prefixSql" />
+		select 
+		LAST_DAY as "dataDate",
+		decode(TOTAL_BAL,'','0',null,'0',TOTAL_BAL)/100 as "totalBal",
+		decode(SUM_AMT_C,'','0',null,'0',SUM_AMT_C)/100 as "sumAmtC",<!-- 贷 （入金）-->
+		decode(SUM_AMT_D,'','0',null,'0',SUM_AMT_D)/100 as "sumAmtD"<!-- 借（出金） -->
+		from  SVC_STL.TB_STL_TOTAL_AMT 
+		where  1=1
+		<dynamic>
+		<isNotEmpty property="startDate" prepend="and">
+				to_date(substr(LAST_DAY,1,8),
+				'yyyy-MM-dd')&gt;=to_date(#startDate:DATE#,'yyyy-MM-dd')
+      	</isNotEmpty>
+			<isNotEmpty property="endDate" prepend="and">
+				to_date(substr(LAST_DAY,1,8),
+				'yyyy-MM-dd')&lt;=to_date(#endDate:DATE#,'yyyy-MM-dd')
+      	</isNotEmpty>
+      	order by LAST_DAY desc 
+		</dynamic>
+		<!--  -->
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="selectStanStifList" resultClass="java.util.HashMap" remapResults="true" 
+		parameterClass="com.allinfinance.univer.manager.transactionQuery.dto.StanStifQueryDTO"
+		>
+		<include refid="Commons.prefixSql" />
+		select 
+		TICD   ,
+CTNM      ,
+CTID      ,
+CTAC      ,
+TSTM,
+CRAT      
+
+		from TB_STAN_STIF 
+		where 
+		1=1
+		
+		<dynamic>
+			<isNotEmpty property="startDate" prepend="and">
+					to_date(substr(TSTM,1,10),
+					'yyyy-MM-dd')&gt;=to_date(#startDate:DATE#,'yyyy-MM-dd')
+	      	</isNotEmpty>
+			<isNotEmpty property="endDate" prepend="and">
+					to_date(substr(TSTM,1,10),
+					'yyyy-MM-dd')&lt;=to_date(#endDate:DATE#,'yyyy-MM-dd')
+	      	</isNotEmpty>
+	      	<isNotEmpty property="CTNM" prepend="and">
+					CTNM=#CTNM:VARCHAR#
+	      	</isNotEmpty>
+	      	<isNotEmpty property="CTAC" prepend="and">
+					CTAC=#CTAC:VARCHAR#
+	      	</isNotEmpty>
+	      </dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="selectStanStifInfo" resultClass="com.allinfinance.univer.manager.transactionQuery.dto.StanStifQueryDTO" 
+		parameterClass="com.allinfinance.univer.manager.transactionQuery.dto.StanStifQueryDTO">
+
+		select 
+		CTIF_ID   ,
+CTIF_TP   ,
+CLIENT_TP ,
+SMID      ,
+CTNM      ,
+CITP      ,
+CITP_NT   ,
+CTID      ,
+CBAT      ,
+CBAC      ,
+CABM      ,
+CTAT      ,
+CTAC      ,
+CPIN      ,
+CPBA      ,
+CPBN      ,
+CTIP      ,
+TSTM      ,
+CTTP      ,
+TSDR      ,
+CRPP      ,
+CRTP      ,
+CRAT      ,
+TCIF_ID   ,
+TCNM      ,
+TSMI      ,
+TCIT      ,
+TCIT_NT   ,
+TCID      ,
+TCAT      ,
+TCBA      ,
+TCBN      ,
+TCTT      ,
+TCTA      ,
+TCPN      ,
+TCPA      ,
+TPBN      ,
+TCIP      ,
+TMNM      ,
+BPTC      ,
+PMTC      ,
+TICD      ,
+BUSI_TYPE ,
+TRANS_TYPE,
+POS_DEV_ID,
+TRANS_STAT,
+BANK_STAT ,
+MER_PROV  ,
+MER_AREA  ,
+POS_PROV  ,
+POS_AREA  ,
+MER_UNIT  ,
+EXTEND1   ,
+EXTEND2   ,
+RATE_RMB  ,
+RATE_USA  ,
+IOFG         
+
+		from TB_STAN_STIF 
+		where 
+		1=1
+		
+		<dynamic>
+			
+	      	<isNotEmpty property="TICD" prepend="and">
+					TICD=#TICD:VARCHAR#
+	      	</isNotEmpty>
+	      </dynamic>
+	</select>
+</sqlMap>

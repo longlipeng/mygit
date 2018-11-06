@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CUST_CONTRACT">
+  <select id="selectCustContractsByDTO" parameterClass="com.huateng.accor.customercontract.dto.CustContractQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.CONTRACT_ID as "contractId",
+        T3.CUSTOMER_NAME as "customerName",
+        T4.PRODUCT_NAME as "productName",
+        T1.START_DATE as "startDate",
+        T1.END_DATE as "endDate",
+        T1.CARD_FEE as "cardFee",
+        T1.DELIVERY_FEE as "deliveryFee",
+        T1.ANNUAL_FEE as "annualFee",
+        T1.WEB_PAY_STAT as "webPayStat"
+    from
+        TB_ENT_CUST_CONTRACT T1,
+        (
+            select
+                T5.CONTRACT_ID,
+                count(*) as PINNOZEROCOUNT
+            from
+                TB_ENT_CUST_ACCTYPE_CONTRACT T5
+            where
+                T5.WITHOUT_PIN_AMOUNT != 0
+                and T5.DATA_STATE = '1'
+            group by
+                T5.CONTRACT_ID
+        ) T2,
+        TB_ENT_CUSTOMER T3,
+        TB_ENT_PRODUCT T4
+    where
+        T1.CONTRACT_ID = T2.CONTRACT_ID(+)
+        and T1.CUSTOMER_ID = T3.CUSTOMER_ID
+        and T1.PRODUCT_ID = T4.PRODUCT_ID
+        and T1.DATA_STATE = '1'
+        and T3.DATA_STATE = '1'
+        and T4.DATA_STATE = '1'
+    <dynamic>
+      <isEqual prepend="and" property="defaultIssuerId" compareValue="0">
+        T3.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+      </isEqual>
+      <isNotEqual prepend="and" property="defaultIssuerId" compareValue="0">
+        T3.ISSUER_ID = #defaultIssuerId:DECIMAL#
+      </isNotEqual>
+      <isNotNull prepend="and" property="contractId">
+        T1.CONTRACT_ID = #contractId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="customerId">
+        T1.CUSTOMER_ID = #customerId:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="and" property="customerName">
+        T3.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotNull prepend="and" property="productId">
+        T1.PRODUCT_ID = #productId:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="and" property="productName">
+        T4.PRODUCT_NAME like '%'||#productName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotNull prepend="and" property="pinAmountFlag">
+        <isEqual property="pinAmountFlag" compareValue="true">
+          T2.PINNOZEROCOUNT > 0
+        </isEqual>
+      </isNotNull>
+      <isNotNull prepend="and" property="webPayStat">
+        T1.WEB_PAY_STAT = #webPayStat:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="currentState">
+        <isEqual property="currentState" compareValue="1">
+          (T1.START_DATE &lt;= SYSDATE
+          and(T1.END_DATE is NULL OR T1.END_DATE &gt;= SYSDATE))
+        </isEqual>
+        <isEqual property="currentState" compareValue="0">
+          (T1.START_DATE &gt;= SYSDATE
+          or T1.END_DATE &lt;= SYSDATE)
+        </isEqual>
+      </isNotNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectCustAcctypeContractsByContractId" parameterClass="java.lang.Long" resultClass="com.huateng.accor.customercontract.dto.CustAcctypeContractDTO">
+    select
+        T1.ACC_TYPE_ID as "accTypeId",
+        T2.ACC_TYPE_NAME as "accTypeName",
+        T3.ISSUER_NAME as "issuerName",
+        T1.SERVICE_FEE as "serviceFee",
+        T1.WITHOUT_PIN_AMOUNT/100 as "withoutPinAmount"
+    from
+        TB_ENT_CUST_ACCTYPE_CONTRACT T1,
+        TB_ENT_ACCTYPE T2,
+        (
+            select
+                T4.ISSUER_ID || '' ISSUER_ID,
+                T4.ISSUER_NAME ISSUER_NAME
+            from
+                TB_ENT_ISSUER T4
+            UNION
+            select
+                T5.ISSUER_GROUP_ID || 'g' ISSUER_ID,
+                T5.ISSUER_GROUP_NAME ISSUER_NAME
+            from
+                TB_ENT_ISSUER_GROUP T5
+        ) T3
+    where
+        T1.ACC_TYPE_ID = T2.ACC_TYPE_ID
+        and ((T2.ISSUER_ID != 0 and T2.ISSUER_ID || '' = T3.ISSUER_ID)
+            or (T2.ISSUER_ID = 0 and T2.ISSUER_GROUP_ID || 'g' = T3.ISSUER_ID))
+        and T1.CONTRACT_ID = #contractId:DECIMAL#
+        and T1.DATA_STATE = '1'
+        and T2.DATA_STATE = '1'
+  </select>
+  <select id="inqueryProductForContract" parameterClass="com.huateng.accor.product.dto.ProductQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+       select
+        T1.PRODUCT_ID as "productId",
+        T1.PRODUCT_NAME as "productName",
+        T1.CARD_TYPE as "cardType",
+        T1.PRODUCT_TYPE as "productType",
+        T1.PROD_STAT as "prodStat" ,
+        T2.ISSUER_GROUP_NAME as "issuerGroupName"
+    from
+        TB_ENT_PRODUCT T1,TB_ENT_ISSUER_GROUP T2
+    where
+        T1.ISSUER_GROUP_ID=T2.ISSUER_GROUP_ID
+        and T1.DATA_STATE='1'
+        and T2.DATA_STATE='1'
+        and T1.PRODUCT_ID in (
+            select
+                PRODUCT_ID
+            from
+                TB_REL_ISSUER_PRODUCT
+            where
+                ISSUER_ID=#issuerId:DECIMAL#
+        )
+        and T2.ISSUER_GROUP_ID=#issuerGroupId:DECIMAL#
+    <dynamic>
+        <isNotNull prepend="and" property="productId">
+            T1.PRODUCT_ID = #productId:DECIMAL#
+        </isNotNull>
+        <isNotEmpty prepend="and" property="productName">
+            T1.PRODUCT_NAME like '%'||#productName:VARCHAR#||'%'
+        </isNotEmpty>
+        <isNotNull prepend="and" property="prodStat">
+            T1.PROD_STAT = #prodStat:DECIMAL#
+        </isNotNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  <select id="getBeforeCustContract" parameterClass="com.huateng.accor.customercontract.dto.CustContractDTO" resultMap="TB_ENT_CUST_CONTRACT.abatorgenerated_CustContractResult">
+    select *
+    from TB_ENT_CUST_CONTRACT T3,
+        (select max(START_DATE) as START_DATE, T1.CUSTOMER_ID as CUSTOMER_ID, T1.PRODUCT_ID as PRODUCT_ID
+        from TB_ENT_CUST_CONTRACT T1
+        where
+            T1.CUSTOMER_ID = #customerId:DECIMAL#
+            and T1.PRODUCT_ID = #productId:DECIMAL#
+            <!-- and T1.START_DATE &lt; #startDate:DATE# -->
+            and T1.DATA_STATE = '1'
+            <dynamic>
+                <isNotNull prepend="and" property="contractId">
+                    T1.CONTRACT_ID != #contractId:DECIMAL#
+                </isNotNull>
+            </dynamic>
+        group by T1.CUSTOMER_ID, T1.PRODUCT_ID) T2
+    where T2.START_DATE = T3.START_DATE
+        and T2.CUSTOMER_ID = T3.CUSTOMER_ID
+        and T2.PRODUCT_ID = T3.PRODUCT_ID
+        and T3.DATA_STATE = '1'
+  </select>
+  <select id="getAfterCustContract" parameterClass="com.huateng.accor.customercontract.dto.CustContractDTO" resultMap="TB_ENT_CUST_CONTRACT.abatorgenerated_CustContractResult">
+    select *
+    from TB_ENT_CUST_CONTRACT T3,
+        (select min(NVL(T1.END_DATE, to_date('9999-12-30','yyyy-mm-dd'))), T1.CUSTOMER_ID, T1.PRODUCT_ID
+        from TB_ENT_CUST_CONTRACT T1
+        where
+            T1.CUSTOMER_ID = #customerId:DECIMAL#
+            and T1.PRODUCT_ID = #productId:DECIMAL#
+            and T1.START_DATE &gt; #startDate:DATE#
+            and T1.DATA_STATE = '1'
+            <dynamic>
+                <isNotNull prepend="and" property="contractId">
+                    T1.CONTRACT_ID != #contractId:DECIMAL#
+                </isNotNull>
+            </dynamic>
+        group by T1.CUSTOMER_ID, T1.PRODUCT_ID) T2
+    where T2.CONTRACT_ID = T3.CONTRACT_ID
+  </select>
+</sqlMap>

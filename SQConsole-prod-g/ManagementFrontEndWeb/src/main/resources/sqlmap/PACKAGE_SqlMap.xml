@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PACKAGE">
+	<select id="selectPackage"  resultClass="java.util.HashMap"  remapResults="true" parameterClass="com.allinfinance.univer.issuer.dto.procuctPackage.PackageQueryDTO">
+		<include refid="Commons.prefixSql"/>
+			  SELECT PAK.PACKAGE_ID as "packageId",
+                     PAK.PACKAGE_NAME as "packageName",
+                     cast( (cast(PAK.PACKAGE_FEE as decimal(15,2))/ 100)  as decimal(15,2)  )  as "packageFee"
+              FROM TB_PACKAGE PAK 
+              WHERE PAK.DATA_STATE='1' 
+			<dynamic>
+      			<isNotNull prepend="and" property="packageId">
+        			PAK.PACKAGE_ID = #packageId:DECIMAL#
+     			</isNotNull>
+     			<isNotNull prepend="and" property="defaultEntityId">
+        			PAK.ENTITY_ID = #defaultEntityId:DECIMAL#
+     			</isNotNull>
+      			<isNotEmpty prepend="and" property="packageName">
+        			UPPER(PAK.PACKAGE_NAME) like UPPER('%'||#packageName:VARCHAR#||'%')
+      			</isNotEmpty>
+      			<isNotNull prepend="and" property="productId">
+      				PACKAGE_ID
+      					not in(
+      						select
+      							PACKAGE_ID
+      						from
+      							TB_REL_PRODUCT_PACKAGE
+      						where
+      							PRODUCT_ID=#productId:DECIMAL#
+      					)
+      			</isNotNull>
+    		</dynamic>
+		<include refid="Commons.suffixSql"/>		
+	</select>	
+</sqlMap>

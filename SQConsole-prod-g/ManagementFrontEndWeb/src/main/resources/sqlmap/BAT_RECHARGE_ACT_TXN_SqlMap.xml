@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RECHARGE_ACT">
+	<insert id="insertRechargeActTxn"
+		parameterClass="com.allinfinance.univer.businessbatch.dto.BatchFileDetailDTO">
+		insert into TBL_BAT_RECHARGE_ACT_TXN (TXN_SEQ, SETTLE_DT, TXN_AMT,
+		TXN_STATE,
+		CARD_NO, ACC_TYPE, EXP_DATE, ACT_FLAG, REC_CRT_TS, UPD_CRT_TS)
+		values (#txnSeq:CHAR#, #smltDate:CHAR#, #txnAmt:CHAR#, #txnState:CHAR#,
+		#cardNo:VARCHAR#, #accType:VARCHAR#, #expDate:CHAR#, #actFlag:CHAR#,
+		#recCrtTs:CHAR#,
+		#recUpdTs:CHAR#)
+	</insert>
+	<select id="getRechargeActState" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.businessbatch.dto.BatchFileDetailDTO">
+		<include refid="Commons.prefixSql" />
+		select t2.order_id as "orderId",
+		t2.batch_no as "batchNo",
+		t1.card_no as "cardNo",
+		t1.txn_amt/100 as "txnAmt",
+		t1.resp_code as "respCode"
+		from tbl_bat_recharge_act_txn t1,
+		tbl_acc_batch_sum t2,
+		tbl_acc_batch_detail t3
+		where t2.batch_no = t3.batch_no
+		and t3.txn_seq = t1.txn_seq
+		and t1.txn_state = '2'
+		<isNotNull prepend="and" property="orderId">
+			t2.order_id = #orderId:VARCHAR#
+	   </isNotNull>
+		<isNotNull prepend="and" property="batchNO">
+			t2.batch_no = #batchNO:VARCHAR#
+	   </isNotNull>
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="getOrderActFlag" resultClass="java.lang.String"
+		parameterClass="java.lang.String">
+		select t1.act_flag
+		from TBL_BAT_RECHARGE_ACT_TXN t1, tbl_acc_batch_detail t2
+		where t1.txn_seq = t2.txn_seq
+		and t2.batch_no = #batchNo#
+	</select>
+</sqlMap>

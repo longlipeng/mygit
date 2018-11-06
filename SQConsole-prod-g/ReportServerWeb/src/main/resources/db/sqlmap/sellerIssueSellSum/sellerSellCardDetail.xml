@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="sellerSellCardDetail">
+	<select id="sellerSellCardOrderDetail" resultClass="com.allinfinance.service.sellOperation.sellerSellCardDetail.dto.SellerSellCardDetailDTO"
+		parameterClass="com.allinfinance.service.sellOperation.sellerSellCardDetail.dto.SellerSellCardDetailDTO">
+	select *
+  from (select t3.entity_id,
+               t3.customer_name,
+               t.order_id as orderId,
+               '销售记名订单' as orderType,
+               to_number(t.face_value * card_quantity / 100) as faceValue,
+               to_number(t.card_quantity) as amount,
+               to_number(t.total_price / 100) as al,
+               substr(char(to_date(substr(t.CREATE_TIME, 1, 8), 'yyyy-MM-dd')),1,10) as orderTime,
+               substr(char(to_date(substr(t.modify_time, 1, 8), 'yyyy-MM-dd')),1,10) as modify_time,
+               t4.user_name as saleMan,
+               t5.contact_name,
+               t6.product_name,
+               t7.dict_name as paymentTerm,
+               to_number(t.total_price / 100) -
+               to_number(t.face_value * card_quantity / 100) as alOther,
+               t8.dict_name as channel,
+               t9.bank_name,
+               t9.bank_account,
+               decode(t.payment_state, 0, '未付款', 2,'已确认','已付款') as paymentState,
+               t10.dict_name as orderState,
+               t11.bank_name as fromBank,
+               t11.bank_account as fromBankAccount
+          from tb_sell_order t
+               left join
+               tb_ent_user t4 on t.sale_man = t4.user_id
+               left join
+               tb_entity_contact t5 on t.contact_id = t5.contact_id
+               left join
+               (select td.dict_code, td.dict_name
+                  from tb_dict_info td
+                 where td.dict_type_code = '207') t7 on t.payment_term = t7.dict_code
+               left join
+               tb_bank t9 on t.into_bank_id = t9.bank_id
+               left join
+               (select td.dict_code, td.dict_name
+                  from tb_dict_info td
+                 where td.dict_type_code = '209') t10 on t.order_state = t10.dict_code
+               left join
+               (select orde.order_id, bank.bank_name, bank.bank_account
+                  from tb_sell_order orde, tb_bank bank
+                 where orde.from_bank_id = bank.bank_id) t11 on t.order_id=t11.order_id,
+               tb_customer t3,
+			   	TB_SELL_ORDER_PAYMENT t15
+               left join
+               (select td.dict_code, td.dict_name
+                  from tb_dict_info td
+                 where td.dict_type_code = '901') t8 on t15.PAYMENT_TYPE = t8.dict_code,
+               tb_product t6
+         where  t.first_entity_id = t3.entity_id
+           and t.product_id = t6.product_id
+          	<isNotEmpty prepend="and" property="customerId">
+				t.first_entity_id= #customerId#
+      		</isNotEmpty>
+           and t.process_entity_id = #issuerId#
+           and t.order_type in ('10000001','10000011','10000005')
+           and t.order_state in ('32','36')
+           and to_date(substr(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &gt;=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(substr(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &lt;=
+               to_date(#endDate#, 'yyyy-MM-dd')
+ 			AND t.order_id = t15.ORDER_ID
+ 			AND t15.DATA_STATE ='1' 
+        union all
+        select t3.entity_id,
+               t3.customer_name,
+               t.order_id as orderId,
+               '销售不记名订单' as orderType,
+               to_number(sum(t2.face_value * t2.card_amount / 100)) as faceValue,
+               sum(t2.CARD_AMOUNT) as amount,
+               to_number(t.total_price / 100) as al,
+               substr(char(to_date(substr(t.CREATE_TIME, 1, 8), 'yyyy-MM-dd')),1,10) as orderTime,
+               substr(char(to_date(substr(t.modify_time, 1, 8), 'yyyy-MM-dd')),1,10) as modify_time,
+               t4.user_name as saleMan,
+               t5.contact_name,
+               t6.product_name,
+               t7.dict_name as paymentTerm,
+               to_number(t.total_price / 100) -
+               to_number(sum(t2.face_value * t2.card_amount / 100)) as alOther,
+               t8.dict_name as channel,
+               t9.bank_name,
+               t9.bank_account,
+               decode(t.payment_state, 0, '未付款',2,'已确认', '已付款') as paymentState,
+               t10.dict_name as orderState,
+               t11.bank_name as fromBank,
+               t11.bank_account as fromBankAccount
+          from tb_sell_order t
+                left join 
+               tb_entity_contact t5 on t.contact_id = t5.contact_id
+                left join
+               (select td.dict_code, td.dict_name
+                  from tb_dict_info td
+                 where td.dict_type_code = '207') t7 on t.payment_term = t7.dict_code
+                left join
+                tb_bank t9 on t.into_bank_id = t9.bank_id
+                left join
+                (select td.dict_code, td.dict_name
+                  from tb_dict_info td
+                 where td.dict_type_code = '209') t10 on t.order_state = t10.dict_code
+               left join
+               (select orde.order_id, bank.bank_name, bank.bank_account
+                  from tb_sell_order orde, tb_bank bank
+                 where orde.from_bank_id = bank.bank_id) t11 on t.order_id=t11.order_id,
+               tb_sell_order_list t2,
+               tb_customer t3,
+				TB_SELL_ORDER_PAYMENT t15
+               left join 
+               (select td.dict_code, td.dict_name
+                  from tb_dict_info td
+                 where td.dict_type_code = '901') t8 on t15.PAYMENT_TYPE = t8.dict_code,
+               tb_ent_user t4,
+               tb_product t6
+         where t.order_id = t2.order_id
+           and t.sale_man = t4.user_id
+           and t.first_entity_id = t3.entity_id
+           and t.product_id = t6.product_id
+           and t.first_entity_id = #customerId#
+           and t.process_entity_id = #issuerId#
+           and t2.data_state = 1
+           and t.order_type in ('10000002','10000012','10000006')
+           and t.order_state in ('32','36')
+           and to_date(substr(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &gt;=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(substr(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &lt;=
+               to_date(#endDate#, 'yyyy-MM-dd')
+			AND t.order_id = t15.ORDER_ID
+			AND t15.DATA_STATE ='1'   
+         group by t.order_id,
+                  t.total_price,
+                  t.CREATE_TIME,
+                  t.modify_time,
+                  t4.user_name,
+                  t5.contact_name,
+                  t6.product_name,
+                  t7.dict_name,
+                  t8.dict_name,
+                  t9.bank_name,
+                  t9.bank_account,
+                  t3.entity_id,
+                  t3.customer_name,
+                  t10.dict_name,
+                  t.payment_state,
+                  t11.bank_name,
+                  t11.bank_account)
+ order by orderTime
+	</select>
+	<select id="sellerSellCardInfoDetail" resultClass="com.allinfinance.service.sellOperation.sellerSellCardDetail.dto.SellerSellCardDetailDTO"
+		parameterClass="com.allinfinance.service.sellOperation.sellerSellCardDetail.dto.SellerSellCardDetailDTO">
+		SELECT
+		    *
+		FROM
+		    (
+		        SELECT
+		            t3.entity_id,
+		            t3.customer_name,
+		            t3.CORP_CRED_ID       AS customerIdNo,
+		            t3.CUSTOMER_TELEPHONE AS customerTelephone,
+		            DECODE(t12.DATA_STATE,'1',T14.FIRST_NAME,'')  AS cardholderName,
+		            DECODE(t12.DATA_STATE,'1',T14.CARDHOLDER_MOBILE,'')  AS cardholderMobile,
+		            DECODE(t12.DATA_STATE,'1',T14.ID_NO,'')  AS cardholderIdNo,
+		            DECODE(t12.DATA_STATE,'1',t12.CARD_NO,'此卡已赎回或已作废!')   AS cardNo,
+		            DECODE(t12.DATA_STATE,'1',
+		            						   DECODE(CARDHOLDER_GENDER, '1', '男', '2','女','')
+		            						 ,''
+		            	  ) AS cardholderGender,
+		            DECODE(t12.DATA_STATE,'1',T14.PLATE_NUMBER,'')  AS plateNumber,
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_NAME,'')  AS deliveryName,
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_ADDRESS,'')  AS deliveryAddress,
+		            DECODE(t12.DATA_STATE,'1',T17.CONTACT_PHONE,'')  AS contactPhone,
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_POSTCODE,'')  AS deliveryPostcode,
+		            t.order_id                                           AS orderId,
+		            '销售记名订单'                                           AS orderType,
+		            to_number(t.face_value * card_quantity / 100)                         AS faceValue,
+		            to_number(t.card_quantity)                                            AS amount,
+		            to_number(t.total_price / 100)                                        AS al,
+		            SUBSTR(CHAR(to_date(SUBSTR(t.CREATE_TIME, 1, 8), 'yyyy-MM-dd')),1,10) AS orderTime,
+		            SUBSTR(CHAR(to_date(SUBSTR(t.modify_time, 1, 8), 'yyyy-MM-dd')),1,10) AS modify_time,
+		            t4.user_name                                                          AS saleMan,
+		            t5.contact_name,
+		            t6.product_name,
+		            t7.dict_name                                                             AS paymentTerm,
+		            to_number(t.total_price / 100) - to_number(t.face_value * card_quantity / 100) AS
+		                            alOther,
+		            t8.dict_name AS channel,
+		            t9.bank_name,
+		            t9.bank_account,
+		            DECODE(t.payment_state, 0, '未付款', 2,'已确认','已付款') AS paymentState,
+		            t10.dict_name                                    AS orderState,
+		            t11.bank_name                                    AS fromBank,
+		            t11.bank_account                                 AS fromBankAccount,
+		            t14.CARDHOLDER_COMMENT                           AS cardholderComment,
+			        DECODE(T18.CHANNEL,
+							null,decode(t.order_type,'10000001','控制台发卡','10000002','控制台发卡','10000011','控制台发卡','10000012','控制台发卡',''),
+							'',decode(t.order_type,'10000001','控制台发卡','10000002','控制台发卡','10000011','控制台发卡','10000012','控制台发卡',''),
+							'70000023','Ipos发卡',T18.CHANNEL)   AS sellChannel,
+		            DECODE(trim(T18.TERM_CHANNEL),null,'70000001','','70000001',T18.TERM_CHANNEL)                 AS termChannel,
+		            T18.BRANCH_ID                                    AS branchId
+		        FROM
+		            tb_sell_order t
+		        LEFT JOIN TB_SELL_ORDER_CARD_LIST T12 ON T.order_id = T12.order_id
+		        LEFT JOIN (select * from TB_CARDHOLDER where data_state = '1') T14 ON T12.CARDHOLDER_ID = T14.CARDHOLDER_ID
+		        LEFT JOIN TB_ENTITY_DELIVERY T16 ON T.DELIVERY_POINT = T16.DELIVERY_ID
+		        LEFT JOIN TB_DELIVERY_CONTACT T17 ON T.ORDER_CONTACT = T17.DELIVERY_CONTACT_ID
+		        LEFT JOIN TB_TERM_SELL_ORDER T18 on T.order_id = T18.order_id
+		        LEFT JOIN
+		            tb_ent_user t4
+		        ON
+		            t.sale_man = t4.user_id
+		        LEFT JOIN
+		            tb_entity_contact t5
+		        ON
+		            t.contact_id = t5.contact_id
+		        LEFT JOIN (
+			                SELECT
+			                    td.dict_code,
+			                    td.dict_name
+			                FROM
+			                    tb_dict_info td
+			                WHERE
+			                    td.dict_type_code = '207'
+			              ) t7
+		        ON
+		            t.payment_term = t7.dict_code
+		        LEFT JOIN
+		            tb_bank t9
+		        ON
+		            t.into_bank_id = t9.bank_id
+		        LEFT JOIN (
+			                SELECT
+			                    td.dict_code,
+			                    td.dict_name
+			                FROM
+			                    tb_dict_info td
+			                WHERE
+			                    td.dict_type_code = '209'
+			              ) t10
+		        ON
+		            t.order_state = t10.dict_code
+		        LEFT JOIN
+		            (
+		                SELECT
+		                    orde.order_id,
+		                    bank.bank_name,
+		                    bank.bank_account
+		                FROM
+		                    tb_sell_order orde,
+		                    tb_bank bank
+		                WHERE
+		                    orde.from_bank_id = bank.bank_id) t11
+		        ON
+		            t.order_id=t11.order_id,
+		            tb_customer t3,
+		            TB_SELL_ORDER_PAYMENT t15
+		        LEFT JOIN
+		            (
+		                SELECT
+		                    td.dict_code,
+		                    td.dict_name
+		                FROM
+		                    tb_dict_info td
+		                WHERE
+		                    td.dict_type_code = '901') t8
+		        ON
+		            t15.PAYMENT_TYPE = t8.dict_code,
+		            tb_product t6
+		        WHERE
+		            t.first_entity_id = t3.entity_id
+		        	<isNotEmpty prepend="and" property="customerId">
+						t.first_entity_id= #customerId#
+      				</isNotEmpty>
+		        AND t.product_id = t6.product_id
+		        AND t.process_entity_id = #issuerId#
+		        AND t.order_type IN ('10000001',
+		                             '10000011',
+		                             '10000005')
+		        AND t.order_state in ('32','36')
+		         AND t.product_id not in(select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+		        AND to_date(SUBSTR(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &gt;= to_date(#startDate#, 'yyyy-MM-dd'
+		            )
+		        AND to_date(SUBSTR(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &lt;= to_date(#endDate#, 'yyyy-MM-dd'
+		            )
+		        AND t.order_id = t15.ORDER_ID
+		        AND t15.DATA_STATE ='1'
+		        UNION ALL
+		        select 
+				      tt.entity_id,
+		             tt.customer_name,
+		             tt.customerIdNo,
+		             tt.customerTelephone,
+		             tt.cardholderName,
+		             tt.cardholderMobile,
+		            tt.cardholderIdNo,
+		             tt.cardNo,
+		            tt.cardholderGender,
+		            tt.plateNumber,
+		             tt.deliveryName,
+		            tt.deliveryAddress,
+		            tt.contactPhone,
+		             tt.deliveryPostcode,
+		             tt.orderId,
+		             tt.orderType,
+		            cast(decode(recharge.RECHARGE_AMT,null,'0','','0',recharge.RECHARGE_AMT) as bigint)/100   AS faceValue,
+		             tt.amount,
+		             tt.al,
+		            tt.orderTime,
+		             tt.modify_time,
+		             tt.saleMan,
+		             tt.contact_name,
+		             tt.product_name,
+		              tt.paymentTerm,
+		             tt.alOther,
+		             tt.channel,
+		            tt.bank_name,
+		             tt.bank_account,
+		             tt.paymentState,
+		            tt.orderState,
+		             tt.fromBank,
+		             tt.fromBankAccount,
+		             tt.cardholderComment,
+		              tt.sellChannel,
+		            tt.termChannel,
+			        tt.branchId
+				 FROM 
+		        (
+		        SELECT
+		            t3.entity_id,
+		            t3.customer_name,
+		            t3.CORP_CRED_ID       AS customerIdNo,
+		            t3.CUSTOMER_TELEPHONE AS customerTelephone,
+		            DECODE(t12.DATA_STATE,'1',T14.FIRST_NAME,'')  AS cardholderName,
+		            DECODE(t12.DATA_STATE,'1',T14.CARDHOLDER_MOBILE,'')  AS cardholderMobile,
+		            DECODE(t12.DATA_STATE,'1',T14.ID_NO,'')  AS cardholderIdNo,
+		            DECODE(t12.DATA_STATE,'1',t12.CARD_NO,'此卡已赎回或已作废!')   AS cardNo,
+		            DECODE(t12.DATA_STATE,'1',
+		            						   DECODE(CARDHOLDER_GENDER, '1', '男', '2','女','')
+		            						 ,''
+		            	  ) AS cardholderGender,
+		           	DECODE(t12.DATA_STATE,'1',T14.PLATE_NUMBER,'')  AS plateNumber,
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_NAME,'')  AS deliveryName,
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_ADDRESS,'')  AS deliveryAddress,
+		            DECODE(t12.DATA_STATE,'1',T17.CONTACT_PHONE,'')  AS contactPhone,
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_POSTCODE,'')  AS deliveryPostcode,
+		            t.order_id                                           AS orderId,
+		            '销售不记名订单'                                            AS orderType,
+		            <!-- to_number(SUM(t2.face_value * t2.card_amount / 100))                  AS faceValue, -->
+		            <!-- '0'                  AS faceValue, -->
+		            SUM(t2.CARD_AMOUNT)                                                   AS amount,
+		            to_number(t.total_price / 100)                                        AS al,
+		            SUBSTR(CHAR(to_date(SUBSTR(t.CREATE_TIME, 1, 8), 'yyyy-MM-dd')),1,10) AS orderTime,
+		            SUBSTR(CHAR(to_date(SUBSTR(t.modify_time, 1, 8), 'yyyy-MM-dd')),1,10) AS modify_time,
+		            t4.user_name                                                          AS saleMan,
+		            t5.contact_name,
+		            t6.product_name,
+		            t7.dict_name AS paymentTerm,
+		            '0' AS alOther,
+		            t8.dict_name AS channel,
+		            t9.bank_name,
+		            t9.bank_account,
+		            DECODE(t.payment_state, 0, '未付款',2,'已确认', '已付款') AS paymentState,
+		            t10.dict_name                                    AS orderState,
+		            t11.bank_name                                    AS fromBank,
+		            t11.bank_account                                 AS fromBankAccount,
+		            t14.CARDHOLDER_COMMENT                           AS cardholderComment,
+			        DECODE(T18.CHANNEL,
+							null,decode(t.order_type,'10000001','控制台发卡','10000002','控制台发卡','10000011','控制台发卡','10000012','控制台发卡',''),
+							'',decode(t.order_type,'10000001','控制台发卡','10000002','控制台发卡','10000011','控制台发卡','10000012','控制台发卡',''),
+							'70000023','Ipos发卡',T18.CHANNEL)   AS sellChannel,
+		            DECODE(trim(T18.TERM_CHANNEL),null,'70000001','','70000001',T18.TERM_CHANNEL)                 AS termChannel,
+		            T18.BRANCH_ID                                    AS branchId
+		        FROM
+		            tb_sell_order t
+		        LEFT JOIN TB_SELL_ORDER_CARD_LIST T12 ON T.order_id = T12.order_id
+		        LEFT JOIN (select * from TB_CARDHOLDER where data_state = '1') T14 ON T12.CARDHOLDER_ID = T14.CARDHOLDER_ID
+		        LEFT JOIN TB_ENTITY_DELIVERY T16 ON T.DELIVERY_POINT = T16.DELIVERY_ID
+		        LEFT JOIN TB_DELIVERY_CONTACT T17 ON T.ORDER_CONTACT = T17.DELIVERY_CONTACT_ID
+		        LEFT JOIN TB_TERM_SELL_ORDER T18 on T.order_id = T18.order_id
+		        LEFT JOIN
+		            tb_entity_contact t5
+		        ON
+		            t.contact_id = t5.contact_id
+		        LEFT JOIN
+		            (
+		                SELECT
+		                    td.dict_code,
+		                    td.dict_name
+		                FROM
+		                    tb_dict_info td
+		                WHERE
+		                    td.dict_type_code = '207') t7
+		        ON
+		            t.payment_term = t7.dict_code
+		        LEFT JOIN
+		            tb_bank t9
+		        ON
+		            t.into_bank_id = t9.bank_id
+		        LEFT JOIN
+		            (
+		                SELECT
+		                    td.dict_code,
+		                    td.dict_name
+		                FROM
+		                    tb_dict_info td
+		                WHERE
+		                    td.dict_type_code = '209') t10
+		        ON
+		            t.order_state = t10.dict_code
+		        LEFT JOIN
+		            (
+		                SELECT
+		                    orde.order_id,
+		                    bank.bank_name,
+		                    bank.bank_account
+		                FROM
+		                    tb_sell_order orde,
+		                    tb_bank bank
+		                WHERE
+		                    orde.from_bank_id = bank.bank_id) t11
+		        ON
+		            t.order_id=t11.order_id,
+		            tb_sell_order_list t2,
+		            tb_customer t3,
+		            TB_SELL_ORDER_PAYMENT t15
+		        LEFT JOIN
+		            (
+		                SELECT
+		                    td.dict_code,
+		                    td.dict_name
+		                FROM
+		                    tb_dict_info td
+		                WHERE
+		                    td.dict_type_code = '901') t8
+		        ON
+		            t15.PAYMENT_TYPE = t8.dict_code,
+		            tb_ent_user t4,
+		            tb_product t6
+		        WHERE
+		            t.order_id = t2.order_id
+		        AND t.sale_man = t4.user_id
+		        AND t.first_entity_id = t3.entity_id
+		        AND t.product_id = t6.product_id
+		       <isNotEmpty prepend="and" property="customerId">
+						t.first_entity_id= #customerId#
+      			</isNotEmpty>
+		        AND t.process_entity_id = #issuerId#
+		        AND t2.data_state = 1
+		        AND t.order_type IN ('10000002',
+		                             '10000012',
+		                             '10000006')
+		        AND t.order_state in ('32','36')
+		        AND t.product_id not in(select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+		        AND to_date(SUBSTR(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &gt;= to_date(#startDate#, 'yyyy-MM-dd'
+		            )
+		        AND to_date(SUBSTR(t.CREATE_TIME, 1, 8), 'yyyyMMdd') &lt;= to_date(#endDate#, 'yyyy-MM-dd'
+		            )
+		        AND t.order_id = t15.ORDER_ID
+		        AND t15.DATA_STATE ='1'
+		        GROUP BY
+		            t.order_id,
+		            t.total_price,
+		            t.CREATE_TIME,
+		            t.modify_time,
+		            t4.user_name,
+		            t5.contact_name,
+		            t6.product_name,
+		            t7.dict_name,
+		            t8.dict_name,
+		            t9.bank_name,
+		            t9.bank_account,
+		            t3.entity_id,
+		            t3.customer_name,
+		            t10.dict_name,
+		            t.payment_state,
+		            t11.bank_name,
+		            t11.bank_account,
+		            t3.CORP_CRED_ID,
+		            t3.CUSTOMER_TELEPHONE,
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_NAME,''),
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_ADDRESS,''),
+		            DECODE(t12.DATA_STATE,'1',T17.CONTACT_PHONE,''),
+		            DECODE(t12.DATA_STATE,'1',T16.DELIVERY_POSTCODE,''),
+		            DECODE(t12.DATA_STATE,'1',T14.FIRST_NAME,''),
+		            DECODE(t12.DATA_STATE,'1',T14.CARDHOLDER_MOBILE,''),
+		            DECODE(t12.DATA_STATE,'1',T14.ID_NO,''),
+		            DECODE(t12.DATA_STATE,'1',t12.CARD_NO,'此卡已赎回或已作废!'),
+		            DECODE(t12.DATA_STATE,'1',
+		            						   DECODE(CARDHOLDER_GENDER, '1', '男', '2','女','')
+		            						 ,''
+		            	  ),
+		            DECODE(t12.DATA_STATE,'1',T14.PLATE_NUMBER,''),
+		            t14.CARDHOLDER_COMMENT,
+			        DECODE(T18.CHANNEL,
+							null,decode(t.order_type,'10000001','控制台发卡','10000002','控制台发卡','10000011','控制台发卡','10000012','控制台发卡',''),
+							'',decode(t.order_type,'10000001','控制台发卡','10000002','控制台发卡','10000011','控制台发卡','10000012','控制台发卡',''),
+							'70000023','Ipos发卡',T18.CHANNEL) ,
+		            DECODE(trim(T18.TERM_CHANNEL),null,'70000001','','70000001',T18.TERM_CHANNEL),
+		            T18.BRANCH_ID
+		            ) tt left join TBL_RECHARGE_BATCH_DETAIL recharge on  
+		            tt.cardNo=recharge.RECHARGE_CARD_NO and recharge.RECHARGE_TYPE='01' 
+		            and recharge.RECHARGE_STATE='00'
+				)
+		ORDER BY
+		    orderTime,orderId
+	</select>
+</sqlMap>

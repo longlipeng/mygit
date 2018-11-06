@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MAKE_CARD">
+	<insert id="insertMakeCardTxn"
+		parameterClass="com.allinfinance.univer.businessbatch.dto.MakeCardBatchDTO">
+		insert into tbl_bat_make_card_txn
+		(txn_type, txn_seq, settle_dt, txn_state, card_no, exp_date, svc_code,
+		pin_stat, no_pin_amt, product_id, cardholder_id, issuer_id, consumer_times,
+		recharge_times, face_value, prn_corp_name, prn_hold_name, card_style,
+		ly_data, acc_info, rec_crt_ts, upd_crt_ts)
+		values (#txnType:CHAR#,#txnSeq:CHAR#, #smltDate:CHAR#, #txnState:CHAR#,
+		#cardNo:VARCHAR#,#expDate:CHAR#,
+		#svrCode:CHAR#,#pinStat:CHAR#,#noPinLimit:CHAR#,#productId:VARCHAR#,#cardHolderId:VARCHAR#,
+		#entityId:VARCHAR#,#consumerTimes:VARCHAR#,#rechargeTimes:VARCHAR#,#txnAmt:CHAR#,#companyName:CHAR#,
+		#cardHolderName:CHAR#,#cardType:CHAR#,#lyDate:CHAR#,#accountInfo:VARCHAR#,
+		#recCrtTs:CHAR#,
+		#recUpdTs:CHAR#)
+	</insert>
+	<select id="getMakeCardState" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.businessbatch.dto.BatchFileDetailDTO">
+		<include refid="Commons.prefixSql" />
+		select t2.order_id as "orderId",
+		t2.batch_no as "batchNo",
+		t1.card_no as "cardNo",
+		t1.face_value/100 as "faceValue",
+		t1.resp_code as "respCode"
+		from tbl_bat_make_card_txn t1,
+		tbl_acc_batch_sum t2,
+		tbl_acc_batch_detail t3
+		where t2.batch_no = t3.batch_no
+		and t3.txn_seq = t1.txn_seq
+		and t1.txn_state = '2'
+		<isNotNull prepend="and" property="orderId">
+			t2.order_id = #orderId:VARCHAR#
+		</isNotNull>
+		<isNotNull prepend="and" property="batchNO">
+			t2.batch_no = #batchNO:VARCHAR#
+		</isNotNull>
+		<include refid="Commons.suffixSql" />
+	</select>
+</sqlMap>

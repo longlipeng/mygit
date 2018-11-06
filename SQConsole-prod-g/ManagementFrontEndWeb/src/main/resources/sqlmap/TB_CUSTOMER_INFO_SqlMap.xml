@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TB_CUSTOMER_INFO">
+	<resultMap class="com.allinfinance.univer.seller.customer.CustomerDTO"  id="CustomerDTO" >
+	<result column="entityId" jdbcType="VARCHAR" property="entityId" />
+	<result column="fatherEntityId" jdbcType="VARCHAR" property="fatherEntityId" />
+	</resultMap>
+	<select id="selectCustomeInfoByIdNo" parameterClass="com.allinfinance.univer.seller.customer.CustomerDTO"
+		resultMap="CustomerDTO">
+		select entity_id as "entityId", FATHER_ENTITY_ID as "fatherEntityId" 
+		from TB_CUSTOMER 
+		where DATA_STATE = 1 
+		<dynamic>
+    	<isNotEmpty prepend="and" property="corpCredId">
+			 CORP_CRED_ID = #corpCredId:VARCHAR# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="corpCredType">
+			 CORP_CRED_TYPE=#corpCredType:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="customerType">
+			 CUSTOMER_TYPE=#customerType:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="dataState">
+			 DATA_STATE=#dataState:VARCHAR#
+		</isNotEmpty>
+		</dynamic>
+	</select>
+	
+</sqlMap>

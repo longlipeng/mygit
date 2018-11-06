@@ -1,0 +1,449 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="issuer_card_sum">
+	<select id="issuer_card_sum_day" resultClass="com.allinfinance.service.issueOperation.issuerCardSum.dto.IssuerCardSumDTO"
+		parameterClass="com.allinfinance.service.issueOperation.issuerCardSum.dto.IssuerCardSumDTO">
+<!--按日统计-->
+  select
+  	   null as DATA_MOUNTH,
+  	   to_date(t1.settle_dt,'yyyyMMdd') as DATA_DATE,
+       decode(t1.trans_num,null,0,t1.trans_num)/1 as TRANS_NUM,
+       decode(t1.trans_amt,null,0,t1.trans_amt)/100 as TRANS_AMT,
+       decode(t2.trans_num,null,0,t2.trans_num)/1 as RECHARGE_NUM,
+       decode(t2.trans_amt,null,0,t2.trans_amt/100) as RECHARGE_AMT,
+       decode(t3.trans_num,null,0,t3.trans_num)/1 as PREAUTH_NUM,
+       decode(t3.trans_amt,null,0,t3.trans_amt)/100 as PREAUTH_AMT,
+       decode(t4.trans_num,null,0,t4.trans_num)/1 as PREAUTH_CANCEL_NUM,
+       decode(t4.trans_amt,null,0,t4.trans_amt)/100 as PREAUTH_CANCEL_AMT,
+       decode(t5.trans_num,null,0,t5.trans_num)/1 as REFUND_NUM,
+       decode(t5.trans_amt,null,0,t5.trans_amt)/100 as REFUND_AMT,
+       decode(t6.amt,null,0,t6.amt)/100 as BALANCE_AMT,
+       decode(t7.num,null,0,t7.num)/1 as VALID_CARD_NUM,
+       decode(t8.num,null,0,t8.num)/1 as ACTIVE_CARD_NUM,
+       decode(t9.num,null,0,t9.num)/1 as DEACTIVE_CARD_NUM
+  from 
+       (select sum(BALANCE_AMT) as amt, tca.issuer_id,to_char(DATETIME,'yyyyMMdd') as datetime
+          from tb_card_info_report tca
+         where to_date(to_char(DATETIME,'yyyyMMdd'), 'yyyyMMdd') >=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(#endDate#, 'yyyy-MM-dd') >=
+               to_date(to_char(DATETIME,'yyyyMMdd'), 'yyyyMMdd')
+           and tca.issuer_id = #issuerId#
+         group by tca.issuer_id,to_char(DATETIME,'yyyyMMdd')
+        
+        ) t6
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               tsp.settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id in ('S22', 'G22')
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and trim(tsp.pri_acct_no)!='00'
+           and tc.father_entity_id = #issuerId#
+           and to_date(tsp.settle_dt, 'yyyyMMdd') >=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(#endDate#, 'yyyy-MM-dd') >=
+               to_date(tsp.settle_dt, 'yyyyMMdd')
+         group by tc.father_entity_id, tsp.settle_dt
+        
+        ) t1 on t6.datetime = t1.settle_dt
+       left join
+       (select sum(trans_amt) as trans_amt,
+               sum(trans_num) as trans_num,
+               issuerId,
+               settle_dt
+          from (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+                       count(tsp.TXN_SEQ_NO) trans_num,
+                       to_char(tc.father_entity_id) as issuerId,
+                       tsp.settle_dt
+                  from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+                 where tsp.trans_id in ('S32', 'G32')
+                   and tc.entity_id =
+                       TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                                   3,
+                                   LENGTH(tsp.rcv_ins_id_cd) - 2))
+                   and tc.father_entity_id = #issuerId#
+                   and to_date(tsp.settle_dt, 'yyyyMMdd') >=
+                       to_date(#startDate#, 'yyyy-MM-dd')
+                   and to_date(#endDate#, 'yyyy-MM-dd') >=
+                       to_date(tsp.settle_dt, 'yyyyMMdd')
+                
+                 group by tc.father_entity_id, tsp.settle_dt
+                union all
+                select sum(t1.txn_amt) as trans_amt,
+                       count(t1.txn_seq) as trans_num,
+                       to_char(t5.issuer_id) as issuerId,
+                       t1.SETTLE_DT
+                  from (select t1.txn_seq,t1.resp_code,t1.txn_amt,t1.settle_dt from tbl_bat_recharge_act_txn t1
+                        where t1.resp_code='00'
+                              and trim(t1.txn_amt)!=0
+                        union all 
+                        select txn_seq,resp_code,txn_amt,settle_dt from tbl_bat_recharge_txn
+                        where resp_code='00'
+                              and trim(txn_amt)!=0) t1,
+                       tbl_acc_batch_sum        t2,
+                       tbl_acc_batch_detail     t3,
+                       tb_sell_order            t4,
+                       tb_seller_id             t5
+                 where t1.txn_seq = t3.txn_seq
+                   and t2.batch_no = t3.batch_no
+                   and t4.order_id = t2.order_id
+                   and t4.process_entity_id = t5.seller_id
+                   and t5.issuer_id = #issuerId#
+                   and to_date(t1.SETTLE_DT, 'yyyyMMdd') >=
+                       to_date(#startDate#, 'yyyy-MM-dd')
+                   and to_date(#endDate#, 'yyyy-MM-dd') >=
+                       to_date(t1.SETTLE_DT, 'yyyyMMdd')
+                 group by t5.issuer_id, t1.SETTLE_DT)
+        
+         group by issuerId, settle_dt) t2 on t6.datetime = t2.settle_dt
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               tsp.settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id = 'S20'
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and tc.father_entity_id = #issuerId#
+           and to_date(tsp.settle_dt, 'yyyyMMdd') >=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(#endDate#, 'yyyy-MM-dd') >=
+               to_date(tsp.settle_dt, 'yyyyMMdd')
+        
+         group by tc.father_entity_id, tsp.settle_dt) t3 on t6.datetime = t3.settle_dt
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               tsp.settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id = 'V50'
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and tc.father_entity_id = #issuerId#
+           and to_date(tsp.settle_dt, 'yyyyMMdd') >=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(#endDate#, 'yyyy-MM-dd') >=
+               to_date(tsp.settle_dt, 'yyyyMMdd')
+        
+         group by tc.father_entity_id, tsp.settle_dt) t4 on t6.datetime = t4.settle_dt
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               tsp.settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id in ('S30', 'G30')
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and tc.father_entity_id = #issuerId#
+           and to_date(tsp.settle_dt, 'yyyyMMdd') >=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(#endDate#, 'yyyy-MM-dd') >=
+               to_date(tsp.settle_dt, 'yyyyMMdd')
+        
+         group by tc.father_entity_id, tsp.settle_dt) t5 on t6.datetime = t5.settle_dt
+        left join
+       (select issuerId, sum(num) as num, DATE_TXN
+          from (select count(t1.card_no) as num,
+                       to_char(t2.issuer_id) as issuerId,
+                       t1.DATE_TXN
+                  from tb_acc_txn_his t1, tb_acc_card_info t2
+                 where t1.card_no = t2.card_no
+                   and (t1.txn_type in ('7015', '7025') or
+                       (t1.txn_type = '7035' and t1.sys_no = '1'))
+                   and t2.issuer_id = #issuerId#
+                   and to_date(t1.DATE_TXN, 'yyyyMMdd') >=
+                       to_date(#startDate#, 'yyyy-MM-dd')
+                   and to_date(#endDate#, 'yyyy-MM-dd') >=
+                       to_date(t1.DATE_TXN, 'yyyyMMdd')
+                
+                 group by t2.issuer_id, t1.DATE_TXN
+                union all
+                select count(t1.txn_seq) as num,
+                       to_char(t5.issuer_id),
+                       t1.SETTLE_DT
+                  from (select txn_seq,SETTLE_DT from tbl_bat_recharge_act_txn
+                  	    where act_flag = 1 and resp_code='00'
+                  	    union all
+                  	    select txn_seq,settle_dt from tbl_bat_act_txn
+                  	    where resp_code='00') t1,
+                       tbl_acc_batch_sum        t2,
+                       tbl_acc_batch_detail     t3,
+                       tb_sell_order            t4,
+                       tb_seller_id             t5
+                 where t1.txn_seq = t3.txn_seq
+                   and t2.batch_no = t3.batch_no
+                   and t4.order_id = t2.order_id
+                   and t4.process_entity_id = t5.seller_id
+                   and t5.issuer_id = #issuerId#
+                   and to_date(t1.SETTLE_DT, 'yyyyMMdd') >=
+                       to_date(#startDate#, 'yyyy-MM-dd')
+                   and to_date(#endDate#, 'yyyy-MM-dd') >=
+                       to_date(t1.SETTLE_DT, 'yyyyMMdd')
+                
+                 group by t5.issuer_id, t1.SETTLE_DT)
+         group by issuerId, DATE_TXN) t8 on t6.datetime = t8.DATE_TXN
+          left join
+       (select count(t1.card_no) as num, t2.issuer_id, t1.DATE_TXN
+          from tb_acc_txn_his t1, tb_acc_card_info t2
+         where t1.card_no = t2.card_no
+           and t1.txn_type in ('7055', '0006')
+           and t2.issuer_id = #issuerId#
+           and to_date(t1.DATE_TXN, 'yyyyMMdd') >=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(#endDate#, 'yyyy-MM-dd') >=
+               to_date(t1.DATE_TXN, 'yyyyMMdd')
+        
+         group by t2.issuer_id, t1.DATE_TXN) t9 on t6.datetime = t9.DATE_TXN,
+       (select sum(VALID_CARD_NUM) as num, t.issuer_id,to_char(DATETIME,'yyyyMMdd') as datetime
+          from tb_card_info_report t
+         where t.issuer_id = #issuerId#
+           and to_date(to_char(DATETIME,'yyyyMMdd'), 'yyyyMMdd') >=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(#endDate#, 'yyyy-MM-dd') >=
+               to_date(to_char(DATETIME,'yyyyMMdd'), 'yyyyMMdd')
+         group by t.issuer_id,to_char(DATETIME,'yyyyMMdd')
+         ) t7
+ where  t6.datetime = t7.datetime
+
+	</select>
+	
+	<select id="issuer_card_sum_month" resultClass="com.allinfinance.service.issueOperation.issuerCardSum.dto.IssuerCardSumDTO"
+		parameterClass="com.allinfinance.service.issueOperation.issuerCardSum.dto.IssuerCardSumDTO">
+select
+       to_date(t1.settle_dt,'yyyyMM') as DATA_MOUNTH,
+       null as DATA_DATE,
+       decode(t1.trans_num,null,0,t1.trans_num)/1 as TRANS_NUM,
+       decode(t1.trans_amt,null,0,t1.trans_amt)/100 as TRANS_AMT,
+       decode(t2.trans_num,null,0,t2.trans_num)/1 as RECHARGE_NUM,
+       decode(t2.trans_amt,null,0,t2.trans_amt/100) as RECHARGE_AMT,
+       decode(t3.trans_num,null,0,t3.trans_num)/1 as PREAUTH_NUM,
+       decode(t3.trans_amt,null,0,t3.trans_amt)/100 as PREAUTH_AMT,
+       decode(t4.trans_num,null,0,t4.trans_num)/1 as PREAUTH_CANCEL_NUM,
+       decode(t4.trans_amt,null,0,t4.trans_amt)/100 as PREAUTH_CANCEL_AMT,
+       decode(t5.trans_num,null,0,t5.trans_num)/1 as REFUND_NUM,
+       decode(t5.trans_amt,null,0,t5.trans_amt)/100 as REFUND_AMT,
+       decode(t6.amt,null,0,t6.amt)/100 as BALANCE_AMT,
+       decode(t7.num,null,0,t7.num)/1 as VALID_CARD_NUM,
+       decode(t8.num,null,0,t8.num)/1 as ACTIVE_CARD_NUM,
+       decode(t9.num,null,0,t9.num)/1 as DEACTIVE_CARD_NUM
+  from 
+        (select amt,issuer_id,to_char(DATETIME,'yyyyMM') as datetime from 
+        (select sum(BALANCE_AMT) as amt, tca.issuer_id,datetime
+          from tb_card_info_report tca
+         where to_date(to_char(DATETIME,'yyyyMM'), 'yyyyMM') >=
+               to_date(substr(#startDate#,1,7), 'yyyy-MM')
+           and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+               to_date(to_char(DATETIME,'yyyyMM'), 'yyyyMM')
+           and tca.issuer_id = #issuerId#
+         group by tca.issuer_id,datetime)
+         where datetime=last_day(datetime)
+        ) t6
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               substr(tsp.settle_dt,1,6) as settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id in ('S22', 'G22')
+           and trim(tsp.pri_acct_no)!='00'
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and tc.father_entity_id = #issuerId#
+           and to_date(substr(tsp.settle_dt,1,6), 'yyyyMM') >=
+               to_date(substr(#startDate#,1,7), 'yyyy-MM')
+           and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+               to_date(substr(tsp.settle_dt,1,6), 'yyyyMM')
+         group by tc.father_entity_id, substr(tsp.settle_dt,1,6)
+        
+        ) t1 on t6.datetime = t1.settle_dt
+       left join
+       (select sum(trans_amt) as trans_amt,
+               sum(trans_num) as trans_num,
+               issuerId,
+               settle_dt
+          from (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+                       count(tsp.TXN_SEQ_NO) trans_num,
+                       to_char(tc.father_entity_id) as issuerId,
+                       substr(tsp.settle_dt,1,6) as settle_dt
+                  from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+                 where tsp.trans_id in ('S32', 'G32')
+                   and tc.entity_id =
+                       TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                                   3,
+                                   LENGTH(tsp.rcv_ins_id_cd) - 2))
+                   and tc.father_entity_id = #issuerId#
+                   and to_date(substr(tsp.settle_dt,1,6), 'yyyyMM') >=
+                       to_date(substr(#startDate#,1,7), 'yyyy-MM')
+                   and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+                       to_date(substr(tsp.settle_dt,1,6), 'yyyyMM')
+                
+                 group by tc.father_entity_id, substr(tsp.settle_dt,1,6)
+                union all
+                select sum(t1.txn_amt) as trans_amt,
+                       count(t1.txn_seq) as trans_num,
+                       to_char(t5.issuer_id) as issuerId,
+                       substr(t1.SETTLE_DT,1,6) as settle_dt
+                  from (select t1.txn_seq,t1.resp_code,t1.txn_amt,t1.settle_dt from tbl_bat_recharge_act_txn t1
+                        where t1.resp_code='00'
+                              and trim(t1.txn_amt)!=0
+                        union all 
+                        select txn_seq,resp_code,txn_amt,settle_dt from tbl_bat_recharge_txn
+                        where resp_code='00'
+                              and trim(txn_amt)!=0) t1,
+                       tbl_acc_batch_sum        t2,
+                       tbl_acc_batch_detail     t3,
+                       tb_sell_order            t4,
+                       tb_seller_id             t5
+                 where t1.txn_seq = t3.txn_seq
+                   and t2.batch_no = t3.batch_no
+                   and t4.order_id = t2.order_id
+                   and t4.process_entity_id = t5.seller_id
+                   and t5.issuer_id = #issuerId#
+                   and to_date(substr(t1.SETTLE_DT,1,6), 'yyyyMM') >=
+                       to_date(substr(#startDate#,1,7), 'yyyy-MM')
+                   and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+                       to_date(substr(t1.SETTLE_DT,1,6), 'yyyyMM')
+                 group by t5.issuer_id, substr(t1.SETTLE_DT,1,6))
+         group by issuerId, settle_dt) t2 on t6.datetime = t2.settle_dt
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               substr(tsp.settle_dt,1,6) as settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id = 'S20'
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and tc.father_entity_id = #issuerId#
+           and to_date(substr(tsp.settle_dt,1,6), 'yyyyMM') >=
+               to_date(substr(#startDate#,1,7), 'yyyy-MM')
+           and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+               to_date(substr(tsp.settle_dt,1,6), 'yyyyMM')
+        
+         group by tc.father_entity_id, substr(tsp.settle_dt,1,6)) t3 on t6.datetime = t3.settle_dt
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               substr(tsp.settle_dt,1,6) as settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id = 'V50'
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and tc.father_entity_id = #issuerId#
+           and to_date(substr(tsp.settle_dt,1,6), 'yyyyMM') >=
+               to_date(substr(#startDate#,1,7), 'yyyy-MM')
+           and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+               to_date(substr(tsp.settle_dt,1,6), 'yyyyMM')
+        
+         group by tc.father_entity_id, substr(tsp.settle_dt,1,6)) t4 on t6.datetime = t4.settle_dt
+       left join
+       (select sum(decode(tsp.trans_at_sgl, null, 0, tsp.trans_at_sgl)) trans_amt,
+               count(tsp.TXN_SEQ_NO) trans_num,
+               tc.father_entity_id as issuerId,
+               substr(tsp.settle_dt,1,6) as settle_dt
+          from TB_SETTLE_TRANS_PRE tsp, tb_consumer tc
+         where tsp.trans_id in ('S30', 'G30')
+           and tc.entity_id =
+               TRIM(SUBSTR(tsp.rcv_ins_id_cd,
+                           3,
+                           LENGTH(tsp.rcv_ins_id_cd) - 2))
+           and tc.father_entity_id = #issuerId#
+           and to_date(substr(tsp.settle_dt,1,6), 'yyyyMM') >=
+               to_date(substr(#startDate#,1,7), 'yyyy-MM')
+           and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+               to_date(substr(tsp.settle_dt,1,6), 'yyyyMM')
+        
+         group by tc.father_entity_id, substr(tsp.settle_dt,1,6)) t5 on t6.datetime = t5.settle_dt
+         left join
+       (select issuerId, sum(num) as num, DATE_TXN
+          from (select count(t1.card_no) as num,
+                       to_char(t2.issuer_id) as issuerId,
+                       substr(t1.DATE_TXN,1,6) as DATE_TXN
+                  from tb_acc_txn_his t1, tb_acc_card_info t2
+                 where t1.card_no = t2.card_no
+                   and (t1.txn_type in ('7015', '7025') or
+                       (t1.txn_type = '7035' and t1.sys_no = '1'))
+                   and t2.issuer_id = #issuerId#
+                   and to_date(substr(t1.DATE_TXN,1,6), 'yyyyMM') >=
+                       to_date(substr(#startDate#,1,7), 'yyyy-MM')
+                   and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+                       to_date(substr(t1.DATE_TXN,1,6), 'yyyyMM')
+                
+                 group by t2.issuer_id, substr(t1.DATE_TXN,1,6)
+                union all
+                select count(t1.txn_seq) as num,
+                       to_char(t5.issuer_id),
+                       substr(t1.SETTLE_DT,1,6) as settle_dt
+                  from (select txn_seq,SETTLE_DT from tbl_bat_recharge_act_txn
+                       where act_flag = 1 and resp_code='00'
+                       union all
+                       select txn_seq,settle_dt from tbl_bat_act_txn
+                       where resp_code='00'
+                       ) t1,
+                       tbl_acc_batch_sum        t2,
+                       tbl_acc_batch_detail     t3,
+                       tb_sell_order            t4,
+                       tb_seller_id             t5
+                 where t1.txn_seq = t3.txn_seq
+                   and t2.batch_no = t3.batch_no
+                   and t4.order_id = t2.order_id
+                   and t4.process_entity_id = t5.seller_id
+                   and t5.issuer_id = #issuerId#
+                   and to_date(substr(t1.SETTLE_DT,1,6), 'yyyyMM') >=
+                       to_date(substr(#startDate#,1,7), 'yyyy-MM')
+                   and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+                       to_date(substr(t1.SETTLE_DT,1,6), 'yyyyMM')
+                 group by t5.issuer_id, substr(t1.SETTLE_DT,1,6))
+         group by issuerId, DATE_TXN) t8 on t6.datetime = t8.DATE_TXN
+         left join
+       (select count(t1.card_no) as num, t2.issuer_id, substr(t1.DATE_TXN,1,6) as DATE_TXN
+          from tb_acc_txn_his t1, tb_acc_card_info t2
+         where t1.card_no = t2.card_no
+           and t1.txn_type in ('7055', '0006')
+           and t2.issuer_id = #issuerId#
+           and to_date(substr(t1.DATE_TXN,1,6), 'yyyyMM') >=
+               to_date(substr(#startDate#,1,7), 'yyyy-MM')
+           and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+               to_date(substr(t1.DATE_TXN,1,6), 'yyyyMM')
+        
+         group by t2.issuer_id, substr(t1.DATE_TXN,1,6)) t9 on t6.datetime = t9.DATE_TXN,
+       
+       ( select num,issuer_id,to_char(DATETIME,'yyyyMM') as datetime from
+         (select sum(VALID_CARD_NUM) as num, t.issuer_id,datetime
+          from tb_card_info_report t
+         where 
+               t.issuer_id = #issuerId#
+           and to_date(to_char(DATETIME,'yyyyMM'), 'yyyyMM') >=
+               to_date(substr(#startDate#,1,7), 'yyyy-MM')
+           and to_date(substr(#endDate#,1,7), 'yyyy-MM') >=
+               to_date(to_char(DATETIME,'yyyyMM'), 'yyyyMM')
+         group by t.issuer_id,datetime)
+         where datetime=last_day(datetime)
+        ) t7
+ where  t6.datetime = t7.datetime
+	</select>
+</sqlMap>
+
+

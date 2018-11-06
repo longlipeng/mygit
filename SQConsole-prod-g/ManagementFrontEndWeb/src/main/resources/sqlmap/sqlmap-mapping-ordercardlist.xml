@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TB_SELL_ORDER_CARD_LIST">
+	<select id="selectOrderCardList" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderCardListQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    	  select
+		        T1.ORDER_CARD_LIST_ID as "orderCardId",
+		        T1.CARD_STATE as "cardState",
+		        decode(T2.FACE_VALUE_TYPE,'0','固定','非固定') as "faceValueType",
+		        T2.FACE_VALUE/100      as   "faceValue",
+		        T1.CARDHOLDER_ID      as    "cardholderId",
+		        T1.FIRST_NAME as "cardholderName",
+		        T1.EXTERNAL_ID as "externalId",
+		        T1.LEG_CARD_NO as "legCardNo",
+		        T2.CARD_ISSUE_FEE/100 as "cardIssueFee",
+		        T1.CREDIT_AMOUNT/100  as "creditAmount",
+		        T1.CARD_NO as "cardNo",
+                T3.check_state  as "checkState"
+		    	from 
+		    		TB_SELL_ORDER_CARD_LIST T1 left join 
+		    		TB_SELL_ORDER_LIST T2 on T1.ORDER_LIST_ID = T2.ORDER_LIST_ID
+		    		 LEFT JOIN
+                            TB_CARDHOLDER T3
+                        ON
+                            T1.CARDHOLDER_ID  = T3.CARDHOLDER_ID 
+		 		WHERE 
+	           		t1.order_id = #orderId:varchar#
+			   		and 	t1.DATA_STATE = '1'
+    <dynamic>
+    	<isNotEmpty prepend="and" property="cardNo">
+			CARD_NO = #cardNo:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cardState">
+			CARD_STATE = #cardState:DECIMAL#
+		</isNotEmpty>
+    </dynamic>
+               order by t1.card_no
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  
+  
+  <select id="selectOrderCardListByorderId" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderListDTO" parameterClass="java.lang.String" >
+      select
+            T2.FACE_VALUE      as   "faceValue",
+            T2.VALIDITY_PERIOD as "validityPeriod",
+            T1.CARD_NO as "cardNo",
+            T3.SERVICE_ID AS "serviceId"
+           from 
+            TB_SELL_ORDER_CARD_LIST T1 left join
+            TB_SELL_ORDER_LIST T2 on T1.ORDER_LIST_ID =  T2.ORDER_LIST_ID join
+            TB_SELL_ORDER T3 on T3.ORDER_ID = T2.ORDER_ID
+           WHERE 
+            T2.ORDER_ID = T1.ORDER_ID
+          AND t2.order_id = #orderId:varchar#
+          
+  </select>
+    <select id="selectChangeCardOrderCardListByorderId" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderListDTO" parameterClass="java.lang.String" >
+      select
+            T2.FACE_VALUE      as   "faceValue",
+            T2.VALIDITY_PERIOD as "validityPeriod",
+            T1.CARD_NO as "cardNo",
+            T2.SERVICE_ID AS "serviceId"
+          from 
+            TB_SELL_ORDER_CARD_LIST T1 left join
+            TB_SELL_ORDER_LIST T2 on T1.ORDER_LIST_ID =  T2.ORDER_LIST_ID
+         WHERE 
+         	 t1.DATA_STATE = '1'
+             and T2.data_state='1'
+             AND   t2.order_id = #orderId:varchar#
+          
+  </select>
+  
+  
+   <select id="selectBuyOrderCardList" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderCardListQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    	  select
+		        T1.ORDER_CARD_LIST_ID as "orderCardId",
+		        T1.CARD_STATE as "cardState",
+		        T1.CARDHOLDER_ID      as    "cardholderId",
+		        T1.FIRST_NAME as "cardholderName",
+		        T1.EXTERNAL_ID as "externalId",
+		        T1.CARD_NO as "cardNo"
+		    	from 
+		    		TB_SELL_ORDER_CARD_LIST T1
+		 		WHERE  	t1.order_id in 
+		<isNotEmpty prepend="" property="oldOrderList">
+        <iterate property="oldOrderList"  conjunction="," close=")" open="(" > 
+			#oldOrderList[]# 
+		</iterate>
+		</isNotEmpty>
+		<isEmpty prepend="" property="oldOrderList">
+			(null)
+		</isEmpty>
+		   and 	t1.DATA_STATE = '1'
+		   order by T1.ORDER_ID
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <select id="queryOldOrderList" resultClass="java.lang.String"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderCardListQueryDTO">
+        with TB_UNION_ORDER_TEMP(old_order,new_order) as
+		(select old_order,new_order from tb_union_order 
+		where new_order = #orderId:varchar#
+		union all
+		select n.old_order,n.new_order
+		from tb_union_order as n,TB_UNION_ORDER_TEMP
+		where TB_UNION_ORDER_TEMP.old_order = n.new_order)
+		select old_order from TB_UNION_ORDER_TEMP 
+		<!-- 迭代  by youy 0211 for db2 用上面那那句代替-->
+		<!--select OLD_ORDER from tb_union_order CONNECT BY PRIOR old_order=new_order START WITH new_order=#orderId:varchar#-->
+		
+  </select>
+  <select id="getCreditCardListByOrderId" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderListDTO" parameterClass="java.lang.String" >
+          select t.card_no as "cardNo",
+                 t.credit_amount as "faceValue",
+                 t2.service_id as "serviceId",
+                 '00000000' as "validityPeriod"
+           from tb_sell_order_card_list t,
+                tb_sell_order t2
+            where
+                t.order_id = t2.order_id 
+            and t.data_state='1'
+            and  t.order_id =#orderId:varchar#
+  </select>
+   <select id="getOrigCardListByOrderId" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderOrigCardListDTO" parameterClass="java.lang.String" >
+          select t.card_no as "cardNo",
+                 t.amount as "amount",
+                 t.card_sate as "cardSate",
+                 '00000000' as "validityPeriod",
+                 t.callback as "callBack"
+           from tb_sell_order_origcard_list t,
+                tb_sell_order t2
+            where
+                t.order_id = t2.order_id 
+            and t.data_state='1'
+            and  t.order_id =#orderId:varchar#
+  </select>
+  
+    
+  <select id="getSellSignCardListByOrderId" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderListDTO" parameterClass="java.lang.String" >
+         select t.card_no as "cardNo",
+                 t2.face_value as "faceValue",
+                 t2.service_id as "serviceId",
+                 t2.validity_period as "validityPeriod"
+           from tb_sell_order_card_list t,
+                tb_sell_order t2
+            where
+                t.order_id = t2.order_id 
+            and t.data_state='1'
+            and  t.order_id =#orderId:varchar#
+  </select>
+  
+   <select id="getCardImage" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderCardListDTO" parameterClass="java.lang.String" >
+  	   select 
+		    m."productId",
+			m."cardholderId",
+			m."cardNo",
+			m."firstName",
+			m."externalId",
+			m. "dateTime"
+  	  from ( 
+  	  select  
+  	  			 t5.*, rownum as numb
+  	  from (
+  	  			(select t1.product_id as "productId",
+				  t2.cardholder_id as "cardholderId",
+				  t2.card_no as "cardNo",
+				  t3.first_name as "firstName",
+				  t3.external_id as "externalId",
+				  to_date(substr(t2.modify_time, 1, 8),'yyyy-MM-dd') as "dateTime"
+				  from 
+				  	 tb_sell_order t1 join
+				     tb_sell_order_card_list t2 on t1.order_id=t2.order_id left join
+				     tb_cardholder t3 on t2.cardholder_id=t3.cardholder_id
+				 where 
+                     t1.data_state='1'
+                     and t2.card_no=#cardNo# and t1.order_state='32' and t2.data_state='1' 
+                     and t1.order_type in ('10000001','10000002','10000011','10000012','10000005','10000006')
+                     and 3=(select t4.stock_state from tb_entity_stock t4 where t4.card_no=#cardNo#))
+     union     
+  		( select t1.product_id as "productId",
+		  t2.cardholder_id as "cardholderId",
+		  t2.card_no as "cardNo",
+		  t3.first_name as "firstName",
+		  t3.external_id as "externalId",
+		 to_date(substr(t2.modify_time, 1, 8),'yyyy-MM-dd') as "dateTime"
+     from 
+        tb_sell_order_list t1 join
+        tb_sell_order_card_list t2 on t1.order_id=t2.order_id left join
+        tb_cardholder t3 on t2.cardholder_id=t3.cardholder_id join
+        tb_sell_order t4 on t2.order_id=t4.order_id
+    where 
+   		t1.data_state='1' and t2.card_no=#cardNo# and t4.order_state='32' and t2.data_state='1' 
+     and t4.data_state='1' and t4.order_type='60000001'
+                 and 3=(select t4.stock_state from tb_entity_stock t4 where t4.card_no=#cardNo#))
+                 )t5
+               order by t5."dateTime" desc ) m where numb=1
+	</select>
+	<!-- 查询订单卡接收明细 -->
+	<select id="selectOrderCardReceiveListPageData" resultClass="java.util.HashMap" 
+			parameterClass="com.allinfinance.univer.seller.order.dto.OrderReceiveCardListQueryDTO" remapResults="true">
+		<include refid="Commons.prefixSql" />
+	    SELECT
+	        t2.CARD_NO as "cardNo",
+	        t2.PRODUCT_ID as "productId",
+	        t3.PRODUCT_NAME as "productName",
+	        t2.FACE_VALUE/100 as "faceValue",
+	        decode(t2.FACE_VALUE_TYPE,'0','固定','非固定') as "faceValueType"
+	    FROM 
+	   		TB_SELL_ORDER_CARD_LIST t1 inner join 
+	   		TB_ENTITY_STOCK t2 on t1.card_no = t2.card_no inner join
+	   		TB_PRODUCT t3 on t2.product_id = t3.product_id
+	   	WHERE
+	   		t1.ORDER_ID = #orderId:VARCHAR#
+	   	AND
+    		t1.DATA_STATE = '1'
+    	AND
+    		t2.FLD_02_RES_DATA is not null
+    	AND 
+    		t2.DATA_STATE = '1'
+    	ORDER BY t2.CARD_NO asc
+	    <include refid="Commons.suffixSql" />
+	</select>
+	<!-- 查询订单卡未接收明细 -->
+	<select id="selectOrderCardNotReceiveListPageData" resultClass="java.util.HashMap" 
+			parameterClass="com.allinfinance.univer.seller.order.dto.OrderReceiveCardListQueryDTO" remapResults="true">
+		<include refid="Commons.prefixSql" />
+	    SELECT
+	        t2.CARD_NO as "cardNo",
+	        t2.PRODUCT_ID as "productId",
+	        t3.PRODUCT_NAME as "productName",
+	        t2.FACE_VALUE/100 as "faceValue",
+	        decode(t2.FACE_VALUE_TYPE,'0','固定','非固定') as "faceValueType"
+	    FROM 
+	   		TB_SELL_ORDER_CARD_LIST t1 inner join 
+	   		TB_ENTITY_STOCK t2 on t1.card_no = t2.card_no inner join
+	   		TB_PRODUCT t3 on t2.product_id = t3.product_id
+	   	WHERE
+	   		t1.ORDER_ID = #orderId:VARCHAR#
+	   	AND
+    		t1.DATA_STATE = '1'
+    	AND
+    		t2.FLD_02_RES_DATA is null
+    	AND 
+    		t2.DATA_STATE = '1'
+	    <include refid="Commons.suffixSql" />
+	</select>
+	
+	<!-- 接收卡号段  -->
+	<select id="selectAcceptOrderList" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.order.dto.AcceptOrderDTO" remapResults="true">
+    	<include refid="Commons.prefixSql"/>
+    	 select 
+    	 max(t.card_no) as "endCardNo",
+    	 min(t.card_no) as "startCardNo",
+    <!--  substr( max(t.card_no),1,length(max(t.card_no))-1)-substr( min(t.card_no),1,length(min(t.card_no))-1)+1 as "cardNum" -->
+    	 count(distinct t.card_no) as "cardNum"
+    	 from 
+    	 (select * from TB_ENTITY_STOCK where fld_02_res_data is not null
+    	 and card_no in (select card_no from tb_sell_order_card_list where order_id=#orderId:varchar#)
+    	 and data_state='1'
+    	 ) t  
+    	 group by t.fld_02_res_data
+     <include refid="Commons.suffixSql"/> 
+  </select>
+  <!-- 判断该卡号段在不在订单的配送中  -->
+	<select id="isAcceptOrderList" resultClass="java.lang.Integer" parameterClass="com.allinfinance.univer.seller.order.dto.AcceptOrderDTO" remapResults="true">
+    	select count(distinct card_no) 
+    	from tb_sell_order_card_list 
+    	where card_no &lt;= #endCardNo:VARCHAR# and card_no &gt;=#startCardNo:VARCHAR# 
+    	and data_state='1'
+    	and order_id=#orderId:varchar#
+    	and card_state = '3'
+  </select>
+  <!-- 判断该卡号段中的卡有没有已经接收  -->
+	<select id="isStockOrderList" resultClass="java.lang.String" parameterClass="com.allinfinance.univer.seller.order.dto.AcceptOrderDTO" remapResults="true">
+    	select count(card_no) 
+    	from tb_entity_stock 
+    	where card_no &lt;= to_number(#endCardNo:VARCHAR#) and card_no &gt;= to_number(#startCardNo:VARCHAR#)  
+    	and data_state='1'
+    	and entity_id=#entity:VARCHAR#
+    	AND FUNCTION_ROLE_ID='3'
+  </select>
+  <!-- 根据卡号段删除  -->
+	<select id="deleteStockOrderList" resultClass="java.lang.Integer" parameterClass="com.allinfinance.univer.seller.order.dto.AcceptOrderDTO" remapResults="true">
+    	<include refid="Commons.prefixSql"/>
+    	delete from tb_entity_stock 
+        where card_no in(
+        select * from tb_sell_order_card_list where order_id=#orderId:varchar#
+        and card_no &lt;= #endCardNo:VARCHAR# and card_no &gt;=#startCardNo:VARCHAR# 
+        and data_state='1'
+        )
+        and entity_id=#entity:varchar#
+        and data_state='1'
+        AND FUNCTION_ROLE_ID='3'
+     <include refid="Commons.suffixSql"/> 
+  </select>
+  <!-- 根据卡号段全部删除  -->
+	<select id="deleteAllStockOrderList" resultClass="java.lang.Integer" parameterClass="com.allinfinance.univer.seller.order.dto.AcceptOrderDTO" remapResults="true">
+    	<include refid="Commons.prefixSql"/>
+    	delete from tb_entity_stock 
+        where card_no in(
+        select * from tb_sell_order_card_list where order_id=#orderId:varchar#
+        and data_state='1
+        )
+        and entity_id=#entity:varchar#
+        and data_state='1'
+        AND FUNCTION_ROLE_ID='3'
+     <include refid="Commons.suffixSql"/> 
+  </select>
+</sqlMap>

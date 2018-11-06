@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="BLACK_LIST">
+<select id="inqueryPerson" resultClass="java.util.HashMap" remapResults="true" parameterClass="com.allinfinance.univer.seller.blacklist.dto.BlackListPerDTO">
+	<include refid="Commons.prefixSql" />
+	select NAME as name ,
+	
+	    SEX as sex,
+        BIRTHDAY as birthday,
+        COUNTRY as conutry,
+        IDNUMBERS as idnumbers,
+        LISTOFTYPE as listOfType,
+        LISTOFSOURCE as listOfSource,
+        DECODE(ENTITY_TYPE,'1','个人','2','机构','其他') as entityType,
+        ADDRESS as address,
+        DESCRIPTION as description 
+	from TB_BLACKLIST_PEOPLE
+	where 1=1
+	<dynamic>
+	<isNotNull prepend="and" property="name">
+	   	NAME  like '%'||#name#||'%'
+	   </isNotNull>
+	   <isNotNull prepend="and" property="idnumbers">
+	   	IDNUMBERS like '%'||#idnumbers#||'%'
+	   </isNotNull>
+	   </dynamic>
+	   <include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="inqueryArea" resultClass="java.util.HashMap" remapResults="true" parameterClass="com.allinfinance.univer.seller.blacklist.dto.BlackListAreaDTO">
+	<include refid="Commons.prefixSql" />
+		
+	select AREA_CODE  as "areaCode",
+	 AREA_NAME  as "areaName",
+	 DECODE(AREA_TYPE,'0','国家','1','省','2','市','3','县','其他')  as "areaType"
+	 from 
+	TB_BLACKLIST_AREA
+	where 1=1
+	<dynamic>
+	<isNotNull prepend="and" property="areaName">
+	   	AREA_NAME  like '%'||#areaName#||'%'
+	   </isNotNull>
+	   <isNotNull prepend="and" property="areaType">
+	   	AREA_TYPE like '%'||#areaType#||'%'
+	   </isNotNull>
+	   <isNotNull prepend="and" property="areaCode">
+	   	AREA_CODE like '%'||#areaCode#||'%'
+	   </isNotNull>
+	   </dynamic>
+	   <include refid="Commons.suffixSql" />
+	</select>
+	
+<!-- 批量插入人员黑名单 -->
+  <insert id="insertBlackListPerson"  parameterClass="java.util.List">  
+    insert into TB_BLACKLIST_PEOPLE (NAME, SEX, BIRTHDAY, 
+      COUNTRY, IDNUMBERS, LISTOFTYPE, 
+      LISTOFSOURCE, ENTITY_TYPE, ADDRESS, 
+      DESCRIPTION)
+    values 
+ 
+     <iterate  conjunction =",">
+     
+     
+           <![CDATA[
+           (#personList[].name:VARCHAR#,#personList[].sex:CHAR#,#personList[].birthday:VARCHAR#,#personList[].country:VARCHAR#,
+            #personList[].idnumbers:VARCHAR#,#personList[].listOfType:VARCHAR#,#personList[].listOfSource:VARCHAR#,#personList[].entityType:CHAR#,
+            #personList[].address:VARCHAR#,#personList[].description:VARCHAR#
+            )  
+                ]]>
+      </iterate>
+    
+   
+  </insert>
+  <!-- 批量插入地区黑名单 -->
+  <insert id="insertBlackListArea"  parameterClass="java.util.List">  
+    insert into TB_BLACKLIST_AREA (AREA_TYPE, AREA_CODE, AREA_NAME)
+    values  
+     <iterate  conjunction =",">  
+           <![CDATA[
+           (#areaList[].areaType:CHAR#,#areaList[].areaCode:VARCHAR#,#areaList[].areaName:VARCHAR#
+            )  
+                ]]>
+      </iterate>
+  </insert>
+
+  <!-- 插入地区黑名单 -->
+  <insert id="insertOneBlackListArea"  parameterClass="com.allinfinance.univer.seller.blacklist.dto.BlackListAreaDTO">  
+    insert into TB_BLACKLIST_AREA (AREA_TYPE, AREA_CODE, AREA_NAME)
+    values  (#areaType#,#areaCode#,#areaName#)
+     
+
+  </insert>
+  
+    <!-- 插入持卡人黑名单 -->
+  <insert id="insertOneBlackListPer"  parameterClass="com.allinfinance.univer.seller.blacklist.dto.BlackListPerDTO">  
+    insert into TB_BLACKLIST_AREA (AREA_TYPE, AREA_CODE, AREA_NAME)
+    values  ( )
+     
+  </insert>
+  
+  
+  
+  
+  <!-- 清空持卡人黑名单表 -->
+  <delete id="delectAllBlackListPerson">
+  DELETE FROM  TB_BLACKLIST_PEOPLE 
+  </delete>
+  <!-- 清空持卡人地区表 -->
+  <delete id="delectAllBlackListArea">
+  DELETE FROM  TB_BLACKLIST_AREA
+  </delete>
+  
+ 
+</sqlMap>

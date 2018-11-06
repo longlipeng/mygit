@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-2.5.xsd"
+	default-lazy-init="false">
+
+	<!-- MDM公司层信息下发 -->
+	<jee:jndi-lookup id="mdmCompanyInQueue" jndi-name="jms/SEAM_MDM_COMPANY_IN" />
+	<jee:jndi-lookup id="mdmCompanyOutQueue" jndi-name="jms/SEAM_MDM_COMPANY_OUT" />
+	<bean id="mdmCompanyListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="svcConnectionFactoryAdapter" />
+		<property name="destination" ref="mdmCompanyInQueue" />
+		<property name="messageListener" ref="mdmCompanyMDP" />
+	</bean>
+	<bean id="mdmCompanyMDP" class="com.suning.svc.datasync.mdp.MdmCompanyMDP">
+		<property name="companyService" ref="mdmCompanyRecvService" />
+	</bean>
+	<bean id="mdmCompanyRecvService" class="com.suning.svc.datasync.service.MdmCompanyRecvService">
+		<property name="issuerDAO" ref="issuerDAO" />
+		<property name="manageHessianService" ref="manageHessianServiceTarget" />
+	</bean>
+
+	<!-- MDM供应商下发 -->
+	<jee:jndi-lookup id="svcSeamMDMSupplierInQueue"
+		jndi-name="jms/SEAM_MDM_MERCHANT_IN" />
+	<jee:jndi-lookup id="svcSeamMDMSupplierOutQueue"
+		jndi-name="jms/SEAM_MDM_MERCHANT_OUT" />
+	<bean id="mdmSupplierListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="svcConnectionFactoryAdapter" />
+		<property name="destination" ref="svcSeamMDMSupplierInQueue" />
+		<property name="messageListener" ref="mdmSupplierMDP" />
+	</bean>
+	<bean id="mdmSupplierMDP" class="com.suning.svc.datasync.mdp.MdmSupplierMDP">
+		<property name="mdmSupplierRecvService" ref="mdmSupplierRecvService" />
+	</bean>
+	<bean id="mdmSupplierRecvService" class="com.suning.svc.datasync.service.MdmSupplierRecvService">
+		<property name="manageHessianService" ref="manageHessianServiceTarget" />
+	</bean>
+
+	<!-- MDM门店下发 -->
+	<jee:jndi-lookup id="svcSeamMDMShopInQueue" jndi-name="jms/SEAM_MDM_SHOP_IN" />
+	<jee:jndi-lookup id="svcSeamMDMShopOutQueue" jndi-name="jms/SEAM_MDM_SHOP_OUT" />
+	<bean id="mdmShopContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="svcConnectionFactoryAdapter" />
+		<property name="destination" ref="svcSeamMDMShopInQueue" />
+		<property name="messageListener" ref="mdmShopMDP" />
+	</bean>
+	<bean id="mdmShopMDP" class="com.suning.svc.datasync.mdp.MdmShopMDP">
+		<property name="shopService" ref="mdmShopRecvService" />
+	</bean>
+	<bean id="mdmShopRecvService" class="com.suning.svc.datasync.service.MdmShopRecvService">
+		<property name="manageHessianService" ref="manageHessianServiceTarget" />
+	</bean>
+
+	<!-- SAP记账上传 -->
+	<jee:jndi-lookup id="sapFinanceOutQueue" jndi-name="jms/SEAM_SAP_FINANCE_OUT" />
+	<jee:jndi-lookup id="sapFinanceInQueue" jndi-name="jms/SEAM_SAP_FINANCE_IN" />
+	<bean id="sapFinanceListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="svcConnectionFactoryAdapter" />
+		<property name="destination" ref="sapFinanceInQueue" />
+		<property name="messageListener" ref="sapFinanceMDP" />
+	</bean>
+	<bean id="sapFinanceMDP" class="com.suning.svc.datasync.mdp.SapFinanceMDP">
+		<property name="sapFinanceRecvService" ref="sapFinanceRecvService" />
+	</bean>
+	<bean id="sapFinanceRecvService" class="com.suning.svc.datasync.service.SapFinanceRecvService">
+		<property name="sapInfoReceiptService" ref="sapInfoReceiptService" />
+	</bean>
+
+	<!-- SOA合同下发 -->
+	<jee:jndi-lookup id="svcSeamSoaContractInQueue"
+		jndi-name="jms/SEAM_SOA_CONTRACT_IN" />
+	<bean id="soaContractContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="svcConnectionFactoryAdapter" />
+		<property name="destination" ref="svcSeamSoaContractInQueue" />
+		<property name="messageListener" ref="soaContractMDP" />
+	</bean>
+	<bean id="soaContractMDP" class="com.suning.svc.datasync.mdp.SoaContractMDP">
+		<property name="contractService" ref="soaContractRecvService" />
+	</bean>
+	<bean id="soaContractRecvService" class="com.suning.svc.datasync.service.SoaContractRecvService">
+		<property name="manageHessianService" ref="manageHessianServiceTarget" />
+	</bean>
+
+	<!-- SAC/SAP交易同步 -->
+	<jee:jndi-lookup id="svcSeamTransDetailInQueue"
+		jndi-name="jms/SEAM_TRANS_DETAIL_IN" />
+	<bean id="transDetailListenerContainer"
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<!-- 新队列DEV/SIT/PRE/PRD所连ESB端口一致，通过连接工厂2连接 -->
+		<property name="connectionFactory" ref="svcConnectionFactoryAdapter2" />
+		<property name="destination" ref="svcSeamTransDetailInQueue" />
+		<property name="messageListener" ref="transDetailMDP" />
+	</bean>
+	<bean id="transDetailMDP" class="com.suning.svc.datasync.mdp.TransDetailMDP">
+		<property name="transDetailRecvService" ref="transDetailRecvService" />
+	</bean>
+	<bean id="transDetailRecvService" class="com.suning.svc.datasync.service.TransDetailRecvService">
+		<property name="partnerDAO" ref="partnerDAO" />
+		<property name="tradeIntroService" ref="tradeIntroService" />
+	</bean>
+
+</beans>

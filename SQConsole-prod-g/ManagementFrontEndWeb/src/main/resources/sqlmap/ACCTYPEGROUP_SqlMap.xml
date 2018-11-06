@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ACCTYPEGROUP">
+	<select id="selectAcctypeGroup"  resultClass="java.util.HashMap" remapResults="true" parameterClass="com.huateng.accor.acctypegroup.dto.AcctypeGroupQueryDTO">
+		<include refid="Commons.prefixSql"/>
+			select
+				ACC_TYPE_GROUP_ID as "accTypeGroupId",
+				ACC_TYPE_NAME as "accTypeName"
+			from
+				TB_ENT_ACCTYPE_GROUP T
+			where
+				DATA_STATE='1'
+			<isNotEmpty prepend="and" property="defaultIssuerGroupId">
+				T.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+			</isNotEmpty>
+		<include refid="Commons.suffixSql"/>
+	</select>
+	<select id="selectAcctype" resultClass="com.huateng.accor.acctype.dto.AccTypeDTO" parameterClass="com.huateng.accor.acctypegroup.dto.AcctypeGroupDTO">
+		select 
+			T1.ACC_TYPE_ID as "accTypeId", 
+			T1.ACC_TYPE_NAME as"accTypeName", 
+			DECODE(T1.ISSUER_ID,0,T5.ISSUER_GROUP_NAME,T2.ISSUER_NAME) as "issuerName"
+		from
+			TB_ENT_ACCTYPE T1,
+			TB_ENT_ISSUER T2,
+			TB_REL_ACCTYPE_GROUP T3,
+			TB_ENT_ACCTYPE_GROUP T4,
+			TB_ENT_ISSUER_GROUP T5
+		where
+			T1.ISSUER_ID=T2.ISSUER_ID(+)
+		and
+			T1.ACC_TYPE_ID=T3.ACC_TYPE_ID
+		and
+			T3.ACC_TYPE_GROUP_ID=T4.ACC_TYPE_GROUP_ID(+)
+		and
+			T5.ISSUER_GROUP_ID(+)=T1.ISSUER_GROUP_ID
+		and
+			T1.DATA_STATE='1'
+			
+		<isNotEmpty prepend="and" property="defaultIssuerGroupId">
+				T1.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+		</isNotEmpty>
+		<dynamic>
+			<isNotNull prepend="and" property="accTypeGroupId">
+				T4.ACC_TYPE_GROUP_ID = #accTypeGroupId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+	
+</sqlMap>

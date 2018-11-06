@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SELLER">
+
+	<select id="selectSeller" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+			T1.ENTITY_ID            as "entityId" ,
+		   	T1.FATHER_ENTITY_ID     as "fatherEntityId" ,
+		   	T1.SELLER_NAME          as "sellerName" ,
+		   	T1.SELLER_CODE          as "sellerCode" ,
+			T1.SELLER_ENGLISH_NAME  as "sellerEnglishName" ,
+		   	T1.SELLER_ADDRESS       as "sellerAddress" ,
+		   	T1.SELLER_ENGLISH_ADDRESS as "sellerEnglishAddress" ,
+		   	T1.SELLER_POSTCODE      as "sellerPostcode" ,
+		   	T1.SELLER_TELEPHONE     as "sellerTelephone" ,
+		   	T1.SELLER_FAX           as "sellerFax" ,
+		   	T1.SELLER_WEBSITE       as "sellerWebsite" ,
+		   	T1.SELLER_SIZE          as "sellerSize" ,
+		   	T1.SELLER_COMMENT       as "sellerComment" ,
+		   	T1.EXTERNAL_ID          as "externalId" ,
+		   	T1.LEG_CUS_ID           as "legCusId" ,
+		   	T1.CHANNEL_ID           as "channelId" ,
+		   	T1.CHAN_BEG_DATE        as "chanBegDate" ,
+		   	T1.PRINT_NAME           as "printName" ,
+		   	T1.EXT_PRINT_INFO       as "extPrintInfo" ,
+		   	T1.CLOSE_DATE           as "closeDate" ,
+		   	T1.PAYMENT_TERM         as "paymentTerm" ,
+		   	T1.PAYMENT_DELAY        as "paymentDelay" ,
+		   	T1.SALES_REGION_ID      as "salesRegionId" ,
+		   	T1.BUSINESS_CITY        as "businessCity" ,
+		   	T1.BUSINESS_AREA_ID     as "businessAreaId" ,
+		   	T1.SALESMAN_ID          as "salesmanId" ,
+		   	T1.ACTIVITY_SECTOR      as "activitySector" ,
+		   	T1.HAS_DM               as "hasDm" ,
+		   	T1.SELLER_STATE         as "sellerState" ,
+		   	T2.USER_NAME          as "modifyUser" ,
+		   	to_char(to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "createTime" ,
+		   	to_char(to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "modifyTime" ,
+		   	T1.DATA_STATE as "dataState",
+		   	T1.user_Id           as "userId"
+		from
+			TB_SELLER T1 left join
+			TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID
+		where 
+			1=1
+
+		<dynamic>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:VARCHAR#
+      		</isNotEmpty>
+      		<isEmpty prepend="and" property="entityId">
+			 	(T1.ENTITY_ID = #defaultEntityId:VARCHAR#
+	         or
+				T1.FATHER_ENTITY_ID = #defaultEntityId:VARCHAR#
+			 or 
+	            FATHER_ENTITY_ID in( 
+	            SELECT 
+	       			I.ENTITY_ID  
+	       		FROM  
+	       			TB_SELLER I 
+			    WHERE  
+			        I.FATHER_ENTITY_ID =#defaultEntityId:VARCHAR#))
+      		</isEmpty>
+      		<isNotEmpty prepend="and" property="sellerCode">
+				T1.SELLER_CODE = #sellerCode:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="sellerName">
+				T1.SELLER_NAME like '%'||#sellerName:VARCHAR#||'%'
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="externalId">
+				T1.EXTERNAL_ID like '%'||#externalId:VARCHAR#||'%'
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="dataState">
+				T1.DATA_STATE = #dataState:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="sellerState">
+				T1.SELLER_STATE = #sellerState:VARCHAR#
+      		</isNotEmpty>
+      		<isNotNull prepend="and" property="startTime">
+		       	<isNull  property="stopTime">
+		       	 <![CDATA[
+		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') >=#startTime:DATE#
+		        ]]>
+		        </isNull>
+		    </isNotNull>
+		    <isNotNull prepend="and" property="stopTime">
+		       	<isNull  property="startTime">
+		       	 <![CDATA[
+		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') <= #stopTime:DATE#
+		        ]]>
+		        </isNull>
+		    </isNotNull>
+		    <isNotNull prepend="and" property="stopTime">
+		       	<isNotNull  property="startTime">
+		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') between #startTime:DATE#  and #stopTime:DATE#
+		        </isNotNull>
+		    </isNotNull>
+		    <isNotEmpty prepend="and" property="paymentTerm">
+				T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+      		</isNotEmpty>
+		    <isNotEmpty prepend="and" property="activitySector">
+				T1.ACTIVITY_SECTOR = #activitySector:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="salesRegionId">
+				T1.SALES_REGION_ID = #salesRegionId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="functionRoleId">
+				T1.FUNCTION_ROLE_ID = #functionRoleId:VARCHAR#
+      		</isNotEmpty>
+		</dynamic>
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+		
+	</select>
+	
+	 <select id="sellerSelect" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO" remapResults="true">
+	 <include refid="Commons.prefixSql" />
+	select sell.entity_id as "entityId",sell.seller_name as "sellerName",sell.seller_code as "sellerCode",sell.seller_english_name as "englishName"
+from (select con.contract_buyer buyer from tb_sell_contract con,tb_seller seller
+where (con.contract_seller=seller.entity_id or con.contract_buyer=seller.entity_id) 
+ <isNotNull prepend="and" property="entityId">
+        seller.entity_id = #entityId:varchar#
+      </isNotNull>
+ and con.data_state='1'and con.contract_state='1' 
+and con.expiry_date> to_char(SYSDATE,'yyyyMMdd') ) contract,tb_seller sell 
+where contract.buyer=sell.entity_id
+<include refid="Commons.suffixSql" />
+</select>
+
+	<select id="selectSellerForSelf" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+			T1.ENTITY_ID            as "entityId" ,
+		   	T1.FATHER_ENTITY_ID     as "fatherEntityId" ,
+		   	T1.SELLER_NAME          as "sellerName" ,
+		   	T1.SELLER_CODE          as "sellerCode" ,
+			T1.SELLER_ENGLISH_NAME  as "sellerEnglishName" ,
+		   	T1.SELLER_ADDRESS       as "sellerAddress" ,
+		   	T1.SELLER_ENGLISH_ADDRESS as "sellerEnglishAddress" ,
+		   	T1.SELLER_POSTCODE      as "sellerPostcode" ,
+		   	T1.SELLER_TELEPHONE     as "sellerTelephone" ,
+		   	T1.SELLER_FAX           as "sellerFax" ,
+		   	T1.SELLER_WEBSITE       as "sellerWebsite" ,
+		   	T1.SELLER_SIZE          as "sellerSize" ,
+		   	T1.SELLER_COMMENT       as "sellerComment" ,
+		   	T1.EXTERNAL_ID          as "externalId" ,
+		   	T1.LEG_CUS_ID           as "legCusId" ,
+		   	T1.CHANNEL_ID           as "channelId" ,
+		   	T1.CHAN_BEG_DATE        as "chanBegDate" ,
+		   	T1.PRINT_NAME           as "printName" ,
+		   	T1.EXT_PRINT_INFO       as "extPrintInfo" ,
+		   	T1.CLOSE_DATE           as "closeDate" ,
+		   	T1.PAYMENT_TERM         as "paymentTerm" ,
+		   	T1.PAYMENT_DELAY        as "paymentDelay" ,
+		   	T1.SALES_REGION_ID      as "salesRegionId" ,
+		   	T1.BUSINESS_CITY        as "businessCity" ,
+		   	T1.BUSINESS_AREA_ID     as "businessAreaId" ,
+		   	T1.SALESMAN_ID          as "salesmanId" ,
+		   	T1.ACTIVITY_SECTOR      as "activitySector" ,
+		   	T1.HAS_DM               as "hasDm" ,
+		   	T1.SELLER_STATE         as "sellerState" ,
+		   	T2.USER_NAME          as "modifyUser" ,
+		   	to_char(to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "createTime" ,
+		   	to_char(to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "modifyTime" ,
+		   	T1.DATA_STATE as "dataState",
+		   	T1.user_Id           as "userId"
+		from
+			TB_SELLER T1 left join
+			TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID
+		where 
+			   T1.DATA_STATE = '1'
+			AND	T1.SELLER_STATE = '1'
+			AND ( T1.FATHER_ENTITY_ID = #defaultEntityId:VARCHAR# OR T1.ENTITY_ID = #defaultEntityId:VARCHAR# )
+		   
+		<include refid="Commons.suffixSql" />
+		
+	</select>
+	
+	
+	<select id="selectEntityId" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/>
+	   select entityNo as "queryId",Max(entityName) as "queryName"       
+     from (select t1.entity_id as entityNo,
+                    t1.issuer_name as entityName
+             from tb_issuer t1
+             where t1.father_entity_id=#entityId:VARCHAR#
+              and t1.data_state='1'
+              and t1.entity_id not in( select t3.entity_id
+                                     from tb_seller t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t1.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t1.issuer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                          
+              union 
+                 select t2.entity_id as entityNo,
+                       t2.consumer_name as entityName
+                 from tb_consumer t2
+                 where t2.father_entity_id=#entityId:VARCHAR#
+                 and t2.data_state='1'
+                  and t2.entity_id not in( select t3.entity_id
+                                     from tb_seller t3
+                                     where t3.data_state='1')
+               <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t2.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t2.consumer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                                 
+                                     ) 
+                            
+             group by entityNo   
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectEntityIdFromIssuer" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/>
+             select t1.entity_id as "queryId",
+                    t1.issuer_name as "queryName"
+             from tb_issuer t1
+             where t1.father_entity_id=#entityId:VARCHAR#
+              and t1.data_state='1'
+              and t1.entity_id not in( select t3.entity_id
+                                     from tb_seller t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t1.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t1.issuer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                        
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectEntityIdFromConsumer" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/> 
+                 select t2.entity_id as "queryId",
+                       t2.consumer_name as "queryName"
+                 from tb_consumer t2
+                 where t2.father_entity_id=#entityId:VARCHAR#
+                 and t2.data_state='1'
+                  and t2.entity_id not in( select t3.entity_id
+                                     from tb_seller t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t2.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t2.consumer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                          
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  	<select id="selectIssuerUpSeller" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />	
+		select 
+		   issuer.entity_id as "entityId"  ,issuer.issuer_name as "issuerName",issuer.issuer_code as "issuerCode",issuer.issuer_english_name as "englishName"
+     from 
+     	tb_issuer issuer,tb_seller seller,TB_SELLER_ID t3
+ 	  where 
+          seller.ENTITY_ID = t3.SELLER_ID
+        and
+          issuer.ENTITY_ID = t3.ISSUER_ID 	
+         and
+           seller.entity_id=#entityId:VARCHAR#
+<include refid="Commons.suffixSql"/>    
+</select>
+<!-- 当前营销机构跟上级发卡机构之间的 采购订单.充值订单 -->
+		<select id="selectOrder" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />	
+  select sellorder.order_id as "orderId",
+                      sellorder.order_type as "orderType",
+                       seller.seller_name as "firstName",
+                       issuer.issuer_name as "processName"
+                        from  tb_sell_order sellorder,
+                       tb_seller     seller,
+                       tb_issuer     issuer where 
+                        sellorder.first_entity_id = seller.entity_id
+                   and sellorder.process_entity_id = issuer.entity_id
+                   <isNotNull prepend="and" property="entityId">
+       sellorder.first_entity_id = #entityId:varchar#
+      </isNotNull>
+                         and sellorder.order_type in
+                       ('30000001', '30000002') and sellorder.order_state ='27'
+          union
+          
+          select sellorder.order_id as "orderId",
+                      sellorder.order_type "orderType",
+                       customer.customer_name as "firstName",
+                       seller.seller_name as "processName"
+                        from  tb_sell_order sellorder,
+                       tb_seller     seller,
+                       tb_customer customer where 
+                        sellorder.first_entity_id =customer.entity_id
+                   and sellorder.process_entity_id = seller.entity_id
+                   and sellorder.order_type ='10000003'
+                     <isNotNull prepend="and" property="entityId">
+       sellorder.process_entity_id = #entityId:varchar#
+      </isNotNull>
+                         and sellorder.order_state ='16'
+		<include refid="Commons.suffixSql"/>    
+</select>
+
+	<select id="selectSellerList" parameterClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO" 
+	resultClass="com.allinfinance.univer.seller.seller.dto.SellerQueryDTO">	
+ 		  SELECT I.ENTITY_ID AS "entityId",
+ 		         I.SELLER_NAME AS "sellerName"
+ 		    FROM  TB_SELLER I 
+ 		   WHERE  I.DATA_STATE='1'
+ 		  <dynamic>
+ 		    <isNotEmpty prepend="and" property="entityId">
+      	      (I.ENTITY_ID =#entityId# or I.FATHER_ENTITY_ID =#entityId# or 
+      	      I.FATHER_ENTITY_ID in(SELECT I.ENTITY_ID 
+ 		                               FROM  TB_SELLER I 
+ 		                               WHERE  I.DATA_STATE='1'
+ 		                               and I.FATHER_ENTITY_ID =#entityId#))
+      	   </isNotEmpty>
+ 		  </dynamic>
+ 	</select>
+
+
+	<!-- 根据当前机构号，查询所有的下级营销机构，建树 -->
+	<select id="queryNextEntity"  parameterClass="java.lang.String" 
+		resultClass="com.allinfinance.univer.seller.seller.dto.TreeNodeDTO">
+	    select 
+			ENTITY_ID as "id",
+			FATHER_ENTITY_ID as "pId",
+			'[' || ENTITY_ID || ']' || SELLER_NAME as "name" 
+		from 
+			TB_SELLER 
+		where 
+			 (ENTITY_ID = #entityId:varchar#
+        or 
+        	FATHER_ENTITY_ID =#entityId:varchar# 
+        or 
+            FATHER_ENTITY_ID in( SELECT 
+        			I.ENTITY_ID  
+        		FROM  
+        			TB_SELLER I 
+ 		        WHERE  
+ 		        	I.DATA_STATE='1'
+ 		        AND
+ 		         	I.FATHER_ENTITY_ID =#entityId:varchar#))
+ 		and
+ 			DATA_STATE='1'
+ 		       
+	</select>
+	
+	<!-- 根据ID,查询所有的下级功能权限-->
+	<select id="nextResourceIds"  parameterClass="java.lang.String" 
+		resultClass="com.allinfinance.univer.system.role.dto.ResourceDTO">
+	    select 
+			 RESOURCE_ID as "resourceId",
+			 FATHER_RESOURCE_ID as "fatherResourceId",
+			 RESOURCE_NAME as "resourceName"
+		from 
+			TB_RESOURCE 
+		where 
+			(RESOURCE_ID  = #resourceId:varchar# 
+        or 
+        	FATHER_RESOURCE_ID  = #resourceId:varchar# 
+        or  
+        	FATHER_RESOURCE_ID in( 
+        		SELECT 
+        			I.RESOURCE_ID   
+        		FROM  
+        			TB_RESOURCE I 
+ 		        WHERE  
+ 		         	I.FATHER_RESOURCE_ID  = #resourceId:varchar# ))
+ 		and
+ 			DATA_STATE='1'       	
+ 		      
+	</select>
+
+
+	<select id="selectSellerDTOList" parameterClass="com.allinfinance.univer.seller.seller.dto.SellerDTO" 
+	resultClass="com.allinfinance.univer.seller.seller.dto.SellerDTO">	
+ 		  SELECT I.ENTITY_ID AS "entityId",
+ 		         I.SELLER_NAME AS "sellerName"
+ 		    FROM  TB_SELLER I 
+ 		   WHERE  I.DATA_STATE='1'
+ 		  <dynamic>
+ 		    <isNotEmpty prepend="and" property="entityId">
+      	      (I.ENTITY_ID =#entityId# or I.FATHER_ENTITY_ID =#entityId# or 
+      	      I.FATHER_ENTITY_ID in(SELECT I.ENTITY_ID 
+ 		                               FROM  TB_SELLER I 
+ 		                               WHERE  I.DATA_STATE='1'
+ 		                               and I.FATHER_ENTITY_ID =#entityId#))
+      	   </isNotEmpty>
+ 		  </dynamic>
+ 	</select>
+</sqlMap>

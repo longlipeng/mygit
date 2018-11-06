@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SELLERCONTRACT">
+
+		<select id="selectSellerContract" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+			T1.SELL_CONTRACT_ID as "sellContractId",
+			T1.CONTRACT_BUYER as "contractBuyer",
+			T1.CONTRACT_SELLER as "contractSeller",
+			T1.DELIVERY_FEE as "deliveryFee",
+			T1.SETTLE_PERIOD_RULE as "settlePeriodRule",
+			T1.SMS_SVC_STAT as "smsSvcStat",
+			T1.EMAIL_SVC_STAT as "emailSvcStat",
+			T1.MONSTMT_SVC_STAT as "monstmtSvcStat",
+			T1.WEB_PAY_STAT as "webPayStat",
+			T1.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+			T1.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+			T1.CONTRACT_STATE  as "contractState",
+			T1.CONTRACT_TYPE as "contractType",
+			to_date(T1.EXPIRY_DATE,'YYYY-MM-DD') as "expiryDate" ,
+			T2.MODIFY_USER as "modifyUser",
+		   	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') as "createTime" ,
+		   	to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS') as "modifyTime",
+		   	T3.SELLER_NAME as "sellerName",
+		   	T4.RULE_NAME as "ruleName",
+		   	T4.RULE_TYPE as "ruleType",
+		   	T1.CLEAR_TP as "clearTp",
+		   	T5.CUSTOMER_NAME as "customerName"
+		from
+			TB_SELL_CONTRACT T1 left join
+			TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID left join
+			TB_SELLER T3 on T1.CONTRACT_BUYER=T3.ENTITY_ID left join
+			TB_SETTLE_PERIOD_RULE T4 on T1.SETTLE_PERIOD_RULE=T4.RULE_NO left join
+			TB_CUSTOMER T5 on T1.CONTRACT_BUYER=T5.ENTITY_ID
+		where 
+		
+			T1.DATA_STATE = '1'
+		<dynamic>
+			<isNotEmpty prepend="and" property="contractBuyer">
+				T1.CONTRACT_BUYER = #contractBuyer:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="contractSeller">
+				T1.CONTRACT_SELLER = #contractSeller:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="sellContractId">
+				T1.SELL_CONTRACT_ID = #sellContractId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="webPayStat">
+				T1.WEB_PAY_STAT = #webPayStat:VARCHAR#
+      		</isNotEmpty>
+      		<isNotNull prepend="and" property="startDate">
+		       	 <![CDATA[
+		        	to_date(T1.EXPIRY_DATE,'YYYY-MM-DD') >=#startDate:DATE#
+		        ]]>
+		    </isNotNull>
+		    <isNotNull prepend="and" property="endDate">
+		       	 <![CDATA[
+		        	to_date(T1.EXPIRY_DATE,'YYYY-MM-DD') <=#endDate:DATE#
+		        ]]>
+		    </isNotNull>
+      		<isNotEmpty prepend="and" property="contractType">
+				T1.CONTRACT_TYPE = #contractType:VARCHAR#
+      		</isNotEmpty>
+      		 
+      		<isNotEmpty prepend="and" property="contractState">
+				T1.CONTRACT_STATE = #contractState:VARCHAR#
+      		</isNotEmpty>
+      		
+      		<isNotEmpty prepend="and" property="sellerName">
+      			T3.SELLER_NAME like '%'||#sellerName:VARCHAR#||'%'
+      		</isNotEmpty>
+      		
+      		<isNotEmpty prepend="and" property="ruleName">
+      			T4.RULE_NAME  like '%'||#ruleName:VARCHAR#||'%'
+      		</isNotEmpty>
+      		
+      		<isNotEmpty prepend="and" property="ruleType">
+      			T1.CLEAR_TP = #ruleType:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="customerName">
+      			T5.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+      		</isNotEmpty>
+		</dynamic>
+			order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="inqueryProduct" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT 
+			T2.PRODUCT_ID AS "productId",
+			T3.PRODUCT_NAME AS "productName",
+			DECODE(T3.CARD_TYPE,'1','IC卡','磁条卡') AS "cardType", 
+			DECODE(T3.PRODUCT_TYPE,'1','充值卡','礼品卡') AS "productType",
+			DECODE(T3.PROD_STAT,'1','可用','不可用') AS "prodStat"
+		FROM 
+			TB_SELL_CONTRACT T1 left join 
+			TB_SELL_PROD_CONTRACT T2 on T1.SELL_CONTRACT_ID = T2.SELL_CONTRACT_ID left join
+			TB_PRODUCT T3 on T2.PRODUCT_ID = T3.PRODUCT_ID
+		WHERE 			
+			  T1.CONTRACT_BUYER = #defaultEntityId:VARCHAR#
+			AND T1.DATA_STATE='1'
+			AND T2.DATA_STATE='1'
+			AND T3.DATA_STATE='1'
+			
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="inqueryProductFromContract" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		SELECT 
+			T2.PRODUCT_ID AS "productId",
+			T3.PRODUCT_NAME AS "productName",
+			DECODE(T3.CARD_TYPE,'1','IC卡','磁条卡') AS "cardType", 
+			DECODE(T3.PRODUCT_TYPE,'1','充值卡','礼品卡') AS "productType",
+			DECODE(T3.PROD_STAT,'1','可用','不可用') AS "prodStat"
+		FROM 
+			TB_SELL_CONTRACT T1 left join
+			TB_SELL_PROD_CONTRACT T2 on T1.SELL_CONTRACT_ID = T2.SELL_CONTRACT_ID left join
+			TB_PRODUCT T3 on T2.PRODUCT_ID = T3.PRODUCT_ID
+		WHERE 
+			    T1.CONTRACT_BUYER = #defaultEntityId:VARCHAR#
+			AND T1.DATA_STATE='1'
+			AND T2.DATA_STATE='1'
+			AND T3.DATA_STATE='1'
+			AND T2.PRODUCT_ID NOT IN(
+				SELECT T4.PRODUCT_ID
+		        FROM  TB_SELL_PROD_CONTRACT T4
+		        WHERE T4.SELL_CONTRACT_ID = #sellContractId:VARCHAR#
+			)
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="inqueryProductForOrder" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+	  	select 
+			T1.PRODUCT_ID as "productId", 
+			T1.PRODUCT_NAME as "productName",
+			decode(T1.Card_Type,'1','IC卡','磁条卡') as "cardType", 
+			decode(T1.Product_Type,'1','充值卡','礼品卡') as "productType",
+			decode(T1.PROD_STAT,'1','可用','不可用') as "prodStat"
+		from 
+			TB_PRODUCT T1
+		where
+			T1.DATA_STATE='1'
+		and T1.entity_id = #defaultEntityId:VARCHAR#
+		AND T1.PRODUCT_ID NOT IN(
+				SELECT T4.PRODUCT_ID
+		        FROM  TB_SELL_PROD_CONTRACT T4
+		        WHERE T4.SELL_CONTRACT_ID = #sellContractId:VARCHAR#
+			)
+		union
+		select 
+			T3.PRODUCT_ID as "productId", 
+			T3.PRODUCT_NAME as "productName",
+			decode(T3.Card_Type,'1','IC卡','磁条卡') as "cardType", 
+			decode(T3.Product_Type,'1','充值卡','礼品卡') as "productType",
+			decode(T3.PROD_STAT,'1','可用','不可用') as "prodStat"
+		 from TB_LOYALTY_PROD_CONTRACT T1,
+		      TB_LOYALTY_CONTRACT T2,
+		      TB_PRODUCT T3
+		 where T1.Data_State='1'
+		 and
+		       T2.Data_State='1'
+		 and
+		       T3.Data_State='1'
+		 and
+		      T1.LOYALTY_CONTRACT_ID = T2.LOYALTY_CONTRACT_ID
+		 and
+		      T3.PRODUCT_ID=T1.PRODUCT_ID
+		      
+		 and  T2.Contract_Buyer = #defaultEntityId:VARCHAR#
+		 AND T1.PRODUCT_ID NOT IN(
+				SELECT T4.PRODUCT_ID
+		        FROM  TB_SELL_PROD_CONTRACT T4
+		        WHERE T4.SELL_CONTRACT_ID = #sellContractId:VARCHAR#
+			)
+
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<!-- 代发卡产品 -->
+	<select id="inqueryProductForIssuerContract" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+	  	select 
+			T1.PRODUCT_ID as "productId", 
+			T1.PRODUCT_NAME as "productName",
+			decode(T1.Card_Type,'1','IC卡','磁条卡') as "cardType", 
+			decode(T1.Product_Type,'1','充值卡','礼品卡') as "productType",
+			decode(T1.PROD_STAT,'1','可用','不可用') as "prodStat"
+		from 
+			TB_PRODUCT T1
+		where
+			T1.DATA_STATE='1'
+		and T1.PRODUCT_DEFINE_ISSUER = #defaultEntityId:VARCHAR#
+		and T1.entity_id = #contractBuyer:VARCHAR#
+		AND T1.PRODUCT_ID NOT IN(
+				SELECT T4.PRODUCT_ID
+		        FROM  TB_LOYALTY_PROD_CONTRACT T4
+		        WHERE T4.LOYALTY_CONTRACT_ID = #sellContractId:VARCHAR#
+			)
+			union
+		SELECT 
+			T2.PRODUCT_ID AS "productId",
+			T3.PRODUCT_NAME AS "productName",
+			DECODE(T3.CARD_TYPE,'1','IC卡','磁条卡') AS "cardType", 
+			DECODE(T3.PRODUCT_TYPE,'1','充值卡','礼品卡') AS "productType",
+			DECODE(T3.PROD_STAT,'1','可用','不可用') AS "prodStat"
+		FROM 
+			TB_LOYALTY_CONTRACT T1 left join 
+			TB_LOYALTY_PROD_CONTRACT T2 on T1.LOYALTY_CONTRACT_ID = T2.LOYALTY_CONTRACT_ID left join
+			TB_PRODUCT T3 on T2.PRODUCT_ID = T3.PRODUCT_ID
+		WHERE 
+				T1.CONTRACT_BUYER = #defaultEntityId:VARCHAR#
+			AND T1.DATA_STATE='1'
+			AND T2.DATA_STATE='1'
+			AND T3.DATA_STATE='1'
+			AND T2.PRODUCT_ID NOT IN(
+				SELECT T4.PRODUCT_ID
+		        FROM  TB_LOYALTY_PROD_CONTRACT T4
+		        WHERE T4.LOYALTY_CONTRACT_ID = #sellContractId:VARCHAR#
+			)
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="selectSellAcctypeContract" 
+		resultClass="com.allinfinance.univer.seller.sellercontract.dto.SellerAcctypeContractDTO"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerProductContractDTO"
+		remapResults="true">
+		SELECT 
+			  DISTINCT
+		      T1.ID AS "id",
+		      T1.SELL_CONTRACT_ID AS "sellContractId",
+		      T1.RULE_NO AS "ruleNo",
+		      T4.CACL_NAME AS "ruleName",
+		      T1.PRODUCT_ID AS "productId",
+		      T2.PRODUCT_Name AS "productName",
+		      T1.ACCTYPE_ID AS "acctypeId",
+		      T3.SERVICE_NAME AS "serviceName",
+		      T1.TXN_NUM AS "txnNum",
+		      T1.FEE AS "fee"
+		FROM 
+		      TB_SELL_ACCTYPE_CONTRACT T1 left join
+		      TB_PRODUCT T2 on T1.PRODUCT_ID=T2.PRODUCT_ID left join
+		      TB_SERVICE T3 on T1.ACCTYPE_ID = T3.SERVICE_ID left join
+      		  TBL_CACL_DSP T4 on T1.RULE_NO = T4.DISC_CD
+		WHERE
+			T1.PRODUCT_ID = #productId:VARCHAR#
+		AND
+			T1.SELL_CONTRACT_ID = #sellContractId:VARCHAR#
+		
+	</select>
+	
+	<select id="selectSellContractForView" 
+		resultClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractDTO"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractDTO"
+		remapResults="true">
+		select distinct
+		      T1.SELL_CONTRACT_ID AS "sellContractId",
+		      T1.CONTRACT_BUYER AS "contractBuyer",
+		      T2.$dynamicContractBuyerName$ AS "contractBuyerName",
+		      T1.CONTRACT_SELLER AS "contractSeller",
+		      T1.DELIVERY_FEE AS "deliveryFee",
+		      T1.SETTLE_PERIOD_RULE AS "settlePeriodRule",
+		      T3.RULE_NAME as "settlePeriodRuleName",
+		      T1.SMS_SVC_STAT AS "smsSvcStat",
+		      T1.EMAIL_SVC_STAT AS "emailSvcStat",
+		      T1.MONSTMT_SVC_STAT AS "monstmtSvcStat",
+		      T1.WEB_PAY_STAT AS "webPayStat",
+		      T1.WEB_SMS_SVC_STAT AS "webSmsSvcStat",
+		      T1.WEB_EMAIL_SVC_STAT AS "webEmailSvcStat",
+		      T1.CONTRACT_STATE AS "contractState",
+		      TO_CHAR(TO_DATE(T1.EXPIRY_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') as "expiryDate",
+		      T1.DATA_STATE AS "dataState",
+		      T1.CONTRACT_TYPE AS "contractType",
+		      T1.CLEAR_TP AS "clearTp"
+		FROM 
+		      TB_SELL_CONTRACT T1 left join 
+		      $dynamicContractBuyerTable$ T2 on T1.CONTRACT_BUYER = T2.ENTITY_ID left join
+		      TB_SETTLE_PERIOD_RULE T3 on T1.SETTLE_PERIOD_RULE = T3.RULE_NO
+		WHERE 
+			  T1.SELL_CONTRACT_ID = #sellContractId:VARCHAR#
+	</select>
+	<select id="selectSellProduct" 
+		resultClass="java.lang.String"
+		parameterClass="java.lang.String"
+		remapResults="true">
+		select t2.product_id as "productId"
+  		from tb_sell_contract t1, tb_sell_prod_contract t2
+ 		where t1.sell_contract_id = t2.sell_contract_id
+   		and t1.contract_buyer = #defaultEntityId:VARCHAR#
+	</select>
+	
+	<select id="selectProdContractForView" 
+		resultClass="com.allinfinance.univer.seller.sellercontract.dto.SellerProductContractDTO"
+		parameterClass="java.lang.String"
+		remapResults="true">
+		SELECT 
+	        T1.ID AS "id",
+	        T1.SELL_CONTRACT_ID AS "sellContractId",
+	        T1.PRODUCT_ID AS "productId",
+	        T2.Product_Name AS "productName",
+	        T1.CARD_FEE/100 AS "cardFee",
+	        T1.ANNUAL_FEE/100 AS "annualFee",
+	        T1.DATA_STATE AS "dataState"
+	  	FROM TB_SELL_PROD_CONTRACT T1 left join
+	         TB_PRODUCT T2 on  T1.PRODUCT_ID = T2.PRODUCT_ID
+	  	WHERE 
+	  	    T1.ID = #id:VARCHAR#
+	</select>
+	<select id="selProdFromContractForCardOperate" 
+		resultClass="java.util.HashMap"
+		parameterClass="java.lang.String"
+		remapResults="true">
+		select
+			distinct prodCon.Product_Id as "productId"
+		from
+			Tb_sell_contract contract,
+			tb_sell_prod_contract prodCon
+		where
+			contract.contract_buyer=#entityId:VARCHAR#
+		and
+			contract.sell_contract_id=prodCon.Sell_Contract_Id
+	</select>
+	
+	
+	
+	<select id="selectMasterPlate" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+			T1.SELL_CONTRACT_ID as "sellContractId",
+			T1.CONTRACT_BUYER as "contractBuyer",
+			T1.CONTRACT_SELLER as "contractSeller",
+			T1.DELIVERY_FEE as "deliveryFee",
+			T1.SETTLE_PERIOD_RULE as "settlePeriodRule",
+			T1.SMS_SVC_STAT as "smsSvcStat",
+			T1.EMAIL_SVC_STAT as "emailSvcStat",
+			T1.MONSTMT_SVC_STAT as "monstmtSvcStat",
+			T1.WEB_PAY_STAT as "webPayStat",
+			T1.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+			T1.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+			T1.CONTRACT_STATE  as "contractState",
+			T1.CONTRACT_TYPE as "contractType",
+			to_date(T1.EXPIRY_DATE,'YYYY-MM-DD') as "expiryDate" ,
+			T2.MODIFY_USER as "modifyUser",
+		   	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') as "createTime" ,
+		   	to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS') as "modifyTime"
+		from
+			TB_SELL_CONTRACT T1 left join
+			TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID
+		where  
+			t1.contract_seller=#defaultEntityId:VARCHAR#
+		and
+			T1.DATA_STATE = '1'
+		and t1.contract_type = '0'
+		 
+		<include refid="Commons.suffixSql" />
+	</select>
+</sqlMap>

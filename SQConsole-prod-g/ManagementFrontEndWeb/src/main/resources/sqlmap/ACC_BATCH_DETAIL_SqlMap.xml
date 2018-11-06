@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="BATCH_DETAIL">
+	<insert id="insertBatchDetail" parameterClass="com.allinfinance.univer.businessbatch.dto.BatchFileDetailDTO">
+	insert into TBL_ACC_BATCH_DETAIL (SMLT_DATE, BATCH_TYPE, BATCH_NO, TXN_SEQ, TXN_AMT, TXN_STATE)
+    values (#smltDate:CHAR#, #batchType:CHAR#, #batchNO:CHAR#, #txnSeq:CHAR#, #txnAmt:CHAR#,
+      #batchState:CHAR#)
+	</insert>
+</sqlMap>
