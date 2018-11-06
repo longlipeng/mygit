@@ -1,0 +1,15 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/allinfinance/prepay/IposMain.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/dao/CommonDAOImpl.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/dao/CommonsDAO.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/encryption/ClientImpl.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/encryption/SyncIssueResp.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/order/business/bo/OrderBaseQueryBO.java=UTF-8
+encoding//src/main/java/com/allinfinance/prepay/service=GBK
+encoding//src/main/java/com/allinfinance/prepay/service/CustomerServiceImpl.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/service/StockOrderCommonServiceImpl.java=UTF-8
+encoding//src/main/java/com/allinfinance/prepay/utils/DataBaseConstant.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/utils/DateUtil.java=UTF-8
+encoding//src/main/java/com/allinfinance/prepay/utils/IDCardCheck.java=GBK
+encoding//src/main/java/com/allinfinance/prepay/utils/OrderConst.java=UTF-8
+encoding//src/main/java/com/allinfinance/prepay/utils/ReflectionUtil.java=GBK
