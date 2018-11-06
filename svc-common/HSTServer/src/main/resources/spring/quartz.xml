@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 调度 -->
+	<bean name="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+		<property name="autoStartup">
+			<value>true</value>
+		</property>		
+		<property name="triggers">
+			<list>
+				<ref bean="normalProcessTrigger" />
+				<ref bean="connectionProcessTrigger" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 心跳报文发送周期配置 -->
+	<bean id="normalProcessTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="normalTask" />
+		<property name="cronExpression" value="0 0/1 * * * ?" />
+		<!-- <property name="cronExpression" value="0 0 2 * * ?" />-->
+	</bean>
+
+	<!-- 心跳报文发送任务 -->
+	<bean id="normalTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="heartBeatProc" />
+		<property name="targetMethod" value="procHeartBeatTask" />
+	</bean>
+	
+	<!-- 通信链路维护周期配置 -->
+	<bean id="connectionProcessTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="connectionTask" />
+		<property name="cronExpression" value="0/3 * * * * ?" /> 
+		<!-- <property name="cronExpression" value="0 0 2 * * ?" />-->
+	</bean>
+	
+	<!-- 通信链路维护任务 -->
+	<bean id="connectionTask"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="concurrent" value="false" />
+		<property name="targetObject" ref="connectionMaintain" />
+		<property name="targetMethod" value="procConnectionTask" />
+	</bean>	
+</beans>
