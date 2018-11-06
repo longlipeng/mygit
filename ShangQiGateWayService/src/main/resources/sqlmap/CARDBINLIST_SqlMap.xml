@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="term_parameter" >
+ 
+  <select id="queryCardBinList" resultClass="com.allinfinance.univer.consumer.pos.dto.posParameterValueDTO">
+		
+    select distinct t3.card_bin as cardBin 
+    from
+        tb_ent_user t,
+        tb_consumer_contract t1,
+        tb_product t2,
+        tb_product_card_bin t3,
+        tb_issuer t4
+    where   t.user_id=#userId#
+        and t1.data_state='1'
+        and  <![CDATA[(t1.contract_start_date <= TO_CHAR(sysdate,'YYYYMMDD'))]]>
+        and (t1.contract_end_date >= TO_CHAR(sysdate,'YYYYMMDD')  or t1.contract_end_date is null)
+        and t1.contract_buyer=t.entity_id
+        and t2.product_define_issuer=t4.entity_id
+        and t2.product_id=t3.product_id
+        and t4.entity_id=t1.contract_seller
+				
+  </select>
+</sqlMap>

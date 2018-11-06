@@ -1,0 +1,3 @@
+delete TB_SELL_ORDER where ORDER_ID in ('-0001');
+delete TB_SELL_ORDER_PAYMENT where ORDER_ID = '-0001' and PAYMENT_ID = '-10000001';
+delete TBL_ORDER_BATCH_CONSTRAIN where ORDER_ID = '-0001';

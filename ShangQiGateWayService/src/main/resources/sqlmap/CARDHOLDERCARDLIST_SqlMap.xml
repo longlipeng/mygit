@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CARDHOLDERCARDLIST">
+	<select id="selectCardholderCardlist"
+		parameterClass="com.allinfinance.univer.cardmanagement.dto.CardManagementDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql"/>
+		 select 
+          T1.ORDER_CARD_LIST_ID as "cardListId",
+       T1.CARDHOLDER_ID as "cardholderId",
+       T1.CARD_NO as "cardNo",
+       T1.CARD_STATE as  "cardState",
+       T1.CREATE_USER as "createUser",
+       T1.CREATE_TIME as "createTime",
+       T3.ENTITY_ID as "customerId",
+       T3.CUSTOMER_NAME as "customerName",
+       T2.Cardholder_Mobile as "cardholderMobile",
+       T2.FIRST_NAME as "cardholderName",
+       T2.ID_TYPE as "idType",
+       T2.ID_NO as "idNo",
+       T2.EXTERNAL_ID as "externalId"  
+    FROM Tb_Sell_Order_Card_List T1,
+      TB_CARDHOLDER T2,
+       TB_CUSTOMER T3
+       
+    where 
+        T1.CARDHOLDER_ID = T2.CARDHOLDER_ID
+        AND T2.entity_id = T3.entity_id
+        AND T1.DATA_STATE = '1'
+        AND T2.DATA_STATE = '1'
+        AND T3.DATA_STATE = '1'
+
+		<dynamic>
+			<isNotEmpty prepend="and" property="cardNo">
+				T1.CARD_NO = #cardNo:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+		 <include refid="Commons.suffixSql"/>
+	</select>
+</sqlMap>

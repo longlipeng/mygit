@@ -1,0 +1,1062 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MCHNT_SETTLE">
+  <select id="selectMerchantSettlePreByDTO" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+       SELECT 
+         DISTINCT
+           T1.MERCHANT_ID as "merchantId",
+           T2.MERCHANT_NAME as "merchantName",
+           T4.ACC_TYPE_ID as "accTypeId",
+           T4.ACCTYPE_CONTRACT_ID as "acctypeContractId",
+           T4.TXN_AMT as "txnAmt",
+           T4.TXN_CNT as "txnCnt",
+           T1.NEXT_SETT_DATE as "nextSettDate",
+           T1.PREVIOUS_SETT_DATE as "previousSettDate",
+           T1.START_DATE as "startDate",
+           T1.SETT_PERIOD as "settPeriod",
+           T1.PERIOD_DAY as "periodDay",
+           T1.MERCHANT_CONTRACT_ID as "merchantContractId"
+          from
+            TB_ENT_MCHNT_CONTRACT T1,
+            TB_ENT_MERCHANT T2,
+            TB_ENT_MERCHANT_GROUP T3,
+
+            (SELECT 
+               b.MERCHANT_ID MERCHANT_ID,
+               b.ACC_TYPE_ID ACC_TYPE_ID,
+               b.ACCTYPE_CONTRACT_ID ACCTYPE_CONTRACT_ID, 
+               SUM(a.TXN_AMT) TXN_AMT,
+               SUM(a.TXN_CNT) TXN_CNT
+             FROM
+               TB_BAT_MCHNT_STAT a,
+               TB_ENT_MCHNT_ACCTYPE_CONTRACT b,
+               TB_ENT_MCHNT_CONTRACT c
+             WHERE
+               a.ACC_TYPE(+) =b.ACC_TYPE_ID
+               AND a.MCHNT_ID(+)=b.MERCHANT_ID
+               AND a.SETTLE_DATE &lt;= to_number(to_char(c.NEXT_SETT_DATE,'yyyymmdd'))
+               AND a.SETTLE_FLAG = 0 
+               AND b.MERCHANT_ID = c.MERCHANT_ID
+               GROUP BY b.MERCHANT_ID,b.ACC_TYPE_ID,b.ACCTYPE_CONTRACT_ID) T4
+         where
+           T4.MERCHANT_ID(+) = T1.MERCHANT_ID
+           AND T2.MERCHANT_ID = T1.MERCHANT_ID
+           AND T3.MERCHANT_GRP_ID(+) = T2.MERCHANT_GROUP_ID
+           AND T1.DATA_STATE = '1'
+           AND T2.DATA_STATE = '1'
+           AND T3.DATA_STATE(+) = '1'
+    <dynamic>
+      <isNotEmpty prepend="and" property="merchantId">
+        T1.MERCHANT_ID = #merchantId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        T2.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantGrpId">
+        T3.MERCHANT_GRP_ID = #merchantGrpId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantGrpName">
+        T3.MERCHANT_GRP_NAME like '%'||#merchantGrpName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotNull prepend="and" property="state">
+        <isEqual property="state" compareValue="1">
+          to_number(to_char(T1.NEXT_SETT_DATE,'yyyymmdd')) &lt;= to_number(to_char(sysdate,'yyyymmdd'))
+        </isEqual>
+      </isNotNull>
+      <isNull prepend="and" property="issuerId">
+        <isNotEqual property="defaultIssuerId" compareValue="0">
+          T2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotEqual>
+        <isEqual property="defaultIssuerId" compareValue="0">
+          T2.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+        </isEqual>
+      </isNull>
+      <isNotNull prepend="and" property="merchantIdList">
+        T1.MERCHANT_ID in 
+        <iterate conjunction="," open="(" close=")" property="merchantIdList" >
+          #merchantIdList[]#
+        </iterate>
+      </isNotNull>
+    </dynamic>
+    ORDER BY T1.MERCHANT_ID,T4.ACC_TYPE_ID
+    <include refid="Commons.suffixSql"/>
+  </select>
+
+  <select id="selectMerchantSettleListPre" parameterClass="java.util.List" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettleListDTO">
+    SELECT 
+      DISTINCT
+        T1.MERCHANT_ID as "merchantId",
+        T4.TXN_TYPE as "txnTypeId",
+        T4.ACC_TYPE_ID as "accType",
+        T4.TXN_AMT as "txnAmt",
+        T1.NEXT_SETT_DATE as "settleEndDate",
+        T5.MCHNT_SETTLE_ID as "mchntSettleId",
+        T1.SETT_PERIOD as "settPeriod",
+        T1.PERIOD_DAY as "periodDay",
+        T1.MERCHANT_CONTRACT_ID as "merchantContractId",
+        T1.PREVIOUS_SETT_DATE as "settleStartDate"
+      FROM
+        TB_ENT_MCHNT_CONTRACT T1,
+        TB_ENT_MERCHANT T2,
+        TB_ENT_MERCHANT_GROUP T3,
+        (SELECT 
+           b.MERCHANT_ID MERCHANT_ID,
+           b.ACC_TYPE_ID ACC_TYPE_ID,
+           b.ACCTYPE_CONTRACT_ID ACCTYPE_CONTRACT_ID,
+           a.TXN_TYPE TXN_TYPE,  
+           SUM(a.TXN_AMT) TXN_AMT
+         FROM
+           TB_BAT_MCHNT_STAT a,
+           TB_ENT_MCHNT_ACCTYPE_CONTRACT b,
+           TB_ENT_MCHNT_CONTRACT c
+         WHERE
+           a.ACC_TYPE(+) =b.ACC_TYPE_ID
+           AND a.MCHNT_ID(+)=b.MERCHANT_ID
+           AND a.SETTLE_DATE &lt;= to_number(to_char(c.NEXT_SETT_DATE,'yyyymmdd'))
+           AND a.SETTLE_FLAG = 0 
+           AND b.MERCHANT_ID = c.MERCHANT_ID
+           GROUP BY b.MERCHANT_ID,b.ACC_TYPE_ID,b.ACCTYPE_CONTRACT_ID,a.TXN_TYPE) T4,
+        TB_ENT_MCHNT_SETTLE T5
+       WHERE
+           T4.MERCHANT_ID(+) = T1.MERCHANT_ID
+           AND T2.MERCHANT_ID = T1.MERCHANT_ID
+           AND T3.MERCHANT_GRP_ID(+) = T2.MERCHANT_GROUP_ID
+           AND T1.DATA_STATE = '1'
+           AND T2.DATA_STATE = '1'
+           AND T3.DATA_STATE(+) = '1'
+           AND T4.ACC_TYPE_ID is Not Null
+           AND T5.SETTLE_END_DATE = T1.NEXT_SETT_DATE
+           AND T5.MERCHANT_ID = T1.MERCHANT_ID
+           AND T1.MERCHANT_ID in
+           <iterate conjunction="," open="(" close=")" >
+             #value[]# 
+           </iterate>
+</select>
+
+<select id="selectMerchantSettlePre" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+       SELECT 
+         DISTINCT
+           T1.MERCHANT_ID as "merchantId",
+           T2.MERCHANT_NAME as "merchantName",
+           T4.ACC_TYPE_ID as "accTypeId",
+           T4.ACCTYPE_CONTRACT_ID as "acctypeContractId",
+           T4.TXN_AMT as "txnAmt",
+           T4.TXN_CNT as "txnCnt",
+           T1.NEXT_SETT_DATE as "nextSettDate",
+           T1.PREVIOUS_SETT_DATE as "previousSettDate",
+           T1.START_DATE as "startDate",
+           T1.SETT_PERIOD as "settPeriod",
+           T1.PERIOD_DAY as "periodDay",
+           T1.MERCHANT_CONTRACT_ID as "merchantContractId"
+          from
+            TB_ENT_MCHNT_CONTRACT T1,
+            TB_ENT_MERCHANT T2,
+            TB_ENT_MERCHANT_GROUP T3,
+
+            (SELECT 
+               b.MERCHANT_ID MERCHANT_ID,
+               b.ACC_TYPE_ID ACC_TYPE_ID,
+               b.ACCTYPE_CONTRACT_ID ACCTYPE_CONTRACT_ID, 
+               SUM(a.TXN_AMT) TXN_AMT,
+               SUM(a.TXN_CNT) TXN_CNT
+             FROM
+               TB_BAT_MCHNT_STAT a,
+               TB_ENT_MCHNT_ACCTYPE_CONTRACT b,
+               TB_ENT_MCHNT_CONTRACT c
+             WHERE
+               a.ACC_TYPE(+) =b.ACC_TYPE_ID
+               AND a.MCHNT_ID(+)=b.MERCHANT_ID
+               AND a.SETTLE_DATE &lt;= to_number(to_char(c.NEXT_SETT_DATE,'yyyymmdd'))
+               AND a.SETTLE_FLAG = 0 
+               AND b.MERCHANT_ID = c.MERCHANT_ID
+               GROUP BY b.MERCHANT_ID,b.ACC_TYPE_ID,b.ACCTYPE_CONTRACT_ID) T4
+         where
+           T4.MERCHANT_ID(+) = T1.MERCHANT_ID
+           AND T2.MERCHANT_ID = T1.MERCHANT_ID
+           AND T3.MERCHANT_GRP_ID(+) = T2.MERCHANT_GROUP_ID
+           AND T1.DATA_STATE = '1'
+           AND T2.DATA_STATE = '1'
+           AND T3.DATA_STATE(+) = '1'
+    <dynamic>
+      <isNotNull prepend="and" property="state">
+        <isEqual property="state" compareValue="1">
+          to_number(to_char(T1.NEXT_SETT_DATE,'yyyymmdd')) &lt;= to_number(to_char(sysdate,'yyyymmdd'))
+        </isEqual>
+      </isNotNull>
+      <isNotNull prepend="and" property="merchantIdList">
+        T1.MERCHANT_ID in 
+        <iterate conjunction="," open="(" close=")" property="merchantIdList" >
+          #merchantIdList[]#
+        </iterate>
+      </isNotNull>
+    </dynamic>
+    ORDER BY T1.MERCHANT_ID,T4.ACC_TYPE_ID
+  </select>
+
+  <select id="selectMerchantSettle" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.MCHNT_SETTLE_ID as "mchntSettleId",
+        T1.MERCHANT_ID as "merchantId",
+        T1.SETTLE_START_DATE as "settleStartDate",
+        T1.SETTLE_END_DATE as "settleEndDate",
+        to_char(T1.TXN_AMT/100,'99999990.00') as "txnAmt",
+		to_char(T1.TXN_FEE/100,'99999990.00') as "txnFee",
+		to_char(T1.SETTLE_AMT/100,'99999990.00') as "settleAmt",
+		decode(T1.MCHNT_SETTLE_STATE,0,'已取消',1,'待确定',2,'已确定',3,'已付款','') as "mchntSettleState",
+		T2.MERCHANT_NAME as "merchantName",
+		decode(t4.oldfee,'',to_char(T1.TXN_FEE/100,'99999990.00'),to_char(substr(t4.oldfee,11)/100, '99999990.00')) as "oldFee"
+    from
+        TB_ENT_MCHNT_SETTLE T1,
+        TB_ENT_MERCHANT T2,
+        TB_ENT_MERCHANT_GROUP T3,
+        (select trim(min(to_char(OPERATER_ID, '0000000000')||old_TXN_FEE)) as oldfee ,MCHNT_SETTLE_ID from TB_ENT_MCHNT_SETTLE_FEE_MOD group by MCHNT_SETTLE_ID) T4
+    where
+        T1.MERCHANT_ID = T2.MERCHANT_ID
+        AND T2.MERCHANT_GROUP_ID = T3.MERCHANT_GRP_ID(+)
+        and t1.MCHNT_SETTLE_ID = t4.MCHNT_SETTLE_ID(+)
+    <dynamic>
+    	<isNotEmpty prepend="and" property="legacyMerchantId">
+         		T2.LEGACY_MERCHANT_ID = #legacyMerchantId:VARCHAR#
+        </isNotEmpty>
+    	<isNotEmpty prepend="and" property="settleStartDate">
+    		to_char(T1.CREATE_TIME,'yyyyMMdd') &gt;= to_char(#settleStartDate:DATE#,'yyyyMMdd')
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="settleEndDate">
+    		to_char(T1.CREATE_TIME,'yyyyMMdd') &lt;= to_char(#settleEndDate:DATE#,'yyyyMMdd')
+    	</isNotEmpty>
+      <isNotEmpty prepend="and" property="mchntSettleId">
+        T1.MCHNT_SETTLE_ID = #mchntSettleId:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantId">
+        T1.MERCHANT_ID = #merchantId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="state">
+        T1.MCHNT_SETTLE_STATE = #state#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        T2.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantGrpId">
+        T3.MERCHANT_GRP_ID = #merchantGrpId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantGrpName">
+        T3.MERCHANT_GRP_NAME like '%'||#merchantGrpName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="selectFlag">
+        <isEqual property="selectFlag" compareValue="1">
+            T1.MCHNT_SETTLE_STATE = 1   
+        </isEqual>
+        <isEqual property="selectFlag" compareValue="2">
+            (T1.MCHNT_SETTLE_STATE = 1 or T1.MCHNT_SETTLE_STATE = 2)  
+        </isEqual>
+        <isEqual property="selectFlag" compareValue="3">
+        	(t2.COMMISSION_FEE = 1
+        	<isNotEmpty prepend="and" property="feeModFlag">
+        		<isEqual property="feeModFlag" compareValue="1">
+        		T1.MCHNT_SETTLE_STATE = 2
+        		</isEqual>
+        		<isEqual property="feeModFlag" compareValue="2">
+        		T1.MCHNT_SETTLE_STATE = 1
+        		</isEqual>
+        		<isEqual property="feeModFlag" compareValue="3">
+        		(T1.MCHNT_SETTLE_STATE = 1 or T1.MCHNT_SETTLE_STATE = 2)
+        		</isEqual>
+        	</isNotEmpty>
+        	)
+        </isEqual>
+        <isEqual property="selectFlag" compareValue="4">
+            T1.MCHNT_SETTLE_STATE = 2      
+        </isEqual>
+        <isEqual property="selectFlag" compareValue="5">
+            T1.MCHNT_SETTLE_STATE != 0      
+        </isEqual>
+      </isNotEmpty>
+      <isNull prepend="and" property="issuerId">
+        <isNotEqual property="defaultIssuerId" compareValue="0">
+          T2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotEqual>
+        <isEqual property="defaultIssuerId" compareValue="0">
+          T2.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+        </isEqual>
+      </isNull>
+    </dynamic>
+    	order by T1.MCHNT_SETTLE_ID desc
+        <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <select id="getUserRoles" parameterClass="java.lang.Integer" resultClass="java.util.HashMap" remapResults="true">
+  	select 
+  		t2.MODIFY_SERVICE_FEE as "modifyFee",
+  		t2.MODIFY_SERVICE_FEE2 as "modifyFee2"
+  	from 
+  		TB_ENT_ROLE_DATE_PURVIEW t2, TB_REL_USER_ROLE t1
+  	where
+  		t1.ROLE_ID = t2.ROLE_ID
+  		and t1.USER_ID = #loginUserId#
+  </select>
+
+  <select id="selectMchntContract" parameterClass="com.huateng.accor.mchntcontract.dto.MchntContractDTO" resultClass="com.huateng.accor.mchntcontract.dto.MchntContractDTO">
+    select
+        T1.MERCHANT_CONTRACT_ID as "merchantContractId",
+        T1.MERCHANT_ID as "merchantId",
+        T2.MERCHANT_NAME as "merchantName",
+        T1.SETT_WAY as "settWay",
+        T1.SETT_PERIOD as "settPeriod",
+		T1.NEXT_SETT_DATE as "nextSettDate"
+    from
+        TB_ENT_MCHNT_CONTRACT T1,
+        TB_ENT_MERCHANT T2
+    where
+        T1.MERCHANT_ID = T2.MERCHANT_ID
+    <dynamic>
+      <isNotEmpty prepend="and" property="merchantId">
+        T1.MERCHANT_ID = #merchantId:VARCHAR#
+      </isNotEmpty>    
+    </dynamic>
+    ORDER BY T1.MERCHANT_CONTRACT_ID DESC
+  </select>
+
+  <insert id="insertBySettleDate" parameterClass="com.huateng.accor.ibatis.model.MchntSettleOperater" >
+    insert into TB_ENT_MCHNT_SETTLE_OPERATER (OPERATER_ID, MERCHANT_ID,
+      OPERATER_TYPE, OLD_SETTLE_DATE, NEW_SETTLE_DATE, OPERATER_MEMO,
+      CREATE_USER, CREATE_TIME, MODIFY_USER, MODIFY_TIME, DATA_STATE)
+    values (#operaterId:DECIMAL#, #merchantId:VARCHAR#,
+      #operaterType:DECIMAL#, #oldSettleDate:DATE#,
+      #newSettleDate:DATE#, #operaterMemo:VARCHAR#, #createUser:DECIMAL#, #createTime:DATE#,
+      #modifyUser:DECIMAL#, #modifyTime:DATE#, #dataState:DECIMAL#)
+  </insert>
+
+  <update id="updateBatMchntStat" parameterClass="com.huateng.accor.ibatis.model.BatMchntStat" >
+    update TB_BAT_MCHNT_STAT
+    set
+        SETTLE_FLAG = #settleFlag:DECIMAL#
+    where ACC_TYPE = #accType:DECIMAL#
+      and MCHNT_ID = #mchntId:VARCHAR#
+      and SETTLE_DATE &lt;= #settleDate:DECIMAL#
+      and TXN_TYPE = #txnType:DECIMAL#
+  </update>
+
+  <update id="updateMchntContract" parameterClass="com.huateng.accor.ibatis.model.MchntContract" >
+    update TB_ENT_MCHNT_CONTRACT
+    set
+        NEXT_SETT_DATE = #nextSettDate#,
+        PREVIOUS_SETT_DATE = #previousSettDate# 
+    where
+        MERCHANT_CONTRACT_ID = #merchantContractId:DECIMAL#
+  </update>
+  
+  <update id="updateSettleMchntContract" parameterClass="com.huateng.accor.ibatis.model.MchntContract" >
+    update TB_ENT_MCHNT_CONTRACT
+    set
+        NEXT_SETT_DATE = #nextSettDate#,
+        PREVIOUS_SETT_DATE = #previousSettDate# 
+    where
+        MERCHANT_ID = #merchantId:DECIMAL#
+        and (#nextSettDate# >= start_date and (end_date >= #nextSettDate# or end_date is null))
+  </update>
+
+  <select id="selectBatMchntStatByIssueId" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettleAmtDTO">
+    select 
+        settle_date as "settleDate", 
+        mchnt_id as "mchntId", 
+        MERCHANT_NAME as "mchntName",
+        txn_type as "txnType", 
+        acc_type as "accType", 
+        txn_cnt as "txnCnt", 
+        txn_amt as "txnAmt"
+    from 
+        tb_bat_mchnt_stat t1, TB_BAT_CTRL t2, TB_ENT_MERCHANT t3, TB_ENT_ACCTYPE t4
+    where 
+        t3.ISSUER_ID = #defaultIssuerId:DECIMAL# and t3.MERCHANT_ID = t1.mchnt_id and
+        t1.mchnt_id = t3.merchant_id and t1.SETTLE_FLAG = 0 and
+        to_char(t2.CURR_DATE, '09999999') >= t1.settle_date and
+        t1.ACC_TYPE = t4.ACC_TYPE_ID and t4.IS_LOYALTY = 0
+    and
+    	t1.TXN_AMT > 0
+        <dynamic>
+         	<isNotEmpty prepend="and" property="merchantId">
+         		t1.MCHNT_ID = #merchantId#
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="merchantName">
+         		t3.MERCHANT_NAME like '%'||#merchantName#||'%'
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="settleStartDate">
+         		to_char(to_date(t1.settle_date,'yyyyMMdd'),'yyyy-MM-dd') &gt;= to_char(#settleStartDate:DATE#,'yyyy-MM-dd')
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="settleEndDate">
+         		to_char(to_date(t1.settle_date,'yyyyMMdd'),'yyyy-MM-dd') &lt;= to_char(#settleEndDate:DATE#,'yyyy-MM-dd')
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="minAmt">
+         		decode(rtrim(t1.txn_amt),'',0,rtrim(t1.txn_amt))>#minAmt#
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="maxAmt">
+         		#maxAmt# > decode(rtrim(t1.txn_amt),'',0,rtrim(t1.txn_amt))
+         	</isNotEmpty>
+        </dynamic>
+    order by mchnt_id, settle_date, acc_type, txn_type
+  </select>
+  
+  <select id="selectInvoiceList" parameterClass="com.huateng.accor.mchntsettleinvoice.dto.MchntSettleInvoiceDTO" resultClass="java.util.HashMap" remapResults="true">
+	<include refid="Commons.prefixSql"/>	
+    select 
+        MCHNT_SETTLE_INVOICE_ID as "mchntSettleInvoiceId",
+        MCHNT_SETTLE_ID as "mchntSettleId",
+        INVOICE_NAME as "invoiceName", 
+        to_char(INVOICE_AMOUNT/100, '99999990.00') as "invoiceAmount",
+        PAYMENT_TYPE as "paymentType"
+    from 
+        TB_ENT_MCHNT_SETTLE_INVOICE
+    where 
+        MCHNT_SETTLE_ID = #mchntSettleId:DECIMAL#
+        and data_state = 1
+    order by MCHNT_SETTLE_INVOICE_ID
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <!-- select id="selectMchntContractByIssueId" parameterClass="com.huateng.accor.common.dto.BaseDTO" resultClass="com.huateng.accor.ibatis.model.MchntContract">
+	select 
+		MERCHANT_CONTRACT_ID as "merchantContractId",
+		t1.MERCHANT_ID as "merchantId",
+		CONTRACT_CREATE_DATE as "contractCreateDate",
+		SETT_WAY as "settWay",
+		SETT_PERIOD as "settPeriod",
+		PERIOD_DAY as "periodDay",
+		MINIMUM_SETT_AMOUNT as "minimumSettAmount",
+		PREVIOUS_SETT_DATE as "previousSettDate",
+		NEXT_SETT_DATE as "nextSettDate",
+		t1.DATA_STATE as "dataState"
+	from 
+		TB_ENT_MCHNT_CONTRACT t1, TB_ENT_MERCHANT t2, tb_bat_ctrl t3
+	where
+		t1.MERCHANT_ID = t2.MERCHANT_ID and
+        t1.DATA_STATE = 1 and
+        t2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        and trim(to_char(t3.CURR_DATE, '09999999')) >= to_char(t1.start_date,'YYYYMMDD') 
+        and decode(to_char(t1.END_DATE, 'YYYYMMDD'),'','39990101',to_char(t1.END_DATE, 'YYYYMMDD')) >= trim(to_char(t3.CURR_DATE, '09999999'))
+  </select -->
+  
+  <select id="getMchntName" parameterClass="java.lang.String" resultClass="java.lang.String">
+  	select MERCHANT_NAME from TB_ENT_MERCHANT
+  	where MERCHANT_ID = #merId#
+  </select>
+  
+  <select id="selectMchntContractByIssueId" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="com.huateng.accor.mchntcontract.dto.MchntContractDTOasIbatis">
+    select 
+        a.MERCHANT_CONTRACT_ID as "merchantContractId",
+        a.MERCHANT_ID as "merchantId",
+        c.MERCHANT_NAME as "merchantName",
+        a.CONTRACT_CREATE_DATE as "contractCreateDate",
+        a.SETT_WAY as "settWay",
+        a.SETT_PERIOD as "settPeriod",
+        a.PERIOD_DAY as "periodDay",
+        a.MINIMUM_SETT_AMOUNT as "minimumSettAmount",
+        a.PREVIOUS_SETT_DATE as "previousSettDate",
+        a.NEXT_SETT_DATE as "nextSettDate",
+        a.DATA_STATE as "dataState",
+        a.START_DATE as "startDate",
+        a.END_DATE as "endDate",
+        a.RULE_NO as "ruleNo"
+    from TB_ENT_MCHNT_CONTRACT a, TB_ENT_MERCHANT c
+    where 
+    	c.ISSUER_ID = #issuerId# and a.MERCHANT_ID = c.MERCHANT_ID and
+    	decode(to_char(END_DATE, 'YYYYMMDD'), '', '99999999', to_char(END_DATE, 'YYYYMMDD')) > c.SETTLE_DATE_PRE
+    <dynamic>
+         	<isNotEmpty prepend="and" property="merchantId">
+         		c.MERCHANT_ID = #merchantId#
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="merchantName">
+         		c.MERCHANT_NAME like '%'||#merchantName#||'%'
+         	</isNotEmpty>
+    </dynamic>
+    order by a.MERCHANT_ID,a.MERCHANT_CONTRACT_ID
+  </select>
+
+  <select id="selectMchntContractsByIssueId" parameterClass="com.huateng.accor.common.dto.BaseDTO" resultClass="com.huateng.accor.ibatis.model.MchntContract">
+	select 
+		MERCHANT_CONTRACT_ID as "merchantContractId",
+		t1.MERCHANT_ID as "merchantId",
+		CONTRACT_CREATE_DATE as "contractCreateDate",
+		SETT_WAY as "settWay",
+		SETT_PERIOD as "settPeriod",
+		PERIOD_DAY as "periodDay",
+		MINIMUM_SETT_AMOUNT as "minimumSettAmount",
+		PREVIOUS_SETT_DATE as "previousSettDate",
+		NEXT_SETT_DATE as "nextSettDate",
+		t1.DATA_STATE as "dataState"
+	from 
+		TB_ENT_MCHNT_CONTRACT t1, TB_ENT_MERCHANT t2
+	where
+		t1.MERCHANT_ID = t2.MERCHANT_ID and
+		t1.DATA_STATE = '1' and
+		t2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+  </select>
+  
+  <select id="selectBatMchntStatByMchntId" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleAmtDTO" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettleAmtDTO">
+	select 
+		settle_date as "settleDate", 
+		mchnt_id as "mchntId", 
+		txn_type as "txnType", 
+		acc_type as "accType", 
+		txn_cnt as "txnCnt", 
+		txn_amt as "txnAmt",
+		to_char(t2.PREVIOUS_SETT_DATE, 'YYYYMMDD') as "previousSettDate", 
+		to_char(t2.NEXT_SETT_DATE, 'YYYYMMDD') as "nextSettDate",
+		t2.SETT_WAY as "settWay",
+		t2.SETT_PERIOD as "settPeriod",
+		t2.PERIOD_DAY as "periodDay",
+		t2.MINIMUM_SETT_AMOUNT as "minimumSettAmount",
+		t2.MERCHANT_CONTRACT_ID as "merchantContractId"
+	from 
+		tb_bat_mchnt_stat t1, tb_ent_mchnt_contract t2
+	where 
+		t2.merchant_id = #mchntId:DECIMAL# and
+		t2.data_state = '1' and
+		t1.mchnt_id = t2.merchant_id and 
+		t1.settle_date >= #nextSettDate:CHAR#
+  	order by mchnt_id, acc_type, txn_type
+  </select>
+
+  <select id="selectBatMchntStatByMchntIds" parameterClass="java.lang.String" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettleAmtDTO">
+	select 
+		settle_date as "settleDate", 
+		mchnt_id as "mchntId", 
+		txn_type as "txnType", 
+		acc_type as "accType", 
+		txn_cnt as "txnCnt", 
+		txn_amt as "txnAmt",
+		to_char(t2.PREVIOUS_SETT_DATE, 'YYYYMMDD') as "previousSettDate", 
+		to_char(t2.NEXT_SETT_DATE, 'YYYYMMDD') as "nextSettDate",
+		t2.SETT_WAY as "settWay",
+		t2.SETT_PERIOD as "settPeriod",
+		t2.PERIOD_DAY as "periodDay",
+		t2.MINIMUM_SETT_AMOUNT as "minimumSettAmount",
+		t2.MERCHANT_CONTRACT_ID as "merchantContractId"
+	from 
+		tb_bat_mchnt_stat t1, tb_ent_mchnt_contract t2, TB_ENT_ACCTYPE t3
+	where 
+		t2.merchant_id in (#queryInMchnt#)and
+		t2.data_state = '1' and
+		t1.mchnt_id = t2.merchant_id and 
+		to_char(t2.next_sett_date, 'YYYYMMDD') >= t1.settle_date and 
+		t1.settle_date >= nvl(to_char(t2.previous_sett_date, 'YYYYMMDD'), '00000000') and
+		t1.ACC_TYPE = t3.ACC_TYPE_ID and t3.IS_LOYALTY = 0
+  	order by mchnt_id, acc_type, txn_type
+  </select>
+  
+  <select id="selectBatMchntStatByMchntIdandDate" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDTO" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettleAmtDTO">
+	select distinct
+		settle_date as "settleDate", 
+		mchnt_id as "mchntId", 
+		txn_type as "txnType", 
+		acc_type as "accType", 
+		t4.DISCOUNT as "discount",
+		txn_cnt as "txnCnt", 
+		txn_amt as "txnAmt",
+		TXN_FEE as "txnFee",
+		to_char(t2.PREVIOUS_SETT_DATE, 'YYYYMMDD') as "previousSettDate", 
+		to_char(t2.NEXT_SETT_DATE, 'YYYYMMDD') as "nextSettDate",
+		t2.SETT_WAY as "settWay",
+		t2.SETT_PERIOD as "settPeriod",
+		t2.PERIOD_DAY as "periodDay",
+		t2.MINIMUM_SETT_AMOUNT as "minimumSettAmount",
+		t2.MERCHANT_CONTRACT_ID as "merchantContractId",
+		t5.FEE_MIN   as "minimumCommission"
+	from 
+		tb_bat_mchnt_stat t1, tb_ent_mchnt_contract t2, TB_ENT_ACCTYPE t3, TB_ENT_MCHNT_ACCTYPE_CONTRACT t4,
+		TB_ENT_FEE_RULE t5, tb_fee_det t6
+	where 
+		t2.merchant_id = #merchantId:DECIMAL# and
+		t2.data_state = '1' and
+		to_char(#settleEndDate#,'YYYYMMDD') >= to_char(t2.START_DATE,'YYYYMMDD') and 
+		(t2.END_DATE is null or to_char(t2.END_DATE,'YYYYMMDD') >= to_char(#settleEndDate#, 'YYYYMMDD')) and
+		t1.mchnt_id = t2.merchant_id and 
+		to_char(#settleEndDate:DATE#,'YYYYMMDD') >= trim(to_char(t1.settle_date,'09999999')) and
+		t1.SETTLE_FLAG = 0 and
+		t4.DATA_STATE = '1' and t4.MERCHANT_ID = t2.MERCHANT_ID and
+		t4.ACC_TYPE_ID = t1.ACC_TYPE and t4.MERCHANT_CONTRACT_ID = t2.MERCHANT_CONTRACT_ID and
+		t1.ACC_TYPE = t3.ACC_TYPE_ID and t3.IS_LOYALTY = 0
+		and t4.ACCTYPE_CONTRACT_ID = t6.ACCTYPE_CONTRACT_ID and t6.RULE_NO = t5.RULE_NO
+  	order by mchnt_id, acc_type, txn_type
+  </select>
+
+  <select id="selectRateByIssueId" parameterClass="com.huateng.accor.common.dto.BaseDTO" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettleFeeDTO">
+	select distinct 
+		t1.merchant_id as "merchantId", 
+		t1.acc_type_id as "accTypeId",
+		t1.account_type as "accountType",    
+		t1.rate as "conRate",    
+		t1.acctype_contract_id as "acctypeContractId",   
+		'' as "startAmount",    
+		'' as "endAmount", 
+		'' as "secRate" 
+	from    
+		tb_ent_mchnt_acctype_contract t1,
+		TB_ENT_MERCHANT t3  
+	where    
+		t1.merchant_id = t3.MERCHANT_ID and 
+		t3.ISSUER_ID = #defaultIssuerId:DECIMAL# and 
+		t1.DATA_STATE = '1' and 
+		t1.ACCOUNT_TYPE = 0
+	union select distinct 
+		t1.merchant_id as "merchantId", 
+		t1.acc_type_id as "accTypeId",    
+		t1.account_type as "accountType",    
+		t1.rate as "conRate",    
+		t1.acctype_contract_id as "acctypeContractId",   
+		decode(t1.ACCOUNT_TYPE,0,'',1, t2.START_AMOUNT) as "startAmount",    
+		decode(t1.ACCOUNT_TYPE,0,'',1, t2.END_AMOUNT) as "endAmount",   
+		decode(t1.ACCOUNT_TYPE,0,'',1, t2.rate) as "secRate"  
+	from    
+		tb_ent_mchnt_acctype_contract t1, 
+		tb_ent_mchnt_subsection_rate t2, 
+		TB_ENT_MERCHANT t3  
+	where    
+		t1.merchant_id = t3.MERCHANT_ID and 
+		t3.ISSUER_ID = #defaultIssuerId:DECIMAL# and 
+		t1.DATA_STATE = '1' and 
+		t1.ACCOUNT_TYPE = 1 and
+		t1.ACCTYPE_CONTRACT_ID = t2.ACCTYPE_CONTRACT_ID and 
+		t2.data_state = '1'
+	order by "merchantId", "accTypeId"
+  </select>
+
+  <select id="selectRateByMchntIds" parameterClass="java.lang.String" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettleFeeDTO">
+	select distinct 
+		t1.merchant_id as "merchantId", 
+		t1.acc_type_id as "accTypeId",
+		t1.account_type as "accountType",    
+		t1.rate as "conRate",    
+		t1.acctype_contract_id as "acctypeContractId",   
+		t1.MERCHANT_CONTRACT_ID as "merchantContractId",
+		'' as "startAmount",    
+		'' as "endAmount", 
+		'' as "secRate" 
+	from    
+		tb_ent_mchnt_acctype_contract t1
+	where    
+		t1.merchant_id in (#queryInMchnt#) and
+		t1.DATA_STATE = '1' and 
+		t1.ACCOUNT_TYPE = 0
+	union select distinct 
+		t1.merchant_id as "merchantId", 
+		t1.acc_type_id as "accTypeId",    
+		t1.account_type as "accountType",    
+		t1.rate as "conRate",    
+		t1.acctype_contract_id as "acctypeContractId",   
+		t1.MERCHANT_CONTRACT_ID as "merchantContractId",
+		decode(t1.ACCOUNT_TYPE,0,'',1, t2.START_AMOUNT) as "startAmount",    
+		decode(t1.ACCOUNT_TYPE,0,'',1, decode(t2.END_AMOUNT,'','999999999999',t2.END_AMOUNT)) as "endAmount",   
+		decode(t1.ACCOUNT_TYPE,0,'',1, t2.rate) as "secRate"  
+	from    
+		tb_ent_mchnt_acctype_contract t1, 
+		tb_ent_mchnt_subsection_rate t2
+	where    
+		t1.merchant_id in (#queryInMchnt#) and
+		t1.DATA_STATE = '1' and 
+		t1.ACCOUNT_TYPE = 1 and
+		t1.ACCTYPE_CONTRACT_ID = t2.ACCTYPE_CONTRACT_ID and 
+		t2.data_state = '1'
+	order by "merchantId", "accTypeId"
+  </select>
+  
+  <select id="selectOperators" resultClass="com.huateng.accor.ibatis.model.TxnType">
+  	select 
+  		TXN_TYPE_ID as "txnTypeId",
+  		SETTLE_TYPE as "settleType"
+  	from
+  		TB_ENT_TXN_TYPE
+  </select>
+  
+  <select id="enquiryMerchantSettle" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+  	<include refid="Commons.prefixSql"/>
+	select  
+		t1.NEXT_SETT_DATE as "nextSettDate",     
+		t2.MERCHANT_NAME as "merchantName",     
+		t2.MERCHANT_ID as "merchantId",
+		trim(to_char(sum(t4.TXN_AMT * decode(t5.SETTLE_TYPE, 1, 1, 2, -1))/100,'9999999990.99')) as "amt",
+		t1.MERCHANT_CONTRACT_ID as "merchantContractId"
+	from     
+		TB_ENT_MERCHANT t2, 
+		TB_ENT_MCHNT_CONTRACT t1, 
+		TB_BAT_CTRL t3, 
+		TB_BAT_MCHNT_STAT t4, 
+		TB_ENT_TXN_TYPE t5
+	where     
+		t1.MERCHANT_ID = t2.MERCHANT_ID and     
+		trim(to_char(t3.CURR_DATE, '09999999')) >= to_char(t1.NEXT_SETT_DATE, 'YYYYMMDD') and 
+		to_char(t1.NEXT_SETT_DATE,'YYYYMMDD') >=  trim(to_char(t4.SETTLE_DATE,'09999999')) and
+	    trim(to_char(t4.SETTLE_DATE,'09999999')) > to_char(t1.PREVIOUS_SETT_DATE, 'YYYYMMDD') and 
+	    t4.MCHNT_ID = t1.MERCHANT_ID and t4.TXN_TYPE = t5.TXN_TYPE_ID
+	<dynamic>
+		<isNotEmpty prepend="and" property="issuerId">
+        	t2.ISSUER_ID = #issuerId:DECIMAL#
+      	</isNotEmpty>
+      	
+		<isNotEmpty prepend="and" property="merchantId">
+        	t2.MERCHANT_ID = #merchantId:DECIMAL#
+      	</isNotEmpty>
+
+		<isNotEmpty prepend="and" property="merchantGrpId">
+        	t2.MERCHANT_GROUP_ID = #merchantGrpId:DECIMAL#
+      	</isNotEmpty>
+
+		<isNotEmpty prepend="and" property="merchantName">
+        	t2.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+      	</isNotEmpty>
+	</dynamic>
+	group by 
+		t2.MERCHANT_ID, t2.MERCHANT_NAME, t1.NEXT_SETT_DATE, t1.MERCHANT_CONTRACT_ID
+  	<include refid="Commons.suffixSql"/>
+  </select>
+
+  <select id="enquiryMerchantSettleAll" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+  	<include refid="Commons.prefixSql"/>
+	select  
+		t1.NEXT_SETT_DATE as "nextSettDate",     
+		t2.MERCHANT_NAME as "merchantName",     
+		t2.MERCHANT_ID as "merchantId",
+		trim(to_char(sum(t4.TXN_AMT * decode(t5.SETTLE_TYPE, 1, 1, 2, -1))/100,'9999999990.99')) as "amt",
+		t1.MERCHANT_CONTRACT_ID as "merchantContractId"
+	from     
+		TB_ENT_MERCHANT t2, 
+		TB_ENT_MCHNT_CONTRACT t1, 
+		TB_BAT_CTRL t3, 
+		TB_BAT_MCHNT_STAT t4, 
+		TB_ENT_TXN_TYPE t5
+	where     
+		t1.MERCHANT_ID = t2.MERCHANT_ID and
+		to_char(t1.NEXT_SETT_DATE,'YYYYMMDD') >=  trim(to_char(t4.SETTLE_DATE,'09999999')) and
+	    trim(to_char(t4.SETTLE_DATE,'09999999')) > to_char(t1.PREVIOUS_SETT_DATE, 'YYYYMMDD') and 
+	    t4.MCHNT_ID = t1.MERCHANT_ID and t4.TXN_TYPE = t5.TXN_TYPE_ID
+	<dynamic>
+		<isNotEmpty prepend="and" property="issuerId">
+        	t2.ISSUER_ID = #issuerId:DECIMAL#
+      	</isNotEmpty>
+      	
+		<isNotEmpty prepend="and" property="merchantId">
+        	t2.MERCHANT_ID = #merchantId:DECIMAL#
+      	</isNotEmpty>
+
+		<isNotEmpty prepend="and" property="merchantGrpId">
+        	t2.MERCHANT_GROUP_ID = #merchantGrpId:DECIMAL#
+      	</isNotEmpty>
+
+		<isNotEmpty prepend="and" property="merchantName">
+        	t2.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+      	</isNotEmpty>
+	</dynamic>
+	group by 
+		t2.MERCHANT_ID, t2.MERCHANT_NAME, t1.NEXT_SETT_DATE, t1.MERCHANT_CONTRACT_ID
+  	<include refid="Commons.suffixSql"/>
+  </select>
+
+  <update id="updateBatMchntStatSettleFlag" parameterClass="com.huateng.accor.ibatis.model.BatMchntStat">
+  	update 
+  		TB_BAT_MCHNT_STAT 
+  	set
+  		SETTLE_FLAG = 1
+  	where
+  		SETTLE_DATE = #settleDate:DECIMAL# and
+  		MCHNT_ID = #mchntId:DECIMAL# 
+  </update>
+  
+  <select id="getCurrentDate" resultClass="java.lang.String">
+  	select CURR_DATE as "currDate"
+  	from TB_BAT_CTRL
+  </select>
+    <select id="selectMerchantSettlewebByDTO" parameterClass="com.huateng.accorecard.merchantwebsite.dto.SettlementQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    	SELECT T1.MCHNT_SETTLE_ID as "settleId",
+    	to_char(T1.TXN_AMT/100,'99,999,999,999,990.00')      as "txnAmt",
+    	to_char(T1.TXN_FEE/100,'99,999,999,999,990.00')      as "txnFee",
+    	to_char(T1.CREATE_TIME,'yyyy-mm-dd hh24:mi:ss')  as "createTime"
+    	FROM TB_ENT_MCHNT_SETTLE T1
+    	where 1=1
+    <dynamic>
+    	<isNotEmpty prepend="and" property="merchantId">
+        	T1.MERCHANT_ID = #merchantId:VARCHAR#
+      	</isNotEmpty>
+      	<isNotNull prepend="and" property="settlementStartDate">
+      		<isNotNull property="settlementStopDate">
+      			trunc(T1.CREATE_TIME) BETWEEN #settlementStartDate:DATE# AND  #settlementStopDate:DATE#
+      		</isNotNull>
+      	</isNotNull>
+      	<isNull prepend="and" property="settlementStartDate">
+      		<isNull property="settlementStopDate">
+      			trunc(T1.CREATE_TIME) BETWEEN to_date(to_char(sysdate-90,'yyyy-MM-dd'),'yyyy-MM-dd') AND  to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd')
+      		</isNull>
+      	</isNull>
+      	<isNotNull prepend="and" property="settlementStartDate">
+      		<isNull property="settlementStopDate">
+      			trunc(T1.CREATE_TIME) BETWEEN  #settlementStartDate:DATE# AND  add_months(#settlementStartDate:DATE#,3)
+      		</isNull>
+      	</isNotNull>
+      	<isNull prepend="and" property="settlementStartDate">
+      		<isNotNull property="settlementStopDate">
+      			trunc(T1.CREATE_TIME) BETWEEN  add_months(#settlementStopDate:DATE#,-3) AND #settlementStopDate:DATE#
+      		</isNotNull>
+      	</isNull>
+      	
+    </dynamic>
+     <include refid="Commons.suffixSql"/>
+    </select>
+    
+    <select id="getMchntSettleDetail" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDetailQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+		select 
+			merchant_Id as "merchantId", 
+			mchnt_settle_id as "mchntSettleId", 
+			acc_type as "accType", 
+			t2.ACC_TYPE_NAME as "accTypeName",
+			settle_start_date as "settleStartDate", 
+			settle_end_date as "settleEndDate", 
+			to_char(sum(txn_amt)/100, '9999999990.00') as "txnAmt", 
+			to_char(sum(fee_amt)/100, '9999999990.00') as "feeAmt"
+		from 
+			TB_ENT_MCHNT_SETTLE_LIST t1, TB_ENT_ACCTYPE t2
+		where
+			mchnt_settle_id = #mchntSettleId# and
+			t1.acc_type = t2.acc_type_id
+		group by 
+			merchant_Id, mchnt_settle_id, acc_type, t2.ACC_TYPE_NAME, settle_start_date, settle_end_date
+    <include refid="Commons.suffixSql"/>
+    </select>
+    
+    <select id="getMchntSettleTxnDetail" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDetailQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+		select 
+		    t2.MCHNT_SETTLE_ID as "mchntSettleId",
+		    t3.ACC_TYPE_NAME as "accTypeName",
+		    t3.ACC_TYPE_ID as "accTypeId",
+			count(RETRIVL_REF) as "retrivlRef",
+			to_char(to_date(DATE_SETTLMT,'YYYYMMDD'), 'YYYY-MM-DD') as "settleDate",
+            INST_DATE as "txnTime"
+		from 
+			tbl_txn_his t1, 
+			TB_ENT_MCHNT_SETTLE_LIST t2, 
+			TB_ENT_ACCTYPE t3,
+			TB_ENT_TXN_TYPE t4
+		where 
+			t2.MERCHANT_ID = t1.CARD_ACCP_ID 
+		and 
+			trim(to_char(t2.ACC_TYPE,'9999')) = substr(t1.ACCT_ID1,22, 4)
+		and 
+			t1.DATE_SETTLMT between to_char(t2.SETTLE_START_DATE, 'YYYYMMDD') 
+		and 	
+			to_char(t2.SETTLE_END_DATE, 'YYYYMMDD') 
+		and	
+			t2.ACC_TYPE = #accType#
+		and 
+			t3.ACC_TYPE_ID = #accType#
+		and
+			t2.MCHNT_SETTLE_ID = #mchntSettleId# 
+		and
+			RESP_CODE = '00'
+		and 
+			trim(t1.TXN_NUM) = trim(to_char(t4.TXN_TYPE_ID,'9999'))
+		group by 
+			INST_DATE,to_char(to_date(DATE_SETTLMT,'YYYYMMDD'), 'YYYY-MM-DD'),t2.MCHNT_SETTLE_ID,t3.ACC_TYPE_ID,t3.ACC_TYPE_NAME
+    <include refid="Commons.suffixSql"/>
+    </select>
+    
+    <select id="getMchntSettleTxnDetail2"  parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDetailQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    	<include refid="Commons.prefixSql"/>
+    	select 
+		    t2.MCHNT_SETTLE_ID as "mchntSettleId",
+		    t2.ACC_TYPE as "accType",
+			RETRIVL_REF as "retrivlRef",
+            PAN as "pan",
+            t4.MERCHANT_NAME as "merchantName",
+            t5.SHOP_NAME as "shopName",
+            t3.TXN_TYPE_NAME as "txnTypeName",
+            to_char(AMT_TRANS/100, '9999999990.00') as "amt",
+            decode(RESP_CODE, '00', '成功','失败') as "respCode",
+            to_char(to_date(DATE_SETTLMT,'YYYYMMDD'), 'YYYY-MM-DD') as "settleDate",
+            to_char(to_date(INST_DATE || INST_TIME, 'YYYYMMDDHH24MISS'),'yyyy-MM-dd hh:mm:ss') as "txnTime"
+		from 
+			tbl_txn_his t1, 
+			TB_ENT_MCHNT_SETTLE_LIST t2, 
+			TB_ENT_TXN_TYPE t3, 
+			TB_ENT_MERCHANT t4, 
+			TB_ENT_SHOP t5
+		where 
+			t2.MERCHANT_ID = t1.CARD_ACCP_ID 
+		and 
+			trim(to_char(t2.ACC_TYPE,'9999')) = substr(t1.ACCT_ID1,22, 4) 
+		and 
+			t1.CARD_ACCP_ID = t4.MERCHANT_ID 
+		and 
+			t1.RCVG_CODE = t5.SHOP_ID 
+		and 
+			t2.MCHNT_SETTLE_ID = #mchntSettleId# 
+		and 
+			t2.ACC_TYPE = #accType# 
+		and
+			t1.DATE_SETTLMT between to_char(t2.SETTLE_START_DATE, 'YYYYMMDD') 
+		and 
+			to_char(t2.SETTLE_END_DATE, 'YYYYMMDD') 
+		and 
+			RESP_CODE = '00' 
+		and 
+			trim(t1.TXN_NUM) = trim(to_char(t3.TXN_TYPE_ID,'9999'))
+		and
+				INST_DATE=to_char(to_date(#txnTime#,'yyyy-MM-dd'),'yyyyMMdd')
+		<include refid="Commons.suffixSql"/>
+    </select>
+    
+    <select id="getMchntFeeModList" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDetailQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+		select 
+			mchnt_settle_id as "mchntSettleId", 
+			to_char(OLD_TXN_FEE/100, '9999999990.00') as "oldTxnFee", 
+			to_char(TXN_FEE/100, '9999999990.00') as "txnFee",
+			to_char(FEE_MOD_DATE, 'YYYY-MM-DD') as "feeModDate", 
+			MOD_DESC as "modDesc",
+			T2.USER_NAME as "userName"
+		from 
+			TB_ENT_MCHNT_SETTLE_FEE_MOD T1, TB_ENT_USER T2
+		where
+			t1.CREATE_USER = t2.USER_ID and
+			mchnt_settle_id = #mchntSettleId#
+    <include refid="Commons.suffixSql"/>
+    </select>
+
+
+
+	<select id="selectMchntSettleForReport" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+		select t1.mchnt_settle_id  as "mchntSettleId", 
+		t2.merchant_id            as "merchantId",
+     	t2.merchant_name    as "mchntName",
+      	to_char(t1.settle_start_date,'yyyy-MM-dd')  as "settleStartDate",
+      	to_char(t1.settle_end_date,'yyyy-MM-dd')    as "settleEndDate",
+        to_char(t1.txn_amt/100,'9999999990.00')       as "txnAmt",
+        to_char(t1.txn_fee/100,'9999999990.00')      as "txnFee",
+        to_char(t1.SETTLE_AMT/100,'9999999990.00')       as  "settleAmt", 
+ 		decode(t1.mchnt_settle_state,1,'已生效',2,'已确认','已付款')   as "settleState"
+		from tb_ent_mchnt_settle t1,
+    	 tb_ent_merchant t2
+     	where t1.merchant_id=t2.merchant_id(+)
+     	and t1.data_state='1'
+     	and t2.data_state='1'
+     	and t1.mchnt_settle_state in ('1','2','3')
+     <dynamic>
+    	 <isNotEmpty prepend="and" property="mchntSettleId">
+        	t1.mchnt_settle_id = #mchntSettleId:DECIMAL#
+     	</isNotEmpty>
+     	<isEqual prepend="and" property="issuerId" compareValue="0">
+			t2.issuer_group_id = #defaultIssuerGroupId:DECIMAL#
+		</isEqual>
+    	<isNotEqual prepend="and" property="issuerId" compareValue="0">
+			t2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+		</isNotEqual>
+		<isNotEmpty prepend="and" property="merchantId">
+        	t2.MERCHANT_ID = #merchantId:DECIMAL#
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="merchantName">
+       	 T2.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+    	  </isNotEmpty>
+    	<isNull prepend="and" property="settleStartDate">
+      		<isNull property="settleStartDate">
+      			trunc(T1.CREATE_TIME) BETWEEN to_date(to_char(sysdate-90,'yyyy-MM-dd'),'yyyy-MM-dd') AND  to_date(to_char(sysdate,'yyyy-MM-dd'),'yyyy-MM-dd')
+      		</isNull>
+      	</isNull>
+      	<isNotNull prepend="and" property="settleStartDate">
+      		t1.settle_start_date like '%'||#settleStartDate:DATE#||'%'
+      	</isNotNull>
+      	<isNotNull prepend="and" property="settleEndDate">
+      		t1.settle_end_date like '%'||#settleEndDate:DATE#||'%'
+      	</isNotNull>
+      </dynamic>
+      <include refid="Commons.suffixSql"/>
+    </select>
+
+  <select id="selectMerchantsByIssuerId" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="com.huateng.accor.ibatis.model.Merchant">
+  	select
+  		T1.MERCHANT_ID as "merchantId",
+  		T1.ISSUER_ID as "issuerId",
+  		T1.MERCHANT_NAME as "merchantName",
+  		T1.STATE as "state",
+  		T1.REIMBURSE_PAUSE as "reimbursePause",
+  		T1.SETTLE_DATE_PRE as "settleDatePre",
+  		T1.SETTLE_DATE_NEXT as "settleDateNext"
+  	from
+  		TB_ENT_MERCHANT T1
+  	where
+  		ISSUER_ID = #issuerId:DECIMAL#
+  	and
+  		T1.SETTLE_DATE_PRE is not null
+        <dynamic>
+         	<isNotEmpty prepend="and" property="merchantId">
+         		T1.MERCHANT_ID = #merchantId:VARCHAR#
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="merchantName">
+         		T1.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="legacyMerchantId">
+         		T1.LEGACY_MERCHANT_ID = #legacyMerchantId:VARCHAR#
+         	</isNotEmpty>
+        </dynamic>
+  </select>
+
+  <select id="selectSettlePeriodRule" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleQueryDTO" resultClass="com.huateng.accor.mchntsettle.dto.MchntSettlePeriodRuleDTO">
+  	select
+  	    t2.MERCHANT_ID as "merchantId",
+  		t1.DATE_START as "dateStart",
+  		t1.DATE_END as "dateEnd",
+  		t1.PERIOD as "period",
+  		t1.PERIOD_TYPE as "periodType",
+  		t1.AMOUNT_MIN as "amountMin",
+  		t1.FLAG_WEEKEND as "flagWeekend",
+  		t1.FLAG_MONTHEND as "flagMonthend",
+  		t1.DATE_PER_MONTH as "datePerMonth"
+  	from
+  		TB_ENT_MERCHANT T2,
+  		TB_ENT_PERIOD_RULE T1
+  	where
+  		ISSUER_ID = #issuerId:DECIMAL#
+  	and
+  		T1.SETTLE_DATE_PRE is not null
+        <dynamic>
+         	<isNotEmpty prepend="and" property="merchantId">
+         		T2.MERCHANT_ID = #merchantId:VARCHAR#
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="merchantName">
+         		T2.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+         	</isNotEmpty>
+         	<isNotEmpty prepend="and" property="legacyMerchantId">
+         		T2.LEGACY_MERCHANT_ID = #legacyMerchantId:VARCHAR#
+         	</isNotEmpty>
+        </dynamic>
+  </select>
+  
+  
+  
+  
+  
+    <select id="selectMchntAcctypeContractRuleNo" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDTO" resultClass="com.huateng.accor.feeRuleManage.dto.FeeRuleDTO">
+	select
+      t5.rule_calc_type as "ruleCalcType", 
+      t5.calc_value as "calcValue", 
+      t5.calc_start_rate as "calcStartRate", 
+      t5.calc_end_rate as "calcEndRate"
+    from 
+      tb_ent_merchant t1,tb_ent_mchnt_contract t2,TB_ENT_MCHNT_ACCTYPE_CONTRACT t3,
+      tb_fee_det t4,TB_ENT_FEE_RULE t5
+    where 
+      t1.merchant_id = t2.merchant_id and
+      t1.merchant_id = t3.merchant_id  and
+      t2.merchant_contract_id = t3.merchant_contract_id and
+      t3.acctype_contract_id = t4.acctype_contract_id and t4.RULE_NO = t5.RULE_NO and 
+      T1.MERCHANT_ID = #merchantId# and
+      t2.merchant_contract_id = #mchntSettleId#
+  </select>
+  
+  
+  
+  
+  
+  
+</sqlMap>

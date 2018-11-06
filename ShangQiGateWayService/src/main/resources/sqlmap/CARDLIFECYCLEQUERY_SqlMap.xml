@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CARDLIFECYCLEQUERY">
+	<select id="cardLifeCycleQuery"  resultClass="java.util.HashMap"  remapResults="true" parameterClass="com.allinfinance.service.issueOperation.cardLifeCycleQuery.dto.CardLifeCycleQueryDTO">
+		<include refid="Commons.prefixSql"/>
+            (select
+            	card_no as "cardNo",
+            	account_no as "accountNo",
+            	to_date(date_txn||time_txn,'yyyy-MM-dd hh24miss') as "txnDate",
+            	txn_type as "txnType",
+            	decode(txn_amt,null,0,txn_amt)/100  as "txnAmt",
+            	decode(acc_bal,null,0,acc_bal)/100 as "accBal"
+            from
+              	tb_acc_txn 
+            where 
+                resp_code = '00'
+            and
+                issuer_id = #issuerId#
+            and  txn_type != '0001' and txn_type != '2315'
+			<dynamic>
+				<isNotEmpty prepend="and" property="cardNo">
+					card_no = #cardNo#
+				</isNotEmpty>
+			
+      			<isNotEmpty prepend="and" property="startDate">
+      				 to_date(date_txn,'yyyyMMdd')&gt;=to_date(#startDate#,'yyyy-MM-dd')
+      			</isNotEmpty>
+      			<isNotEmpty prepend="and" property="endDate">
+        			 to_date(date_txn,'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+      			</isNotEmpty>
+    		</dynamic>
+    		order by card_no, to_date(date_txn||time_txn,'yyyy-MM-dd hh24miss') asc)	
+    		UNION
+    		(select
+            	card_no as "cardNo",
+            	account_no as "accountNo",
+            	to_date(date_txn||time_txn,'yyyy-MM-dd hh24miss') as "txnDate",
+            	txn_type as "txnType",
+            	decode(txn_amt,null,0,txn_amt)/100  as "txnAmt",
+            	decode(acc_bal,null,0,acc_bal)/100 as "accBal"
+            from
+              	tb_acc_txn_his
+            where 
+                resp_code = '00'
+            and
+                issuer_id = #issuerId#
+            and  
+            	txn_type != '0001' and txn_type != '2315'
+			<dynamic>
+				<isNotEmpty prepend="and" property="cardNo">
+					card_no = #cardNo#
+				</isNotEmpty>
+			
+      			<isNotEmpty prepend="and" property="startDate">
+      				 to_date(date_txn,'yyyyMMdd')&gt;=to_date(#startDate#,'yyyy-MM-dd')
+      			</isNotEmpty>
+      			<isNotEmpty prepend="and" property="endDate">
+        			 to_date(date_txn,'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+      			</isNotEmpty>
+    		</dynamic>
+    		order by card_no, to_date(date_txn||time_txn,'yyyy-MM-dd hh24miss') asc)	
+		<include refid="Commons.suffixSql"/>		
+	</select>
+</sqlMap>

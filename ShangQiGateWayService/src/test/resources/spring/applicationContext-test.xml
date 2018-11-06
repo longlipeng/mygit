@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd"
+    >
+    
+    <bean id="ApplicationContextUtil" class="com.huateng.framework.util.ApplicationContextUtil"/>
+	
+	<import resource="applicationContext-cxf.xml" /> 
+	<import resource="applicationContext-dao.xml" />
+	<import resource="applicationContext-order.xml" />
+	<import resource="applicationContext-service.xml" />
+	<import resource="applicationContext-batch.xml" />
+	<import resource="applicationContext-dataAccess.xml" />
+	<import resource="applicationContext-coupon-service.xml" />
+	<import resource="applicationContext-coupon-dao.xml" />
+	<import resource="applicationContext-hstserver-service.xml"/>
+	<import resource="applicationContext-mina.xml"/>
+    <import resource="applicationContext-dbunit.xml" />
+
+</beans>

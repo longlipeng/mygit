@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Merchant">
+  <select id="selectMerchantByDTO" parameterClass="com.allinfinance.univer.consumer.merchant.dto.MerchantQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.ENTITY_ID as "entityId",
+        T1.MERCHANT_CODE as "merchantCode",
+        T1.MERCHANT_NAME as "merchantName",
+        T1.MERCHANT_REALITY_NAME as "merchantRealityName",
+        T1.MERCHANT_ENGLISH_NAME as "englishName",
+        decode(T1.MERCHANT_STATE,'1','已审核','0','无效','2','未审核','3','审核未通过','4','审核中') as "merchantState",
+        T2.DICT_NAME as "merchantAttribute", 
+        decode(T1.DATA_STATE,'0','已注销','1','未注销') as "dataState"
+    from
+         TB_MERCHANT T1 left join  TB_DICT_INFO T2  on  T1.MERCHANT_ATTRIBUTE=T2.DICT_CODE and  '184' = T2.DICT_TYPE_CODE 
+    where 
+           1=1
+    <dynamic>
+       <isNotEmpty prepend="and" property="fatherEntityId">
+        T1.father_entity_id = #fatherEntityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="entityId">
+        T1.ENTITY_ID = #entityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantCode">
+        T1.MERCHANT_CODE = #merchantCode:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        UPPER(T1.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="externalId">
+        T1.EXTERNAL_ID= #externalId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantState">
+        T1.MERCHANT_STATE = #merchantState:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantRealityName">
+        UPPER(T1.MERCHANT_REALITY_NAME) like UPPER('%'||#merchantRealityName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantAttribute">
+        T1.MERCHANT_ATTRIBUTE = #merchantAttribute:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ePayIn">
+        T1.E_PAY_IN = #ePayIn:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="dataState">
+        T1.DATA_STATE = #dataState:VARCHAR#
+      </isNotEmpty> 
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <select id="selectExternalMerchantByDTO" parameterClass="com.allinfinance.univer.consumer.merchant.dto.MerchantQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.ENTITY_ID as "entityId",
+        T1.MERCHANT_CODE as "merchantCode",
+        T1.MERCHANT_NAME as "merchantName",
+        T1.MERCHANT_REALITY_NAME as "merchantRealityName",
+        T1.MERCHANT_ENGLISH_NAME as "englishName",
+        decode(T1.MERCHANT_STATE,'1','已审核','0','无效','2','未审核','3','审核未通过','4','审核中') as "merchantState",
+        T2.DICT_NAME as "merchantAttribute", 
+        decode(T1.DATA_STATE,'0','已注销','1','未注销') as "dataState"
+    from
+        TB_MERCHANT T1  left join TB_DICT_INFO T2  on T1.MERCHANT_ATTRIBUTE=T2.DICT_CODE
+    where  T1.DATA_STATE = '1'      
+       and T2.DICT_TYPE_CODE = '184'
+          <!--   外部商户以R打头      
+          and substr( T1.ENTITY_ID,0,1) != 'R' -->
+    <dynamic>
+       <isNotEmpty prepend="and" property="fatherEntityId">
+        T1.father_entity_id = #fatherEntityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="entityId">
+        T1.ENTITY_ID = #entityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantCode">
+        T1.MERCHANT_CODE = #merchantCode:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        UPPER(T1.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="externalId">
+        T1.EXTERNAL_ID= #externalId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantState">
+        T1.MERCHANT_STATE = #merchantState:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantRealityName">
+        UPPER(T1.MERCHANT_REALITY_NAME) like UPPER('%'||#merchantRealityName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantAttribute">
+        T1.MERCHANT_ATTRIBUTE = #merchantAttribute:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ePayIn">
+        T1.E_PAY_IN = #ePayIn:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="dataState">
+        T1.DATA_STATE = #dataState:VARCHAR#
+      </isNotEmpty> 
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+    <select id="selectMerchantVerifierByDTO" parameterClass="com.allinfinance.univer.consumer.merchant.dto.MerchantQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.ENTITY_ID as "entityId",
+        T1.MERCHANT_CODE as "merchantCode",
+        T1.MERCHANT_NAME as "merchantName",
+        T1.MERCHANT_REALITY_NAME as "merchantRealityName",
+        T1.MERCHANT_ENGLISH_NAME as "englishName",
+        decode(T1.MERCHANT_STATE,'1','已审核','0','无效','2','未审核','3','审核未通过','4','审核中') as "merchantState",
+        T2.DICT_NAME as "merchantAttribute", 
+        decode(T1.DATA_STATE,'0','已注销','1','未注销') as "dataState"
+    from
+       TB_MERCHANT T1 left join TB_DICT_INFO T2 on T1.MERCHANT_ATTRIBUTE=T2.DICT_CODE
+    where  T1.DATA_STATE = '1' 
+     and (T1.MERCHANT_STATE = 1 or T1.MERCHANT_STATE = 3 or T1.MERCHANT_STATE =4)
+     and T2.DICT_TYPE_CODE= '184'
+          
+    <dynamic>
+       <isNotEmpty prepend="and" property="fatherEntityId">
+        T1.father_entity_id = #fatherEntityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="entityId">
+        T1.ENTITY_ID = #entityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantCode">
+        T1.MERCHANT_CODE = #merchantCode:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        UPPER(T1.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="externalId">
+        T1.EXTERNAL_ID= #externalId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantState">
+        T1.MERCHANT_STATE = #merchantState:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantRealityName">
+        UPPER(T1.MERCHANT_REALITY_NAME) like UPPER('%'||#merchantRealityName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantAttribute">
+        T1.MERCHANT_ATTRIBUTE = #merchantAttribute:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ePayIn">
+        T1.E_PAY_IN = #ePayIn:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="dataState">
+        T1.DATA_STATE = #dataState:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+ <!--  <select id="selectTxn" parameterClass="com.huateng.accor.merchant.dto.MerchantQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    	select 
+    	T3.SHOP_NAME as "shopName",
+    	T1.Retrivl_Ref as "tranCode", 
+    	to_char(to_date(T1.date_settlmt,'yyyy-MM-dd'),'yyyy-MM-dd')   as "dateSettlmt",
+		to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyyMMddhh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		to_char(to_number(decode(trim(T1.AMT_TRANS),'',0,T1.AMT_TRANS))/100,'99,999,999,999,990.00') as "tranFee",
+		T1.PAN as "cardNo",
+		T2.MERCHANT_NAME as "merchantName",
+		decode(T1.RESP_CODE,'00','成功','失败')     as "respCode",
+		T1.TXN_NUM  as "tranType" from TBL_TXN T1, TB_ENT_MERCHANT T2,TB_ENT_SHOP T3 where
+		  to_date(T1.INST_DATE,'yyyyMMdd') = trunc(sysdate)
+		 and 	T1.CARD_ACCP_ID=T2.MERCHANT_ID
+		 AND    decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T3.SHOP_ID(+)
+		 and    T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+		 and    T1.REVSAL_FLAG='0'
+		 AND    T1.TRANS_STATE!='0' and t1.resp_code='00'	
+    <dynamic>
+    	<isNotNull property="defaultIssuerId" prepend="and">
+          T2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotNull> 
+        <isNotEmpty property="shopName" prepend="and">
+      		UPPER(T3.SHOP_NAME) like UPPER('%'||#shopName:VARCHAR#||'%')
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="merchantId">
+        	T2.MERCHANT_ID = #merchantId:VARCHAR#
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="merchantName">
+        	UPPER(T2.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      	</isNotEmpty>
+      	<isNotEmpty property="cardNo" prepend="and">
+      		T1.PAN = #cardNo:VARCHAR#
+      	</isNotEmpty>
+    </dynamic>
+    union
+    select 
+    	T3.SHOP_NAME as "shopName",
+    	T1.Retrivl_Ref as "tranCode", 
+    	to_char(to_date(T1.date_settlmt,'yyyy-MM-dd'),'yyyy-MM-dd')   as "dateSettlmt",
+		to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyyMMddhh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		to_char(to_number(decode(trim(T1.AMT_TRANS),'',0,T1.AMT_TRANS))/100,'99,999,999,999,990.00') as "tranFee",
+		T1.PAN as "cardNo",
+		T2.MERCHANT_NAME as "merchantName",
+		decode(T1.RESP_CODE,'00','成功','失败')     as "respCode",		 
+	    T1.TXN_NUM	as "tranType" from tbl_auth T1, TB_ENT_MERCHANT T2,TB_ENT_SHOP T3 where
+		  to_date(T1.INST_DATE,'yyyyMMdd') = trunc(sysdate)
+		 and 	T1.CARD_ACCP_ID=T2.MERCHANT_ID
+		 AND    decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T3.SHOP_ID(+)
+		 and    T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+		 and    T1.REVSAL_FLAG='0'
+		 AND    T1.TRANS_STATE!='0' and t1.resp_code='00'	
+     <dynamic>
+    	<isNotNull property="defaultIssuerId" prepend="and">
+          T2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotNull> 
+        <isNotEmpty property="shopName" prepend="and">
+      		UPPER(T3.SHOP_NAME) like UPPER('%'||#shopName:VARCHAR#||'%')
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="merchantId">
+        	T2.MERCHANT_ID = #merchantId:VARCHAR#
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="merchantName">
+        	UPPER(T2.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      	</isNotEmpty>
+      	<isNotEmpty property="cardNo" prepend="and">
+      		T1.PAN = #cardNo:VARCHAR#
+      	</isNotEmpty>
+    </dynamic>
+    
+    
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  
+   <select id="selectTxnhis" parameterClass="com.huateng.accor.merchant.dto.MerchantQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+      <include refid="Commons.prefixSql"/>
+    	select 
+    	T3.SHOP_NAME as "shopName",
+    	T1.Retrivl_Ref as "tranCode", 
+    	to_char(to_date(T1.date_settlmt,'yyyy-MM-dd'),'yyyy-MM-dd')   as "dateSettlmt",
+    	to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyyMMddhh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		to_char(to_number(decode(trim(T1.AMT_TRANS),'',0,T1.AMT_TRANS))/100,'99,999,999,999,990.00') as "tranFee",
+		T1.PAN as "cardNo",
+		T2.MERCHANT_NAME as "merchantName",
+		decode(T1.RESP_CODE,'00','成功','失败')     as "respCode",		
+		T1.TXN_NUM  as "tranType" from TBL_TXN_HIS T1, TB_ENT_MERCHANT T2,TB_ENT_SHOP T3 
+		where
+	    	T1.CARD_ACCP_ID=T2.MERCHANT_ID
+		 AND    decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T3.SHOP_ID(+)
+    <dynamic>
+    	<isNotNull property="defaultIssuerId" prepend="and">
+          T2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotNull>
+      	<isNotEmpty prepend="and" property="merchantId">
+        	T2.MERCHANT_ID = #merchantId:VARCHAR#
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="merchantName">
+        	UPPER(T2.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      	</isNotEmpty>
+      	<isNotEmpty property="cardNo" prepend="and">
+      		T1.PAN = #cardNo:VARCHAR#
+      	</isNotEmpty>
+      	<isNotEmpty property="shopName" prepend="and">
+      		UPPER(T3.SHOP_NAME) like UPPER('%'||#shopName:VARCHAR#||'%')  
+      	</isNotEmpty>
+     
+      	<isNull property="txnStartTime">
+				<isNull  prepend="and"  property="txnStopTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between sysdate-30
+					and sysdate
+				</isNull>
+		</isNull>
+  	
+      	<isNull  property="txnStartTime">
+			<isNotNull prepend="and" property="txnStopTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between
+					add_months(#txnStopTime:DATE#,-1) and #txnStopTime:DATE#
+				</isNotNull>
+		</isNull>
+      	
+      	<isNull property="txnStopTime">
+				<isNotNull prepend="and"  property="txnStartTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between
+					#txnStartTime:DATE# and add_months(#txnStartTime:DATE#,1)
+				</isNotNull>
+			</isNull>
+      	
+      	<isNotNull property="txnStartTime">
+				<isNotNull  prepend="and"  property="txnStopTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between
+					#txnStartTime:DATE# and #txnStopTime:DATE#
+				</isNotNull>
+		</isNotNull>
+    </dynamic>
+ 	and 	T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+ 	and    T1.REVSAL_FLAG='0'
+	AND    T1.TRANS_STATE!='0' and t1.resp_code='00'	
+    union
+    select 
+    	T3.SHOP_NAME as "shopName",
+    	T1.Retrivl_Ref as "tranCode", 
+    	to_char(to_date(T1.date_settlmt,'yyyy-MM-dd'),'yyyy-MM-dd')   as "dateSettlmt",
+		to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyyMMddhh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		to_char(to_number(decode(trim(T1.AMT_TRANS),'',0,T1.AMT_TRANS))/100,'99,999,999,999,990.00') as "tranFee",
+		T1.PAN as "cardNo",
+		T2.MERCHANT_NAME as "merchantName",
+		decode(T1.RESP_CODE,'00','成功','失败')     as "respCode",
+		T1.TXN_NUM   as "tranType" from tbl_auth T1, TB_ENT_MERCHANT T2,TB_ENT_SHOP T3 where
+		  to_date(T1.INST_DATE,'yyyyMMdd') = trunc(sysdate)
+		 and 	T1.CARD_ACCP_ID=T2.MERCHANT_ID
+		 AND    decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T3.SHOP_ID(+)
+      <dynamic>
+    	<isNotNull property="defaultIssuerId" prepend="and">
+          T2.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotNull>
+      	<isNotEmpty prepend="and" property="merchantId">
+        	T2.MERCHANT_ID = #merchantId:VARCHAR#
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="merchantName">
+        	UPPER(T2.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      	</isNotEmpty>
+      	<isNotEmpty property="cardNo" prepend="and">
+      		T1.PAN = #cardNo:VARCHAR#
+      	</isNotEmpty>
+      	<isNotEmpty property="shopName" prepend="and">
+      		UPPER(T3.SHOP_NAME) like UPPER('%'||#shopName:VARCHAR#||'%')  
+      	</isNotEmpty>
+     
+      	<isNull property="txnStartTime">
+				<isNull  prepend="and"  property="txnStopTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between sysdate-30
+					and sysdate 
+				</isNull>
+		</isNull>
+  	
+      	<isNull  property="txnStartTime">
+			<isNotNull prepend="and" property="txnStopTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between
+					add_months(#txnStopTime:DATE#,-1) and #txnStopTime:DATE#
+				</isNotNull>
+		</isNull>
+      	
+      	<isNull property="txnStopTime">
+				<isNotNull prepend="and"  property="txnStartTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between
+					#txnStartTime:DATE# and add_months(#txnStartTime:DATE#,1)
+				</isNotNull>
+			</isNull>
+      	
+      	<isNotNull property="txnStartTime">
+				<isNotNull  prepend="and"  property="txnStopTime">
+					to_date(t1.date_settlmt,'yyyyMMdd') between
+					#txnStartTime:DATE# and #txnStopTime:DATE#
+				</isNotNull>
+		</isNotNull>
+    </dynamic>
+     and    T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+     and    T1.REVSAL_FLAG='0'
+	 AND    T1.TRANS_STATE!='0' and t1.resp_code='00'	 
+      <include refid="Commons.suffixSql"/>
+  </select>
+   -->
+   <select id="selectWebsiteName" parameterClass="com.allinfinance.univer.consumer.merchant.dto.MerchantDTO" resultClass="com.allinfinance.univer.consumer.merchant.dto.MerchantDTO" remapResults="true">
+ 		select 
+       t.entity_id as "entityId",
+       t.merchant_name as "merchantName",
+       t.merchant_english_name   as "merchantEnglishName",
+       t.external_id  as "externalId",
+       t.website_user_name as "websiteUserName",
+       t.website_password as "websitePassword"
+ from tb_merchant t where   upper(t.website_user_name)= UPPER(#websiteUserName:VARCHAR#) 
+  </select>
+  
+   <select id="selectShopDTOByMerchantId" parameterClass="com.allinfinance.univer.consumer.merchant.dto.MerchantTxnQueryDTO" resultClass="com.allinfinance.univer.consumer.shop.dto.ShopDTO" remapResults="true">
+		  	select t2.shop_Id as "shopId",
+		  		   t2.shop_name as "shopName"
+		  	from tb_merchant t1,
+		         tb_shop t2
+		    where t1.entity_id = t2.entity_id 
+		         and t1.merchant_code = #merchantCode:varchar#
+  </select>
+  
+</sqlMap>

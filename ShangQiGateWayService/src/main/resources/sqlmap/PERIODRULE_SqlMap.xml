@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="PERIODRULE">
+  <select id="selectPeriodRuleByPrimaryKey" resultClass="com.huateng.accor.feeRuleManage.dto.PeriodRuleDTO" parameterClass="java.lang.String" >
+    select 
+    	T1.RULE_NO as "ruleNo", 
+    	T1.RULE_NAME as "ruleName", 
+    	T1.RULE_DESC as "ruleDesc", 
+    	T1.RULE_TYPE as "ruleType", 
+    	T1.STATE as "state", 
+    	T1.DATE_START as "dateStart",
+      	T1.DATE_END as "dateEnd", 
+      	T1.PERIOD as "period", 
+      	T1.PERIOD_TYPE as "periodType", 
+      	T1.AMOUNT_MIN as "amountMin", 
+      	T1.FLAG_WEEKEND as "flagWeekend", 
+      	T1.FLAG_MONTHEND as "flagMonthend", 
+      	T1.DATE_PER_MONTH as "datePerMonth", 
+      	T1.MODIFY_TIME as "modifyTime", 
+      	T1.CREATE_TIME as "createTime", 
+        T2.ISSUER_GROUP_NAME as "issuerGroupName",
+        T3.ISSUER_NAME as "issuerName",
+        T4.USER_NAME AS "createUserName",
+        T5.USER_NAME AS "modifyUserName"
+    from 
+    	TB_ENT_PERIOD_RULE T1,
+        TB_ENT_ISSUER_GROUP T2,
+        TB_ENT_ISSUER T3,
+        TB_ENT_USER T4,
+        TB_ENT_USER T5
+    where
+    	T1.ISSUER_GROUP_ID = T2.ISSUER_GROUP_ID
+        and T1.ISSUER_ID = T3.ISSUER_ID(+)
+        and T1.CREATE_USER = T4.USER_ID(+)
+        and T1.MODIFY_USER = T5.USER_ID(+)
+    	and T1.RULE_NO = #ruleNo:CHAR#
+  </select>
+  
+  <select id="selectPeriodRulesByDTO" parameterClass="com.huateng.accor.feeRuleManage.dto.PeriodRuleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.RULE_NO as "ruleNo",
+        T1.RULE_NAME as "ruleName",
+        to_char(to_date(T1.DATE_START,'yyyy-MM-dd'),'yyyy-MM-dd') as "dateStart",
+        to_char(to_date(T1.DATE_END,'yyyy-MM-dd'),'yyyy-MM-dd') as "dateEnd",
+        decode(T1.STATE,'0','删除','1','新建','启用')  as "state"
+    from
+        TB_ENT_PERIOD_RULE T1,
+        TB_ENT_ISSUER T3
+    where
+         T1.ISSUER_ID = T3.ISSUER_ID(+)
+        
+    <dynamic>
+      <isNotEmpty prepend="and" property="ruleNo">
+        T1.RULE_NO = #ruleNo:CHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleName">
+        T1.RULE_NAME like '%'||#ruleName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="state">
+        T1.STATE = #state:CHAR#
+      </isNotEmpty>
+      <isNotEqual prepend="and" property="defaultIssuerGroupId" compareValue="0">
+        T1.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+        <isNotEqual prepend="and" property="defaultIssuerId" compareValue="0">
+       (T1.ISSUER_ID = #defaultIssuerId:DECIMAL# or T1.ISSUER_ID=0)       
+       </isNotEqual>
+      </isNotEqual>
+       
+    </dynamic>
+     
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CARDSTOCKOPR">
+  <select id="selectCardStockOprByDTO" parameterClass="com.huateng.accor.cardStockOpr.dto.CardStockOprQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.card_no as "cardNo",
+        to_char(T1.face_value/100,'99,999,999,999,990.00')      as  "faceValue",
+        T1.card_valid_date   as "cardValidDate",
+        T1.card_opr_bef_state  as "cardOprBefState",
+        T1.card_opr_aft_state  as "cardOprAftState",
+        T2.USER_NAME as "operationUser",
+        to_char(T1.create_time,'yyyy-MM-dd hh24:mi:ss') as "operationTime",
+         T1.notes   as "notes"
+    from
+     	tb_ent_card_stock_opr T1,TB_ENT_USER T2
+    where
+    	   T1.create_user=T2.USER_ID(+)
+    <dynamic>
+      		<isNotEmpty prepend="and" property="cardNo">
+       			T1.card_no like '%'||#cardNo:VARCHAR#||'%'
+      		</isNotEmpty>
+      		<isNotNull prepend="and" property="startTime">
+      			<isNotNull  property="stopTime">
+      			T1.create_time between  #startTime:DATE# and #stopTime:DATE#
+      			</isNotNull>
+      		</isNotNull>
+      		
+      		<isNotNull prepend="and" property="startTime">
+      			<isNull  property="stopTime">
+      			 <![CDATA[
+      				trunc(T1.create_time)  > #startTime:DATE# 
+      			  ]]>
+      			</isNull>
+      		</isNotNull>
+      		
+      		<isNull prepend="and" property="startTime">
+      			<isNotNull  property="stopTime">
+      			 <![CDATA[
+      				trunc(T1.create_time)  < #stopTime:DATE#
+      			  ]]>
+      			</isNotNull>
+      		</isNull>
+      		
+    	</dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>
