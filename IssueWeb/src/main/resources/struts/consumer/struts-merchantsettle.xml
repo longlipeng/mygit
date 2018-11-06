@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="merchantSettle" extends="struts-global"  namespace="/merchantSettle">
+       <global-results>
+          <result name="list">/WEB-INF/pages/univer/settleperiodrule/SettlePeriodRuleList.jsp</result>
+          <result name="changefeelist">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleChangeFee.jsp</result>
+          <result name="confirm">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleConfirmList.jsp</result>
+          <result name="cancel">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleCancelList.jsp</result>
+          <result name="change">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleChangeSettleDate.jsp</result>
+          <result name="changefee">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleChangeFeeList.jsp</result>
+          <result name="settlePaymentConfirm">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePayConfirmList.jsp</result>
+           <result name="changeDateDetail">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleChangeSettleDate.jsp</result>
+           <result name="generate">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleGenerateList.jsp</result>
+           <result name="preview">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+        </global-results>
+        <action name ="changefeelist" class="merchantSettleAction" method="execute"></action>
+        <action name ="changeDateDetail" class="merchantSettleAction" method="changeDateDetail"></action>
+      <action name="query" class="merchantSettleAction" method="query">
+          <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleQuery.jsp</result>
+          <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleQuery.jsp</result>
+         
+      </action>
+      <!-- 清结算下载 -->
+		<action name="clearingFile" class="clearingFileDownloaAction" >
+	   		<result >/WEB-INF/pages/univer/consumer/merchantsettle/clearingFileDownload.jsp</result>
+	   		<result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/clearingFileDownload.jsp</result>
+	   	</action>
+		<!-- 文件下载 -->
+		<action name="clearingFileDownloaAction" class="clearingFileDownloaAction">
+   			<result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/clearingFileDownload.jsp</result>
+   			<result name="downfile" type="chain">
+   				<param name="actionName">saveFile</param>
+   			</result>
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/clearingFileDownload.jsp</result>
+   		</action>
+   		<action name="saveFile" class="clearingFileDownloaAction" method="saveFile">
+   			<result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/clearingFileDownload.jsp</result>
+   		</action>
+        <action name="settlePreviewInit" class="merchantSettleAction" method="settlePreviewInit">
+          <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+          <result name="previewInit">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+      </action>
+      
+      <action name="settlePreview" class="merchantSettleAction" method="settlePreview">
+          <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+          <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+      </action>
+       <action name="generateSettle" class="merchantSettleAction" method="generateSettle">
+       <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+        <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+      </action>
+      <!-- 确定 -->
+      <action name="queryDrafeSettle" class="merchantSettleAction" method="queryDrafeSettle">
+          <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleConfirmList.jsp</result>
+          <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleComfirmList.jsp</result>
+      </action>
+      <action name="querySettleDetail" class="merchantSettleAction" method="querySettleDetail">
+           <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleQuery.jsp</result>
+          <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleDetail.jsp</result>
+      </action>
+        <action name="settleDetail" class="merchantSettleAction" method="settleDetail">
+          <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleDetail.jsp</result>
+          <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleDetail.jsp</result>
+      </action>
+       <action name="settlePaymentConfirm" class="merchantSettleAction" method="settlePaymentConfirm">
+          <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePayConfirmList.jsp</result>
+          <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePayConfirmList.jsp</result>
+      </action>
+       <action name="changeSettleDate" class="merchantSettleAction" method="changeSettleDate">
+          <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleChangeSettleDate.jsp</result>
+          <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettlePreviewList.jsp</result>
+      </action>
+      <action name="settleChangeFee" class="merchantSettleAction" method="settleChangeFees">
+         <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleChangeFee.jsp</result>
+         <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleChangeFee.jsp</result>
+      </action>
+      <action name="cancelMerchantSettle" class="merchantSettleAction" method="cancelMerchantSettle">
+         <result name="input">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleCancelList.jsp</result>
+         <result name="list">/WEB-INF/pages/univer/consumer/merchantsettle/mchntSettleCancelList.jsp</result>
+      </action>
+    </package>
+</struts>

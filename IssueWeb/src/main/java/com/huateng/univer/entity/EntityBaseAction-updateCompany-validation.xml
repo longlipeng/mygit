@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <field name="invoiceCompanyDTO.invoiceCompanyName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>发票公司名称必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>发票公司名称不能超过64个字符！</message>
+        </field-validator>
+    </field>
+  
+</validators>

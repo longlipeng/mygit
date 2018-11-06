@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>	
+	<!--企业持卡人编辑校验 -->
+	<field name="companyInfoDTO.entityId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择客户号！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.linkphone">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写公司固定电话！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">15</param>
+            <message>公司固话不能超过15个字符！</message>
+        </field-validator>     
+    </field>
+    <field name="companyInfoDTO.companyName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写公司名称！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">32</param>
+            <message>公司名称不能超过32个字符！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.companyEnglishname">
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">32</param>
+            <message>公司英文名称不能超过32个字符！</message>
+        </field-validator>
+    </field>   
+    <field name="companyInfoDTO.companyRegisteredAddress">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写企业注册地！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">20</param>
+        	<message>企业注册地不能超过20个字符！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.companyCountyr">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择企业国别！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.companyIdType">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择企业证件种类！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.companyId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写企业证件号！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">20</param>
+        	<message>企业证件号不能超过20个字符！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.ctidEdt">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写企业证件有效期！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.email">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写企业邮箱！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">32</param>
+        	<message>企业邮箱不能超过32个字符！</message>
+        </field-validator>
+    </field>   
+    <field name="companyInfoDTO.corpName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写法定代表人姓名！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+        	<param name="maxLength">18</param>
+        	<message>法定代表人姓名不能超过18个字符！</message>
+        </field-validator>       
+    </field>
+    <field name="companyInfoDTO.corpGender">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择法定代表人性别！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.corpCredType">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择法定代表人证件种类！</message>
+        </field-validator>
+    </field>    
+    <field name="companyInfoDTO.corpCredId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写法定代表人证件号！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">18</param>
+			<message>法定代表人证件号码不能超过18个字符！</message>
+		</field-validator>	
+    </field>
+    <field name="companyInfoDTO.corpCredValidity">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写法定代表人证件有效期！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.corpAddress">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写法定代表人住址！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">64</param>
+			<message>法定代表人住址不能超过64个字符！</message>
+		</field-validator>	
+    </field>
+    <field name="companyInfoDTO.corpCountyr">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填选择法定代表人国籍！</message>
+        </field-validator>
+    </field>    
+    <field name="companyInfoDTO.corpTelephoneNumber">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写法定代表人电话！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">11</param>
+			<message>法定代表人电话不能超过11个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.companyAccountant">
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">32</param>
+			<message>公司会计不能超过32个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.registeredCapital">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写公司注册资本！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">12</param>
+			<message>公司注册资本不能超过12个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.companySize">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择企业规模！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.postcode">
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">11</param>
+			<message>公司邮编不能超过11个字符！</message>
+		</field-validator>
+    </field>
+     <field name="companyInfoDTO.ctidStartValidity">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>实际控制人证件有效期开始时间不能为空！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.ctidEndValidity">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>实际控制人证件有效期结束时间不能为空！</message>
+        </field-validator>
+    </field> 
+    <field name="companyInfoDTO.companyFax">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择公司所属行业！</message>
+        </field-validator>
+    </field>   
+    <field name="companyInfoDTO.corpBirthday">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写法定代表人出生日期！</message>
+        </field-validator>
+    </field>    
+    <field name="companyInfoDTO.relName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写实际控制人姓名！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">32</param>
+			<message>实际控制人姓名不能超过32个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.citp">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择实际控制人证件类型！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.ctid">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写实际控制人证件号码！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">18</param>
+			<message>实际控制人证件号码不能超过18个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.citpNt">
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">10</param>
+			<message>证件类型说明不能超过10个字符！</message>
+		</field-validator>
+    </field>
+<!--     <field name="companyInfoDTO.ctidEndValidity">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写实际控制人证件有效期！</message>
+        </field-validator>
+    </field> -->
+    <field name="companyInfoDTO.holdPer">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写实际控制人持股比例！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">32</param>
+			<message>实际控制人持股比例不能超过32个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.holdAmt">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写实际控制人持股金额！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">32</param>
+			<message>实际控制人持股金额不能超过32个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.companyDescription">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写公司描述(经营范围)！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">80</param>
+			<message>公司描述不能超过80个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.operatorType">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请选择经办人证件类型！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.operatorId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写经办人证件号！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">18</param>
+			<message>经办人证件号不能超过18个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.operatorValidity">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写经办人证件有效期！</message>
+        </field-validator>
+    </field>
+    <field name="companyInfoDTO.operatorName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写经办人姓名！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">18</param>
+			<message>经办人姓名不能超过18个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.operatorTelephoneNumber">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写经办人联系电话！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">11</param>
+			<message>经办人联系电话不能超过11个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.operatorAddress">
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">64</param>
+			<message>经办人住址不能超过64个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.bankAccount">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写银行账户号码！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">30</param>
+			<message>银行账户号码不能超过30个字符！</message>
+		</field-validator>
+    </field>
+    <field name="companyInfoDTO.bankName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请填写银行账户名称！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+			<param name="maxLength">15</param>
+			<message>银行账户名称不能超过15个字符！</message>
+		</field-validator>
+    </field>   
+</validators>

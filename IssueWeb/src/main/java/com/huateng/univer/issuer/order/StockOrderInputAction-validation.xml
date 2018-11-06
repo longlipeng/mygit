@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+	"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <!-- 订单日期 -->
+    <field name="sellOrderDTO.orderDate">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入订单日期!</message>
+        </field-validator>
+    </field>
+    
+    <!-- 卡有效期 -->
+    <field name="sellOrderDTO.validityPeriod">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入卡有效期 !</message>
+        </field-validator>
+    </field>
+    
+    <!-- 产品 -->
+    <field name="sellOrderDTO.productId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入产品! </message>
+        </field-validator>
+    </field>
+    
+    <!-- 面额类型 -->
+    <!-- <field name="sellOrderDTO.faceValueType">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入面额类型! </message>
+        </field-validator>
+    </field> -->
+    <!-- 张数 -->
+	<field name="sellOrderDTO.cardQuantity">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>张数必须输入！</message>
+		</field-validator>
+		<field-validator type="regex" short-circuit="true">
+			<param name="expression">^([1-9][0-9]{0,9})$</param>
+			<message>张数必须是数字(10位内)！</message>
+		</field-validator>
+	</field>
+	<!-- 帐户 -->
+	 <field name="sellOrderDTO.serviceId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入帐户! </message>
+        </field-validator>
+    </field>
+</validators>

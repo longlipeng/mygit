@@ -1,0 +1,13 @@
+<Configure id='wac' class="org.mortbay.jetty.webapp.WebAppContext">
+	<New id="htddb" class="org.mortbay.jetty.plus.naming.Resource">
+		<Arg>jdbc/htddb</Arg>
+		<Arg>
+			<New class="org.apache.commons.dbcp.BasicDataSource">
+				<Set name="driverClassName">oracle.jdbc.driver.OracleDriver</Set>
+				<Set name="url">jdbc:oracle:thin:@192.168.2.132:1521:intopay</Set>
+				<Set name="username">svc_mng</Set>
+				<Set name="password">svc_mng</Set>
+			</New>
+		</Arg>
+	</New>
+</Configure>

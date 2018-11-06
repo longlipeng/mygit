@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="customerVerifier" extends="struts-global"
+		namespace="/customerVerifier">
+		<global-results>
+			<result name="list">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp</result>
+			<result name="addBank">/WEB-INF/pages/univer/entitybaseinfo/bank/insert.jsp</result>
+			<result name="blank">/WEB-INF/pages/univer/entitybaseinfo/blank.jsp</result>
+			<result name="edit">/WEB-INF/pages/univer/seller/customerverifier/customerEdit.jsp</result>
+            <result name="editPer">/WEB-INF/pages/univer/seller/customerverifier/customerPerEdit.jsp</result>
+            <result name="view">/WEB-INF/pages/univer/seller/customerverifier/customerView.jsp</result>
+            <result name="viewPer">/WEB-INF/pages/univer/seller/customerverifier/customerPerView.jsp</result>
+           <result name="addCompany">/WEB-INF/pages/univer/entitybaseinfo/invoicecompany/invoiceCompanyAdd.jsp</result>
+            <result name="editCompany">/WEB-INF/pages/univer/entitybaseinfo/invoicecompany/invoiceCompanyEdit.jsp</result>
+            <result name="addAddress">/WEB-INF/pages/univer/entitybaseinfo/invoiceaddress/invoiceAddressAdd.jsp</result>
+            <result name="editAddress">/WEB-INF/pages/univer/entitybaseinfo/invoiceaddress/invoiceAddressEdit.jsp</result>
+            <result name="addContact">/WEB-INF/pages/univer/entitybaseinfo/contact/contactAdd.jsp</result>
+            <result name="editContact">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementEdit.jsp</result>
+            <result name="addDeliveryPoint">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointAdd.jsp</result>
+            <result name="editDeliveryPoint">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointEdit.jsp</result>
+            <result name="addDepartment">/WEB-INF/pages/univer/entitybaseinfo/department/departmentAdd.jsp</result>
+            <result name="editDepartment">/WEB-INF/pages/univer/entitybaseinfo/department/departmentEdit.jsp</result>
+            <result name="addBank">/WEB-INF/pages/univer/entitybaseinfo/bank/insert.jsp</result>
+            <result name="editBank">/WEB-INF/pages/univer/entitybaseinfo/bank/edit.jsp</result>
+		</global-results>
+		<action name="pass" class="customerVerifiterAction" method="pass">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerView.jsp</result>
+		</action>
+		<action name="passPerson" class="customerVerifiterAction" method="pass">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerPerView.jsp</result>
+		</action>
+		<action name="inquery" class="customerVerifiterAction" method="inquery">
+			<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp
+			</result>
+		</action>
+		<action name="delete" class="customerVerifiterAction" method="delete">
+			<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp
+			</result>
+		</action>
+		 <action name="edit" class="customerVerifiterAction" method="edit">
+        	<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerEdit.jsp</result>
+        </action>
+        
+        <action name="update" class="customerVerifiterAction" method="update">
+        	<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp</result>
+            <result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerEdit.jsp</result>
+        </action>
+        <action name="updatePersion" class="customerVerifiterAction" method="update">
+        	<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp</result>
+            <result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerPerEdit.jsp</result>
+        </action>
+        <action name="view" class="customerVerifiterAction" method="view">
+        	<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerVerifierList.jsp</result>
+        </action>
+         <!--实体信息 -->
+        <action name="addCompany" class="customerVerifiterAction" method="addCompany">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoicecompany/invoiceCompanyAdd.jsp</result>
+        </action>
+        <action name="insertCompany" class="customerVerifiterAction" method="insertCompany">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoicecompany/invoiceCompanyAdd.jsp</result>
+        </action>
+         <action name="editCompany" class="customerVerifiterAction" method="editCompany">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoicecompany/invoiceCompanyEdit.jsp</result>
+        </action>
+        <action name="updateCompany" class="customerVerifiterAction" method="updateCompany">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoicecompany/invoiceCompanyEdit.jsp</result>
+        </action>
+        <action name="delCompany" class="customerVerifiterAction" method="delCompany">
+        	<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerEdit.jsp</result>
+        </action>
+        
+       <action name="addAddress" class="customerVerifiterAction" method="addAddress">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoiceaddress/invoiceAddressAdd.jsp</result>
+        </action>
+        <action name="insertAddress" class="customerVerifiterAction" method="insertAddress">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoiceaddress/invoiceAddressAdd.jsp</result>
+        </action>
+         <action name="editAddress" class="consumerAction" method="editAddress">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoiceaddress/invoiceAddressEdit.jsp</result>
+        </action>
+        <action name="updateAddress" class="consumerAction" method="updateAddress">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoiceaddress/invoiceAddressEdit.jsp</result>
+        </action>
+        <action name="delAddress" class="customerVerifiterAction" method="delAddress">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/invoiceaddress/invoiceAddressAdd.jsp</result>
+        </action>
+        
+        <action name="addContact" class="customerVerifiterAction" method="addContact">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/contact/contactAdd.jsp</result>
+        </action>
+        <action name="insertContact" class="customerVerifiterAction" method="insertContact">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/contact/contactAdd.jsp</result>
+        </action>
+        <action name="delContact" class="customerVerifiterAction" method="delContact">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/contact/contactAdd.jsp</result>
+        </action>
+  		<action name="editContact" class="customerAction" method="editContact">
+        </action>
+ 		<action name="updateContact" class="customerAction" method="updateContact">
+        </action>
+        
+        <action name="insertDeliveryContanct" class="customerVerifiterAction" method="insertDeliveryContanct">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointEdit.jsp</result>
+        </action>
+        <action name="delDeliveryContanct" class="customerVerifiterAction" method="delDeliveryContanct">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointEdit.jsp</result>
+        </action> 
+        
+        <action name="addDeliveryPoint" class="customerVerifiterAction" method="addDeliveryPoint">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointAdd.jsp</result>
+        </action>
+        <action name="insertDeliveryPoint" class="customerVerifiterAction" method="insertDeliveryPoint">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointAdd.jsp</result>
+        </action>
+        <action name="editDeliveryPoint" class="customerVerifiterAction" method="editDeliveryPoint">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointEdit.jsp</result>
+        </action>
+        <action name="delDeliveryPoint" class="customerVerifiterAction" method="delDeliveryPoint">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointEdit.jsp</result>
+        </action>
+        <action name="updateDeliveryPoint" class="customerVerifiterAction" method="updateDeliveryPoint">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/delivarypoint/deliveryPointEdit.jsp</result>
+        </action>
+        <action name="addBank" class="customerVerifiterAction" method="addBank">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/bank/insert.jsp</result>
+        </action>
+        <action name="insertBank" class="customerVerifiterAction" method="insertBank">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/bank/insert.jsp</result>
+        </action>
+        <action name="editBank" class="customerVerifiterAction" method="editBank">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/bank/edit.jsp</result>
+        </action>
+        <action name="updateBank" class="customerVerifiterAction" method="updateBank">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/bank/edit.jsp</result>
+        </action>
+        <action name="delBank" class="customerVerifiterAction" method="delBank">
+        	<result name="input">/WEB-INF/pages/univer/seller/customerverifier/customerEdit.jsp</result>
+        </action>
+        
+        <action name="addDepartment" class="customerVerifiterAction" method="addDepartment">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/department/departmentAdd.jsp</result>
+        </action>
+        <action name="insertDepartment" class="customerVerifiterAction" method="insertDepartment">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/department/departmentAdd.jsp</result>
+        </action>
+        <action name="editDepartment" class="consumerAction" method="editDepartment">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/department/departmentEdit.jsp</result>
+        </action>
+        <action name="updateDepartment" class="consumerAction" method="updateDepartment">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/department/departmentEdit.jsp</result>
+        </action>
+        <action name="delDepartment" class="customerVerifiterAction" method="delDepartment">
+        	<result name="input">/WEB-INF/pages/univer/entitybaseinfo/department/departmentAdd.jsp</result>
+        </action>
+	</package>
+</struts>

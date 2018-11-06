@@ -1,0 +1,416 @@
+
+body, table, td, p, font{font-size:9pt}
+A:link { text-decoration:none;color:#000000}
+A:visited { text-decoration:none;color:#000000}
+A:Hover {
+	text-decoration: underline;position: relative; left: 0px; top: 0px; clip:  rect(   );crosshair;Color:#99ccff}
+	color:#FF9900;}
+
+
+
+body {
+SCROLLBAR-FACE-COLOR: #cccccc; 
+SCROLLBAR-HIGHLIGHT-COLOR: #eeeeee; 
+SCROLLBAR-SHADOW-COLOR: #efefef; 
+SCROLLBAR-3DLIGHT-COLOR: #cccccc; 
+SCROLLBAR-ARROW-COLOR: #ffffff; 
+SCROLLBAR-TRACK-COLOR: #efefef; 
+SCROLLBAR-DARKSHADOW-COLOR: #eeeeee;
+background-color: #ffffff;
+margin-bottom: '0cm';
+margin-left:   '0cm';
+margin-right:  '0cm';
+margin-top:    '0cm';
+behavior: url("../../js/init.htc");
+
+}
+
+
+.user {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #ffffff;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.wel {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #B0E0FF;
+	text-decoration: none;
+	
+}
+
+.date {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #FECB01;
+	text-decoration: none;
+	
+}
+
+
+
+.place {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #FFA800;
+	text-decoration: none;
+	
+}
+
+
+.place2 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #C9C9C9;
+	text-decoration: none;
+	
+}
+
+.text1 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #000000;
+	text-decoration: none;
+	filter: DropShadow(Color=#ffffff, OffX=1, OffY=1);
+}
+
+.text2 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #FFFFFF;
+	text-decoration: none;
+	filter: DropShadow(Color=#333333, OffX=1, OffY=1);
+	line-height: 20px;
+}
+
+.text3 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #000000;
+	text-decoration: none;
+}
+
+.title0 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #FFFFFF;
+	text-decoration: none;
+	background-attachment: fixed;
+	background-image:  url(../images/top_02.jpg);
+	background-repeat: repeat-x;
+	height: 24px;
+}
+
+.title1 {
+	font-family: "Arial";
+	font-size: 10pt;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+}
+
+a:visited {
+	font-size: 9pt;
+	color: #666666;
+	text-decoration: none;
+	font-family: "Arial";
+}
+
+.b:link {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #006666;
+	text-decoration: none;
+}
+.b:hover {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #CC0000;
+	text-decoration: underline;
+}
+
+.p:link {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #666600;
+	text-decoration: none;
+}
+.p:hover {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #CC0000;
+	text-decoration: none;
+}
+
+
+.b_01 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #666666;
+	text-decoration: none;
+	height: 25px;
+	width: 60px;
+	border: 0px none;
+	background-attachment: fixed;
+	background-image:  url(../images/b_01.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 15px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.mainbutton2 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #666666;
+	text-decoration: none;
+	height: 22px;
+	width: 70px;
+	border: 0px none;
+	background-attachment: fixed;
+	background-image:  url(../images/main_15.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 15px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.mainbutton3 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #666666;
+	text-decoration: none;
+	height: 22px;
+	width: 100px;
+	border: 0px none;
+	background-attachment: fixed;
+	background-image:  url(../images/main_16.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-align: center;
+	vertical-align: middle;
+	line-height: 15px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.loginbutton {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #666666;
+	text-decoration: none;
+	height: 24px;
+	width: 50px;
+	border: 0px none;
+	background-attachment: fixed;
+	background-image:  url(../images/popup_16.gif);
+	background-repeat: no-repeat;
+	background-position: center top;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 4px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.popupbutton2 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #666666;
+	text-decoration: none;
+	height: 24px;
+	width: 70px;
+	border: 0px none;
+	background-attachment: fixed;
+	background-image:  url(../images/popup_17.gif);
+	background-repeat: no-repeat;
+	background-position: center top;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 2px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.popupbutton3 {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #666666;
+	text-decoration: none;
+	height: 24px;
+	width: 100px;
+	border: 0px none;
+	background-attachment: fixed;
+	background-image:  url(../images/popup_18.gif);
+	background-repeat: no-repeat;
+	background-position: center top;
+	text-align: center;
+	vertical-align: middle;
+	padding-top: 2px;
+	margin-right: 5px;
+	margin-left: 5px;
+}
+
+.use {
+	font-family: "Arial";
+	font-size: 9pt;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	filter: Shadow(Color=#295A5A, Direction=180);
+	text-align: center;
+	vertical-align: top;
+}
+
+input {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #000000;
+	height: 18px;
+	vertical-align: middle;
+	border-top: 1px solid #333333;
+	border-right: 1px solid #B3B3B3;
+	border-bottom: 1px solid #B3B3B3;
+	border-left: 1px solid #333333;
+	line-height: 13px;
+}
+
+textarea {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #003300;
+	text-decoration: none;
+	border-top: 1px solid #333333;
+	border-right: 1px solid #B3B3B3;
+	border-bottom: 1px solid #B3B3B3;
+	border-left: 1px solid #333333;
+}
+
+select {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #003300;
+	text-decoration: none;
+	vertical-align: middle;
+	border-top: 1px solid #333333;
+	border-right: 1px solid #B3B3B3;
+	border-bottom: 1px solid #B3B3B3;
+	border-left: 1px solid #333333;
+}
+
+.check {
+	border: 0px none;
+}
+
+.tabletext {
+	font-family: "Arial";
+	font-size: 9pt;
+	color: #000000;
+	text-decoration: none;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.div0 {
+	font-family: "Arial";
+	font-size: 9pt;
+	font-weight: bolder;
+	color: #333333;
+	text-decoration: none;
+	margin-top: 2px;
+	border: 1px solid #999999;
+}
+
+.div1 {
+	border-top: 0px none;
+	border-right: 1px solid #999999;
+	border-bottom: 1px solid #999999;
+	border-left: 1px solid #999999;
+	background-image:  url(../images/add_21.jpg);
+	padding: 5px;
+}
+
+.div2 {
+	border-top: 0px none;
+	border-right: 1px solid #999999;
+	border-bottom: 1px solid #999999;
+	border-left: 1px solid #999999;
+	background-image:  url(../images/add_20.jpg);
+	padding-right: 15px;
+	padding-left: 15px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.empty {
+	background-attachment: fixed;
+	background-image:  url(../images/icon/empty.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	right: 50px;
+}
+.G {
+	font-family: "Arial";
+	font-size: 8pt;
+	color: #666666;
+	text-decoration: none;
+	background-attachment: fixed;
+	background-image:  url(../images/main_17.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	text-align: center;
+	vertical-align: middle;
+	height: 18px;
+	width: 37px;
+	border: 0px none;
+}
+.warning {
+	font-family: "Arial";
+	font-size: 11pt;
+	color: #CC0000;
+	text-decoration: none;
+	filter: Shadow(Color=#dfdfdf, Direction=180);
+	font-weight: bold;
+	line-height: 25px;
+}
+.active {
+	font-family: "Arial";
+	font-size: 11pt;
+	color: #000000;
+	text-decoration: none;
+	filter: Shadow(Color=#dfdfdf, Direction=180);
+	font-weight: bold;
+	line-height: 25px;
+}
+.notice {
+	font-family: "Arial";
+	font-size: 11pt;
+	color: #996600;
+	text-decoration: none;
+	filter: Shadow(Color=#dfdfdf, Direction=180);
+	font-weight: bold;
+	line-height: 25px;
+}
+.how {
+	font-family: "Arial";
+	font-size: 11pt;
+	color: #006600;
+	text-decoration: none;
+	filter: Shadow(Color=#dfdfdf, Direction=180);
+	font-weight: bold;
+	line-height: 25px;
+}
+
+.table {
+	background-color: #93B3CA;
+	cellspacing: 1;
+	border: 0;
+} 

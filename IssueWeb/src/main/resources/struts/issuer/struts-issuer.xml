@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>                                                              
+    <package name="issuer" extends="struts-global" >
+        <global-results>
+           <result name="list">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+           <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+           <result name="addCardBin">/WEB-INF/pages/univer/issuer/issuer/cardSerialNumberAdd.jsp</result>
+           <result name="addCardBinSucess">/WEB-INF/pages/univer/issuer/issuer/addsuccess.jsp</result>
+           <result name="view" >/WEB-INF/pages/univer/issuer/issuer/keyEdit.jsp</result>
+            <result name="blank">/WEB-INF/pages/univer/issuer/issuer//blank.jsp</result>
+        </global-results>
+         <action name="issuerModifyPassword" class="issuerAction" method="issuerModifyPassword">
+         	<result name="issuerModifyPassword">/WEB-INF/pages/univer/issuer/issuer/issuerModifyPassword.jsp</result>
+         	<result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+         </action>
+         <action name="issuerUpdatePassword" class="issuerAction" method="issuerUpdatePassword">
+         	<result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerModifyPassword.jsp</result>
+         </action>
+         <action name="configEntiyId" class="issuerAction" method="configEntiyId">
+         	<result name="configEntiyId">/WEB-INF/pages/univer/issuer/issuer/issuerAdd.jsp</result>
+         	<result name="input">/WEB-INF/pages/univer/issuer/issuer/selectEntityId.jsp</result>
+         </action>
+          <action name="record" class="issuerAction" method="record">
+         	<result name="selectEntityId">/WEB-INF/pages/univer/issuer/issuer/selectEntityId.jsp</result>
+         	<result name="input">/WEB-INF/pages/univer/issuer/issuer/selectEntityId.jsp</result>
+         </action>
+         <action name="addCardBin" class="issuerAction" method="addCardBin">
+         	
+         </action>
+        
+         <action name="updateKey" class="issuerAction" method="updateKey">
+         
+         </action>
+         <action name="insertCardBin" class="issuerAction" method="insertCardBin">
+
+         </action>
+        
+         <action name="loadKey" class="issuerAction" method="loadKey">
+         	
+         </action>
+        <action name="issuerInquery" class="issuerAction" method="inQuery">
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+        </action>
+         <action name="listIssuer" class="issuerAction" method="listIssuer">
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+        </action>
+        <action name="issuerChoose" class="issuerAction" method="issuerChoose">
+         <result name="choose">/WEB-INF/pages/univer/issuer/issuer/issuerChoose.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerChoose.jsp</result>
+        </action>
+        
+        
+        <action name="issuerReAdd" class="issuerAction" method="reAdd">
+         <result name="readd">/WEB-INF/pages/univer/issuer/issuer/issuerAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+        </action>
+        <action name="issuersInsert" class="issuerAction" method="insert">
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerAdd.jsp</result>
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        
+        <action name="invoiceCompanyList" class="issuerAction" method="companyList">
+         <result name="companyList">/WEB-INF/pages/univer/issuer/issuer/invoiceCompanyAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="invoiceCompanyAdd" class="issuerAction" method="companyAdd">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+         <action name="toInvoiceCompanyEdit" class="issuerAction" method="toInvoiceCompanyEdit">
+         <result name="editCompany">/WEB-INF/pages/univer/issuer/issuer/invoiceCompanyEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="invoiceCompanyUpdate" class="issuerAction" method="invoiceCompanyUpdate">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/invoiceCompanyEdit.jsp.jsp</result>
+        </action>
+        
+        
+        <action name="companyDel" class="issuerAction" method="companyDel">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="invoiceAddressList" class="issuerAction" method="addressList">
+         <result name="addresslist">/WEB-INF/pages/univer/issuer/issuer/invoiceAddressAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+         <action name="invoiceAddressAdd" class="issuerAction" method="addAddress">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/invoiceAddressAdd.jsp</result>
+        </action>
+        
+        <action name="toInvoiceAddressEdit" class="issuerAction" method="toInvoiceAddressEdit">
+         <result name="editInvoiceAddress">/WEB-INF/pages/univer/issuer/issuer/invoiceAddressEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+         <action name="invoiceAddressUpdate" class="issuerAction" method="invoiceAddressUpdate">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/invoiceAddressEdit.jsp</result>
+        </action>
+        
+        <action name="reLoad" class="issuerAction" method="reLoad">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="addressDelete" class="issuerAction" method="addressDel">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="contractList" class="issuerAction" method="toContract">
+         <result name="contractlist">/WEB-INF/pages/univer/issuer/issuer/contactAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="bankAdd" class="issuerAction" method="toBank">
+        	<result name="bankAdd">/WEB-INF/pages/univer/issuer/issuer/bankAdd.jsp</result>
+         	<result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="bankInsert" class="issuerAction" method="bankInsert">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/bankAdd.jsp</result>
+        </action>
+        <action name="bankEdit" class="issuerAction" method="bankEdit">
+         <result name="editBank">/WEB-INF/pages/univer/issuer/issuer/bankEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+         <action name="bankUpdate" class="issuerAction" method="bankUpdate">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/bankEdit.jsp</result>
+        </action>
+         <action name="bankDel" class="issuerAction" method="bankDel">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="contactInsert" class="issuerAction" method="contactInsert">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/contactAdd.jsp</result>
+        </action>
+        
+        <action name="toContactEdit" class="issuerAction" method="toContactEdit">
+         <result name="editContract">/WEB-INF/pages/univer/issuer/issuer/contactEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="contactUpdate" class="issuerAction" method="contactUpdate">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        
+        <action name="contractDel" class="issuerAction" method="contractDel">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        
+        <action name="departmentInsertInit" class="issuerAction" method="toDepartMent">
+         <result name="departlist">/WEB-INF/pages/univer/issuer/issuer/departmentAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+       
+        <action name="departmentInsert" class="issuerAction" method="departmentInsert">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/departmentAdd.jsp</result>
+        </action>
+        
+         <action name="toDepartmentEdit" class="issuerAction" method="toDepartmentEdit">
+         <result name="editDepart">/WEB-INF/pages/univer/issuer/issuer/departmentEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+       
+        <action name="departmentUpdate" class="issuerAction" method="departmentUpdate">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/departmentEdit.jsp</result>
+        </action>
+        
+         <action name="departMentDel" class="issuerAction" method="departMentDel">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="issuerDelete" class="issuerAction" method="deleteIssuer">
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+        </action>
+        <action name="issuerEdit" class="issuerAction" method="editIssuer">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+        </action>
+        
+        <action name="deliveryPointInit" class="issuerAction" method="toDeliveryPoint">
+         <result name="deliveryPoint">/WEB-INF/pages/univer/issuer/issuer/deliveryPointAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        <action name="deliveryPointInsert" class="issuerAction" method="insertDeliveryPoint">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/deliveryPointAdd.jsp</result>
+        </action>
+         <action name="deliveryPointDel" class="issuerAction" method="deliveryPointDel">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        
+        <action name="deliveryPointInsertAndEdit" class="issuerAction" method="insertAndEdit">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+        </action>
+        
+        <action name="deliveryPointInsertRecipient" class="issuerAction" method="insertRecipient">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+        </action>
+        
+        <action name="deliveryPointUpdate" class="issuerAction" method="deliveryPointUpdate">
+         <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+        </action>
+        
+        <action name="deliveryInfoEdit" class="issuerAction" method="deliveryInfoEdit">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        
+        
+        <action name="deleteRecipient" class="issuerAction" method="deleteRecipient">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuer/deliveryPointEdit.jsp</result>
+        </action>
+        
+        
+         <action name="updateIssuer" class="issuerAction" method="updateIssuer">
+          <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerEdit.jsp</result>
+        </action>
+        
+         <action name="checkIssuerIdPin" class="issuerAction" method="checkIssuerIdPin">
+          <result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerAdd.jsp</result>
+        </action>
+      	 <action name="issuerModifyUserState" class="issuerAction" method="issuerModifyUserState">
+         	<result name="issuerModifyUserState">/WEB-INF/pages/univer/issuer/issuer/issuerModifyUserState.jsp</result>
+         	<result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+         </action>
+         <action name="issuerUpdateUserState" class="issuerAction" method="issuerUpdateUserState">
+         	<result name="input">/WEB-INF/pages/univer/issuer/issuer/issuerModifyUserState.jsp</result>
+         	<result name="list">/WEB-INF/pages/univer/issuer/issuer/issuerList.jsp</result>
+         </action>
+    </package>
+</struts>

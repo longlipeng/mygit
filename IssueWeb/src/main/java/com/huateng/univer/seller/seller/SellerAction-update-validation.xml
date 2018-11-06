@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <field name="sellerDTO.sellerName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>名称必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>名称不能超过64个字符！</message>
+        </field-validator>
+    </field>
+	
+    <!-- <field name="sellerDTO.sellerEnglishName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>英文名称必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>英文名称不能超过64个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^[\x00-\xFF]+$</param>
+            <message>英文名称只能输入英文</message>
+        </field-validator>
+    </field> -->
+    
+    <field name="sellerDTO.externalId">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>外部系统代码不能超过64个字符！</message>
+        </field-validator>
+    </field>
+    <field name="sellerDTO.legCusId">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>老系统客户号不能超过64个字符！</message>
+        </field-validator>
+    </field>
+    
+
+    
+<!--    <field name="sellerDTO.printName">-->
+<!--        <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>卡片打印名称必须输入！</message>-->
+<!--        </field-validator>-->
+<!--        <field-validator type="stringlength" short-circuit="true">-->
+<!--            <param name="maxLength">32</param>-->
+<!--            <message>卡片打印名称不能超过32个字符！</message>-->
+<!--        </field-validator>-->
+<!--    </field>-->
+    
+    <field name="sellerDTO.extPrintInfo">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>额外打印信息不能超过32个字符！</message>
+        </field-validator>
+    </field>
+    
+    <field name="sellerDTO.sellerAddress">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>地址必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>地址不能超过128个字符！</message>
+        </field-validator>
+    </field>
+    <!-- <field name="sellerDTO.sellerEnglishAddress">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>英文地址必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>英文地址不能超过128个字符！</message>
+        </field-validator>
+    </field> -->
+    <field name="sellerDTO.sellerPostcode">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>邮编必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>邮编不能超过32个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^\d{6}$</param>
+            <message>邮编必须是6位数字 </message>
+        </field-validator>
+    </field>
+    
+    <field name="sellerDTO.sellerTelephone">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>电话必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>电话不能超过32个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^([0-9]|[0-9\-])+$</param>
+            <message>电话号码格式不正确 </message>
+        </field-validator>
+    </field>
+    
+     <!--<field name="sellerDTO.sellerCode">
+        <field-validator type="requiredstring">
+			<message>机构代码必须是正整数(1-8位)</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">^([1-9][0-9]{0,7})$</param>
+			<message>机构代码必须是正整数(1-8位)</message>
+		</field-validator>
+    </field>  -->
+     <field name="sellerDTO.sellerSize">
+        <field-validator type="requiredstring">
+			<message>规模必须是正整数(10位内)</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">^([1-9][0-9]{0,9})$</param>
+			<message>规模必须是正整数(10位内)</message>
+		</field-validator>
+    </field>
+    
+    
+    <field name="sellerDTO.sellerFax">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>传真必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>传真不能超过32个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^([0-9]|[0-9\-])+$</param>
+            <message>传真格式不正确 </message>
+        </field-validator>
+    </field>
+    
+    <field name="sellerDTO.sellerWebsite">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>网站不能超过128个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression"><![CDATA[^(http[s]?:\/\/)?[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@\[\]\':+!]*([^\"\"])*$]]></param>
+            <message>网站格式不正确 </message>
+        </field-validator>
+    </field>
+    
+    <field name="sellerDTO.paymentTerm">
+        <field-validator type="required" short-circuit="true">
+            <message>必须选择缺省支付方式！</message>
+        </field-validator>
+    </field>
+    
+    <field name="sellerDTO.paymentDelay">
+   		<field-validator type="regex">
+			<param name="expression">^([1-9][0-9]{0,4})$</param>
+			<message>延期天数必须是正整数(5位内)</message>
+		</field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">5</param>
+            <message>延期天数不能超过5位！</message>
+        </field-validator>
+        
+    </field>
+   
+    
+    <field name="sellerDTO.salesRegionId">
+        <field-validator type="required" short-circuit="true">
+            <message>必须选择销售区域！</message>
+        </field-validator>
+    </field>
+    
+    <field name="sellerDTO.businessCity">
+        <field-validator type="required" short-circuit="true">
+            <message>必须选择营业城市！</message>
+        </field-validator>
+    </field>
+    <field name="sellerDTO.businessAreaId">
+        <field-validator type="required" short-circuit="true">
+            <message>必须选择营业区域！</message>
+        </field-validator>
+    </field>
+    <field name="sellerDTO.salesmanId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>必须选择缺省销售人员！</message>
+        </field-validator>
+    </field>
+    <field name="sellerDTO.activitySector">
+        <field-validator type="required" short-circuit="true">
+            <message>必须选择行业！</message>
+        </field-validator>
+    </field>
+    <field name="sellerDTO.hasDm">
+        <field-validator type="required" short-circuit="true">
+            <message>必须选择是否发送DM！</message>
+        </field-validator>
+    </field>
+     <field name="sellerDTO.userName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>用户名称必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>用户名称不能超过64个字符！</message>
+        </field-validator>
+    </field>
+    <field name="sellerDTO.userEmail">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>email不能为空</message>
+        </field-validator>
+        <field-validator type="email" short-circuit="true">
+            <message>电子邮箱格式不正确！</message>
+        </field-validator>
+    </field>
+</validators>

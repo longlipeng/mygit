@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="prodAcctypeDTO.maxTxnAmt">
+		<field-validator type="requiredstring">
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">^(([1-9]{1}[0-9]{0,7})|([0]))([.]\d{1,2})?$</param>
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+	</field>
+	<field name="prodAcctypeDTO.maxDayTxnAmt">
+		<field-validator type="requiredstring">
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">^(([1-9]{1}[0-9]{0,7})|([0]))([.]\d{1,2})?$</param>
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+	</field>
+	<field name="prodAcctypeDTO.webMaxTxnAmt">
+		<field-validator type="requiredstring">
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">^(([1-9]{1}[0-9]{0,7})|([0]))([.]\d{1,2})?$</param>
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+	</field>
+	<field name="prodAcctypeDTO.webMaxDayTxnAmt">
+		<field-validator type="requiredstring">
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">^(([1-9]{1}[0-9]{0,7})|([0]))([.]\d{1,2})?$</param>
+			<message>整数不超过8位(两位以上整数首位不能为零),小数位不超过2位</message>
+		</field-validator>
+	</field>
+	<field name="prodAcctypeDTO.serviceFee">
+		<field-validator type="requiredstring">
+			<message>0-100之间(例:98.89)</message>
+		</field-validator>
+			<field-validator type="regex">
+			<param name="expression">^(((([1-9]{1}[0-9]{0,1})|([0]))([.]\d{1,2}))|([1-9]{1}[0-9]{0,1}|[0])|100)?$</param>
+			<message>0-100之间(例:98.89)</message>
+		</field-validator> 
+	</field>
+	
+</validators>

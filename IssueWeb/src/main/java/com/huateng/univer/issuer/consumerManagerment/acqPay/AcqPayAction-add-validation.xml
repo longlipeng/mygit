@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="acqPayDTO.entityId">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>收单机构号必须选择！</message>
+		</field-validator>
+	</field>
+
+	<field name="cert">
+		<field-validator type="required" short-circuit="true">
+			<message>证书文件必须选择！</message>
+		</field-validator>
+	</field>
+
+	<field name="acqPayDTO.certsPwd">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>证书密码必须填写！</message>
+		</field-validator>
+	</field>
+	
+	<field name="logo">
+		<field-validator type="required" short-circuit="true">
+			<message>LOGO必须选择！</message>
+		</field-validator>
+	</field>
+	<field name="acqPayDTO.copyright">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>版权必须填写！</message>
+		</field-validator>
+	</field>
+	<field name="acqPayDTO.insNm">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>收单网关名称必须填写！</message>
+		</field-validator>
+	</field>
+	<field name="acqPayDTO.domainUrl">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>收单网关URL必须填写！</message>
+		</field-validator>
+	</field>
+</validators>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="consumerContractDTO.contractBuyer">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>收单机构号必须选择！</message>
+		</field-validator>
+	</field>
+
+	<field name="consumerContractDTO.ruleNo">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>结算周期规则必须选择！</message>
+		</field-validator>
+	</field>
+
+	<field name="consumerContractDTO.contractStartDateDate">
+		<field-validator type="required" short-circuit="true">
+			<message>合同有效期开始时间必须选择！</message>
+		</field-validator>
+	</field>
+</validators>

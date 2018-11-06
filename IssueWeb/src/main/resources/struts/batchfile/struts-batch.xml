@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="batchfile" extends="struts-global" namespace="/batchfile">
+        <global-results>
+        	<result name="rechargeList">/WEB-INF/pages/univer/batch/rechargeBatchDetailList.jsp</result>
+            <result name="rechargeActList">/WEB-INF/pages/univer/batch/rechargeActBatchDetailList.jsp</result>
+            <result name="makeCardList">/WEB-INF/pages/univer/batch/makeCardBatchDetailList.jsp</result>
+            <result name="actList">/WEB-INF/pages/univer/batch/actBatchDetailList.jsp</result>
+            <result name="ransomList">/WEB-INF/pages/univer/batch/ransomBatchDetailList.jsp</result>
+        </global-results>
+        
+        <action name="rechargeActView" class="batchFileAction" method="rechargeActView">
+        	<result name="view">/WEB-INF/pages/univer/batch/rechargeActBatchDetailList.jsp</result>
+        </action>
+        <action name="rechargeView" class="batchFileAction" method="rechargeView">
+        	<result name="view">/WEB-INF/pages/univer/batch/rechargeBatchDetailList.jsp</result>
+        </action>
+        <action name="changeCardNo" class="batchFileAction" method="changeCardNo">
+        	<result name="changeCardNo">/WEB-INF/pages/univer/issuer/issuer/addsuccess.jsp</result>
+        </action>
+        <action name="makeCardView" class="batchFileAction" method="makeCardView">
+        	<result name="view">/WEB-INF/pages/univer/batch/makeCardBatchDetailList.jsp</result>
+        </action>
+         <action name="ransomView" class="batchFileAction" method="ransomView">
+        	<result name="view">/WEB-INF/pages/univer/batch/ransomBatchDetailList.jsp</result>
+        </action>
+         <action name="actView" class="batchFileAction" method="actView">
+        	<result name="view">/WEB-INF/pages/univer/batch/actBatchDetailList.jsp</result>
+        </action>
+        <action name="getOrderState" class="batchFileAction" method="getOrderState">
+        	<result name="input">/WEB-INF/pages/univer/seller/cardholder/cardholderList.jsp</result>
+        </action>
+        <action name="getRechargeActBatchDetail" class="batchFileAction" method="getRechargeActBatchDetail">
+        	<result name="input">/WEB-INF/pages/univer/batch/rechargeActBatchDetailList.jsp</result>
+        </action> 
+         <action name="getRechargeBatchDetail" class="batchFileAction" method="getRechargeBatchDetail">
+        	<result name="input">/WEB-INF/pages/univer/batch/rechargeBatchDetailList.jsp</result>
+        </action>   
+         <action name="getMakeCardBatchDetail" class="batchFileAction" method="getMakeCardBatchDetail">
+        	<result name="input">/WEB-INF/pages/univer/batch/makeCardBatchDetailList.jsp</result>
+        </action>  
+         <action name="getRansomBatchDetail" class="batchFileAction" method="getRansomBatchDetail">
+        	<result name="input">/WEB-INF/pages/univer/batch/ransomBatchDetailList.jsp</result>
+        </action>
+         <action name="getActBatchDetail" class="batchFileAction" method="getActBatchDetail">
+        	<result name="input">/WEB-INF/pages/univer/batch/actBatchDetailList.jsp</result>
+        </action> 
+        <action name="batchRechargeListAction" class="batchFileAction" method="getBatchRechargeInfoAction">
+			<result name="rechargeInfoList">/WEB-INF/pages/univer/issuer/order/batchRecharge.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/issuer/order/batchRecharge.jsp</result>
+		</action>
+		<action name="tobatchRecharge" class="batchFileAction" method="toBatchRechargeInfoAction">
+			<result name="tochargeInfo">/WEB-INF/pages/univer/issuer/order/toBatchRecharge.jsp</result>
+		</action> 
+		<action name="batchRecharge" class="batchFileAction" method="batchRechargeAction">
+			<result name="success">/WEB-INF/pages/univer/issuer/order/toBatchRecharge.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/issuer/order/toBatchRecharge.jsp</result>
+		</action>  
+		<action name="batchActivateListAction" class="batchFileAction" method="getBatchActivateInfoAction">
+			<result name="activateInfoList">/WEB-INF/pages/univer/issuer/order/batchActivate.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/issuer/order/batchActivate.jsp</result>
+		</action>
+		<action name="tobatchActivate" class="batchFileAction" method="toBatchActivateInfoAction">
+			<result name="toActivateInfo">/WEB-INF/pages/univer/issuer/order/toBatchActivate.jsp</result>
+		</action> 
+		<action name="batchActivate" class="batchFileAction" method="batchActivateAction">
+			<result name="success" type="chain">batchActivateListAction</result>
+			<result name="input">/WEB-INF/pages/univer/issuer/order/toBatchActivate.jsp</result>
+		</action> 
+		<action name="activateView" class="batchFileAction" method="batchActivateDetail">
+			<result name="success">/WEB-INF/pages/univer/issuer/order/activateDetail.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/issuer/order/batchActivate.jsp</result>
+		</action> 
+		<action name="activateCardView" class="batchFileAction" method="getBatchActivateCardDetail">
+			<result name="success">/WEB-INF/pages/univer/issuer/order/activateCardDetail.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/issuer/order/batchActivate.jsp</result>
+		</action>
+    </package>
+</struts>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+	"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	   <!-- 订单日期 -->
+    <field name="sellOrderDTO.orderDate">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入订单日期!</message>
+        </field-validator>
+    </field>
+    <!-- 客户 -->
+    <field name="sellOrderDTO.firstEntityId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入客户! </message>
+        </field-validator>
+    </field>
+	<!-- 包装费 -->
+	<field name="sellOrderDTO.packageFee">
+		<field-validator type="stringlength">
+			<param name="maxLength">14</param>
+			<message>请填放数字(14位)内!</message>
+		</field-validator>
+
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>请输入包装费 </message>
+		</field-validator>
+		<field-validator type="regex" short-circuit="true">
+			<param name="expression">^[0-9]+(.[0-9]{0,2})?$</param>
+			<message>请输入大于等于0且最多两位小数!</message>
+		</field-validator>
+	</field>
+	 <!-- 发票公司名称 -->
+<!--    <field name="sellOrderDTO.invoiceCompanyName">-->
+<!--        <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>请输入发票公司名称</message>-->
+<!--        </field-validator>-->
+<!--    </field>-->
+    
+    <!-- 发票地址 -->
+<!--    <field name="sellOrderDTO.invoiceAddresses">-->
+<!--        <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>请输入发票地址 </message>-->
+<!--        </field-validator>-->
+<!--    </field>-->
+    
+    <!-- 发票内容名称 -->
+     <!-- 发票内容名称 -->
+<!--    <field name="sellOrderDTO.invoiceItemId">-->
+<!--        <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>请输入发票内容名称 </message>-->
+<!--        </field-validator>-->
+<!--    </field>-->
+    
+      <!-- 服务费 -->
+    <field name="sellOrderDTO.additionalFee">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>请输入服务费 </message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+        	<param name="expression">^(([1-9]{1}[0-9]{0,7})|([0]))([.]\d{1,2})?$</param>
+            <message>请输入大于等于0且最多两位小数!</message>
+        </field-validator>
+    </field>
+      <!-- 发票日期 -->
+<!--    <field name="sellOrderDTO.invoiceDate">-->
+<!--        <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>请输入发票日期 </message>-->
+<!--        </field-validator>-->
+<!--    </field>-->
+    
+    <!-- 付款延期天数 -->
+    <field name="sellOrderDTO.paymentDelay">
+    	<field-validator type="conversion" short-circuit="true">
+            <message>请输入数字</message>
+        </field-validator>
+        <field-validator type="fieldexpression" short-circuit="true">
+        <param name="expression">
+    		<![CDATA[!(sellOrderDTO.getPaymentTerm().equals("4") && (sellOrderDTO.getPaymentDelay() == null || sellOrderDTO.getPaymentDelay()==0))]]>
+    	</param>
+    	<message>信用支付时 付款延期天数 必须大于0!</message>
+    	</field-validator>
+    	<field-validator type="regex" short-circuit="true">
+        	<param name="expression">^(([1-9]{1}[0-9]{0,7})|([0]))([.]\d{1,2})?$</param>
+            <message>请输入大于等于0且最多两位小数!</message>
+        </field-validator>
+    </field>
+    
+    <!-- 送货费用 -->
+    <field name="sellOrderDTO.deliveryFee">
+    	<field-validator type="conversion" short-circuit="true">
+            <message>请输入数字</message>
+        </field-validator>
+        <field-validator type="fieldexpression" short-circuit="true">
+        <param name="expression">
+    		<![CDATA[!(sellOrderDTO.getDeliveryMeans().equals("1") && (sellOrderDTO.getDeliveryFee() == null || "".equals(sellOrderDTO.getDeliveryFee())))]]>
+    	</param>
+    	<message>送货上门时送货费用 必须输入!</message>
+    	</field-validator>
+    	<field-validator type="regex" short-circuit="true">
+        	<param name="expression">^(([1-9]{1}[0-9]{0,7})|([0]))([.]\d{1,2})?$</param>
+            <message>必须大于等于0且最多两位小数!</message>
+        </field-validator>
+    </field>
+    
+    <!-- 收货地址 -->
+<!--    <field name="sellOrderDTO.deliveryPoint">-->
+<!--        <field-validator type="fieldexpression" short-circuit="true">-->
+<!--        <param name="expression">-->
+<!--    		<![CDATA[!(sellOrderDTO.getDeliveryMeans().equals("1") && (sellOrderDTO.getDeliveryPoint() == null ||"".equals(sellOrderDTO.getDeliveryPoint())))]]>-->
+<!--    	</param>-->
+<!--    	<message>送货上门时收货地址 必须输入!</message>-->
+<!--    	</field-validator>-->
+<!--    </field>-->
+    
+    <!-- 收货人 -->
+<!--    <field name="sellOrderDTO.orderContact">-->
+<!--        <field-validator type="fieldexpression" short-circuit="true">-->
+<!--        <param name="expression">-->
+<!--    		<![CDATA[!(sellOrderDTO.getDeliveryMeans().equals("1") && (sellOrderDTO.getOrderContact() == null||"".equals(sellOrderDTO.getOrderContact())) )]]>-->
+<!--    	</param>-->
+<!--    	<message>送货上门时收货人 必须输入!</message>-->
+<!--    	</field-validator>-->
+<!--    </field>-->
+    <!-- 销售人员 -->
+    <field name="sellOrderDTO.saleMan">
+        <field-validator type="requiredstring" short-circuit="true">
+    	<message>请输入销售人员</message>
+    	</field-validator>
+    </field>
+    
+    <!-- 备注 -->
+    <field name="sellOrderDTO.memo">
+       <field-validator type="stringlength">
+			<param name="maxLength">500</param>
+			<message>500个字内</message>
+		</field-validator>
+    </field>
+</validators>

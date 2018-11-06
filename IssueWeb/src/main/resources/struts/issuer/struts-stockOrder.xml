@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+      <constant name="struts.custom.i18n.resources" value="message"/>  
+       <constant name="struts.multipart.saveDir" value="D:\" /> 
+       <constant name="struts.i18n.encoding" value="UTF-8" />   
+    <package name="stockOrder" extends="struts-global" >
+    	<global-results>
+    		<result name="view">WEB-INF/pages/univer/issuer/order/orderview/stockOrderView.jsp</result>
+    		<result name="orderFlowView">WEB-INF/pages/univer/issuer/order/orderview/orderFlowView.jsp</result>
+    		<result name="confirm">WEB-INF/pages/univer/issuer/order/orderconfirm/stockOrderConfirm.jsp</result>
+    		<result name="reject">WEB-INF/pages/univer/issuer/order/orderconfirm/stockOrderConfirm.jsp</result>
+    		<result name="cancel">WEB-INF/pages/univer/issuer/order/orderconfirm/stockOrderConfirm.jsp</result>
+    		<result name="ready">WEB-INF/pages/univer/issuer/order/orderconfirm/stockOrderConfirmReady.jsp</result>
+    	</global-results>
+    	
+     	<!-- 制卡订单查询 -->
+        <action name="stockOrderQueryAction" class="stockOrderQueryAction">
+			<result name="list">WEB-INF/pages/univer/issuer/order/orderview/stockOrderQueryList.jsp</result>
+			<result name="stockPrintOut">WEB-INF/pages/univer/seller/order/orderquery/orderPrintOutStock.jsp</result>
+			<result name="stockPrintEnt">WEB-INF/pages/univer/seller/order/orderquery/orderPrintEntStock.jsp</result>
+		</action>
+        <!-- 制卡订单录入 -->
+        <action name="stockOrderInputAction" class="stockOrderInputAction">
+			<result name="list">WEB-INF/pages/univer/issuer/order/orderinput/stockOrderInputList.jsp</result>
+			<result name="add">WEB-INF/pages/univer/issuer/order/orderinput/stockOrderAdd.jsp</result>
+			<result name="edit">WEB-INF/pages/univer/issuer/order/orderinput/stockOrderEdit.jsp</result>
+			<result name="editIput">WEB-INF/pages/univer/issuer/order/orderinput/stockOrderEdit.jsp</result>
+<!--			<result name="input">WEB-INF/pages/univer/issuer/order/orderinput/stockOrderInputList.jsp</result>-->
+			<result name="input">${errorJsp}</result>
+			<result name="SUCESS" type="stream">
+			<param name="contentType">application/x-download</param>
+			<param name="inputName">inputStream</param>
+			<param name="contentDisposition">attachment;filename="${fileName}"</param>
+			<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		<!-- 制卡订单确定 -->
+		<action name="stockOrderConfirmAction" class="stockOrderConfirmAction">
+			<result name="list">WEB-INF/pages/univer/issuer/order/orderconfirm/stockOrderConfirmList.jsp</result>
+			<result name="input">WEB-INF/pages/univer/issuer/order/orderconfirm/stockOrderConfirmList.jsp</result>
+		</action>
+   		<!-- 制卡订单制卡文件下载 -->
+   		<action name="stockOrderMakeCardDownAction" class="stockOrderMakeCardDownAction">
+   			<result name="list">WEB-INF/pages/univer/issuer/order/ordermakecarddown/stockOrderMakeCardDownList.jsp</result>
+   			<result name="choiceCardCompany">WEB-INF/pages/univer/issuer/order/ordermakecarddown/choiceCardCompany.jsp</result>
+			<result name="input">WEB-INF/pages/univer/issuer/order/ordermakecarddown/stockOrderMakeCardDownList.jsp</result>
+			<result name="confirm">WEB-INF/pages/univer/issuer/order/ordermakecarddown/stockOrderMakeConfirm.jsp</result>
+   		</action>
+   		
+   		<!-- 制卡订单制卡文件生成 -->
+   		<action name="stockOrderMakeCardMakeAction" class="stockOrderMakeCardMakeAction">
+   			<result name="list">WEB-INF/pages/univer/issuer/order/ordermakecardmake/stockOrderMakeCardMakeList.jsp</result>
+   			<result name="makeCardFile" type="chain">
+   				<param name="actionName">saveFile2</param>
+   			</result>
+   			<result name="cardPINFile" type="chain">
+   				<param name="actionName">saveFile</param>
+   			</result>
+			<result name="input">WEB-INF/pages/univer/issuer/order/ordermakecardmake/stockOrderMakeCardMakeList.jsp</result>
+   		</action>
+   		
+   		<action name="saveFile" class="stockOrderMakeCardMakeAction" method="saveFile">
+   			<result name="list">WEB-INF/pages/univer/issuer/order/ordermakecardmake/stockOrderMakeCardMakeList.jsp</result>
+   		</action>
+   		
+   		<action name="saveFile2" class="stockOrderMakeCardMakeAction" method="saveFile2">
+   			<result name="list">WEB-INF/pages/univer/issuer/order/ordermakecardmake/stockOrderMakeCardMakeList.jsp</result>
+   		</action>
+   		<!-- 制卡订单接收 -->
+   		<action name="stockOrderAcceptAction" class="stockOrderAcceptAction">
+   			<result name="list">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderAcceptList.jsp</result>
+   			<result name="makeCardList">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderMakeCardList.jsp</result>
+   			<result name="modifyCardState">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderCardStateEdit.jsp</result>
+			<result name="input">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderAcceptList.jsp</result>
+			<result name="blank">WEB-INF/pages/univer/issuer/order/orderaccept/blank.jsp</result>
+			<result name="checkCardInitSucc">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderCheckCard.jsp</result>
+			<result name="checkCardSucc">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderCheckCard.jsp</result>
+			<result name="endCheckCardSucc">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderCheckCard.jsp</result>
+   		<result name="input">WEB-INF/pages/univer/issuer/order/orderaccept/stockOrderCheckCard.jsp</result>
+   		</action>
+   		<action name="hadCheckCardForOrder" class="stockOrderAcceptAction" method="hadCheckCardForOrder">
+   		</action>
+   		<!-- 制卡订单准备 -->
+   		<action name="stockOrderReadyAction" class="stockOrderReadyAction">
+   			<result name="list">WEB-INF/pages/univer/issuer/order/orderready/stockOrderReadyList.jsp</result>
+   			<result name="orderListList">WEB-INF/pages/univer/issuer/order/orderready/stockOrderListList.jsp</result>
+   			<result name="stockList">WEB-INF/pages/univer/issuer/order/orderready/stockOrderStockList.jsp</result>
+			<result name="input">${errorJsp}</result>
+			<result name="blank">WEB-INF/pages/univer/issuer/order/blank.jsp</result>
+			<result name="choice">WEB-INF/pages/univer/issuer/order/orderready/loyaltyChoiceContract.jsp</result>
+   		</action>
+   	
+   		<!-- 制卡订单配送 -->
+   		<action name="stockOrderSendAction" class="stockOrderSendAction">
+   			<result name="list">WEB-INF/pages/univer/issuer/order/ordersend/stockOrderSendList.jsp</result>
+			<result name="input">WEB-INF/pages/univer/issuer/order/ordersend/stockOrderSendList.jsp</result>
+   		</action>
+   		
+   		<!-- 代发卡订单生成 -->
+   		<action name="loyaltyOrderAction" class="loyaltyOrderAction">
+   			<result name="choice">WEB-INF/pages/univer/issuer/order/orderready/loyaltyChoiceContract.jsp</result>
+			<result name="list">WEB-INF/pages/univer/issuer/order/orderready/stockOrderReadyList.jsp</result>
+   		</action>
+    </package>
+</struts>

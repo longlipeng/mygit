@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>                                                           
+    <package name="acqpay" extends="struts-global"  namespace="/acqpay">
+    	<global-results>
+    		<result name="list">/WEB-INF/pages/univer/issuer/acqpay/acqPayList.jsp</result>
+    		<result name="add">/WEB-INF/pages/univer/issuer/acqpay/acqPayAdd.jsp</result>
+    		<result name="choose">/WEB-INF/pages/univer/issuer/consumer/consumerChooseList.jsp</result>
+    		<result name="edit">/WEB-INF/pages/univer/issuer/acqpay/acqPayEdit.jsp</result>
+    		<result name="view">/WEB-INF/pages/univer/issuer/acqpay/acqPayView.jsp</result>
+    		<result name="chooseBank">/WEB-INF/pages/univer/issuer/acqpay/bankAddList.jsp</result>
+    		<result name="addSucess">/WEB-INF/pages/univer/seller/order/orderinput/sellorder/signorder/orderListSuccess.jsp</result>    		
+    	</global-results>
+       <action name="inquery" class="acqPayAction" method="inquery">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayList.jsp</result>
+         </action>
+          <action name="initAdd" class="acqPayAction" method="initAdd">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayList.jsp</result>
+         </action>
+          <action name="add" class="acqPayAction" method="add">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayAdd.jsp</result>
+         </action>
+         
+         <action name="chooseConsumer" class="acqPayAction" method="chooseConsumer">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayAdd.jsp</result>
+         </action>
+         <action name="selectProd" class="acqPayAction" method="selectProd">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayAdd.jsp</result>
+         </action>
+         <action name="reEdit" class="acqPayAction" method="reEdit">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayList.jsp</result>
+         </action>
+          <action name="edit" class="acqPayAction" method="edit">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayEdit.jsp</result>
+         </action>
+          <action name="delete" class="acqPayAction" method="delete">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayList.jsp</result>
+         </action>
+          <action name="view" class="acqPayAction" method="view">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayList.jsp</result>
+         </action>
+          <action name="chooseBank" class="acqPayAction" method="chooseBank">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/bankAddList.jsp</result>
+         </action>
+          <action name="addBank" class="acqPayAction" method="addBank">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/bankAddList.jsp</result>
+         </action>
+          <action name="delBank" class="acqPayAction" method="delBank">
+         	<result name="input">/WEB-INF/pages/univer/issuer/acqpay/acqPayEdit.jsp</result>
+         </action>
+    </package>
+</struts>

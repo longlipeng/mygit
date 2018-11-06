@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>	
+ 	<field name="posParameterDTO.prmDesc">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>不超过64位</message>
+        </field-validator>
+    </field>
+	<field name="posParameterDTO.prmId">
+		<field-validator type="required">
+			<message>请填写参数名称</message>
+		</field-validator>
+    </field>
+	 <field name="posParameterDTO.prmVersionInt">
+       <field-validator type="required">
+			<message>请填写5位内的正整数</message>
+		</field-validator>
+		<field-validator type="int">
+		<param name="min">1</param>
+		<param name="max">99999</param>
+		<message>请填写5位内的正整数</message>
+		</field-validator>	
+    </field> 
+ 	
+ 	
+</validators>

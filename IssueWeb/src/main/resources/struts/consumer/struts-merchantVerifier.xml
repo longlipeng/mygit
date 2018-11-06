@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="merchantverifier" extends="struts-global"
+		namespace="/merchantVerifier">
+		<global-results>
+			<result name="list">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierList.jsp
+			</result>
+			<result name="edit">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierEdit.jsp
+			</result>
+			<result name="view">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantDetail.jsp
+			</result>
+			<result name="viewVerifier">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierDetail.jsp
+			</result>
+			<result name="error">/commons/error.jsp</result>
+			<result name="addContact">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementAdd.jsp
+			</result>
+			<result name="editContact">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementEdit.jsp
+			</result>
+			<result name="viewContact">/WEB-INF/pages/contact/contactManagementDetail.jsp
+			</result>
+			<result name="addBank">/WEB-INF/pages/univer/entitybaseinfo/bank/bankMchtVerifierAdd.jsp
+			</result> 
+			<result name="editBank">/WEB-INF/pages/univer/entitybaseinfo/bank/edit.jsp</result>
+            <result name="blank">/WEB-INF/pages/univer/entitybaseinfo/blank.jsp
+			</result>
+		</global-results>
+
+		<action name="pass" class="merchantVerifierAction" method="pass">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierList.jsp
+			</result>
+		</action>
+		<action name="edit" class="merchantVerifierAction" method="edit">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierList.jsp
+			</result>
+		</action>
+		<action name="view" class="merchantVerifierAction" method="view">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierList.jsp
+			</result>
+		</action>
+		<action name="inquiry" class="merchantVerifierAction" method="inquiry">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierList.jsp
+			</result>
+		</action>
+
+		<action name="update" class="merchantVerifierAction" method="update">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierEdit.jsp
+			</result>
+		</action>
+		<action name="addContact" class="merchantVerifierAction"
+			method="addContact">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierEdit.jsp
+			</result>
+		</action>
+		<action name="insertContact" class="merchantVerifierAction"
+			method="insertContact">
+			<result name="input">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementAdd.jsp
+			</result>
+		</action>
+		<action name="editContact" class="merchantVerifierAction"
+			method="editContact">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierEdit.jsp
+			</result>
+		</action>
+		<action name="updateContact" class="merchantVerifierAction"
+			method="updateContact">
+			<result name="input">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementEdit.jsp
+			</result>
+		</action>
+		<action name="viewContact" class="merchantVerifierAction"
+			method="viewContact">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierList.jsp
+			</result>
+		</action>
+		<action name="deleteContact" class="merchantVerifierAction"
+			method="deleteContact">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierEdit.jsp
+			</result>
+		</action>
+		<action name="addBank" class="merchantVerifierAction" method="addBank">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierEdit.jsp
+			</result>
+		</action>
+		<action name="deleteBank" class="merchantVerifierAction"
+			method="deleteBank">
+			<result name="input">/WEB-INF/pages/univer/consumer/merchantVerifier/merchantVerifierEdit.jsp
+			</result>
+		</action>
+		<action name="insertBank" class="merchantVerifierAction"
+			method="insertBank">
+			<result name="input">/WEB-INF/pages/univer/entitybaseinfo/bank/bankManagementAdd.jsp
+			</result>
+		</action>
+		
+        <action name="updateBank" class="merchantVerifierAction" method="updateBank">
+          <result name="input">/WEB-INF/pages/univer/entitybaseinfo/bank/edit.jsp</result>
+        </action>
+        <action name="editBank" class="merchantVerifierAction" method="editBank">
+          <result name="input">/WEB-INF/pages/merchant/merchantManagementList.jsp</result>
+        </action>
+	</package>
+</struts>

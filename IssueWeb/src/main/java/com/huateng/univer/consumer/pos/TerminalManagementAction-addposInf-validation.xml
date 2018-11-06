@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>	
+	<field name="posInfoDTO.termId">
+	 	<field-validator type="requiredstring">
+			<message>终端号不能为空</message>
+		</field-validator>	
+		<field-validator type="regex">
+			<param name="expression"><![CDATA[[0-9]{8,8}$]]></param>  
+			<message>终端号必须是8位数字组成</message>
+		</field-validator>
+    </field>
+    	
+    <field name="posInfoDTO.termModel">
+ 		<field-validator type="requiredstring">
+			<message>终端型号不能为空</message>
+		</field-validator>		
+    </field>
+    
+ 	<field name="posInfoDTO.mchntId">
+ 		<field-validator type="requiredstring">
+			<message>商户号不能为空</message>
+		</field-validator>
+    </field>
+    
+ 	<field name="posInfoDTO.termOwner">
+ 		<field-validator type="requiredstring">
+ 			<message>终端持有者不能为空</message>
+ 		</field-validator>
+ 	</field>
+ 	
+ 	<field name="posInfoDTO.termBrandId">
+ 		<field-validator type="required">
+			<message>终端厂商不能为空</message>
+		</field-validator>
+    </field>
+ 	
+ 	
+ 	<field name="posInfoDTO.mchntName">
+ 		<field-validator type="requiredstring">
+			<message>商户名称不能为空</message>
+		</field-validator>
+    </field>
+ 	<field name="posInfoDTO.shopId">
+ 		<field-validator type="required">
+			<message>门店号不能为空</message>
+		</field-validator>
+    </field>
+ 	
+ 	<field name="posInfoDTO.maxTxnCntInt">
+ 		<field-validator type="required">
+			<message>必须是正整数(5位内)</message>
+		</field-validator>
+		<field-validator type="int">
+			<param name="min">1</param>
+			<param name="max">99999</param>
+			<message>必须是正整数(5位内)</message>
+		</field-validator>
+    </field>
+ 	
+</validators>

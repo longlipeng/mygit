@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+	"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<!-- 订单日期 -->
+	<field name="sellOrderDTO.orderDate">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>请输入订单日期!</message>
+		</field-validator>
+	</field>
+	<!-- 客户 -->
+	<field name="sellOrderDTO.firstEntityId">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>请输入客户! </message>
+		</field-validator>
+	</field>
+	<!-- 服务费 -->
+	<field name="sellOrderDTO.serviceFee">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>请输入服务费率</message>
+		</field-validator>
+		<field-validator type="regex" short-circuit="true">
+			<param name="expression">^(([1-9]{1}[0-9]{0,1})|([0]))([.]\d{1,2})?$</param>
+			<message>请输入小于等于100且最多两位小数!</message>
+		</field-validator>
+	</field>
+	<!-- 其他费用 -->
+	<field name="sellOrderDTO.additionalFee">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>请输入其他退回费用</message>
+		</field-validator>
+		<field-validator type="regex" short-circuit="true">
+			<param name="expression">^[0-9]+(.[0-9]{0,2})?$</param>
+			<message>请输入大于等于0且最多两位小数!</message>
+		</field-validator>
+	</field>
+	<!-- 销售人员 -->
+	<field name="sellOrderDTO.saleMan">
+		<field-validator type="requiredstring" short-circuit="true">
+			<message>请输入销售人员</message>
+		</field-validator>
+	</field>
+
+	<!-- 备注 -->
+	<field name="sellOrderDTO.memo">
+		<field-validator type="stringlength">
+			<param name="maxLength">500</param>
+			<message>500个字内</message>
+		</field-validator>
+	</field>
+</validators>	

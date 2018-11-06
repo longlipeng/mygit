@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+    default-autowire="byName"  >
+   	 <!-- 营销运营汇总表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.SellerSellSummaryAction" id="sellerSellSummaryAction"/> 
+<!-- 营销运营明细表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.SellerSellDetailAction" id="sellerSellDetailAction"/> 
+<!-- 收单运营汇总表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.ConsumerSellSummaryAction" id="consumerSellSummaryAction"/> 
+<!-- 收单运营明细表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.ConsumerSellDetailAction" id="consumerSellDetailAction"/> 
+<!-- 营销机构——发行运营汇总表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.SellerIssueSellSumAction" id="sellerIssueSellSumAction"/> 
+<!-- 营销机构——发行运营汇明细表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.SellerIssueSellDetailAction" id="sellerIssueSellDetailAction"/> 
+<!-- 营销机构收支平衡表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.IssueBalanceOfPaymentsAction" id="issueBalanceOfPaymentsAction"/>
+<!-- 发行机构——库存汇总表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.IssuerStockSumAction" id="issuerStockSumAction"/> 
+<!-- 发行机构——库存明细表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.IssuerStockDetailAction" id="issuerStockDetailAction"/> 
+<!-- 发行机构——库存流水表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.IssuerStockStreamAction" id="issuerStockStreamAction"/> 
+<!-- 预付卡充值充退报表 -->
+<bean scope="prototype" class="com.huateng.univer.issuer.report.CardRechargeAndChargebackAction" id="cardRechargeAndChargeback"/>
+<!--卡余额变动明细表-->
+<bean scope="prototype" class="com.huateng.univer.issuer.report.CardBalanceDetailAction" id="cardBalanceDetailAction"/>
+<!--卡余额报表-->
+<bean scope="prototype" class="com.huateng.univer.issuer.report.CardBalanceAction" id="cardBalanceAction"/>
+<!-- 资金沉淀 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.SedimentationFundsAction" id="sedimentationFundsAction"></bean>
+<!-- 资金沉淀汇总表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.FundSubsideSumAction" id="fundSubsideSumAction"/> 
+<!-- 资金沉淀明细表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.FundSubsideDetailAction" id="fundSubsideDetailAction"/>
+  <bean scope="prototype" class="com.huateng.univer.report.IreportAction" id="ireportAction"> </bean>	
+ <!-- 发行机构——卡余额汇总表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.IssuerCardValSumAction" id="issuerCardValSumAction"/> 
+ <!-- 发行机构——发卡情况汇总表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.IssuerCardSumAction" id="issuerCardSumAction"/> 
+ <!-- 卡实时库存查询报表 -->
+ <bean scope="prototype" class="com.huateng.univer.issuer.report.CurrentTimeStockAction" id="currentTimeStockAction"/>
+	 
+  <!-- 收单机构 -->
+	   
+	    <!-- 发行运营汇总表 -->
+   <bean id="issuerSellSummaryAction" class="com.huateng.univer.consumer.report.IssuerSellSummaryAction" scope="prototype">
+    </bean>
+    	<!-- 发行运营明细表 -->
+    <bean id="issuerSellDetailAction" class="com.huateng.univer.consumer.report.ConsumerIssuerDetailAction" scope="prototype">
+    </bean>
+        <!-- 与商户的运营汇总表 -->
+    <bean id="calculateWithMerchantAction" class="com.huateng.univer.consumer.report.CalculateWithMerchantAction" scope="prototype">
+    </bean>
+     	<!-- 与商户的运营明细表 -->
+    <bean id="calculateWithMerchantDetailAction" class="com.huateng.univer.consumer.report.CalculateWithMerchantDetailAction" scope="prototype">
+    </bean>
+    	<!--  POS机明细表 -->
+     <bean id="posDetailAction" class="com.huateng.univer.consumer.report.POSdetailAction" scope="prototype">
+    </bean>
+    <!-- 结算汇总表 -->
+    <bean id="monthSettleAction" class="com.huateng.univer.consumer.report.MonthSettleAction" scope="prototype">
+    </bean>
+     <!--营销运营报表  -->	
+	     <!-- 交易汇总表 -->
+     <bean id="tradeSummaryAction" class="com.huateng.univer.seller.report.tradeSummaryAction" scope="prototype">
+    </bean>
+    	 <!-- 交易明细报表 -->
+     <bean id="tradeDetailAction" class="com.huateng.univer.seller.report.tradeDetailAction" scope="prototype">
+    </bean>
+          <!--  库存汇总报表 -->
+     <bean id="warehouseSummaryAction" class="com.huateng.univer.seller.report.WarehouseSummaryAction" scope="prototype">
+    </bean>
+          <!-- 库存详细报表 -->
+      <bean id="warehouseDetailAction" class="com.huateng.univer.seller.report.WarehouseDetailAction" scope="prototype">
+    </bean>
+          <!-- 库存流水报表 -->
+      <bean id="warehouseFlowAction" class="com.huateng.univer.seller.report.WarehouseFlowAction" scope="prototype">
+    </bean>
+    <!-- 售卡明细报表 -->
+    <bean id="sellCardAction" class="com.huateng.univer.seller.report.SellCardAction" scope="prototype">
+    </bean>
+    <!-- 查询发行机构-->
+     <bean id="chooseIssuerAction" class="com.huateng.univer.seller.report.chooseIssuerAction" scope="prototype">
+    </bean>
+    <!-- 营销运营汇总表（营销机构） -->
+    <bean id="sellSummaryAction" class="com.huateng.univer.seller.report.SellSummaryAction" scope="prototype"></bean>
+    <!-- 订单号的查询 -->
+<!-- <bean scope="prototype" class="com.huateng.univer.issuer.report.OrderChooseAction" id="orderChooseAction"/>-->
+
+
+	<!-- 个人收支平衡报表-->
+     <bean id="issuePersonalBalanceOfPaymentsAction" class="com.huateng.univer.issuer.report.IssuePersonalBalanceOfPaymentsAction" scope="prototype">
+    </bean>
+    <!-- 卡消费明细报表  -->
+     <bean id="cardConsumptionDetailAction" class="com.huateng.univer.issuer.report.CardConsumptionDetailAction" scope="prototype">
+    </bean>
+    <!-- 商户结算明细报表 -->
+    <bean id="merchantSettlementDetailAction" class="com.huateng.univer.issuer.report.MerchantSettlementDetailAction" scope="prototype">
+    </bean>
+    <!-- 备付金余额报表 -->
+    <bean id="provisionsBanlanceAction" class="com.huateng.univer.issuer.report.ProvisionsBanlanceAction" scope="prototype">
+    </bean>
+    
+    <!-- 卡作废报表 -->
+    <bean id="cardInvalidIreportAction" class="com.huateng.univer.issuer.report.CardInvalidIreportAction" scope="prototype">
+    </bean>
+</beans>

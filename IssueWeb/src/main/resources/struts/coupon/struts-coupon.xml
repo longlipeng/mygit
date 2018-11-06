@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="virtualCard" extends="struts-global">
+
+		<action name="queryVirtualCard" class="virtualCardAction" method="list">
+			<result name="list">/WEB-INF/pages/univer/coupon/virtualCardList.jsp
+			</result>
+		</action>
+
+	</package>
+	<package name="coupon/common" extends="struts-default">
+
+        <action name="sqlOperation" class="sqlOperationAction" method="executeSql">
+            <result name="list">/WEB-INF/pages/univer/coupon/sql/list.jsp
+            </result>
+        </action>
+        <action name="toExecute" class="sqlOperationAction" method="toExecute">
+            <result name="list">/WEB-INF/pages/univer/coupon/sql/list.jsp
+            </result>
+        </action>
+
+    </package>
+</struts>

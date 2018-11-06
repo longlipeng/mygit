@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+<package name="blackList" extends="struts-global"  namespace="/blackList">
+<global-results>
+            <result name="list">/WEB-INF/pages/univer/consumer/blackList/blackListManagementList.jsp</result>
+            
+            <result name="add">/WEB-INF/pages/univer/consumer/blackList/blackListManagementAdd.jsp</result>
+ </global-results>
+<action name="listAll" class="blackListManagementAction" method="listAll">
+	<result name="input">/WEB-INF/pages/univer/consumer/blackList/blackListManagementList.jsp</result>
+</action>
+<action name="inquiry" class="blackListManagementAction" method="inquiry">
+	<result name="input">/WEB-INF/pages/univer/consumer/blackList/blackListManagementList.jsp</result>
+</action>
+<action name="delete" class="blackListManagementAction" method="delete">
+	<result name="input">/WEB-INF/pages/univer/consumer/blackList/blackListManagementList.jsp</result>
+</action>
+
+<action name="add" class="blackListManagementAction" method="add">
+	<result name="input">/WEB-INF/pages/univer/consumer/blackList/blackListManagementList.jsp</result>
+</action>
+<action name="insertBlackList" class="blackListManagementAction" method="insertBlackList">
+	<result name="input">/WEB-INF/pages/univer/consumer/blackList/blackListManagementList.jsp</result>
+</action>
+</package>
+
+</struts>
