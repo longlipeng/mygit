@@ -1,1 +1,0 @@
-DELETE FROM "SVC_MNG"."TB_SELL_ORDER" WHERE order_id = '-2222';
