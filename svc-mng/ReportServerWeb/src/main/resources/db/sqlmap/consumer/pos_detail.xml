@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="pos_detail">
+	<select id="pos_detail" resultClass="com.allinfinance.service.consumer.posDetail.dto.PosDetailDTO"
+		parameterClass="com.allinfinance.service.consumer.posDetail.dto.PosDetailDTO">
+
+select t.sys_seq_num "sysSeqNum",
+       TERM_BATCH_NO "termBatchNo",
+       TERM_ID "termId",
+       TERM_MODEL "termModel",
+       t1.brand_name "brandName",
+       t.mchnt_id "mchntId",
+       t2.merchant_name "mchntName",
+       t3.shop_id "shopId",
+       t3.shop_name "shopName",
+       t3.shop_telephone "telephone",
+       t3.shop_address "address",
+       decode(TERM_TRANS_FLAG,
+              'A',
+              'ADSL',
+              'C',
+              'CDMA',
+              'D',
+              'Dial up',
+              'G',
+              'GPRS',
+              'T',
+              'TCP/IP') as "termTrans"
+  from tb_pos_info t 
+        left join
+        tb_pos_brand_info t1 on t.TERM_BRAND_ID = t1.term_brand_id
+       left join
+        tb_shop t3 on t.shop_id = t3.shop_id, 
+        tb_merchant t2
+ where  t.mchnt_id = t2.merchant_code
+   and t2.merchant_state = 1
+   and t2.father_entity_id = #issuerId#
+   <dynamic>
+  	<isNotNull prepend="and" property="mchntId">
+  		t.mchnt_id like '%'||#mchntId:VARCHAR#||'%'
+  	</isNotNull>
+  	<isNotNull prepend="and" property="mchntName">
+  		t2.merchant_name like '%'||#mchntName:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="shopId">
+  		t3.shop_id like '%'||#shopId:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="shopName">
+  		t3.shop_name like '%'||#shopName:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="termId">
+  		TERM_ID like '%'||#termId:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="brandName">
+  		t1.brand_name like '%'||#brandName:VARCHAR#||'%'
+  	</isNotNull>
+   </dynamic>
+   AND t.DATA_STATE = 1
+union
+select ''   "sysSeqNum",
+       null "termBatchNo",
+       TERM_ID "termId",
+       TERM_MODEL "termModel",
+       t1.brand_name "brandName",
+       t.mchnt_id "mchntId",
+       t2.merchant_name "mchntName",
+       t3.shop_id "shopId",
+       t3.shop_name "shopName",
+       t3.shop_telephone "telephone",
+       t3.shop_address "address",
+       decode(TERM_TRANS_FLAG,
+              'A',
+              'ADSL',
+              'C',
+              'CDMA',
+              'D',
+              'Dial up',
+              'G',
+              'GPRS',
+              'T',
+              'TCP/IP') as "termTrans"
+  from tb_outer_pos_info t
+       left join
+       tb_pos_brand_info t1 on t.TERM_BRAND_ID = t1.term_brand_id
+       left join
+       tb_shop           t3 on t.shop_id = t3.shop_id,
+       tb_merchant       t2
+ where  t.mchnt_id = t2.merchant_code
+   and t2.merchant_state = 1
+   and t2.father_entity_id = #issuerId#
+   <dynamic>
+  	<isNotNull prepend="and" property="mchntId">
+  		t.mchnt_id like '%'||#mchntId:VARCHAR#||'%'
+  	</isNotNull>
+  	<isNotNull prepend="and" property="mchntName">
+  		t2.merchant_name like '%'||#mchntName:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="shopId">
+  		t3.shop_id like '%'||#shopId:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="shopName">
+  		t3.shop_name like '%'||#shopName:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="termId">
+  		TERM_ID like '%'||#termId:VARCHAR#||'%'
+  	</isNotNull>
+   <isNotNull prepend="and" property="brandName">
+  		t1.brand_name like '%'||#brandName:VARCHAR#||'%'
+  	</isNotNull>
+   </dynamic>      
+   AND t.DATA_STATE = 1
+
+	</select>
+</sqlMap>

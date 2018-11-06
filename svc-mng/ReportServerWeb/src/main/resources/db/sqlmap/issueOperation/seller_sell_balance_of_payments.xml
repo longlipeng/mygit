@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="issueBalanceOfPayments">
+	<select id="issueBalanceOfPayments"
+		resultClass="com.allinfinance.service.issueOperation.issueBalanceOfPayments.dto.IssueBalanceOfPaymentsDTO"
+		parameterClass="com.allinfinance.service.issueOperation.issueBalanceOfPayments.dto.IssueBalanceOfPaymentsDTO">
+	select 
+		entityId as entityId,
+		sellerName as sellerName,
+		orderPayAuditor as orderPayAuditor,
+		sum(cash) as cash,
+		sum(telegraph) as telegraph,
+		sum(cheque) as cheque,
+		sum(accountBalance) as accountBalance,
+		sum(bankCard) as bankCard,
+		sum(cash)+sum(telegraph)+sum(cheque)+sum(accountBalance)+sum(bankCard) as total
+		from
+		(
+			select 
+			ENTITY_ID as entityId,
+			SELLER_NAME as sellerName,
+			user_name as orderPayAuditor,
+			case PAYMENT_TYPE when '1' then sum/100 else 0 end as cash,
+			case PAYMENT_TYPE when '2' then sum/100 else 0 end as cheque,
+			case PAYMENT_TYPE when '3' then sum/100 else 0 end as accountBalance,
+			case PAYMENT_TYPE when '4' then sum/100 else 0 end as telegraph,
+			case PAYMENT_TYPE when '9' then sum/100 else 0 end as bankCard
+			from(
+				select t4.ENTITY_ID,t4.SELLER_NAME,t4.user_name,t4.PAYMENT_TYPE,sum(t4.PAYMENT_AMOUNT) sum
+				from
+				(
+					select
+					t1.PAYMENT_ID,t1.ORDER_ID,t1.PAYMENT_TYPE,t1.PAYMENT_AMOUNT,t2.USER_NAME,t5.ENTITY_ID,t5.SELLER_NAME
+					from
+					TB_SELL_ORDER_PAYMENT t1,
+					TB_SELL_ORDER t3,
+					TB_ENT_USER t2,
+					TB_SELLER t5
+					where t1.PAYMENT_TYPE in('1','2','3','4','9')
+					and t3.ORDER_ID = t1.ORDER_ID
+					and t3.PAYMENT_STATE in('1', '2')
+					and t1.DATA_STATE = '1'
+					and t2.USER_ID=t1.MODIFY_USER
+					and t3.PROCESS_ENTITY_ID = t5.ENTITY_ID
+					<isNotEmpty prepend="and" property="startDate">
+					substr(to_date(t1.CREATE_TIME, 'yyyyMMddhh24miss'),1,10) &gt;=
+					#startDate:varchar#	
+					</isNotEmpty>
+					<isNotEmpty prepend="and" property="endDate">
+					substr(to_date(t1.CREATE_TIME, 'yyyyMMddhh24miss'),1,10) &lt;=
+					#endDate:varchar#			
+					</isNotEmpty>
+					and t3.PROCESS_ENTITY_ID in
+						(
+						SELECT I.ENTITY_ID AS "entityId"
+						FROM  TB_SELLER I 
+						WHERE  I.DATA_STATE=1
+						  <dynamic>
+							<isNotEmpty prepend="and" property="issuerId">
+							  (I.ENTITY_ID =#issuerId:varchar# or I.FATHER_ENTITY_ID =#issuerId:varchar# or 
+							  I.FATHER_ENTITY_ID in(SELECT I.ENTITY_ID 
+													   FROM  TB_SELLER I 
+													   WHERE  I.DATA_STATE=1
+													   and I.FATHER_ENTITY_ID =#issuerId:varchar#))
+						   </isNotEmpty>
+						  </dynamic>
+						)
+					and t3.ORDER_TYPE not in ('10000006','10000005')
+				) t4
+				group by t4.ENTITY_ID,t4.SELLER_NAME,t4.user_name,t4.PAYMENT_TYPE
+			)
+		) group by entityId,sellerName,orderPayAuditor
+	</select>
+</sqlMap>

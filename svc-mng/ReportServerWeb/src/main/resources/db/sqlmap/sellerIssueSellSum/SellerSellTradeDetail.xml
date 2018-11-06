@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="tradeDetail">
+	<select id="tradeDetail" resultClass="com.allinfinance.service.sellOperation.sellerSellTradeDetail.dto.SellerSellTradeDetailDTO"
+		parameterClass="com.allinfinance.service.sellOperation.sellerSellTradeDetail.dto.SellerSellTradeDetailDTO">
+select
+	   
+       t4.entity_id as CUSTOMERID1,
+       t4.customer_name as customerName,
+       to_date(substr(t.modify_time, 1, 8), 'yyyyMMdd') as modifyTime,
+       t.order_id as orderId,
+       '销售记名卡订单' as orderType,
+       to_number(t.face_value / 100) as faceValue,
+       t1.product_name as productName,
+       t1.dict_name as onymousName,
+       decode(t.payment_state,2,'已确认',1, '已支付') as paymentState,
+       t11.dict_name as channel,
+       substr(t6.payDate,1,4)||'-'||substr(t6.payDate,5,2)||'-'||substr(t6.payDate,7,2) as payDate,
+       t5.bank_name,
+       t2.card_no,
+       t5.bank_account,
+       t7.contact_name,
+       t8.bank_name as fromBank,
+       t8.bank_account as fromBankAccount
+  from tb_sell_order t
+        left join
+        tb_entity_contact t7 on t7.contact_id = t.contact_id
+        left join
+        (		 
+        select t3.dict_name as dict_name,t9.order_id as order_id from tb_sell_order_payment t9
+        left join
+        (select td.dict_code, td.dict_name
+          from tb_dict_info td
+         where td.dict_type_code = '901'
+		 )t3
+         on t3.dict_code=t9.payment_type
+		 where t9.data_state = '1'
+        )t11 on t11.order_id=t.order_id
+        left join
+        tb_bank t5 on t.into_bank_id = t5.bank_id
+        left join
+        tb_bank t8 on t.from_bank_id=t8.bank_id,
+       (select tp.product_id, tp.product_name, td.dict_name
+          from tb_product tp
+               left join
+               tb_dict_info td on tp.onymous_stat = td.dict_code
+         where  td.dict_type_code = 816) t1,
+       tb_sell_order_card_list t2,
+       tb_customer t4,
+       (select sof.order_id,max(sof.MODIFY_TIME) as payDate from tb_sell_order_flow sof  where sof.ORDER_FLOW_NODE = '14' group by sof.order_id) t6
+ where t.product_id = t1.product_id
+   and t6.order_id=t.order_id
+   and t.order_id = t2.order_id
+   and t4.entity_id = t.first_entity_id
+   and t.order_type in (10000001,10000011,10000005)
+   and t.payment_state in(2,1)
+   and t.first_entity_id = #customerId#
+   and t.process_entity_id = #issuerId#
+   and to_date(substr(t6.payDate, 1, 8), 'yyyyMMdd') &gt;=
+       to_date(#startDate#, 'yyyy-MM-dd')
+   and to_date(substr(t6.payDate, 1, 8), 'yyyyMMdd') &lt;=
+        to_date(#endDate#, 'yyyy-MM-dd')
+union all
+select t4.entity_id as CUSTOMERID1,
+       t4.customer_name as customerName,
+       to_date(substr(t.modify_time, 1, 8), 'yyyyMMdd') as modifyTime,
+       t.order_id as orderId,
+       '销售不记名卡订单' as orderType,
+       to_number(t2.face_value / 100) as faceValue,
+       t1.product_name as productName,
+       t1.dict_name as onymousName,
+       decode(t.payment_state,2,'已确认',1, '已支付') as paymentState,
+       t11.dict_name as channel,
+       substr(t6.payDate,1,4)||'-'||substr(t6.payDate,5,2)||'-'||substr(t6.payDate,7,2) as payDate,
+       t5.bank_name,
+       t2.card_no,
+       t5.bank_account,
+       t7.contact_name,
+       t8.bank_name as fromBank,
+       t8.bank_account as fromBankAccount
+  from tb_sell_order t
+        left join
+        tb_entity_contact t7 on t7.contact_id = t.contact_id
+        left join
+        (		 
+        select t3.dict_name as dict_name,t9.order_id as order_id from tb_sell_order_payment t9
+        left join
+        (select td.dict_code, td.dict_name
+          from tb_dict_info td
+         where td.dict_type_code = '901')t3
+         on t3.dict_code=t9.payment_type
+		 where t9.data_state = '1'
+        )t11 on t11.order_id=t.order_id
+       left join
+       tb_bank t5 on t.into_bank_id = t5.bank_id
+      left join
+      tb_bank t8 on t.from_bank_id = t8.bank_id,
+       (select cl.order_id,ol.face_value,cl.card_no from tb_sell_order_card_list cl,tb_sell_order_list ol where cl.order_list_id=ol.order_list_id and cl.data_state=1) t2,
+       (select tp.product_id, tp.product_name, td.dict_name
+          from tb_product tp
+               left join
+              tb_dict_info td on tp.onymous_stat = td.dict_code
+         where  td.dict_type_code = 816) t1,
+       tb_customer t4,
+       (select sof.order_id,max(sof.MODIFY_TIME) as payDate from tb_sell_order_flow sof  where sof.ORDER_FLOW_NODE = '14' group by sof.order_id) t6
+ where t1.product_id = t.product_id
+   and t6.order_id=t.order_id
+   and t.order_id = t2.order_id
+   and t4.entity_id = t.first_entity_id
+   and t.payment_state in(2,1)
+   and t.order_type in (10000002,10000012,10000006)
+   and t.first_entity_id = #customerId#
+   and t.process_entity_id = #issuerId#
+   and to_date(substr(t6.payDate, 1, 8), 'yyyyMMdd') &gt;=
+       to_date(#startDate#, 'yyyy-MM-dd')
+   and to_date(substr(t6.payDate, 1, 8), 'yyyyMMdd') &lt;=
+      to_date(#endDate#, 'yyyy-MM-dd')
+union all
+select t5.entity_id as CUSTOMERID1,
+       t5.customer_name as customerName,
+       to_date(substr(t1.modify_time, 1, 8), 'yyyyMMdd') as modifyTime,
+       t1.order_id as orderId,
+       '充值订单' as orderType,
+       to_number(t2.credit_amount / 100) as creditAmount,
+       t3.product_name as productName,
+       t3.dict_name as onymousName,
+       decode(t1.payment_state,2,'已确认',1, '已支付') as paymentState,
+       t4.dict_name as channel,
+       substr(t7.payDate,1,4)||'-'||substr(t7.payDate,5,2)||'-'||substr(t7.payDate,7,2) as payDate,
+       t6.bank_name,
+       t2.card_no,
+       t6.bank_account,
+       t8.contact_name,
+       t9.bank_name as fromBank,
+       t9.bank_account as fromBankAccount
+  from tb_sell_order t1
+        left join
+       tb_entity_contact t8 on t8.contact_id = t1.contact_id
+	   left join 
+	   tb_sell_order_payment t10 on t10.order_id=t1.order_id 
+        left join
+       tb_bank t6 on t1.into_bank_id = t6.bank_id
+       left join
+       tb_bank t9 on t1.from_bank_id = t9.bank_id,
+       tb_sell_order_card_list t2,
+       (select tp.product_id, tp.product_name, td.dict_name
+          from tb_product tp
+                left join
+                tb_dict_info td on tp.onymous_stat = td.dict_code
+         where  td.dict_type_code = 816) t3,
+       (select td.dict_code,td.dict_name
+          from tb_dict_info td
+         where td.dict_type_code = '901') t4,
+       tb_customer t5,
+       (select sof.ORDER_ID,max(sof.MODIFY_TIME) as payDate from tb_sell_order_flow sof where sof.ORDER_FLOW_NODE = '14' group by sof.order_id) t7
+ where t1.product_id = t3.product_id
+   and t7.order_id=t1.order_id
+   and t1.ORDER_ID = t2.order_id
+   and t4.dict_code = t10.payment_type
+   and t5.entity_id = t1.first_entity_id
+   and t1.order_type = 10000003
+   and t1.order_state = 16
+   and t1.first_entity_id=#customerId#
+   and t1.PROCESS_ENTITY_ID=#issuerId#
+   and t2.data_state=1
+   and t10.data_state = '1'
+   and to_date(substr(t7.payDate,1,8),'yyyyMMdd')&gt;=to_date(#startDate#,'yyyy-MM-dd')
+   and to_date(substr(t7.payDate,1,8),'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+   and t1.payment_state in(2,1)
+	</select>
+</sqlMap>
