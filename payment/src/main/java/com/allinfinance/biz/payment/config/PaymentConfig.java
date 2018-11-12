@@ -25,6 +25,9 @@ public class PaymentConfig {
     @Value("${SPECIAL_CARDBIN}")
     private String specialCardBin;//特殊用途卡前五位
 
+    @Value("${NON_ASYNC_TERMINAL}")
+    private String nonAsyncTerminal;//无需支付异步通知终端号
+
     private static Logger logger = Logger.getLogger(PaymentConfig.class);
 
     public static List<String> LIST_CARD_BIN = null;
@@ -33,18 +36,21 @@ public class PaymentConfig {
 
     public static String SPECIAL_CARD_BIN;
 
+    public static List<String> NON_ASYNC_TERMINAL_LIST;
+
     //启动服务初始化必要参数
     @PostConstruct
     public void setListCardBin(){
-        LIST_CARD_BIN = Arrays.asList
-                (cxfCardBin.trim().split(","));
+        LIST_CARD_BIN = Arrays.asList(cxfCardBin.trim().split(","));
         logger.info("调用setListCardBin方法；初始化多用途卡前五位信息："+LIST_CARD_BIN.toString());
 
-        MULTI_AREA_CODE = Arrays.asList
-                (multiAreaCode.trim().split(","));
+        MULTI_AREA_CODE = Arrays.asList(multiAreaCode.trim().split(","));
         logger.info("调用setListCardBin方法；初始化多用途受理地区的地区码信息："+MULTI_AREA_CODE.toString());
 
         SPECIAL_CARD_BIN = specialCardBin;
         logger.info("调用setListCardBin方法；初始化特殊用途卡前五位信息："+SPECIAL_CARD_BIN);
+
+        NON_ASYNC_TERMINAL_LIST = Arrays.asList(nonAsyncTerminal.trim().split(","));
+        logger.info("调用setListCardBin方法；初始化无需支付异步通知终端号："+NON_ASYNC_TERMINAL_LIST.toString());
     }
 }

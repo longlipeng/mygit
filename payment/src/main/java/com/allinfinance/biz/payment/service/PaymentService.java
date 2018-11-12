@@ -79,6 +79,7 @@ public class PaymentService {
             paymentRespondInfo.setMsg("系统错误,支付失败");
             paymentRespondInfo.setResult("false");
         }
+
         if("true".equals(paymentRespondInfo.getResult())){//支付成功
 //            paymentRespondInfo.setResult("true");
             //开启异步通知线程
@@ -138,11 +139,14 @@ public class PaymentService {
             }catch (Exception e) {
                 logger.info(e.getMessage());
             }
-            /**
-             * POST请求参数，根据需要进行封装
-             */
-            logger.info("asyncNoticeInfo------------------------------>"+asyncNoticeInfo);
-            if(asyncNoticeInfo != null){
+
+            //判断终端号是否需要发送异步通知
+            boolean flag = isNeedAsync(paymentRequestInfo.getTerminal_sn());
+            logger.info("asyncNoticeInfo------------------------------>" + asyncNoticeInfo + ",flag:" + String.valueOf(flag));
+            if(asyncNoticeInfo != null && flag && (!StringUtils.isEmpty(paymentRequestInfo.getNotify_url()))){
+                /**
+                 * POST请求参数，根据需要进行封装
+                 */
                 Map<String, String> respondInfo = RSASignUtils.buildRequestPara(new PojoChangeToMap().pojoSwapToMap(asyncNoticeInfo), RSASignUtils.PRIVATEKEY);
 //                respondInfo.replace("+","\\+");
                 try {
@@ -157,7 +161,15 @@ public class PaymentService {
             /*if(!respond.equals("success")){
                 asyncNoticeThread(paymentRequestInfo, notifyUrl);
             }*/
+        }
 
+        //判断是否是多用途卡
+        private boolean isNeedAsync(String terminalSN){
+            //校验无需发送异步通知的终端号是否在配置中
+            if((!StringUtils.isEmpty(terminalSN)) && PaymentConfig.NON_ASYNC_TERMINAL_LIST.contains(terminalSN)){
+                    return false;
+            }
+            return true;
         }
     }
 }

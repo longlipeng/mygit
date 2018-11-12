@@ -8,7 +8,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 	
 	<rabbit:connection-factory id="connectionFactory" username="guest" password="guest"
-	    addresses="10.250.3.84:5672,10.250.3.85:5672" />
+	    addresses="10.131.19.173:5672" />
 
 	<rabbit:admin connection-factory="connectionFactory" auto-startup="true"/>
 

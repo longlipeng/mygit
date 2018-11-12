@@ -18,6 +18,7 @@ public class AsyncNoticeInfo{
     private String payment_time;//该笔交易完成的时间。格式为yyyy-MM-dd HH:mm:ss
     private String tran_code;
     private String channel;//渠道信息
+    private String terminal_sn;//终端
     private String card_no;//礼品卡卡号
 
     public String getChannel() {
@@ -133,7 +134,15 @@ public class AsyncNoticeInfo{
         this.card_no = card_no;
     }
 
-	@Override
+    public String getTerminal_sn() {
+        return terminal_sn;
+    }
+
+    public void setTerminal_sn(String terminal_sn) {
+        this.terminal_sn = terminal_sn;
+    }
+
+    @Override
 	public String toString() {
 		return "AsyncNoticeInfo [notify_time=" + notify_time + ", app_id=" + app_id + ", charset=" + charset
 				+ ", sign_type=" + sign_type + ", sign=" + sign + ", trade_no=" + trade_no + ", out_trade_no="
