@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+			<!-- 分行内部账户号维护 -->
+	<bean id="T80208BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.settle.T80208BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T80208BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T80208BOTarget" class="com.huateng.bo.impl.settle.T80208BOTarget">
+		<property name="tblBrhAcctDAO">
+			<ref bean="TblBrhAcctDAO"/>
+		</property>
+	</bean>
+	
+	<bean id="TblBrhAcctDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.settle.TblBrhAcctDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblBrhAcctDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblBrhAcctDAOTarget" class="com.huateng.dao.impl.settle.TblBrhAcctDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!--批量处理
+    <bean id="qryBatMainAction" class="com.huateng.struts.settle.action.QryBatMainAction" singleton="false">
+        <property name="batMainBO">
+            <ref bean="batMainBO"/>
+        </property>
+    </bean>-->
+    
+    
+    <!-- MCHNT ALL -->
+	<bean id="TblSettleService" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.impl.settle.TblSettleService</value>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+				<value>TblSettleServiceTarget</value>
+			</list>
+		</property>
+	</bean>
+	<!-- MCHNT TARGET-->
+	<bean id="TblSettleServiceTarget" class="com.huateng.bo.impl.settle.TblSettleServiceImpl">
+		<property name="tblInfileOptDAO">
+			<ref bean="tblInfileOptDAO" />
+		</property>
+	</bean>
+	<!-- MCHNT DAO -->
+	<bean id="tblInfileOptDAO" class="com.huateng.dao.TblInfileOptDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 冻结商户维护 -->
+	<bean id="T80402BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.settle.T80402BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T80402BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T80402BOTarget" class="com.huateng.bo.impl.settle.T80402BOTarget">
+		<property name="tblFrozenAccInfDAO">
+			<ref bean="TblFrozenAccInfDAO" />
+		</property>
+	</bean>
+	<bean id="TblFrozenAccInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.settle.TblFrozenAccInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblFrozenAccInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblFrozenAccInfDAOTarget" class="com.huateng.dao.impl.settle.TblFrozenAccInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 商户划款表维护 -->
+	<bean id="T80224BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.settle.T80224BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T80224BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T80224BOTarget" class="com.huateng.bo.impl.settle.T80224BOTarget">
+		<property name="tblMchtSumrzInfDAO">
+			<ref bean="TblMchtSumrzInfDAO"/>
+		</property>
+	</bean>
+	
+	<bean id="TblMchtSumrzInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.settle.TblMchtSumrzInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblMchtSumrzInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblMchtSumrzInfDAOTarget" class="com.huateng.dao.impl.settle.TblMchtSumrzInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!--客户赎回信息-->
+	<bean id="T80601BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.settle.T80601BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T80601BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T80601BOTarget" class="com.huateng.bo.impl.settle.T80601BOTarget">
+		<property name="tblSettleRedempInfDAO">
+			<ref bean="TblSettleRedempInfDAO"/>
+		</property>
+	</bean>
+	
+	<bean id="TblSettleRedempInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.settle.TblSettleRedempInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblSettleRedempInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblSettleRedempInfDAOTarget" class="com.huateng.dao.impl.settle.TblSettleRedempInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+</beans>

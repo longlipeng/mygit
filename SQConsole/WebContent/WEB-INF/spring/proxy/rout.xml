@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 路由信息 -->
+	<bean id="TblRoutingDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.rout.TblRoutingDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRoutingDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRoutingDAOTarget" class="com.huateng.dao.impl.rout.TblRoutingDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T11011BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.rout.T11011BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11011BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11011BOTarget" class="com.huateng.bo.impl.rout.T11011BOTarget">
+		<property name="tblRoutingDAO">
+			<ref bean="TblRoutingDAO" />
+		</property>		
+	</bean>
+	
+	<!-- 审核路由信息 -->
+	<bean id="TblRouteInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.rout.TblRouteInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRouteInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRouteInfDAOTarget" class="com.huateng.dao.impl.rout.TblRouteInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T11012BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.rout.T11012BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11012BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11012BOTarget" class="com.huateng.bo.impl.rout.T11012BOTarget">
+		<property name="tblRouteInfDAO">
+			<ref bean="TblRouteInfDAO" />
+		</property>		
+	</bean>
+	
+	<!-- 路由切换信息 -->
+	<bean id="TblRouteChgInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.rout.TblRouteChgInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRouteChgInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRouteChgInfDAOTarget" class="com.huateng.dao.impl.rout.TblRouteChgInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T11014BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.rout.T11014BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11014BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11014BOTarget" class="com.huateng.bo.impl.rout.T11014BOTarget">
+		<property name="tblRouteChgInfDAO">
+			<ref bean="TblRouteChgInfDAO" />
+		</property>		
+	</bean>
+	
+		<!-- 终端通道配置信息临时表 -->
+	<bean id="TblTermChannelInfTmpDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.rout.TblTermChannelInfTmpDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblTermChannelInfTmpDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblTermChannelInfTmpDAOTarget" class="com.huateng.dao.impl.rout.TblTermChannelInfTmpDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T11015BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.rout.T11015BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11015BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11015BOTarget" class="com.huateng.bo.impl.rout.T11015BOTarget">
+		<property name="tblTermChannelInfTmpDAO">
+			<ref bean="TblTermChannelInfTmpDAO" />
+		</property>		
+	</bean>
+	
+	<!-- 终端通道配置信息 -->
+	<bean id="TblTermChannelInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.rout.TblTermChannelInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblTermChannelInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblTermChannelInfDAOTarget" class="com.huateng.dao.impl.rout.TblTermChannelInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T11018BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.rout.T11018BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11018BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11018BOTarget" class="com.huateng.bo.impl.rout.T11018BOTarget">
+		<property name="tblTermChannelInfDAO">
+			<ref bean="TblTermChannelInfDAO" />
+		</property>		
+	</bean>
+	
+	<!-- 交行终端通道配置信息 -->
+	<bean id="TblTermChannelInf2DAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.rout.TblTermChannelInf2DAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblTermChannelInf2DAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblTermChannelInf2DAOTarget" class="com.huateng.dao.impl.rout.TblTermChannelInf2DAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T11020BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.rout.T11020BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11020BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11020BOTarget" class="com.huateng.bo.impl.rout.T11020BOTarget">
+		<property name="tblTermChannelInf2DAO">
+			<ref bean="TblTermChannelInf2DAO" />
+		</property>		
+	</bean>
+</beans>

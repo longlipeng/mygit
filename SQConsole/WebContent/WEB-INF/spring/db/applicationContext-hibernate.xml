@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">	
+			<value>classpath:jdbc.properties</value>
+		</property>
+	</bean>
+<!-- 	<bean id="propertyConfigurer" -->
+<!-- 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"> -->
+<!-- 		<property name="location"> -->
+<!-- 			<value>classpath:jdbc.properties</value> -->
+<!-- 		</property> -->
+<!-- 		<property name="ignoreUnresolvablePlaceholders" value="true" /> -->
+<!-- 	</bean> -->
+<!-- 	<bean id="dataSource" -->
+<!-- 	class="org.apache.commons.dbcp.BasicDataSource"> -->
+<!-- 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> -->
+<!-- 		<property name="url" value="jdbc:oracle:thin:@10.250.5.55:12521:posp"/> -->
+<!-- 		<property name="username" value="posp"/> -->
+<!-- 		<property name="password" value="posp"/> -->
+<!-- 	</bean> -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"> 
+		<property name="driverClassName">
+			<value>${jdbc.oracle.driverClassName}</value>
+		</property> 
+		<property name="url">
+		 	<value>${jdbc.oracle.url}</value>
+		</property> 
+		<property name="username">
+		 	<value>${jdbc.oracle.username}</value> 
+		</property> 
+		<property name="password"> 
+			<value>${jdbc.oracle.password}</value>
+		</property>
+	</bean>
+	
+	<!-- 针对查询连接池 -->
+	<bean id="dataSourceQuery" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"> 
+		<property name="driverClassName">
+			<value>${jdbc.oracle.driverClassName}</value>
+		</property> 
+		<property name="url">
+		 	<value>${jdbc.oracle.url}</value>
+		</property> 
+		<property name="username">
+		 	<value>${jdbc.oracle.username}</value> 
+		</property> 
+		<property name="password"> 
+			<value>${jdbc.oracle.password}</value>
+		</property>
+		<property name="maxActive">
+			<value>8</value>
+		</property>
+		<property name="minIdle">
+			<value>1</value>
+		</property>
+	</bean>
+	
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					com.huateng.hibernate.dialect.OracleDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.query.factory_class">
+					org.hibernate.hql.classic.ClassicQueryTranslatorFactory
+				</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.jdbc.batch_size">50</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<!-- 系统 -->
+				<value>hbm/system/TblFuncInf.hbm.xml</value>
+				<value>hbm/system/TblRoleInf.hbm.xml</value>
+				<value>hbm/system/TblRoleFuncMap.hbm.xml</value>
+				<value>hbm/system/TblTxnInfo.hbm.xml</value>
+				<!-- 基本信息管理 -->
+				<value>hbm/base/TblOprInfo.hbm.xml</value>
+				<value>hbm/base/TblBrhInfo.hbm.xml</value>
+				<value>hbm/base/CstSysParam.hbm.xml</value>
+				<value>hbm/base/TblCityCode.hbm.xml</value>
+				<value>hbm/base/TblBankBinInf.hbm.xml</value>
+				<value>hbm/base/TblBrhTlrInfo.hbm.xml</value>
+				<value>hbm/base/TblTxnName.hbm.xml</value>
+				<value>hbm/base/TblEmvPara.hbm.xml</value>
+				<value>hbm/base/SettleDocInfo.hbm.xml</value>
+				<value>hbm/base/TxnModel.hbm.xml</value>
+				<value>hbm/base/TxnModelOnly.hbm.xml</value>
+				<value>hbm/base/TblRespCodeInfo.hbm.xml</value>
+				<value>hbm/base/TblHolidays.hbm.xml</value>
+				<value>hbm/base/TblIssueBranchInf.hbm.xml</value>
+				<value>hbm/base/TblAgentInfo.hbm.xml</value>
+				<value>hbm/base/TblAgentFee.hbm.xml</value>
+				<value>hbm/base/TblAgentFeeTmp.hbm.xml</value>
+				<value>hbm/base/TblAgentFeeRefuseInfo.hbm.xml</value>
+				<value>hbm/base/TblAgentDivide.hbm.xml</value>
+				<value>hbm/base/TblAgentDivideTmp.hbm.xml</value>
+				<value>hbm/base/TblInstBdbBankCodeTmp.hbm.xml</value>
+				<value>hbm/base/TblInstBdbBankCode.hbm.xml</value>
+				<!-- 机构信息详细查询 -->
+				<value>hbm/base/AgencyFeeLub.hbm.xml</value>
+				<value>hbm/base/AgencyFeeLubTmp.hbm.xml</value>
+				<value>hbm/base/AgencyInfo.hbm.xml</value>
+				<value>hbm/base/TblCityCodeCode.hbm.xml</value>
+				<value>hbm/base/Type.hbm.xml</value>
+				<value>hbm/base/TblAuitStatus.hbm.xml</value>
+				<!-- 机构分润查询 -->
+				<value>hbm/base/TblTradeCode.hbm.xml</value>
+				<!-- 机构信息审核 -->
+				<value>hbm/base/AgencyInfoTrue.hbm.xml</value>
+				<value>hbm/base/TblRespCodeInfoTrue.hbm.xml</value>
+				<value>hbm/base/TblRspCodeMap.hbm.xml</value>
+				<!-- 分公司 -->
+				<value>hbm/base/TblBranchManage.hbm.xml</value>
+				<value>hbm/base/TblBranchManageTrue.hbm.xml</value>
+				<!-- 签到 -->
+				<value>hbm/base/TblAttendanceBrh.hbm.xml</value>
+				<!-- 商户管理 -->
+				<value>hbm/mchnt/TblMchtBaseBusiRange.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtBeneficiaryInf.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtBeneficiaryInfTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblHisDiscAlgo2Tmp.hbm.xml</value>
+			    <value>hbm/mchnt/TblMchtBaseInf.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtBaseInfTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtSettleInf.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtSettleInfTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblMerRoleFuncMap.hbm.xml</value>				
+				<value>hbm/mchnt/TblInfMchntTp.hbm.xml</value>
+				<value>hbm/mchnt/TblInfMchntTpGrp.hbm.xml</value>
+				<value>hbm/mchnt/TblDivMchnt.hbm.xml</value>
+				<value>hbm/mchnt/TblDivMchntTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblMchntRefuse.hbm.xml</value>	
+				<value>hbm/mchnt/CstMchtFeeInf.hbm.xml</value>		
+				<value>hbm/mchnt/CstMchtFeeInfTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtBranInf.hbm.xml</value>		
+				<value>hbm/mchnt/TblGroupMchtInf.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtAcctInf.hbm.xml</value>
+				<value>hbm/mchnt/TblInfDiscCd.hbm.xml</value>
+				<value>hbm/mchnt/TblHisDiscAlgo.hbm.xml</value>
+				<value>hbm/mchnt/TblMchntLogs.hbm.xml</value>
+				<value>hbm/mchnt/TblDefMchtInf.hbm.xml</value>
+				<value>hbm/mchnt/TblDefTermInf.hbm.xml</value>
+				<!-- 入网商户管理-->
+				<value>hbm/mchnt/TblMchtNetTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtNet.hbm.xml</value>
+				
+				<!-- 终端管理 -->
+				<value>hbm/pos/TblTermInf.hbm.xml</value>
+				<value>hbm/pos/TblTermInfTmp.hbm.xml</value>
+				<value>hbm/pos/TblTermTmkLog.hbm.xml</value>
+                <value>hbm/pos/TblTermRefuse.hbm.xml</value>
+                <!-- 终端库存-->
+                <value>hbm/pos/TblTermManagement.hbm.xml</value>
+				<!-- 风险控制 -->
+				<value>hbm/risk/TblRiskInf.hbm.xml</value>
+				<value>hbm/risk/TblRiskInfUpdLog.hbm.xml</value>
+				<value>hbm/risk/TblCtlCardInf.hbm.xml</value>
+				<value>hbm/risk/TblCtlMchtInf.hbm.xml</value>
+				<value>hbm/risk/TblCnpcCardInf.hbm.xml</value>
+				<value>hbm/risk/TblRiskMchtTranCtl.hbm.xml</value>
+				<value>hbm/risk/TblRiskRefuse.hbm.xml</value>
+				<value>hbm/risk/TblRiskMchtTranLimit.hbm.xml</value>
+				<value>hbm/risk/TblRiskTermTranLimit.hbm.xml</value>
+				<value>hbm/risk/TblWhiteList.hbm.xml</value>
+				<value>hbm/risk/TblWhiteListTmp.hbm.xml</value>
+				<!-- 差错控制 -->
+				<value>hbm/error/BthErrRegistTxn.hbm.xml</value>				 
+				<value>hbm/error/TblManualReturn.hbm.xml</value>
+				<value>hbm/error/TblChangeAccInfTmp.hbm.xml</value>
+				<value>hbm/error/TblChangeAccInf.hbm.xml</value>
+				<value>hbm/error/TblChangeAccInfRefuse.hbm.xml</value>
+				<!--路由信息维护-->
+				<value>hbm/rout/TblRouteInfo.hbm.xml</value>
+				<value>hbm/rout/TblRouteInfoTemp.hbm.xml</value>
+				<value>hbm/rout/TblRouteChgInf.hbm.xml</value>
+				<!--终端通道信息维护-->
+				<value>hbm/rout/TblTermChannelInf.hbm.xml</value>
+				<value>hbm/rout/TblTermChannelInfTmp.hbm.xml</value>
+				<value>hbm/rout/TblTermChannelInf2.hbm.xml</value>
+				<!-- 分行内部账户 -->
+				<value>hbm/settle/TblBrhAcct.hbm.xml</value>
+				<value>hbm/settle/TblInfileOpt.hbm.xml</value>
+				<value>hbm/settle/TblFrozenAccInf.hbm.xml</value>
+				<value>hbm/settle/TblMchtSumrzInf.hbm.xml</value>
+				<!--赎回信息-->
+				<value>hbm/settle/TblSettleRedempTionInf.hbm.xml</value>
+				<value>hbm/settle/TblSettleRedempTionInfTmp.hbm.xml</value>
+				<!--商户备款信息-->
+				<value>hbm/reserve/TblMchtSettleReserve.hbm.xml</value>
+				<value>hbm/reserve/TblMchtSettleReserveTmp.hbm.xml</value>
+				<value>hbm/reserve/TblFocusReserve.hbm.xml</value>
+				<value>hbm/reserve/TblPaymentReserve.hbm.xml</value>
+				<!--白名单信息-->
+				<value>hbm/reserve/TblSettleRosterInfTmp.hbm.xml</value>
+				<value>hbm/reserve/TblSettleRosterInf.hbm.xml</value>
+				<!--人行备付金余额查询-->
+				<value>hbm/reserve/TblBalanceReserveQuery.hbm.xml</value>
+				<!-- 商户服务-->
+				<value>hbm/mchtSrv/TblProfessionalOrgan.hbm.xml</value>
+				<value>hbm/mchtSrv/TblPaperDefInf.hbm.xml</value>
+				<value>hbm/mchtSrv/TblPaperOptInf.hbm.xml</value>
+				<value>hbm/mchtSrv/TblPaperSelInf.hbm.xml</value>
+				<value>hbm/mchtSrv/TblMarketAct.hbm.xml</value>
+				<value>hbm/mchtSrv/TblMarketActReview.hbm.xml</value>
+				<value>hbm/mchtSrv/TblMchntParticipat.hbm.xml</value>
+				<value>hbm/mchtSrv/TblMchntParticipatReview.hbm.xml</value>
+				<!-- 事前风险控制 -->
+				<value>hbm/risk/RiskBefore.hbm.xml</value>
+				<!-- 事后风险控制 -->
+				<value>hbm/risk/CstAfterRuleInf.hbm.xml</value>
+ 				<!-- 差错信息维护 -->
+				<value>hbm/error/BthCupErrTxn.hbm.xml</value>
+				<value>hbm/error/TblAlgoDtl.hbm.xml</value>
+				<value>hbm/error/TblAlgoDtlCheck.hbm.xml</value>
+				<!-- 补电子现金消费 -->
+				<value>hbm/error/TblElecCashInf.hbm.xml</value>
+				<value>hbm/error/TblElecCashInfTmp.hbm.xml</value>
+				<!-- 事中风险控制 -->
+				<!-- 黑名单交易渠道 -->
+				<value>hbm/risk/TblRiskChlTranCtl.hbm.xml</value>
+ 				<!-- 渠道交易权限 -->
+                <value>hbm/risk/TblRiskChlTranLimit.hbm.xml</value>
+ 				<!-- 终端交易限额 -->
+                <value>hbm/pos/CstTermFeeIn.hbm.xml</value>
+				 <!--终端交易限额真是表  -->
+				 <value>hbm/pos/CstTermFeeInTrue.hbm.xml</value>
+				 <!--商户手续费规则  -->
+				 <value>hbm/mchnt/TblHisDiscAlgo1.hbm.xml</value>
+ 				 <value>hbm/mchnt/TblHisDiscAlgo1Tmp.hbm.xml</value>
+ 				 
+				 <!-- 商户，交易，终端挂账 -->
+                <value>hbm/error/TblMchtHang.hbm.xml</value>
+                <value>hbm/error/TBLTermHang.hbm.xml</value>
+                <value>hbm/error/TblTransHang.hbm.xml</value>
+                <value>hbm/mchnt/TblHisDiscAlgoTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblInfDiscCdTmp.hbm.xml</value>
+				
+				<value>hbm/mchnt/TblMchtSupp1.hbm.xml</value>
+				<value>hbm/mchnt/TblMchtSupp1Tmp.hbm.xml</value>
+ 				</list>
+		</property>
+	</bean>
+	
+	<bean id="sessionFactoryQuery"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref local="dataSourceQuery" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					com.huateng.hibernate.dialect.OracleDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.query.factory_class">
+					org.hibernate.hql.classic.ClassicQueryTranslatorFactory
+				</prop>
+				<prop key="hibernate.jdbc.fetch_size">50</prop>
+				<prop key="hibernate.jdbc.batch_size">50</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>hbm/system/TblFuncInf.hbm.xml</value>
+				<value>hbm/system/TblRoleFuncMap.hbm.xml</value>
+				<value>hbm/mchnt/TblDivMchnt.hbm.xml</value>
+				<value>hbm/mchnt/TblDivMchntTmp.hbm.xml</value>
+				<value>hbm/mchnt/TblMchntRefuse.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!--Transaction -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+		<property name="beanNames">
+			<list>
+				<value>*Target</value>
+                <value>*BO</value>
+                <value>*Service</value>
+			</list>
+		</property>
+		<property name="interceptorNames">
+			<list>
+				<value>transactionInterceptor</value>
+			</list>
+		</property>
+	</bean>
+</beans>

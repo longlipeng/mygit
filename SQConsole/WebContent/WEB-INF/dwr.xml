@@ -1,0 +1,80 @@
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr/dwr20.dtd">
+<dwr>
+	<allow>
+		<!--下拉列表数据-->
+		<create creator="new" javascript="SelectOptionsDWR" scope="request">
+			<param name="class" value="com.huateng.dwr.system.SelectOptionsDWR" />
+		</create>
+		<!--授权管理-->
+		<create creator="new" javascript="AuthoriseDwr" scope="request">
+			<param name="class" value="com.huateng.dwr.system.AuthoriseDwr" />
+		</create>
+		<!--图表数据-->
+		<create creator="new" javascript="ChartUtilDWR" scope="request">
+			<param name="class" value="com.huateng.dwr.system.ChartUtilDWR" />
+		</create>
+        <!--终端管理-->
+        <create creator="new" javascript="T30101" scope="request">
+            <param name="class" value="com.huateng.dwr.term.T30101" />
+        </create>
+         <!--银联密钥重置-->
+        <create creator="new" javascript="ResetCup" scope="request">
+            <param name="class" value="com.huateng.dwr.term.ResetCup" />
+        </create>
+		<!--商户管理-->
+		<create creator="new" javascript="T20101" scope="request">
+			<param name="class" value="com.huateng.dwr.mchnt.T20101" />
+		</create>
+		<!--新增商户-->
+		<create creator="new" javascript="T20100" scope="request">
+			<param name="class" value="com.huateng.dwr.mchnt.T20100" />
+		</create>
+		<!--新增机构-->
+		<create creator="new" javascript="T10106" scope="request">
+			<param name="class" value="com.huateng.dwr.mchnt.T10106" />
+		</create>
+		<!--商户黑名单管理-->
+		<create creator="new" javascript="T40202" scope="request">
+			<param name="class" value="com.huateng.dwr.risk.T40202" />
+		</create>
+		<!--终端交易权限管理-->
+		<create creator="new" javascript="T40216" scope="request">
+			<param name="class" value="com.huateng.dwr.risk.T40216" />
+		</create>
+		<!--动态转译-->
+		<create creator="new" javascript="RemoteTransDWR" scope="request">
+			<param name="class" value="com.huateng.dwr.mchnt.RemoteTransDWR" />
+		</create>
+		<!--清算对账-->
+		<create creator="new" javascript="HandleOfBatch" scope="request">
+			<param name="class" value="com.huateng.dwr.settle.HandleOfBatch" />
+		</create>
+		<create creator="new" javascript="T80205" scope="request">
+			<param name="class" value="com.huateng.dwr.settle.T80205" />
+		</create>
+		
+		<!--商户问卷-->
+		<create creator="new" javascript="T70101" scope="request">
+			<param name="class" value="com.huateng.dwr.mchtSrv.T70101" />
+		</create>
+		<create creator="new" javascript="T70102" scope="request">
+			<param name="class" value="com.huateng.dwr.mchtSrv.T70102" />
+		</create>
+		<create creator="new" javascript="T70104" scope="request">
+			<param name="class" value="com.huateng.dwr.mchtSrv.T70104" />
+		</create>
+		<!--商户营销活动-->
+		<create creator="new" javascript="T70200" scope="request">
+			<param name="class" value="com.huateng.dwr.mchtSrv.T70200" />
+		</create>
+		<!--加解密类-->
+		<create creator="new" javascript="EncryptUtils" scope="request">
+			<param name="class" value="com.huateng.system.util.EncryptUtils" />
+		</create>
+		<!-- 商户MCC -->
+		<create creator="new" javascript="T20402" scope="request">
+			<param name="class" value="com.huateng.dwr.mchnt.T20402" />
+		</create>
+		<convert match="as.huateng.po.management.mer.TblMchtBaseInf" converter="bean" />
+	</allow>
+</dwr>

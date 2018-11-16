@@ -1,0 +1,406 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 设置风险模型 -->
+	<bean id="T40101BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40101BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40101BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40101BOTarget" class="com.huateng.bo.impl.risk.T40101BOTarget">
+		<property name="tblRiskInfDAO">
+			<ref bean="TblRiskInfDAO" />
+		</property>
+		<property name="tblRiskInfUpdLogDAO">
+			<ref bean="TblRiskInfUpdLogDAO" />
+		</property>
+	</bean>
+	<bean id="TblRiskInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>riskInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="riskInfDAOTarget" class="com.huateng.dao.impl.risk.TblRiskInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="TblRiskInfUpdLogDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskInfUpdLogDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>riskInfUpdLogDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="riskInfUpdLogDAOTarget" class="com.huateng.dao.impl.risk.TblRiskInfUpdLogDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 卡黑名单管理 -->
+	<bean id="T40201BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40201BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40201BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40201BOTarget" class="com.huateng.bo.impl.risk.T40201BOTarget">
+		<property name="tblCtlCardInfDAO">
+			<ref bean="TblCtlCardInfDAO" />
+		</property>
+	</bean>
+	<bean id="TblCtlCardInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblCtlCardInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblCtlCardInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblCtlCardInfDAOTarget" class="com.huateng.dao.impl.risk.TblCtlCardInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 卡黑名单审核 -->
+	<bean id="T40206BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40206BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40206BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40206BOTarget" class="com.huateng.bo.impl.risk.T40206BOTarget">
+		<property name="tblCtlCardInfDAO">
+			<ref bean="TblCtlCardInfDAO" />
+		</property>
+		<property name="tblRiskRefuseDAO">
+			<ref bean="TblRiskRefuseDAO" />
+		</property>
+	</bean>
+	<bean id="TblRiskRefuseDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskRefuseDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRiskRefuseDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRiskRefuseDAOTarget" class="com.huateng.dao.impl.risk.TblRiskRefuseDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 商户黑名单管理 -->
+	<bean id="T40202BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40202BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40202BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40202BOTarget" class="com.huateng.bo.impl.risk.T40202BOTarget">
+		<property name="tblCtlMchtInfDAO">
+			<ref bean="TblCtlMchtInfDAO" />
+		</property>
+	</bean>
+	<bean id="TblCtlMchtInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblCtlMchtInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblCtlMchtInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblCtlMchtInfDAOTarget" class="com.huateng.dao.impl.risk.TblCtlMchtInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 中石油黑名单卡管理 -->
+	<bean id="T40601BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40601BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40601BOTarget</value>
+		</property>
+	</bean>                                
+	<bean id="T40601BOTarget" class="com.huateng.bo.impl.risk.T40601BOTarget">
+		<property name="tblCnpcMchtInfDAO">
+			<ref bean="TblCnpcMchtInfDAO" />
+		</property>
+	</bean>
+	<bean id="TblCnpcMchtInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblCnpcMchtInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblCnpcMchtInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblCnpcMchtInfDAOTarget" class="com.huateng.dao.risk.TblCnpcMchtInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 商户白名单管理 -->
+	<bean id="T41201BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T41201BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T41201BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T41201BOTarget" class="com.huateng.bo.impl.risk.T41201BOTarget">
+		<property name="tblWhiteListDAO">
+			<ref bean="TblWhiteListDAO" />
+		</property>
+	</bean>
+	<bean id="TblWhiteListDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblWhiteListDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblWhiteListDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblWhiteListDAOTarget" class="com.huateng.dao.impl.risk.TblWhiteListDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 商户白名单Tmp -->
+	<bean id="T41202BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T41202BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T41202BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T41202BOTarget" class="com.huateng.bo.impl.risk.T41202BOTarget">
+		<property name="tblWhiteListTmpDAO">
+			<ref bean="TblWhiteListTmpDAO" />
+		</property>
+	</bean>
+	<bean id="TblWhiteListTmpDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblWhiteListTmpDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblWhiteListTmpDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblWhiteListTmpDAOTarget" class="com.huateng.dao.impl.risk.TblWhiteListTmpDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+<!-- 商户交易黑名单管理 -->
+	<bean id="T40208BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40208BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40208BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40208BOTarget" class="com.huateng.bo.impl.risk.T40208BOTarget">
+		<property name="tblRiskMchtTranCtlDAO">
+			<ref bean="TblRiskMchtTranCtlDAO" />
+		</property>
+	</bean>
+	<bean id="TblRiskMchtTranCtlDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskMchtTranCtlDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRiskMchtTranCtlDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRiskMchtTranCtlDAOTarget" class="com.huateng.dao.impl.risk.TblRiskMchtTranCtlDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+<!-- 商户交易权限管理 -->
+	<bean id="T40214BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40214BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40214BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40214BOTarget" class="com.huateng.bo.impl.risk.T40214BOTarget">
+		<property name="tblRiskMchtTranLimitDAO">
+			<ref bean="TblRiskMchtTranLimitDAO" />
+		</property>
+	</bean>
+	<bean id="TblRiskMchtTranLimitDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskMchtTranLimitDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRiskMchtTranLimitDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRiskMchtTranLimitDAOTarget" class="com.huateng.dao.impl.risk.TblRiskMchtTranLimitDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 终端交易权限管理 -->
+	<bean id="T40216BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40216BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40216BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40216BOTarget" class="com.huateng.bo.impl.risk.T40216BOTarget">
+		<property name="tblRiskTermTranLimitDAO">
+			<ref bean="TblRiskTermTranLimitDAO" />
+		</property>
+	</bean>
+	<bean id="TblRiskTermTranLimitDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskTermTranLimitDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRiskTermTranLimitDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRiskTermTranLimitDAOTarget" class="com.huateng.dao.impl.risk.TblRiskTermTranLimitDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 事中风险控制 -->
+	<!-- 渠道交易黑名单 -->
+		<bean id="T40210BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40210BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40210BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40210BOTarget" class="com.huateng.bo.impl.risk.T40210BOTarget">
+		<property name="tblRiskChlTranCltDAO">
+			<ref bean="TblRiskChlTranCtlDAO" />
+		</property>
+	</bean>
+	<bean id="TblRiskChlTranCtlDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskChlTranCltDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRiskChlTranCtlDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRiskChlTranCtlDAOTarget" class="com.huateng.dao.impl.risk.TblRiskChlTranCtlDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+<!-- 渠道交易权限 -->
+<bean id="T40212BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40212BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40212BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40212BOTarget" class="com.huateng.bo.impl.risk.T40212BOTarget">
+		<property name="tblRiskChlTranLimitDAO">
+			<ref bean="TblRiskChlTranLimitDAO" />
+		</property>
+	</bean>
+	<bean id="TblRiskChlTranLimitDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.TblRiskChlTranLimitDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRiskChlTranLimitDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRiskChlTranLimitDAOTarget" class="com.huateng.dao.impl.risk.TblRiskChlTranLimitDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 事前风险控制 -->
+	<bean id="T40402BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40402BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40402BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40402BOTarget" class="com.huateng.bo.impl.risk.T40402BOTarget">
+		<property name="riskBeforeDAO">
+			<ref bean="RiskBeforeDAO" />
+		</property>
+	</bean>
+	<bean id="RiskBeforeDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.RiskBeforeDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>RiskBeforeDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="RiskBeforeDAOTarget" class="com.huateng.dao.impl.risk.RiskBeforeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 商户事后风险预警系数管理 -->
+	<bean id="T40501BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.risk.T40501BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T40501BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T40501BOTarget" class="com.huateng.bo.impl.risk.T40501BOTarget">
+		<property name="cstAfterRuleInfDAO">
+			<ref bean="CstAfterRuleInfDAO" />
+		</property>
+	</bean>
+	<bean id="CstAfterRuleInfDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.risk.CstAfterRuleInfDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>CstAfterRuleInfDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="CstAfterRuleInfDAOTarget" class="com.huateng.dao.impl.risk.CstAfterRuleInfDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+</beans>

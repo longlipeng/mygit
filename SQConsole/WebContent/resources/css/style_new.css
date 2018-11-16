@@ -1,0 +1,283 @@
+TABLE.fb_result_back {
+	border-left:1px solid buttonface;
+	border-top:1px solid buttonface;
+	border-right:1px solid buttonshadow;
+	border-bottom:1px solid buttonshadow;
+}
+TABLE.fb_border {
+	background:buttonface;
+}
+.fb_result_title {
+	FONT-SIZE: 12px;
+	FONT-FAMILY: "宋体";
+	height:26px;
+	filter : progid:DXImageTransform.Microsoft.gradient(startColorStr=#FC1229,endColorStr=#FD7785,GradientType=1);
+	padding:4px 0 0 10px;
+	color:#fff;
+	font-weight: bold;
+}
+
+.fb_result_head {
+	background:url(/aifca/resources/pic/tabtopbg.jpg);
+	FONT-SIZE: 12px;
+	FONT-FAMILY: "宋体";
+	HEIGHT: 34px;
+	padding:2px 0 0 5px;
+	text-align:center;
+	color:#555555;
+}
+
+.fb_result_content {
+	FONT-SIZE: 12px;
+	BACKGROUND: #EFEFEF;
+	FONT-FAMILY: "宋体";
+	HEIGHT: 25px;
+	text-decoration: none;
+	border-bottom:1px solid buttonface;
+}
+
+.fb_result_content_ {
+	FONT-SIZE: 12px;
+	BACKGROUND: #FFFFFF;
+	FONT-FAMILY: "宋体";
+	HEIGHT: 27px;
+	text-decoration: none;
+	vertical-align:middle;
+	text-align:center;
+	border-bottom:1px solid buttonface;
+}
+
+.fb_result_onmouseover {
+	FONT-SIZE: 12px;
+	BACKGROUND: highlight;
+	color:highlighttext;
+	FONT-FAMILY: "宋体";
+	HEIGHT: 30px;
+	text-decoration: none;
+	border-bottom:1px solid buttonface;
+}
+
+.fb_result_bottom {
+	FONT-SIZE: 12px;
+	background:#fff;	
+	FONT-FAMILY: "宋体";
+	text-align: center;
+	HEIGHT:35px;
+	cursor:default;
+}
+
+.fb_result_divide {
+	FONT-SIZE: 12px;
+	BACKGROUND: #EFEFEF;
+	FONT-FAMILY: "宋体";
+	HEIGHT: 20px;
+	text-decoration: none;
+	border-bottom:1px solid buttonface;
+}
+
+TABLE.fb_add_back {
+	border-left:1px solid buttonface;
+	border-top:1px solid buttonface;
+	border-right:1px solid buttonshadow;
+	border-bottom:1px solid buttonshadow;
+}
+TABLE.tb_border {
+	BACKGROUND: silver;
+	padding:0 0 0 0px;
+}
+
+.fb_add_title {
+	FONT-SIZE: 12px;
+	FONT-FAMILY: "宋体";
+	height:26px;
+	filter : progid:DXImageTransform.Microsoft.gradient(startColorStr=#5c6c7d,endColorStr=#acbed0,GradientType=1);
+	padding:4px 0 0 10px;
+	color:#fff;
+	font-weight: bold;
+}
+
+.fb_add_head {
+	FONT-SIZE: 12px;
+	BACKGROUND: #eee;
+	FONT-FAMILY: "宋体";
+	text-decoration: none;
+	text-align:right;
+	border-right:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	height:30px;
+}
+
+.fb_add_content {
+	FONT-SIZE: 12px;
+	BACKGROUND: white;
+	FONT-FAMILY: "宋体";
+	border-right:1px solid #ccc;
+	border-bottom:1px solid #ccc;
+	padding-left:5px;
+}
+
+.fb_add_bottom {
+	FONT-SIZE: 12px;
+	BACKGROUND: #ddd;
+	border-bottom:3px solid #999999;
+	COLOR: buttonfacetext;
+	FONT-FAMILY: "宋体";
+	text-align: center;
+	HEIGHT: 32px;
+}
+
+.frame_w {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #D4D0C8;
+	border-right-color: #404040;
+	border-bottom-color: #404040;
+	border-left-color: #D4D0C8;
+}
+.frame_l {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFFFFF;
+	border-right-color: #808080;
+	border-bottom-color: #808080;
+	border-left-color: #FFFFFF;
+	background-color: buttonface;
+}
+
+.tab_bg{background:#dee5f8; height:34px; padding:4px 0 0 8px; border-top:3px solid #1959b6}
+
+.formtext01 {
+	font-family: Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #333;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	border-bottom: 1px solid #ccc;
+	background:#F8FFE3;
+	height:18px;
+}
+
+.formtext02 {
+	font-family: Arial, Helvetica, sans-serif, "宋体";
+	font-size: 12px;
+	color: #333;
+	border-right: 1px solid #ccc;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	border-bottom: 1px solid #ccc;
+	background:#F8FFE3;
+}
+
+
+.btn_style_out{
+	border:1px solid #bbb;
+	padding:1px;
+	background:#eeeeee; center
+}
+
+button{
+	border:1px solid #bbb;
+	padding:1px;
+	background:#eeeeee; center
+}
+
+.btn_style_over{
+	border-left:1px solid #eee;
+	border-top:1px solid #eee;
+	border-bottom:1px solid #666;
+	border-right:1px solid #666;
+	background:#787878;color:#fff;
+	padding:1px;
+	CURSOR: hand;
+}
+
+.ListTextOut{
+	padding: 5px 8px;
+	color:#555;
+	font-size:12px;
+	border:1px solid #b3bfd9;
+	background:url(/aifca/resources/pic/allbuttom.jpg) right; 
+	cursor:pointer
+}
+
+.ListTextOver{
+	font-size:12px;
+	padding: 5px 8px;
+	border:1px solid #b3bfd9;
+	background:url(/aifca/resources/pic/allbuttom.jpg) right; 
+	cursor:pointer;
+	color:#1959b5;
+}
+
+.menutabOut{
+	padding:1px 3px;
+}
+
+.menutabOver{
+	padding:0 2px;
+	background:#e7f6ff;
+	CURSOR: hand;
+	border:1px solid #c3e8ff;
+}
+
+.fontwhite{
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#fff;
+}
+
+.fontblue {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#215ebb;
+}
+
+.fontblue02{
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#0c2575;
+}
+
+.fontred {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#ec2500;
+}
+
+.fontgray{
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color:#333;
+}
+
+.fontgreen{
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	color:green;
+}
+.delline {
+	text-decoration:line-through;
+	color:#ec2500;
+}
+
+body{ 
+	background:#f6f6f6;
+}
+
+.table_foot{
+	margin-top: 300px;
+	text-align: center;
+}

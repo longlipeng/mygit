@@ -1,0 +1,745 @@
+<?xml version="1.0"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!--操作员信息-->
+	<bean id="OprInfoDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblOprInfoDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>OprInfoDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="OprInfoDAOTarget" class="com.huateng.dao.impl.base.TblOprInfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10401BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10401BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10401BOTarget</value>
+		</property>
+	</bean>
+	
+	<bean id="T10401BOTarget" class="com.huateng.bo.impl.base.T10401BOTarget">
+		<property name="tblOprInfoDAO">
+			<ref bean="OprInfoDAO" />
+		</property>
+	</bean>
+	
+	
+	<!--机构信息-->
+	<bean id="BrhInfoDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblBrhInfoDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>BrhInfoDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="BrhInfoDAOTarget" class="com.huateng.dao.impl.base.TblBrhInfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10101BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10101BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10101BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10101BOTarget" class="com.huateng.bo.impl.base.T10101BOTarget">
+		<property name="tblBrhInfoDAO">
+			<ref bean="BrhInfoDAO" />
+		</property>
+	</bean>
+	<!-- 签到 -->
+	<bean id="TblAttendanceBrhDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAttendanceBrhDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAttendanceBrhDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAttendanceBrhDAOTarget" class="com.huateng.dao.impl.base.TblAttendanceBrhDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10600BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10600BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10600BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10600BOTarget" class="com.huateng.bo.impl.base.T10600BOTarget">
+		<property name="tblAttendanceBrhDAO">
+			<ref bean="TblAttendanceBrhDAO" />
+		</property>
+	</bean>
+	<!--分公司信息-->
+	<bean id="TblBranchManageDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblBranchManageDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>BranchManageDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="BranchManageDAOTarget" class="com.huateng.dao.impl.base.TblBranchManageDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10108BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10108BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10108BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10108BOTarget" class="com.huateng.bo.impl.base.T10108BOTarget">
+		<property name="tblBranchManageDAO">
+			<ref bean="TblBranchManageDAO" />
+		</property>
+	</bean>
+	<!--我的机构信息-->
+	<bean id="TblAgencyInfoDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAgencyInfoDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAgencyInfoDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAgencyInfoDAOTarget" class="com.huateng.dao.impl.base.TblAgencyInfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10106BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10106BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10106BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10106BOTarget" class="com.huateng.bo.impl.base.T10106BOTarget">
+		<property name="tblAgencyInfoDAO">
+			<ref bean="TblAgencyInfoDAO" />
+		</property>
+	</bean>
+	<!--我的机构信息审核-->
+	<bean id="TblAgencyInfoTrueDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAgencyInfoTrueDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAgencyInfoTrueDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAgencyInfoTrueDAOTarget" class="com.huateng.dao.impl.base.TblAgencyInfoTrueDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T1010802BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T1010802BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T1010802BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T1010802BOTarget" class="com.huateng.bo.impl.base.T1010802BOTarget">
+		<property name="tblAgencyInfoTrueDAO">
+			<ref bean="TblAgencyInfoTrueDAO" />
+		</property>
+	</bean>
+	<!-- 我的机构分润信息 -->
+	<bean id="TblAgencyFeeDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAgencyFeeDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAgencyFeeDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAgencyFeeDAOTarget" class="com.huateng.dao.impl.base.TblAgencyFeeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10110BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10110BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10110BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10110BOTarget" class="com.huateng.bo.impl.base.T10110BOTarget">
+		<property name="tblAgencyFeeDAO">
+			<ref bean="TblAgencyFeeDAO" />
+		</property>
+	</bean>
+	<!-- 分公司审核 -->
+	<bean id="TblBranchManageTrueDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblBranchManageTrueDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>BranchManageTrueDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="BranchManageTrueDAOTarget" class="com.huateng.dao.impl.base.TblBranchManageTrueDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T90102BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T90102BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T90102BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T90102BOTarget" class="com.huateng.bo.impl.base.T90102BOTarget">
+		<property name="tblBranchManageTrueDAO">
+			<ref bean="TblBranchManageTrueDAO" />
+		</property>
+	</bean>
+	<!--清算凭证信息-->
+	<bean id="SettleDocInfoDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.SettleDocInfoDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>SettleDocInfoDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="SettleDocInfoDAOTarget" class="com.huateng.dao.impl.base.SettleDocInfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10102BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10102BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10102BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10102BOTarget" class="com.huateng.bo.impl.base.T10102BOTarget">
+		<property name="settleDocInfoDAO">
+			<ref bean="SettleDocInfoDAO" />
+		</property>
+	</bean>
+	<!-- 系统参数信息 -->
+	<bean id="CstSysParamDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.CstSysParamDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>CstSysParamDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="CstSysParamDAOTarget" class="com.huateng.dao.impl.base.CstSysParamDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10202BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10202BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10202BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10202BOTarget" class="com.huateng.bo.impl.base.T10202BOTarget">
+		<property name="cstSysParamDAO">
+			<ref bean="CstSysParamDAO"/>
+		</property>
+	</bean>
+	<!-- 地区码信息 -->
+	<bean id="TblCityCodeCodeDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblCityCodeCodeDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>CityCodeDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="CityCodeDAOTarget" class="com.huateng.dao.impl.base.TblCityCodeCodeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T1020101BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T1020101BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T1020101BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T1020101BOTarget" class="com.huateng.bo.impl.base.T1020101BOTarget">
+		<property name="tblCityCodeCodeDAO">
+			<ref bean="TblCityCodeCodeDAO" />
+		</property>
+	</bean>
+	<!-- 节假日管理 -->
+	<bean id="TblHolidaysDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblHolidaysDao</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblHolidaysDaoTarget</value>
+		</property>
+	</bean>
+	<bean id="TblHolidaysDaoTarget" class="com.huateng.dao.impl.base.TblHolidaysDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10209BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10209BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10209BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10209BOTarget" class="com.huateng.bo.impl.base.T10209BOTarget">
+		<property name="tblHolidaysDao">
+			<ref bean="TblHolidaysDao" />
+		</property>		
+	</bean>
+	<!-- 门店管理 -->
+	<bean id="T60101BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T60101BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T60101BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T60101BOTarget" class="com.huateng.bo.impl.base.T60101BOTarget">
+		<property name="tblIssueBranchInfDao">
+			<ref bean="TblIssueBranchInfDao" />
+		</property>		
+	</bean>
+	<bean id="TblIssueBranchInfDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.ITblIssueBranchInfDao</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblIssueBranchInfDaoTarget</value>
+		</property>
+	</bean>
+	<bean id="TblIssueBranchInfDaoTarget" class="com.huateng.dao.impl.base.TblIssueBranchInfDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 银联卡表信息 -->
+	<bean id="ITblBankBinInfoDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.ITblBankBinInfoDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>ITblBankBinInfoDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="ITblBankBinInfoDAOTarget" class="com.huateng.dao.impl.base.ITblBankBinInfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10205BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10205BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10205BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10205BOTarget" class="com.huateng.bo.impl.base.T10205BOTarget">
+		<property name="tblBankBinInfDAO">
+			<ref bean="ITblBankBinInfoDAO" />
+		</property>		
+	</bean>
+	
+	<!-- 交易码信息 -->
+	<bean id="TblTxnNameDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblTxnNameDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblTxnNameDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblTxnNameDAOTarget" class="com.huateng.dao.impl.base.TblTxnNameDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10203BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10203BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10203BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10203BOTarget" class="com.huateng.bo.impl.base.T10203BOTarget">
+		<property name="tblTxnNameDAO">
+			<ref bean="TblTxnNameDAO" />
+		</property>
+	</bean>
+	<!-- 虚拟柜员信息 -->
+	<bean id="TblBrhTlrInfoDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblBrhTlrInfoDao</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblBrhTlrInfoDaoTarget</value>
+		</property>
+	</bean>
+	<bean id="TblBrhTlrInfoDaoTarget" class="com.huateng.dao.impl.base.TblBrhTlrInfoDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10207BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10207BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10207BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10207BOTarget" class="com.huateng.bo.impl.base.T10207BOTarget">
+		<property name="tblBrhTlrInfoDao">
+			<ref bean="TblBrhTlrInfoDao" />
+		</property>		
+	</bean>
+	
+	
+	<!-- CA银联公钥 -->
+	<bean id="TblEmvParaDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblEmvParaDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblEmvParaDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblEmvParaDAOTarget" class="com.huateng.dao.impl.base.TblEmvParaDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T10206BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T10206BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T10206BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T10206BOTarget" class="com.huateng.bo.impl.base.T10206BOTarget">
+		<property name="tblEmvParaDAO">
+			<ref bean="TblEmvParaDAO" />
+		</property>		
+	</bean>
+	<!-- 代理商维护 -->
+	<bean id="T11501BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T11501BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11501BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11501BOTarget" class="com.huateng.bo.impl.base.T11501BOTarget">
+		<property name="tblAgentInfoDAO">
+			<ref bean="TblAgentInfoDAO" />
+		</property>
+	</bean>
+	<bean id="TblAgentInfoDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAgentInfoDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAgentInfoDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAgentInfoDAOTarget" class="com.huateng.dao.impl.base.TblAgentInfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 代理商成本维护 -->
+	<bean id="T11521BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T11521BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11521BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11521BOTarget" class="com.huateng.bo.impl.base.T11521BOTarget">
+		<property name="tblAgentFeeDAO">
+			<ref bean="TblAgentFeeDAO" />
+		</property>
+	</bean>
+	<bean id="TblAgentFeeDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAgentFeeDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAgentFeeDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAgentFeeDAOTarget" class="com.huateng.dao.impl.base.TblAgentFeeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 代理商分润信息维护 -->
+	<bean id="T11502BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T11502BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11502BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11502BOTarget" class="com.huateng.bo.impl.base.T11502BOTarget">
+		<property name="tblAgentDivideDAO">
+			<ref bean="TblAgentDivideDAO" />
+		</property>
+	</bean>
+	<bean id="TblAgentDivideDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAgentDivideDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAgentDivideDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAgentDivideDAOTarget" class="com.huateng.dao.impl.base.TblAgentDivideDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 代理商分润 临时表 -->
+	<bean id="T11503BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T11503BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T11503BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T11503BOTarget" class="com.huateng.bo.impl.base.T11503BOTarget">
+		<property name="tblAgentDivideTmpDAO">
+			<ref bean="TblAgentDivideTmpDAO" />
+		</property>
+	</bean>
+	<bean id="TblAgentDivideTmpDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblAgentDivideTmpDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblAgentDivideTmpDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblAgentDivideTmpDAOTarget" class="com.huateng.dao.impl.base.TblAgentDivideTmpDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- 机构-开户行 临时表 -->
+	<bean id="T1010601BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T1010601BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T1010601BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T1010601BOTarget" class="com.huateng.bo.impl.base.T1010601BOTarget">
+		<property name="tblInstBdbBankCodeTmpDAO">
+			<ref bean="TblInstBdbBankCodeTmpDAO" />
+		</property>
+	</bean>
+	<bean id="TblInstBdbBankCodeTmpDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblInstBdbBankCodeTmpDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblInstBdbBankCodeTmpDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblInstBdbBankCodeTmpDAOTarget" class="com.huateng.dao.impl.base.TblInstBdbBankCodeTmpDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 机构-开户行 正式表 -->
+	<bean id="T1010602BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T1010602BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T1010602BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T1010602BOTarget" class="com.huateng.bo.impl.base.T1010602BOTarget">
+		<property name="tblInstBdbBankCodeDAO">
+			<ref bean="TblInstBdbBankCodeDAO" />
+		</property>
+	</bean>
+	<bean id="TblInstBdbBankCodeDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblInstBdbBankCodeDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblInstBdbBankCodeDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblInstBdbBankCodeDAOTarget" class="com.huateng.dao.impl.base.TblInstBdbBankCodeDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- 应答码信息 -->
+	<bean id="TblRespCodeInfoDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblRespCodeInfoDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRespCodeInfoDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRespCodeInfoDAOTarget" class="com.huateng.dao.impl.base.TblRespCodeInfoDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T20107BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T20107BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T20107BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T20107BOTarget" class="com.huateng.bo.impl.base.T20107BOTarget">
+		<property name="tblRespCodeInfoDao">
+			<ref bean="TblRespCodeInfoDAO" />
+		</property>		
+	</bean>
+	<!-- 应答码信息 -->
+	<bean id="TblRspCodeMapDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblRspCodeMapDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRspCodeMapDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRspCodeMapDAOTarget" class="com.huateng.dao.impl.base.TblRspCodeMapDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T20109BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T20109BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T20109BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T20109BOTarget" class="com.huateng.bo.impl.base.T20109BOTarget">
+		<property name="tblRspCodeMapDAO">
+			<ref bean="TblRspCodeMapDAO" />
+		</property>		
+	</bean>
+	<!-- 应答码审核 -->
+	<bean id="TblRespCodeInfoTrueDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblRespCodeInfoTrueDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblRespCodeInfoTrueDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblRespCodeInfoTrueDAOTarget" class="com.huateng.dao.impl.base.TblRespCodeInfoTrueDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T20108BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.base.T20108BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T20108BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T20108BOTarget" class="com.huateng.bo.impl.base.T20108BOTarget">
+		<property name="tblRespCodeInfoTrueDao">
+			<ref bean="TblRespCodeInfoTrueDAO" />
+		</property>		
+	</bean>
+	
+	<!-- mcc -->
+	<bean id="TblInfMchntTpDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.base.TblInfMchntTpDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblInfMchntTpDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblInfMchntTpDAOTarget" class="com.huateng.dao.impl.base.TblInfMchntTpDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="TblMchtUpLoadAddBatchDAO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.mchnt.ITblMchtUpLoadAddBatchDAO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>TblMchtUpLoadAddBatchDAOTarget</value>
+		</property>
+	</bean>
+	<bean id="TblMchtUpLoadAddBatchDAOTarget" class="com.huateng.dao.impl.mchnt.TblMchtUpLoadAddBatchDAO">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+</beans>

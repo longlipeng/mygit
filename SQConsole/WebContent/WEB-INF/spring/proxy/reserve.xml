@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!--商户备款-->
+	<bean id="ReserveSettleDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.reserve.TblReserveSettleDao</value>
+		</property>
+		<property name="interceptorNames">
+			<value>ReserveSettleDaoTarget</value>
+		</property>
+	</bean>
+	<bean id="ReserveSettleDaoTarget" class="com.huateng.dao.impl.reserve.TblReserveSettleDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T9130101BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.reserve.T9130101BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T9130101BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T9130101BOTarget" class="com.huateng.bo.impl.reserve.T9130101BOTarget">
+		<property name="tblReserveSettleDao">
+			<ref bean="ReserveSettleDao" />
+		</property>
+	</bean>
+	
+	<!--账户白名单-->
+	<bean id="RosterSettleTmpDao" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.dao.iface.reserve.TblRosterSettleTmpDao</value>
+		</property>
+		<property name="interceptorNames">
+			<value>RosterSettleTmpDaoTarget</value>
+		</property>
+	</bean>
+	<bean id="RosterSettleTmpDaoTarget" class="com.huateng.dao.impl.reserve.TblRosterSettleTmpDao">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="T91101BO" class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="proxyInterfaces">
+			<value>com.huateng.bo.reserve.T91101BO</value>
+		</property>
+		<property name="interceptorNames">
+			<value>T91101BOTarget</value>
+		</property>
+	</bean>
+	<bean id="T91101BOTarget" class="com.huateng.bo.impl.reserve.T91101BOTarget">
+		<property name="tblRosterSettleTmpDao">
+			<ref bean="RosterSettleTmpDao" />
+		</property>
+	</bean>
+	
+	
+</beans>
