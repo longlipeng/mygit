@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblMchtSettleInf" table="BASETBLMCHTSETTLEINF" abstract="true">
+        <id name="holidaySetFlag" type="java.lang.String">
+            <column name="HOLIDAYSETFLAG" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int" access="field">
+            <column name="HASHCODE" />
+        </property>
+        <many-to-one name="id" class="com.huateng.po.mchnt.TblMchtSettleInfPK" fetch="join">
+            <column name="ID" />
+        </many-to-one>
+        <property name="settleType" type="java.lang.String">
+            <column name="SETTLETYPE" />
+        </property>
+        <property name="rateFlag" type="java.lang.String">
+            <column name="RATEFLAG" />
+        </property>
+        <property name="settleChn" type="java.lang.String">
+            <column name="SETTLECHN" />
+        </property>
+        <property name="batTime" type="java.lang.String">
+            <column name="BATTIME" />
+        </property>
+        <property name="autoStlFlg" type="java.lang.String">
+            <column name="AUTOSTLFLG" />
+        </property>
+        <property name="partNum" type="java.lang.String">
+            <column name="PARTNUM" />
+        </property>
+        <property name="feeType" type="java.lang.String">
+            <column name="FEETYPE" />
+        </property>
+        <property name="feeFixed" type="java.lang.String">
+            <column name="FEEFIXED" />
+        </property>
+        <property name="feeMaxAmt" type="java.lang.String">
+            <column name="FEEMAXAMT" />
+        </property>
+        <property name="feeMinAmt" type="java.lang.String">
+            <column name="FEEMINAMT" />
+        </property>
+        <property name="feeRate" type="java.lang.String">
+            <column name="FEERATE" />
+        </property>
+        <property name="feeDiv1" type="java.lang.String">
+            <column name="FEEDIV1" />
+        </property>
+        <property name="feeDiv2" type="java.lang.String">
+            <column name="FEEDIV2" />
+        </property>
+        <property name="feeDiv3" type="java.lang.String">
+            <column name="FEEDIV3" />
+        </property>
+        <property name="settleMode" type="java.lang.String">
+            <column name="SETTLEMODE" />
+        </property>
+        <property name="feeCycle" type="java.lang.String">
+            <column name="FEECYCLE" />
+        </property>
+        <property name="settleRpt" type="java.lang.String">
+            <column name="SETTLERPT" />
+        </property>
+        <property name="settleBankNo" type="java.lang.String">
+            <column name="SETTLEBANKNO" />
+        </property>
+        <property name="settleBankNm" type="java.lang.String">
+            <column name="SETTLEBANKNM" />
+        </property>
+        <property name="settleAcctNm" type="java.lang.String">
+            <column name="SETTLEACCTNM" />
+        </property>
+        <property name="settleAcct" type="java.lang.String">
+            <column name="SETTLEACCT" />
+        </property>
+        <property name="feeAcctNm" type="java.lang.String">
+            <column name="FEEACCTNM" />
+        </property>
+        <property name="feeAcct" type="java.lang.String">
+            <column name="FEEACCT" />
+        </property>
+        <property name="groupFlag" type="java.lang.String">
+            <column name="GROUPFLAG" />
+        </property>
+        <property name="openStlno" type="java.lang.String">
+            <column name="OPENSTLNO" />
+        </property>
+        <property name="changeStlno" type="java.lang.String">
+            <column name="CHANGESTLNO" />
+        </property>
+        <property name="speSettleTp" type="java.lang.String">
+            <column name="SPESETTLETP" />
+        </property>
+        <property name="speSettleLv" type="java.lang.String">
+            <column name="SPESETTLELV" />
+        </property>
+        <property name="speSettleDs" type="java.lang.String">
+            <column name="SPESETTLEDS" />
+        </property>
+        <property name="feeBackFlg" type="java.lang.String">
+            <column name="FEEBACKFLG" />
+        </property>
+        <property name="reserved" type="java.lang.String">
+            <column name="RESERVED" />
+        </property>
+        <property name="recUpdTs" type="java.lang.String">
+            <column name="RECUPDTS" />
+        </property>
+        <property name="recCrtTs" type="java.lang.String">
+            <column name="RECCRTTS" />
+        </property>
+        <property name="currAccount" type="java.lang.String">
+            <column name="CURRACCOUNT" />
+        </property>
+        <property name="bankAccountCode" type="java.lang.String">
+            <column name="BANKACCOUNTCODE" />
+        </property>
+        <property name="corpBankName" type="java.lang.String">
+            <column name="CORPBANKNAME" />
+        </property>
+        <property name="compAccountBankCode" type="java.lang.String">
+            <column name="COMPACCOUNTBANKCODE" />
+        </property>
+        <property name="compAccountBankName" type="java.lang.String">
+            <column name="COMPACCOUNTBANKNAME" />
+        </property>
+        <property name="dirBankCode" type="java.lang.String">
+            <column name="DIRBANKCODE" />
+        </property>
+        <property name="dirBankName" type="java.lang.String">
+            <column name="DIRBANKNAME" />
+        </property>
+        <property name="dirAccountName" type="java.lang.String">
+            <column name="DIRACCOUNTNAME" />
+        </property>
+        <property name="dirAccount" type="java.lang.String">
+            <column name="DIRACCOUNT" />
+        </property>
+        <property name="dirFlag" type="java.lang.String">
+            <column name="DIRFLAG" />
+        </property>
+        <property name="autoFlag" type="java.lang.String">
+            <column name="AUTOFLAG" />
+        </property>
+        <property name="creFlag" type="java.lang.String">
+            <column name="CREFLAG" />
+        </property>
+        <property name="returnFeeFlag" type="java.lang.String">
+            <column name="RETURNFEEFLAG" />
+        </property>
+        <property name="legalNam" type="java.lang.String">
+            <column name="LEGALNAM" />
+        </property>
+        <property name="companyNam" type="java.lang.String">
+            <column name="COMPANYNAM" />
+        </property>
+        <property name="dirOpenBank" type="java.lang.String">
+            <column name="DIROPENBANK" />
+        </property>
+        <property name="dirBankProvince" type="java.lang.String">
+            <column name="DIRBANKPROVINCE" />
+        </property>
+        <property name="dirBankCity" type="java.lang.String">
+            <column name="DIRBANKCITY" />
+        </property>
+        <property name="compOpenBank" type="java.lang.String">
+            <column name="COMPOPENBANK" />
+        </property>
+        <property name="compBankProvince" type="java.lang.String">
+            <column name="COMPBANKPROVINCE" />
+        </property>
+        <property name="compBankCity" type="java.lang.String">
+            <column name="COMPBANKCITY" />
+        </property>
+        <property name="corpOpenBank" type="java.lang.String">
+            <column name="CORPOPENBANK" />
+        </property>
+        <property name="corpBankProvince" type="java.lang.String">
+            <column name="CORPBANKPROVINCE" />
+        </property>
+        <property name="corpBankCity" type="java.lang.String">
+            <column name="CORPBANKCITY" />
+        </property>
+    </class>
+</hibernate-mapping>

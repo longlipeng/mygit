@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblMchntLogs" table="BASETBLMCHNTLOGS" abstract="true">
+        <id name="oprId" type="java.lang.String">
+            <column name="OPRID" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int" access="field">
+            <column name="HASHCODE" />
+        </property>
+        <many-to-one name="id" class="com.huateng.po.mchnt.TblMchntLogsPK" fetch="join">
+            <column name="ID" />
+        </many-to-one>
+        <property name="mchntId" type="java.lang.String">
+            <column name="MCHNTID" />
+        </property>
+        <property name="oprType" type="java.lang.String">
+            <column name="OPRTYPE" />
+        </property>
+        <property name="oprStatus" type="java.lang.String">
+            <column name="OPRSTATUS" />
+        </property>
+        <property name="oprInfo" type="java.lang.String">
+            <column name="OPRINFO" />
+        </property>
+        <property name="reserved1" type="java.lang.String">
+            <column name="RESERVED1" />
+        </property>
+        <property name="reserved2" type="java.lang.String">
+            <column name="RESERVED2" />
+        </property>
+        <property name="reserved3" type="java.lang.String">
+            <column name="RESERVED3" />
+        </property>
+        <property name="reserved4" type="java.lang.String">
+            <column name="RESERVED4" />
+        </property>
+        <property name="crtOprId" type="java.lang.String">
+            <column name="CRTOPRID" />
+        </property>
+        <property name="updOprId" type="java.lang.String">
+            <column name="UPDOPRID" />
+        </property>
+        <property name="recUpdTs" type="java.lang.String">
+            <column name="RECUPDTS" />
+        </property>
+        <property name="recCrtTs" type="java.lang.String">
+            <column name="RECCRTTS" />
+        </property>
+    </class>
+</hibernate-mapping>

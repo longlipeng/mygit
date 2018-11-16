@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblHisDiscAlgo" table="BASETBLHISDISCALGO" abstract="true">
+        <id name="recUpdUsrId" type="java.lang.String">
+            <column name="RECUPDUSRID" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int" access="field">
+            <column name="HASHCODE" />
+        </property>
+        <many-to-one name="id" class="com.huateng.po.mchnt.TblHisDiscAlgoPK" fetch="join">
+            <column name="ID" />
+        </many-to-one>
+        <property name="minFee" type="java.math.BigDecimal">
+            <column name="MINFEE" />
+        </property>
+        <property name="maxFee" type="java.math.BigDecimal">
+            <column name="MAXFEE" />
+        </property>
+        <property name="floorMount" type="java.math.BigDecimal">
+            <column name="FLOORMOUNT" />
+        </property>
+        <property name="upperMount" type="java.math.BigDecimal">
+            <column name="UPPERMOUNT" />
+        </property>
+        <property name="flag" type="java.lang.Integer">
+            <column name="FLAG" />
+        </property>
+        <property name="feeValue" type="java.math.BigDecimal">
+            <column name="FEEVALUE" />
+        </property>
+        <property name="recUpdTs" type="java.lang.String">
+            <column name="RECUPDTS" />
+        </property>
+        <property name="recCrtTs" type="java.lang.String">
+            <column name="RECCRTTS" />
+        </property>
+        <property name="txnNum" type="java.lang.String">
+            <column name="TXNNUM" />
+        </property>
+    </class>
+</hibernate-mapping>

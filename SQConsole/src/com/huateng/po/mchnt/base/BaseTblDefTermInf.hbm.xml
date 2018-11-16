@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblDefTermInf" table="BASETBLDEFTERMINF" abstract="true">
+        <id name="oprId" type="java.lang.String">
+            <column name="OPRID" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int" access="field">
+            <column name="HASHCODE" />
+        </property>
+        <property name="recId" type="java.lang.String">
+            <column name="RECID" />
+        </property>
+        <property name="mchtRecId" type="java.lang.String">
+            <column name="MCHTRECID" />
+        </property>
+        <property name="termNo" type="java.lang.String">
+            <column name="TERMNO" />
+        </property>
+        <property name="termType" type="java.lang.String">
+            <column name="TERMTYPE" />
+        </property>
+        <property name="termBrand" type="java.lang.String">
+            <column name="TERMBRAND" />
+        </property>
+        <property name="termModel" type="java.lang.String">
+            <column name="TERMMODEL" />
+        </property>
+        <property name="sn" type="java.lang.String">
+            <column name="SN" />
+        </property>
+        <property name="phoneNo" type="java.lang.String">
+            <column name="PHONENO" />
+        </property>
+        <property name="imei" type="java.lang.String">
+            <column name="IMEI" />
+        </property>
+        <property name="proCode" type="java.lang.String">
+            <column name="PROCODE" />
+        </property>
+        <property name="cityCode" type="java.lang.String">
+            <column name="CITYCODE" />
+        </property>
+        <property name="country" type="java.lang.String">
+            <column name="COUNTRY" />
+        </property>
+        <property name="address" type="java.lang.String">
+            <column name="ADDRESS" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="reserve1" type="java.lang.String">
+            <column name="RESERVE1" />
+        </property>
+        <property name="reserve2" type="java.lang.String">
+            <column name="RESERVE2" />
+        </property>
+        <property name="reserve3" type="java.lang.String">
+            <column name="RESERVE3" />
+        </property>
+        <property name="reserve4" type="java.lang.String">
+            <column name="RESERVE4" />
+        </property>
+        <property name="reserve5" type="java.lang.String">
+            <column name="RESERVE5" />
+        </property>
+        <property name="reserve6" type="java.lang.String">
+            <column name="RESERVE6" />
+        </property>
+        <property name="reserve7" type="java.lang.String">
+            <column name="RESERVE7" />
+        </property>
+        <property name="reserve8" type="java.lang.String">
+            <column name="RESERVE8" />
+        </property>
+        <property name="reserve9" type="java.lang.String">
+            <column name="RESERVE9" />
+        </property>
+        <property name="reserve10" type="java.lang.String">
+            <column name="RESERVE10" />
+        </property>
+        <property name="crtDate" type="java.lang.String">
+            <column name="CRTDATE" />
+        </property>
+        <property name="uptDate" type="java.lang.String">
+            <column name="UPTDATE" />
+        </property>
+    </class>
+</hibernate-mapping>

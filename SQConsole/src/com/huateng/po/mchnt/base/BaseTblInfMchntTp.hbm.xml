@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblInfMchntTp" table="BASETBLINFMCHNTTP" abstract="true">
+        <id name="recUpdUsrId" type="java.lang.String">
+            <column name="RECUPDUSRID" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int" access="field">
+            <column name="HASHCODE" />
+        </property>
+        <many-to-one name="id" class="com.huateng.po.mchnt.TblInfMchntTpPK" fetch="join">
+            <column name="ID" />
+        </many-to-one>
+        <property name="mchntTpGrp" type="java.lang.String">
+            <column name="MCHNTTPGRP" />
+        </property>
+        <property name="descr" type="java.lang.String">
+            <column name="DESCR" />
+        </property>
+        <property name="recSt" type="java.lang.String">
+            <column name="RECST" />
+        </property>
+        <property name="lastOperIn" type="java.lang.String">
+            <column name="LASTOPERIN" />
+        </property>
+        <property name="recUpdTs" type="java.lang.String">
+            <column name="RECUPDTS" />
+        </property>
+        <property name="recCrtTs" type="java.lang.String">
+            <column name="RECCRTTS" />
+        </property>
+        <property name="statusidmcc" type="java.lang.String">
+            <column name="STATUSIDMCC" />
+        </property>
+    </class>
+</hibernate-mapping>

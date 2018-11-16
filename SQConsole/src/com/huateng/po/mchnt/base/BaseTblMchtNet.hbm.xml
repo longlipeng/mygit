@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblMchtNet" table="BASETBLMCHTNET" abstract="true">
+        <id name="id" type="java.lang.String">
+            <column name="ID" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int" access="field">
+            <column name="HASHCODE" />
+        </property>
+        <property name="brhId" type="java.lang.String">
+            <column name="BRHID" />
+        </property>
+        <property name="mchtId" type="java.lang.String">
+            <column name="MCHTID" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="certNo" type="java.lang.String">
+            <column name="CERTNO" />
+        </property>
+        <property name="managerNo" type="java.lang.String">
+            <column name="MANAGERNO" />
+        </property>
+        <property name="legalNo" type="java.lang.String">
+            <column name="LEGALNO" />
+        </property>
+        <property name="legalNm" type="java.lang.String">
+            <column name="LEGALNM" />
+        </property>
+        <property name="certUrl" type="java.lang.String">
+            <column name="CERTURL" />
+        </property>
+        <property name="orgUrl" type="java.lang.String">
+            <column name="ORGURL" />
+        </property>
+        <property name="taxUrl" type="java.lang.String">
+            <column name="TAXURL" />
+        </property>
+        <property name="legalUrl" type="java.lang.String">
+            <column name="LEGALURL" />
+        </property>
+        <property name="createTime" type="java.lang.String">
+            <column name="CREATETIME" />
+        </property>
+        <property name="lastUpdTime" type="java.lang.String">
+            <column name="LASTUPDTIME" />
+        </property>
+        <property name="lastOprId" type="java.lang.String">
+            <column name="LASTOPRID" />
+        </property>
+        <property name="mchtNm" type="java.lang.String">
+            <column name="MCHTNM" />
+        </property>
+        <property name="reject" type="java.lang.String">
+            <column name="REJECT" />
+        </property>
+        <property name="operNo" type="java.lang.String">
+            <column name="OPERNO" />
+        </property>
+        <property name="operNm" type="java.lang.String">
+            <column name="OPERNM" />
+        </property>
+        <property name="operPh" type="java.lang.String">
+            <column name="OPERPH" />
+        </property>
+    </class>
+</hibernate-mapping>

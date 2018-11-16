@@ -1,0 +1,360 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblDefMchtInf" table="BASETBLDEFMCHTINF" abstract="true">
+        <id name="oprId" type="java.lang.String">
+            <column name="OPRID" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int" access="field">
+            <column name="HASHCODE" />
+        </property>
+        <property name="recId" type="java.lang.String">
+            <column name="RECID" />
+        </property>
+        <property name="mchtNo" type="java.lang.String">
+            <column name="MCHTNO" />
+        </property>
+        <property name="genMchtNo" type="java.lang.String">
+            <column name="GENMCHTNO" />
+        </property>
+        <property name="mchtNoIn" type="java.lang.String">
+            <column name="MCHTNOIN" />
+        </property>
+        <property name="mchtName" type="java.lang.String">
+            <column name="MCHTNAME" />
+        </property>
+        <property name="mchtShortName" type="java.lang.String">
+            <column name="MCHTSHORTNAME" />
+        </property>
+        <property name="mchtType" type="java.lang.String">
+            <column name="MCHTTYPE" />
+        </property>
+        <property name="proCode" type="java.lang.String">
+            <column name="PROCODE" />
+        </property>
+        <property name="cityCode" type="java.lang.String">
+            <column name="CITYCODE" />
+        </property>
+        <property name="countryCode" type="java.lang.String">
+            <column name="COUNTRYCODE" />
+        </property>
+        <property name="regAddress" type="java.lang.String">
+            <column name="REGADDRESS" />
+        </property>
+        <property name="postCode" type="java.lang.String">
+            <column name="POSTCODE" />
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="EMAIL" />
+        </property>
+        <property name="busiLicNo" type="java.lang.String">
+            <column name="BUSILICNO" />
+        </property>
+        <property name="orgCertNo" type="java.lang.String">
+            <column name="ORGCERTNO" />
+        </property>
+        <property name="taxRegCertNo" type="java.lang.String">
+            <column name="TAXREGCERTNO" />
+        </property>
+        <property name="busiScope" type="java.lang.String">
+            <column name="BUSISCOPE" />
+        </property>
+        <property name="busi" type="java.lang.String">
+            <column name="BUSI" />
+        </property>
+        <property name="industry" type="java.lang.String">
+            <column name="INDUSTRY" />
+        </property>
+        <property name="regDate" type="java.lang.String">
+            <column name="REGDATE" />
+        </property>
+        <property name="regCapital" type="java.math.BigDecimal">
+            <column name="REGCAPITAL" />
+        </property>
+        <property name="legNation" type="java.lang.String">
+            <column name="LEGNATION" />
+        </property>
+        <property name="legalName" type="java.lang.String">
+            <column name="LEGALNAME" />
+        </property>
+        <property name="legCert" type="java.lang.String">
+            <column name="LEGCERT" />
+        </property>
+        <property name="legalCardNo" type="java.lang.String">
+            <column name="LEGALCARDNO" />
+        </property>
+        <property name="authorizerName" type="java.lang.String">
+            <column name="AUTHORIZERNAME" />
+        </property>
+        <property name="authorizerId" type="java.lang.String">
+            <column name="AUTHORIZERID" />
+        </property>
+        <property name="busiArea" type="java.math.BigDecimal">
+            <column name="BUSIAREA" />
+        </property>
+        <property name="busiPlaceType" type="java.lang.String">
+            <column name="BUSIPLACETYPE" />
+        </property>
+        <property name="empCount" type="java.lang.Integer">
+            <column name="EMPCOUNT" />
+        </property>
+        <property name="webName" type="java.lang.String">
+            <column name="WEBNAME" />
+        </property>
+        <property name="webUrl" type="java.lang.String">
+            <column name="WEBURL" />
+        </property>
+        <property name="icpNo" type="java.lang.String">
+            <column name="ICPNO" />
+        </property>
+        <property name="icpInsName" type="java.lang.String">
+            <column name="ICPINSNAME" />
+        </property>
+        <property name="adjustUser" type="java.lang.String">
+            <column name="ADJUSTUSER" />
+        </property>
+        <property name="adjustUserTel" type="java.lang.String">
+            <column name="ADJUSTUSERTEL" />
+        </property>
+        <property name="mchtTel" type="java.lang.String">
+            <column name="MCHTTEL" />
+        </property>
+        <property name="mchtFax" type="java.lang.String">
+            <column name="MCHTFAX" />
+        </property>
+        <property name="legalTel" type="java.lang.String">
+            <column name="LEGALTEL" />
+        </property>
+        <property name="contacts" type="java.lang.String">
+            <column name="CONTACTS" />
+        </property>
+        <property name="contactsPhone" type="java.lang.String">
+            <column name="CONTACTSPHONE" />
+        </property>
+        <property name="contactsTel" type="java.lang.String">
+            <column name="CONTACTSTEL" />
+        </property>
+        <property name="contactsEmail" type="java.lang.String">
+            <column name="CONTACTSEMAIL" />
+        </property>
+        <property name="rcvProCode" type="java.lang.String">
+            <column name="RCVPROCODE" />
+        </property>
+        <property name="rcvCityCode" type="java.lang.String">
+            <column name="RCVCITYCODE" />
+        </property>
+        <property name="rcvCountryCode" type="java.lang.String">
+            <column name="RCVCOUNTRYCODE" />
+        </property>
+        <property name="rcvAddr" type="java.lang.String">
+            <column name="RCVADDR" />
+        </property>
+        <property name="dSingleTransLimit" type="java.lang.Integer" access="field">
+            <column name="DSINGLETRANSLIMIT" />
+        </property>
+        <property name="dDayTransLimit" type="java.lang.Integer" access="field">
+            <column name="DDAYTRANSLIMIT" />
+        </property>
+        <property name="dMonTransLimit" type="java.lang.Integer" access="field">
+            <column name="DMONTRANSLIMIT" />
+        </property>
+        <property name="dSingleHighTrans" type="java.lang.Integer" access="field">
+            <column name="DSINGLEHIGHTRANS" />
+        </property>
+        <property name="cSingleTransLimit" type="java.lang.Integer" access="field">
+            <column name="CSINGLETRANSLIMIT" />
+        </property>
+        <property name="cDayTransLimit" type="java.lang.Integer" access="field">
+            <column name="CDAYTRANSLIMIT" />
+        </property>
+        <property name="cMonTransLimit" type="java.lang.Integer" access="field">
+            <column name="CMONTRANSLIMIT" />
+        </property>
+        <property name="cSingleHighTrans" type="java.lang.Integer" access="field">
+            <column name="CSINGLEHIGHTRANS" />
+        </property>
+        <property name="funcCreditCard" type="java.lang.String">
+            <column name="FUNCCREDITCARD" />
+        </property>
+        <property name="funcPreauth" type="java.lang.String">
+            <column name="FUNCPREAUTH" />
+        </property>
+        <property name="funcHolidayWithdraw" type="java.lang.String">
+            <column name="FUNCHOLIDAYWITHDRAW" />
+        </property>
+        <property name="funcReturn" type="java.lang.String">
+            <column name="FUNCRETURN" />
+        </property>
+        <property name="funcAutoWithdraw" type="java.lang.String">
+            <column name="FUNCAUTOWITHDRAW" />
+        </property>
+        <property name="funcReturnWithFee" type="java.lang.String">
+            <column name="FUNCRETURNWITHFEE" />
+        </property>
+        <property name="funcPosInExp" type="java.lang.String">
+            <column name="FUNCPOSINEXP" />
+        </property>
+        <property name="funcPosOutExp" type="java.lang.String">
+            <column name="FUNCPOSOUTEXP" />
+        </property>
+        <property name="funcPosOut" type="java.lang.String">
+            <column name="FUNCPOSOUT" />
+        </property>
+        <property name="expander" type="java.lang.String">
+            <column name="EXPANDER" />
+        </property>
+        <property name="expanderTel" type="java.lang.String">
+            <column name="EXPANDERTEL" />
+        </property>
+        <property name="busiStartTime" type="java.lang.String">
+            <column name="BUSISTARTTIME" />
+        </property>
+        <property name="busiEndTime" type="java.lang.String">
+            <column name="BUSIENDTIME" />
+        </property>
+        <property name="agentNo" type="java.lang.String">
+            <column name="AGENTNO" />
+        </property>
+        <property name="applyDesc" type="java.lang.String">
+            <column name="APPLYDESC" />
+        </property>
+        <property name="settleAccType" type="java.lang.String">
+            <column name="SETTLEACCTYPE" />
+        </property>
+        <property name="mchntTpGrp" type="java.lang.String">
+            <column name="MCHNTTPGRP" />
+        </property>
+        <property name="mcc" type="java.lang.String">
+            <column name="MCC" />
+        </property>
+        <property name="busiUser" type="java.lang.String">
+            <column name="BUSIUSER" />
+        </property>
+        <property name="busiUserTel" type="java.lang.String">
+            <column name="BUSIUSERTEL" />
+        </property>
+        <property name="licStartDate" type="java.lang.String">
+            <column name="LICSTARTDATE" />
+        </property>
+        <property name="licEndDate" type="java.lang.String">
+            <column name="LICENDDATE" />
+        </property>
+        <property name="authorizerTel" type="java.lang.String">
+            <column name="AUTHORIZERTEL" />
+        </property>
+        <property name="aveMonthIncome" type="java.lang.Integer">
+            <column name="AVEMONTHINCOME" />
+        </property>
+        <property name="settleInterval" type="java.lang.String">
+            <column name="SETTLEINTERVAL" />
+        </property>
+        <property name="mchtSettleType" type="java.lang.Integer">
+            <column name="MCHTSETTLETYPE" />
+        </property>
+        <property name="pubAccBank" type="java.lang.String">
+            <column name="PUBACCBANK" />
+        </property>
+        <property name="pubAccBranch" type="java.lang.String">
+            <column name="PUBACCBRANCH" />
+        </property>
+        <property name="pubAccBranchNm" type="java.lang.String">
+            <column name="PUBACCBRANCHNM" />
+        </property>
+        <property name="pubAccName" type="java.lang.String">
+            <column name="PUBACCNAME" />
+        </property>
+        <property name="pubAccNo" type="java.lang.String">
+            <column name="PUBACCNO" />
+        </property>
+        <property name="persAccBank" type="java.lang.String">
+            <column name="PERSACCBANK" />
+        </property>
+        <property name="persAccBranch" type="java.lang.String">
+            <column name="PERSACCBRANCH" />
+        </property>
+        <property name="persAccBranchNm" type="java.lang.String">
+            <column name="PERSACCBRANCHNM" />
+        </property>
+        <property name="persAccName" type="java.lang.String">
+            <column name="PERSACCNAME" />
+        </property>
+        <property name="persAccNo" type="java.lang.String">
+            <column name="PERSACCNO" />
+        </property>
+        <property name="legAccBank" type="java.lang.String">
+            <column name="LEGACCBANK" />
+        </property>
+        <property name="legAccBranch" type="java.lang.String">
+            <column name="LEGACCBRANCH" />
+        </property>
+        <property name="legAccBranchNm" type="java.lang.String">
+            <column name="LEGACCBRANCHNM" />
+        </property>
+        <property name="legAccName" type="java.lang.String">
+            <column name="LEGACCNAME" />
+        </property>
+        <property name="legAccNo" type="java.lang.String">
+            <column name="LEGACCNO" />
+        </property>
+        <property name="posCnt" type="java.lang.Integer">
+            <column name="POSCNT" />
+        </property>
+        <property name="payCardType" type="java.lang.String">
+            <column name="PAYCARDTYPE" />
+        </property>
+        <property name="discNo" type="java.lang.String">
+            <column name="DISCNO" />
+        </property>
+        <property name="realFeePercent" type="java.lang.String">
+            <column name="REALFEEPERCENT" />
+        </property>
+        <property name="reserve1" type="java.lang.String">
+            <column name="RESERVE1" />
+        </property>
+        <property name="reserve2" type="java.lang.String">
+            <column name="RESERVE2" />
+        </property>
+        <property name="reserve3" type="java.lang.String">
+            <column name="RESERVE3" />
+        </property>
+        <property name="reserve4" type="java.lang.String">
+            <column name="RESERVE4" />
+        </property>
+        <property name="reserve5" type="java.lang.String">
+            <column name="RESERVE5" />
+        </property>
+        <property name="reserve6" type="java.lang.String">
+            <column name="RESERVE6" />
+        </property>
+        <property name="reserve7" type="java.lang.String">
+            <column name="RESERVE7" />
+        </property>
+        <property name="reserve8" type="java.lang.String">
+            <column name="RESERVE8" />
+        </property>
+        <property name="reserve9" type="java.lang.String">
+            <column name="RESERVE9" />
+        </property>
+        <property name="reserve10" type="java.lang.String">
+            <column name="RESERVE10" />
+        </property>
+        <property name="status" type="java.lang.String">
+            <column name="STATUS" />
+        </property>
+        <property name="useable" type="java.lang.String">
+            <column name="USEABLE" />
+        </property>
+        <property name="crtDate" type="java.lang.String">
+            <column name="CRTDATE" />
+        </property>
+        <property name="uptDate" type="java.lang.String">
+            <column name="UPTDATE" />
+        </property>
+    </class>
+</hibernate-mapping>

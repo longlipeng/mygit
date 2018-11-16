@@ -1,0 +1,483 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.huateng.po.mchnt.base.BaseTblMchtBaseInf" table="BASETBLMCHTBASEINF" abstract="true">
+        <id name="crtOprId" type="java.lang.String">
+            <column name="CRTOPRID" />
+            <generator class="assigned" />
+        </id>
+        <discriminator type="string">
+            <column name="DISCR_COL" />
+        </discriminator>
+        <property name="hashCode" type="int">
+            <column name="HASHCODE" />
+        </property>
+        <property name="mchtNo" type="java.lang.String">
+            <column name="MCHTNO" />
+        </property>
+        <property name="mchtNoHx" type="java.lang.String">
+            <column name="MCHTNOHX" />
+        </property>
+        <property name="mchtNm" type="java.lang.String">
+            <column name="MCHTNM" />
+        </property>
+        <property name="rislLvl" type="java.lang.String">
+            <column name="RISLLVL" />
+        </property>
+        <property name="mchtLvl" type="java.lang.String">
+            <column name="MCHTLVL" />
+        </property>
+        <property name="mchtStatus" type="java.lang.String">
+            <column name="MCHTSTATUS" />
+        </property>
+        <property name="manuAuthFlag" type="java.lang.String">
+            <column name="MANUAUTHFLAG" />
+        </property>
+        <property name="partNum" type="java.lang.String">
+            <column name="PARTNUM" />
+        </property>
+        <property name="discConsFlg" type="java.lang.String">
+            <column name="DISCCONSFLG" />
+        </property>
+        <property name="discConsRebate" type="java.lang.String">
+            <column name="DISCCONSREBATE" />
+        </property>
+        <property name="passFlag" type="java.lang.String">
+            <column name="PASSFLAG" />
+        </property>
+        <property name="openDays" type="java.lang.String">
+            <column name="OPENDAYS" />
+        </property>
+        <property name="sleepDays" type="java.lang.String">
+            <column name="SLEEPDAYS" />
+        </property>
+        <property name="mchtCnAbbr" type="java.lang.String">
+            <column name="MCHTCNABBR" />
+        </property>
+        <property name="spellName" type="java.lang.String">
+            <column name="SPELLNAME" />
+        </property>
+        <property name="engName" type="java.lang.String">
+            <column name="ENGNAME" />
+        </property>
+        <property name="mchtEnAbbr" type="java.lang.String">
+            <column name="MCHTENABBR" />
+        </property>
+        <property name="areaNo" type="java.lang.String">
+            <column name="AREANO" />
+        </property>
+        <property name="addr" type="java.lang.String">
+            <column name="ADDR" />
+        </property>
+        <property name="homePage" type="java.lang.String">
+            <column name="HOMEPAGE" />
+        </property>
+        <property name="mcc" type="java.lang.String">
+            <column name="MCC" />
+        </property>
+        <property name="tcc" type="java.lang.String">
+            <column name="TCC" />
+        </property>
+        <property name="etpsAttr" type="java.lang.String">
+            <column name="ETPSATTR" />
+        </property>
+        <property name="mngMchtId" type="java.lang.String">
+            <column name="MNGMCHTID" />
+        </property>
+        <property name="mchtGrp" type="java.lang.String">
+            <column name="MCHTGRP" />
+        </property>
+        <property name="mchtAttr" type="java.lang.String">
+            <column name="MCHTATTR" />
+        </property>
+        <property name="mchtGroupFlag" type="java.lang.String">
+            <column name="MCHTGROUPFLAG" />
+        </property>
+        <property name="mchtGroupId" type="java.lang.String">
+            <column name="MCHTGROUPID" />
+        </property>
+        <property name="mchtEngNm" type="java.lang.String">
+            <column name="MCHTENGNM" />
+        </property>
+        <property name="mchtEngAddr" type="java.lang.String">
+            <column name="MCHTENGADDR" />
+        </property>
+        <property name="mchtEngCityName" type="java.lang.String">
+            <column name="MCHTENGCITYNAME" />
+        </property>
+        <property name="saLimitAmt" type="java.lang.String">
+            <column name="SALIMITAMT" />
+        </property>
+        <property name="saAction" type="java.lang.String">
+            <column name="SAACTION" />
+        </property>
+        <property name="psamNum" type="java.lang.String">
+            <column name="PSAMNUM" />
+        </property>
+        <property name="cdMacNum" type="java.lang.String">
+            <column name="CDMACNUM" />
+        </property>
+        <property name="posNum" type="java.lang.String">
+            <column name="POSNUM" />
+        </property>
+        <property name="connType" type="java.lang.String">
+            <column name="CONNTYPE" />
+        </property>
+        <property name="mchtMngMode" type="java.lang.String">
+            <column name="MCHTMNGMODE" />
+        </property>
+        <property name="mchtFunction" type="java.lang.String">
+            <column name="MCHTFUNCTION" />
+        </property>
+        <property name="licenceNo" type="java.lang.String">
+            <column name="LICENCENO" />
+        </property>
+        <property name="licenceEndDate" type="java.lang.String">
+            <column name="LICENCEENDDATE" />
+        </property>
+        <property name="bankLicenceNo" type="java.lang.String">
+            <column name="BANKLICENCENO" />
+        </property>
+        <property name="busType" type="java.lang.String">
+            <column name="BUSTYPE" />
+        </property>
+        <property name="faxNo" type="java.lang.String">
+            <column name="FAXNO" />
+        </property>
+        <property name="uscCode" type="java.lang.String">
+            <column name="USCCODE" />
+        </property>
+        <property name="organizationType" type="java.lang.String">
+            <column name="ORGANIZATIONTYPE" />
+        </property>
+        <property name="isSyncretic" type="java.lang.String">
+            <column name="ISSYNCRETIC" />
+        </property>
+        <property name="busAmt" type="java.lang.String">
+            <column name="BUSAMT" />
+        </property>
+        <property name="mchtCreLvl" type="java.lang.String">
+            <column name="MCHTCRELVL" />
+        </property>
+        <property name="contact" type="java.lang.String">
+            <column name="CONTACT" />
+        </property>
+        <property name="postCode" type="java.lang.String">
+            <column name="POSTCODE" />
+        </property>
+        <property name="commEmail" type="java.lang.String">
+            <column name="COMMEMAIL" />
+        </property>
+        <property name="commMobil" type="java.lang.String">
+            <column name="COMMMOBIL" />
+        </property>
+        <property name="commTel" type="java.lang.String">
+            <column name="COMMTEL" />
+        </property>
+        <property name="manager" type="java.lang.String">
+            <column name="MANAGER" />
+        </property>
+        <property name="artifCertifTp" type="java.lang.String">
+            <column name="ARTIFCERTIFTP" />
+        </property>
+        <property name="identityNo" type="java.lang.String">
+            <column name="IDENTITYNO" />
+        </property>
+        <property name="managerTel" type="java.lang.String">
+            <column name="MANAGERTEL" />
+        </property>
+        <property name="fax" type="java.lang.String">
+            <column name="FAX" />
+        </property>
+        <property name="electrofax" type="java.lang.String">
+            <column name="ELECTROFAX" />
+        </property>
+        <property name="regAddr" type="java.lang.String">
+            <column name="REGADDR" />
+        </property>
+        <property name="applyDate" type="java.lang.String">
+            <column name="APPLYDATE" />
+        </property>
+        <property name="endDate" type="java.lang.String">
+            <column name="ENDDATE" />
+        </property>
+        <property name="enableDate" type="java.lang.String">
+            <column name="ENABLEDATE" />
+        </property>
+        <property name="preAudNm" type="java.lang.String">
+            <column name="PREAUDNM" />
+        </property>
+        <property name="confirmNm" type="java.lang.String">
+            <column name="CONFIRMNM" />
+        </property>
+        <property name="protocalId" type="java.lang.String">
+            <column name="PROTOCALID" />
+        </property>
+        <property name="signInstId" type="java.lang.String">
+            <column name="SIGNINSTID" />
+        </property>
+        <property name="netNm" type="java.lang.String">
+            <column name="NETNM" />
+        </property>
+        <property name="agrBr" type="java.lang.String">
+            <column name="AGRBR" />
+        </property>
+        <property name="netTel" type="java.lang.String">
+            <column name="NETTEL" />
+        </property>
+        <property name="prolDate" type="java.lang.String">
+            <column name="PROLDATE" />
+        </property>
+        <property name="prolTlr" type="java.lang.String">
+            <column name="PROLTLR" />
+        </property>
+        <property name="closeDate" type="java.lang.String">
+            <column name="CLOSEDATE" />
+        </property>
+        <property name="closeTlr" type="java.lang.String">
+            <column name="CLOSETLR" />
+        </property>
+        <property name="operNo" type="java.lang.String">
+            <column name="OPERNO" />
+        </property>
+        <property name="operNm" type="java.lang.String">
+            <column name="OPERNM" />
+        </property>
+        <property name="procFlag" type="java.lang.String">
+            <column name="PROCFLAG" />
+        </property>
+        <property name="setCur" type="java.lang.String">
+            <column name="SETCUR" />
+        </property>
+        <property name="printInstId" type="java.lang.String">
+            <column name="PRINTINSTID" />
+        </property>
+        <property name="acqInstId" type="java.lang.String">
+            <column name="ACQINSTID" />
+        </property>
+        <property name="acqBkName" type="java.lang.String">
+            <column name="ACQBKNAME" />
+        </property>
+        <property name="bankNo" type="java.lang.String">
+            <column name="BANKNO" />
+        </property>
+        <property name="orgnNo" type="java.lang.String">
+            <column name="ORGNNO" />
+        </property>
+        <property name="subbrhNo" type="java.lang.String">
+            <column name="SUBBRHNO" />
+        </property>
+        <property name="subbrhNm" type="java.lang.String">
+            <column name="SUBBRHNM" />
+        </property>
+        <property name="openTime" type="java.lang.String">
+            <column name="OPENTIME" />
+        </property>
+        <property name="closeTime" type="java.lang.String">
+            <column name="CLOSETIME" />
+        </property>
+        <property name="visActFlg" type="java.lang.String">
+            <column name="VISACTFLG" />
+        </property>
+        <property name="visMchtId" type="java.lang.String">
+            <column name="VISMCHTID" />
+        </property>
+        <property name="mstActFlg" type="java.lang.String">
+            <column name="MSTACTFLG" />
+        </property>
+        <property name="mstMchtId" type="java.lang.String">
+            <column name="MSTMCHTID" />
+        </property>
+        <property name="amxActFlg" type="java.lang.String">
+            <column name="AMXACTFLG" />
+        </property>
+        <property name="amxMchtId" type="java.lang.String">
+            <column name="AMXMCHTID" />
+        </property>
+        <property name="dnrActFlg" type="java.lang.String">
+            <column name="DNRACTFLG" />
+        </property>
+        <property name="dnrMchtId" type="java.lang.String">
+            <column name="DNRMCHTID" />
+        </property>
+        <property name="jcbActFlg" type="java.lang.String">
+            <column name="JCBACTFLG" />
+        </property>
+        <property name="jcbMchtId" type="java.lang.String">
+            <column name="JCBMCHTID" />
+        </property>
+        <property name="cupMchtFlg" type="java.lang.String">
+            <column name="CUPMCHTFLG" />
+        </property>
+        <property name="debMchtFlg" type="java.lang.String">
+            <column name="DEBMCHTFLG" />
+        </property>
+        <property name="creMchtFlg" type="java.lang.String">
+            <column name="CREMCHTFLG" />
+        </property>
+        <property name="cdcMchtFlg" type="java.lang.String">
+            <column name="CDCMCHTFLG" />
+        </property>
+        <property name="reserved" type="java.lang.String">
+            <column name="RESERVED" />
+        </property>
+        <property name="recUpdTs" type="java.lang.String">
+            <column name="RECUPDTS" />
+        </property>
+        <property name="recCrtTs" type="java.lang.String">
+            <column name="RECCRTTS" />
+        </property>
+        <property name="updOprId" type="java.lang.String">
+            <column name="UPDOPRID" />
+        </property>
+        <property name="internalNo" type="java.lang.String">
+            <column name="INTERNALNO" />
+        </property>
+        <property name="reject" type="java.lang.String">
+            <column name="REJECT" />
+        </property>
+        <property name="mchntAttr" type="java.lang.String">
+            <column name="MCHNTATTR" />
+        </property>
+        <property name="linkPer" type="java.lang.String">
+            <column name="LINKPER" />
+        </property>
+        <property name="SettleAreaNo" type="java.lang.String">
+            <column name="SETTLEAREANO" />
+        </property>
+        <property name="MainTlr" type="java.lang.String">
+            <column name="MAINTLR" />
+        </property>
+        <property name="CheckTlr" type="java.lang.String">
+            <column name="CHECKTLR" />
+        </property>
+        <property name="routeFlag" type="java.lang.String">
+            <column name="ROUTEFLAG" />
+        </property>
+        <property name="agentNo" type="java.lang.String">
+            <column name="AGENTNO" />
+        </property>
+        <property name="mchntInd" type="java.lang.String">
+            <column name="MCHNTIND" />
+        </property>
+        <property name="auditOprId" type="java.lang.String">
+            <column name="AUDITOPRID" />
+        </property>
+        <property name="foreignName" type="java.lang.String">
+            <column name="FOREIGNNAME" />
+        </property>
+        <property name="riskGrade" type="java.lang.String">
+            <column name="RISKGRADE" />
+        </property>
+        <property name="uscCodeDate" type="java.lang.String">
+            <column name="USCCODEDATE" />
+        </property>
+        <property name="licenceNoDate" type="java.lang.String">
+            <column name="LICENCENODATE" />
+        </property>
+        <property name="shareholder" type="java.lang.String">
+            <column name="SHAREHOLDER" />
+        </property>
+        <property name="idshareholderTpmd" type="java.lang.String">
+            <column name="IDSHAREHOLDERTPMD" />
+        </property>
+        <property name="idshareholder" type="java.lang.String">
+            <column name="IDSHAREHOLDER" />
+        </property>
+        <property name="shareholderDate" type="java.lang.String">
+            <column name="SHAREHOLDERDATE" />
+        </property>
+        <property name="identityNoDate" type="java.lang.String">
+            <column name="IDENTITYNODATE" />
+        </property>
+        <property name="contactmd" type="java.lang.String">
+            <column name="CONTACTMD" />
+        </property>
+        <property name="linkTelDate" type="java.lang.String">
+            <column name="LINKTELDATE" />
+        </property>
+        <property name="operateAddr" type="java.lang.String">
+            <column name="OPERATEADDR" />
+        </property>
+        <property name="legalGender" type="java.lang.String">
+            <column name="LEGALGENDER" />
+        </property>
+        <property name="legalAddr" type="java.lang.String">
+            <column name="LEGALADDR" />
+        </property>
+        <property name="legalProfession" type="java.lang.String">
+            <column name="LEGALPROFESSION" />
+        </property>
+        <property name="custNo" type="java.lang.String">
+            <column name="CUSTNO" />
+        </property>
+        <property name="busiRangeId" type="java.lang.String">
+            <column name="BUSIRANGEID" />
+        </property>
+        <property name="postalCode" type="java.lang.String">
+            <column name="POSTALCODE" />
+        </property>
+        <property name="insAddr" type="java.lang.String">
+            <column name="INSADDR" />
+        </property>
+        <property name="belInd" type="java.lang.String">
+            <column name="BELIND" />
+        </property>
+        <property name="ownerBusi" type="java.lang.String">
+            <column name="OWNERBUSI" />
+        </property>
+        <property name="ICPrecordNo" type="java.lang.String">
+            <column name="ICPRECORDNO" />
+        </property>
+        <property name="ICPcompName" type="java.lang.String">
+            <column name="ICPCOMPNAME" />
+        </property>
+        <property name="mailAddr" type="java.lang.String">
+            <column name="MAILADDR" />
+        </property>
+        <property name="contRate" type="java.lang.String">
+            <column name="CONTRATE" />
+        </property>
+        <property name="sinDebAmount" type="java.lang.String">
+            <column name="SINDEBAMOUNT" />
+        </property>
+        <property name="dayDebAmount" type="java.lang.String">
+            <column name="DAYDEBAMOUNT" />
+        </property>
+        <property name="monDebAmount" type="java.lang.String">
+            <column name="MONDEBAMOUNT" />
+        </property>
+        <property name="sinCreAmount" type="java.lang.String">
+            <column name="SINCREAMOUNT" />
+        </property>
+        <property name="dayCreAmount" type="java.lang.String">
+            <column name="DAYCREAMOUNT" />
+        </property>
+        <property name="monCreAmount" type="java.lang.String">
+            <column name="MONCREAMOUNT" />
+        </property>
+        <property name="contName" type="java.lang.String">
+            <column name="CONTNAME" />
+        </property>
+        <property name="contTel" type="java.lang.String">
+            <column name="CONTTEL" />
+        </property>
+        <property name="busiTel" type="java.lang.String">
+            <column name="BUSITEL" />
+        </property>
+        <property name="appComm" type="java.lang.String">
+            <column name="APPCOMM" />
+        </property>
+        <property name="agentName" type="java.lang.String">
+            <column name="AGENTNAME" />
+        </property>
+        <property name="agentType" type="java.lang.String">
+            <column name="AGENTTYPE" />
+        </property>
+        <property name="regionBel" type="java.lang.String">
+            <column name="REGIONBEL" />
+        </property>
+    </class>
+</hibernate-mapping>
