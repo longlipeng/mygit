@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.risk">
+	<class
+		name="TblRiskRefuse"
+		table="tbl_risk_refuse"
+	>
+	    <meta attribute="sync-DAO">true</meta>
+	    <id
+			name="param1"
+			column="PARAM1"
+			type="string"
+			length="40"
+		/><!-- 参数1 -->
+		<property
+			name="param2"
+			column="PARAM2"
+			type="string"
+			not-null="false"
+			length="40"
+		/><!-- 参数2 -->
+		<property
+			name="param3"
+			column="PARAM3"
+			type="string"
+			not-null="false"
+			length="40"
+		/><!-- 参数3 -->
+		<property
+			name="param4"
+			column="PARAM4"
+			type="string"
+			not-null="false"
+			length="40"
+		/><!-- 参数4 -->
+		<property
+			name="param5"
+			column="PARAM5"
+			type="string"
+			not-null="false"
+			length="40"
+		/><!-- 参数5 -->
+		<property
+			name="param6"
+			column="PARAM6"
+			type="string"
+			not-null="false"
+			length="40"
+		/><!-- 参数7 -->
+		<property
+			name="reserve1"
+			column="RESERVE1"
+			type="string"
+			not-null="false"
+			length="128"
+		/><!-- 参数6 -->
+		<property
+			name="txnTime"
+			column="TXN_TIME"
+			type="string"
+			not-null="false"
+			length="14"
+		/><!-- 拒绝时间 -->
+		<property
+			name="brhId"
+			column="BRH_ID"
+			type="string"
+			not-null="false"
+			length="10"
+		/><!-- 机构号 -->
+		<property
+			name="oprId"
+			column="OPR_ID"
+			type="string"
+			not-null="false"
+			length="40"
+		/><!-- 操作员编号 -->
+		<property
+			name="refuseType"
+			column="REFUSE_TYPE"
+			type="string"
+			not-null="false"
+			length="40"
+		/><!-- 拒绝类型 -->
+		<property
+			name="refuseInfo"
+			column="REFUSE_INFO"
+			type="string"
+			not-null="false"
+			length="200"
+		/><!-- 拒绝原因 -->
+		<property
+			name="flag"
+			column="FLAG"
+			type="string"
+			not-null="false"
+			length="1"
+		/><!-- 黑名单类型  1-卡黑名单，2-商户黑名单-->
+		
+	</class>	
+</hibernate-mapping>

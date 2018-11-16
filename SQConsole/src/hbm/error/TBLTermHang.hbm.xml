@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.error">
+	<class
+		name="TBLTermHang"
+		table="TBL_TERM_HANG"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		  <composite-id name="id" class="TBLTermHangPK">
+			<key-property name="termid" column="TERM_ID" type="string" />
+			<key-property name="transdate" column="TRANS_DATE" type="string" />
+		</composite-id>
+
+		<property
+			name="hangflag"
+			column="HANG_FLAG"
+			type="string"
+			not-null="false"
+			length="60"
+		/>
+		<property
+			name="hangdate"
+			column="HANG_DATE"
+			type="string"
+		/>
+		<property
+			name="relievedate"
+			column="RELIEVE_DATE"
+			type="string"
+		/>
+		<property
+			name="remark"
+			column="REMARK"
+			type="string"
+		/>
+		<property
+			name="oprid"
+			column="OPR_ID"
+			type="string"
+		/>
+		<property
+			name="reliveremark"
+			column="RELIEVE_REMARK"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

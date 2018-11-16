@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.mchnt">
+	<class
+		name="TblInfDiscCdTmp"
+		table="tbl_inf_disc_cd_temp"
+	>
+       <id name="DiscCd" type="string" column="DISC_CD"/>
+		<property
+			name="discNm"
+			column="DISC_NM"
+			type="string"
+			not-null="true"
+			length="40"
+		/>
+		
+		<property
+			name="DiscOrg"
+			column="DISC_ORG"
+			type="string"
+			not-null="true"
+			length="14"
+		/>
+		<property
+			name="LastOperIn"
+			column="LAST_OPER_IN"
+			type="string"
+			not-null="true"
+			length="1"
+		/>
+		<property
+			name="RecUpdUserId"
+			column="REC_UPD_USER_ID"
+			type="string"
+		/>
+		<property
+			name="RecUpdTs"
+			column="REC_UPD_TS"
+			type="string"
+		/>
+		<property
+			name="RecCrtTs"
+			column="REC_CRT_TS"
+			type="string"
+			not-null="true"
+			length="14"
+		/>
+        <property
+			name="cre_id"
+			column="CRE_ID"
+			type="string"
+		/>
+     <property
+			name="sastate"
+			column="SA_STATE"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.rout">
+	<class
+		name="TblRouteChgInf"
+		table="tbl_route_chg_inf">
+		<meta attribute="sync-DAO">true</meta>
+		<id name="destInstId"
+			column="DEST_INST_ID"
+			type="string">
+		</id><!-- 主键 -->
+		<property
+			name="dftDestId"
+			column="DFT_DEST_ID"
+			type="string"/>
+		<property
+			name="chgFlag"
+			column="CHG_FLAG"
+			type="string"/>
+		<property
+			name="chgDestId"
+			column="CHG_DEST_ID"
+			type="string"/>
+		<property
+			name="createTime"
+			column="CREATETIME"
+			type="string"/>
+		<property
+			name="createOprId"
+			column="CREATEOPRID"
+			type="string"/>
+		<property
+			name="modiTime"
+			column="MODITIME"
+			type="string"/>
+		<property
+			name="modiOprId"
+			column="MODIOPRID"
+			type="string"/>
+		<property
+			name="reserved"
+			column="RESERVED"
+			type="string"/>
+	</class>	
+</hibernate-mapping>

@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.risk">
+	<class
+		name="TblRiskTermTranLimit"
+		table="tbl_risk_term_tran_limit"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="id"
+			type="string"
+			column="ID"
+		>
+		<generator class="assigned"/>
+		</id><!-- UUID -->
+		<property
+			name="saState"
+			column="SA_STATE"
+			type="string"
+			 
+		/><!-- 状态-->
+		<property
+			name="termID"
+			column="TERM_ID"
+			 
+			type="string"
+		/><!-- 终端号 -->
+		<property
+			name="oprID"
+			column="OPR_ID"
+			type="string"
+			 
+		/><!-- 操作员 ID-->
+		<property
+			name="updateTime"
+			column="UPDATETIME"
+			type="string"
+			 
+		/><!-- 修改时间-->
+		<property
+			name="txnNum"
+			column="TXN_NUM"
+			type="string"
+			 
+		/><!--交易代码 -->
+		<property
+			name="bussType"
+			column="BUSS_TYPE"
+			type="string"
+			 
+		/><!--业务类型 -->
+		<property
+			name="channel"
+			column="CHANNEL"
+			type="string"
+			 
+		/><!-- 交易渠道 -->
+		<property
+			name="cardType"
+			column="CARD_TYPE"
+			type="string"
+			 
+		/><!-- 卡类型 -->
+		<property
+			name="limit"
+			column="LIMIT"
+			type="string"
+			 
+		/><!-- 权限 -->
+		<property
+			name="txnNumOld"
+			column="TXN_NUM_OLD"
+			type="string"
+			 
+		/><!--修改前的交易代码 -->
+		<property
+			name="bussTypeOld"
+			column="BUSS_TYPE_OLD"
+			type="string"
+			 
+		/><!--修改前的业务类型 -->
+		<property
+			name="channelOld"
+			column="CHANNEL_OLD"
+			type="string"
+		 
+		/><!-- 修改前的交易渠道 -->
+		<property
+			name="cardTypeOld"
+			column="CARD_TYPE_OLD"
+			type="string"
+			 
+		/><!-- 修改前的卡类型 -->
+		<property
+			name="limitOld"
+			column="LIMIT_OLD"
+			type="string"
+		 
+		/><!-- 修改前的权限 -->
+		<property
+			name="creid"
+			column="CRE_ID"
+			type="string"
+		/>
+		<property
+			name="cretime"
+			column="CRE_TIME"
+			type="string"
+		/>
+		<property
+			name="mchtNo"
+			column="mcht_no"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.risk">
+	<class	name="TblWhiteListTmp"	table="tbl_white_list_tmp">
+		<meta attribute="sync-DAO">true</meta>
+		<!-- uuid主键 -->
+		<id	name="uuid" type="string"	column="UUID">
+			<generator class="assigned"/>
+		</id>
+		<!-- 商户号 -->
+		<property name="mchtNo" column="MCHT_NO" type="string"/>
+		<!-- 起始日期 -->
+		<property name="beginDt" column="BEGIN_DT" type="string"/>
+		<!-- 有效期 -->
+		<property name="validity" column="VALIDITY" type="string"/>
+		<!-- 申请人 -->
+		<property name="insOpr" column="INS_OPR" type="string"/>
+		
+		<!-- 申请时间 -->
+		<property name="insDt" column="INS_DT" type="string"/>
+		<!-- 审核人-->
+		<property name="updOpr" column="UPD_OPR" type="string"/>
+		<!-- 审核时间 -->
+		<property name="updDt" column="UPD_DT" type="string"/>
+		<!-- 状态-->
+		<property name="state" column="STATE" type="string"/>
+		<!-- 申请备注 -->
+		<property name="appRemark" column="APP_REMARK" type="string"/>
+		<!-- 添加方式 -->
+		<property name="addType" column="ADD_TYPE" type="string"/>
+		
+	</class>	
+</hibernate-mapping>

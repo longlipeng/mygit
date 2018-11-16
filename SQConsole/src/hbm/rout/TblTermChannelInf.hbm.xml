@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.rout">
+	<class
+		name="TblTermChannelInf"
+		table="tbl_term_channel_inf">
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="id"
+			column="ID"
+			type="string">
+			<generator class="assigned"/>
+		</id><!-- 主键：id -->
+		<property
+			name="termIns"
+			column="TERM_INS"
+			type="string"/>
+		<property
+			name="mchtMcc"
+			column="MCHT_MCC"
+			type="string"/>
+		<property
+			name="mchtId"
+			column="MCHT_ID"
+			type="string"/>
+		<property
+			name="mchtTermId"
+			column="MCHT_TERM_ID"
+			type="string"/>
+		<property
+			name="insMcc"
+			column="INS_MCC"
+			type="string"/>
+		<property
+			name="insMcht"
+			column="INS_MCHT"
+			type="string"/>
+		<property
+			name="insTerm"
+			column="INS_TERM"
+			type="string"/>
+		<property
+			name="stat"
+			column="STAT"
+			type="string"/>
+		<property
+			name="modiTime"
+			column="MODI_TIME"
+			type="string"/>
+		<property
+			name="modiOprId"
+			column="MODI_OPR_ID"
+			type="string"/>
+		<property
+			name="checkTime"
+			column="CHECK_TIME"
+			type="string"/>
+		<property
+			name="checkOprId"
+			column="CHECK_OPR_ID"
+			type="string"/>
+		<property
+			name="termInsOld"
+			column="TERM_INS_OLD"
+			type="string"/>
+		<property
+			name="mchtMccOld"
+			column="MCHT_MCC_OLD"
+			type="string"/>
+		<property
+			name="mchtIdOld"
+			column="MCHT_ID_OLD"
+			type="string"/>
+		<property
+			name="mchtTermIdOld"
+			column="MCHT_TERM_ID_OLD"
+			type="string"/>
+		<property
+			name="insMccOld"
+			column="INS_MCC_OLD"
+			type="string"/>
+		<property
+			name="insMchtOld"
+			column="INS_MCHT_OLD"
+			type="string"/>
+		<property
+			name="insTermOld"
+			column="INS_TERM_OLD"
+			type="string"/>
+		<property
+			name="reserve01"
+			column="RESERVE_01"
+			type="string"/>
+		<property
+			name="reserve02"
+			column="RESERVE_02"
+			type="string"/>
+		<property
+			name="lmk"
+			column="LMK"
+			type="string"/>
+		<property
+			name="creTime"
+			column="CRE_TIME"
+			type="string"/>
+		<property
+			name="creOprId"
+			column="CRE_OPR_ID"
+			type="string"/>
+		<property
+			name="channelType"
+			column="CHANNEL_TYPE"
+			type="string"/>
+<!-- 		<property -->
+<!-- 			name="maxAmt" -->
+<!-- 			column="MAX_AMT" -->
+<!-- 			type="long"/>	 -->
+<!-- 		<property -->
+<!-- 			name="minAmt" -->
+<!-- 			column="MIN_AMT" -->
+<!-- 			type="long"/> -->
+	</class>	
+</hibernate-mapping>

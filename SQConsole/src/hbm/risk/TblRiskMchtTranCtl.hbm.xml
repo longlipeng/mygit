@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.risk">
+	<class
+		name="TblRiskMchtTranCtl"
+		table="tbl_risk_mcht_tran_ctl"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="id"
+			type="string"
+			column="ID"
+		>
+		<generator class="uuid.hex"/>
+		</id><!-- UUID -->
+		<property
+			name="saState"
+			column="SA_STATE"
+			type="string"
+			not-null="true"
+			length="1"
+		/><!-- 状态-->
+		<property
+			name="mchtNo"
+			column="MCHT_NO"
+			not-null="true"
+			length="15"
+			type="string"
+		/><!-- 商户编号 -->
+		<property
+			name="oprID"
+			column="OPR_ID"
+			type="string"
+			not-null="true"
+			length="14"
+		/><!-- 操作员 ID-->
+		<property
+			name="updateTime"
+			column="UPDATETIME"
+			type="string"
+			not-null="true"
+			length="14"
+		/><!-- 修改时间-->
+		<property
+			name="txnNum"
+			column="TXN_NUM"
+			type="string"
+			not-null="true"
+			length="4"
+		/><!--交易代码 -->
+		<property
+			name="bussType"
+			column="BUSS_TYPE"
+			type="string"
+			not-null="true"
+			length="6"
+		/><!--业务类型 -->
+		<property
+			name="channel"
+			column="CHANNEL"
+			type="string"
+			not-null="true"
+			length="2"
+		/><!-- 交易渠道 -->
+		<property
+			name="txnNumOld"
+			column="TXN_NUM_OLD"
+			type="string"
+			not-null="false"
+			length="4"
+		/><!--修改前的交易代码 -->
+		<property
+			name="bussTypeOld"
+			column="BUSS_TYPE_OLD"
+			type="string"
+			not-null="false"
+			length="6"
+		/><!--修改前的业务类型 -->
+		<property
+			name="channelOld"
+			column="CHANNEL_OLD"
+			type="string"
+			not-null="false"
+			length="2"
+		/><!-- 修改前的交易渠道 -->
+		<property
+			name="reserved1"
+			column="RESERVED1"
+			type="string"
+			not-null="false"
+			length="12"
+		/><!-- 审核人编号 -->
+	</class>	
+</hibernate-mapping>

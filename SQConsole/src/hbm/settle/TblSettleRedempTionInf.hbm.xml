@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-9-26 15:04:17 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.settle">
+    <class 
+    	name="TblSettleRedempTionInf" 
+    	table="TBL_SETTLE_REDEMPTION_INF"
+   	>
+   		<meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="redempTionId"
+        	type="string"
+        	column="REDEMPTION_ID"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+        <property
+			name="redempTionAccountName"
+			column="REDEMPTION_ACCOUNT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionAccount"
+			column="REDEMPTION_ACCOUNT"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionMoney"
+			column="REDEMPTION_MONEY"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionBankCard"
+			column="REDEMPTION_BANK_CARD"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionStatus"
+			column="REDEMPTION_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionAccountStatus"
+			column="REDEMPTION_ACCOUNT_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionPayStatus"
+			column="REDEMPTION_PAY_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionAddTime"
+			column="REDEMPTION_ADD_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionAddName"
+			column="REDEMPTION_ADD_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionAuditDate"
+			column="REDEMPTION_AUDIT_DATE"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionAuditName"
+			column="REDEMPTION_AUDIT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="redempTionEnTry"
+			column="REDEMPTION_ENTRY"
+			type="string"
+		/>
+		
+    </class>
+</hibernate-mapping>

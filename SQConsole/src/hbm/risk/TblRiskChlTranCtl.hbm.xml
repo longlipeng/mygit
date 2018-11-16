@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.risk">
+	<class
+		name="TblRiskChlTranCtl"
+		table="TBL_RISK_CHL_TRAN_CTL"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="id"
+			type="string"
+			column="ID"
+		>
+			<generator class="assigned"/>
+		</id>
+		<property
+			name="channel"
+			column="CHANNEL"
+		/>
+		<property
+			name="cardbin"
+			column="CARD_BIN"
+			type="string"
+		/>
+		<property
+			name="txnnum"
+			column="TXN_NUM"
+			type="string"
+		/>
+		<property
+			name="sastatue"
+			column="SA_STATE"
+				type="string"
+		/>
+		<property
+			name="creid"
+			column="CRE_ID"
+			type="string"
+		/>
+		<property
+			name="cretime"
+			column="CRE_TIME"
+		/>
+		<property
+			name="upid"
+			column="UP_ID"
+			type="string"
+		/>
+		<property
+			name="uptime"
+			column="UP_TIME"
+			type="string"
+		/>
+		<property
+			name="cardbinold"
+			column="CARD_BIN_OLD"
+			type="string"
+		/>
+		<property
+			name="txnnumold"
+			column="TXN_NUM_OLD"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

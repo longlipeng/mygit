@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+<class
+		name="TblRespCodeInfo"
+		table="tbl_resp_code_info_temp"
+	>
+        <meta attribute="sync-DAO">true</meta>
+		<id
+			name="respCodeId"
+			type="string"
+			column="RESP_CODE_ID"
+		>
+	   <generator class="assigned" />
+		</id>
+
+		<property
+			name="respCodeNum"
+			column="RESP_CODE_NUM"
+			type="string"
+		/>
+		<property
+			name="respCodeName"
+			column="RESP_CODE_NAME"
+			type="string" 
+		/>
+		<property
+			name="respCodeDesc"
+			column="RESP_CODE_DESC"
+			type="string" 
+		/>
+		<property
+			name="statusId"
+			column="STATUS_ID"
+			type="string" 
+		/>
+		<property
+			name="createOprId"
+			column="CREATE_OPR_ID"
+			type="string" 
+		/>
+		<property
+			name="updateOprId"
+			column="UPDATE_OPR_ID"
+			type="string" 
+		/>
+		<property
+			name="createOprDate"
+			column="CREATE_OPR_DATE"
+			type="string" 
+		/>
+		<property
+			name="updateOprDate"
+			column="UPDATE_OPR_DATE"
+			type="string" 
+		/>
+	</class>	
+</hibernate-mapping>

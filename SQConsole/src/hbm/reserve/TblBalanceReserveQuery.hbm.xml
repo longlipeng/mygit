@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-10-30 10:51:51 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblBalanceReserveQuery" 
+    	table="TBL_BALANCE_RESERVE_QUERY"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="balanceNo"
+        	type="string"
+        	column="BALANCE_NO"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+         <property
+			name="balanceDate"
+			column="BALANCE_DATE"
+			type="string"
+		/>
+		
+		 <property
+			name="balanceAcsBankNo"
+			column="BALANCE_ACS_BANK_NO"
+			type="string"
+		/>
+        
+        <property
+			name="balanceAcctBal"
+			column="BALANCE_ACCT_BAL"
+			type="string"
+		/>
+		
+		<property
+			name="balanceAvlbBal"
+			column="BALANCE_AVLB_BAL"
+			type="string"
+		/>
+		
+		<property
+			name="balanceAcsAcctBal"
+			column="BALANCE_ACS_ACCT_BAL"
+			type="string"
+		/>
+		
+		<property
+			name="balanceAcsAcctName"
+			column="BALANCE_ACS_ACCT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="balanceAvlbQuotaAmt"
+			column="BALANCE_AVLB_QUOTA_AMT"
+			type="string"
+		/>
+        
+    </class>
+</hibernate-mapping>

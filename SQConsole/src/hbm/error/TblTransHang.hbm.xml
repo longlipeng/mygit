@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.error">
+	<class
+		name="TblTransHang"
+		table="TBL_TRANS_HANG"
+	>
+		<meta attribute="sync-DAO">false</meta>
+	    <composite-id name="id" class="TblTransHangPK">
+			<key-property name="txnssn" column="TXN_SSN" type="string" />
+			<key-property name="flownum" column="FLOW_NUM" type="string" />
+		</composite-id>
+
+		<property
+			name="transdate"
+			column="TRANS_DATE"
+			type="string"
+		/>
+		<property
+			name="hangflag"
+			column="HANG_FLAG"
+			type="string"
+			not-null="false"
+			length="60"
+		/>
+		<property
+			name="hangdate"
+			column="HANG_DATE"
+			type="string"
+		/>
+		<property
+			name="relievedate"
+			column="RELIEVE_DATE"
+			type="string"
+		/>
+		<property
+			name="remark"
+			column="REMARK"
+			type="string"
+		/>
+		<property
+			name="oprid"
+			column="OPR_ID"
+			type="string"
+		/>
+		<property
+			name="reliveremark"
+			column="RELIEVE_REMARK"
+			type="string"
+		/>
+		<property
+			name="mchtno"
+			column="MCHT_NO"
+			type="string"
+		/>
+		<property
+			name="termid"
+			column="term_Id"
+			type="string"
+		/>
+		<property
+			name="transTime"
+			column="trans_Time"
+			type="string"
+		/>
+		<property
+			name="transAmt"
+			column="trans_amt"
+			type="string"
+		/>
+		<property
+			name="txnNum"
+			column="txn_num"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

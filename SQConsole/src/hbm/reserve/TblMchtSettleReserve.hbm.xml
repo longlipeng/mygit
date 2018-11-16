@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-9-30 15:41:28 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblMchtSettleReserve" 
+    	table="TBL_MCHT_SETTLE_RESERVE"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="reserveId"
+        	type="string"
+        	column="RESERVE_ID"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+        <property
+			name="reserveTime"
+			column="RESERVE_TIME"
+			type="string"
+		/><!--日期-->
+		
+		<property
+			name="redemptionMoney"
+			column="REDEMPTION_MONEY"
+			type="string"
+		/>
+		
+		<property
+			name="reserveSettleMoney"
+			column="RESERVE_SETTLE_MONEY"
+			type="string"
+		/>
+		
+		<property
+			name="reserveMoney"
+			column="RESERVE_MONEY"
+			type="string"
+		/>
+		
+		<property
+			name="reserveStatus"
+			column="RESERVE_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="reserveSettleStatus"
+			column="RESERVE_SETTLE_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="reservePayStatus"
+			column="RESERVE_PAY_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="reserveLaunchTime"
+			column="RESERVE_LAUNCH_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="reserveLaunchName"
+			column="RESERVE_LAUNCH_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="reserveAuditTime"
+			column="RESERVE_AUDIT_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="reserveAuditName"
+			column="RESERVE_AUDIT_NAME"
+			type="string"
+		/>
+        
+        
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.rout">
+	<class
+		name="TblRouteInfoTemp"
+		table="tbl_txn_route_inf_temp">
+		<meta attribute="sync-DAO">true</meta>
+		<id
+			name="reserved"
+			column="RESERVED"
+			type="string">
+			<generator class="assigned"/>
+		</id><!-- 主键：reserved -->
+		<property
+			name="cardBin"
+			column="CARD_BIN"
+			type="string"/>
+		<property
+			name="bussType"
+			column="BUSS_TYPE"
+			type="string"/>
+		<property
+			name="txnNum"
+			column="TXN_NUM"
+			type="string"/>
+		<property
+			name="channel"
+			column="CHANNEL"
+			type="string"/>
+		<property
+			name="areaNo"
+			column="AREA_NO"
+			type="string"/>
+		<property
+			name="mchntId"
+			column="MERCH_ID"
+			type="string"/>
+		<property
+			name="destInstId"
+			column="DEST_INST_ID"
+			type="string"/>
+		<property
+			name="saState"
+			column="SA_STATE"
+			type="string"/>
+		<property
+			name="creatorId"
+			column="CREATOR_ID"
+			type="string"/>
+		<property
+			name="checkId"
+			column="CHECK_ID"
+			type="string"/>
+		<property
+			name="updateTime"
+			column="UPDATE_TIME"
+			type="string"/>
+		<property
+			name="checkTime"
+			column="CHECK_TIME"
+			type="string"/>
+		<property
+			name="creTime"
+			column="CRE_TIME"
+			type="string"/>
+		<property
+			name="creOprId"
+			column="CRE_OPR_ID"
+			type="string"/>
+		<property
+			name="cardType"
+			column="CARD_TYPE"
+			type="string"/>
+		<property
+		    name="minAmt"
+		    column="MIN_AMT"
+		    type="long"/>
+		<property
+		    name="maxAmt"
+		    column="MAX_AMT"
+		    type="long"/>
+		<property
+		    name="mchtMcc"
+		    column="MCHT_MCC"
+		    type="string"/>
+	</class>	
+</hibernate-mapping>

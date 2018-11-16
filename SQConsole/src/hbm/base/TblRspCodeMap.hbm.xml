@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+<class
+		name="TblRspCodeMap"
+		table="tbl_rsp_code_map">
+        <meta attribute="sync-DAO">false</meta>
+		<composite-id name="Id" class="TblRspCodeMapPK">
+		    <key-property
+				name="srcId"
+				column="SRC_ID"
+				type="string"/>
+			<key-property
+				name="destId"
+				column="DEST_ID"
+				type="string"/>
+			<key-property
+				name="srcRspCode"
+				column="SRC_RSP_CODE"
+				type="string"/>
+			<key-property
+				name="destRspCode"
+				column="DEST_RSP_CODE"
+				type="string"/>
+		</composite-id>
+
+		<property
+			name="srcRspCodeL"
+			column="SRC_RSP_CODE_L"
+			type="int"
+			not-null="true"/>
+		<property
+			name="destRspCodeL"
+			column="DEST_RSP_CODE_L"
+			type="int"
+			not-null="true"/>
+		<property
+			name="rspCodeDsp"
+			column="RSP_CODE_DSP"
+			type="string"
+			not-null="true"/>
+	    <property
+			name="statusId"
+			column="STATUS_ID"
+			type="string"/>
+		<property
+			name="oprId"
+			column="OPR_ID"
+			type="string"/>
+		<property
+			name="checkId"
+			column="CHECK_ID"
+			type="string"/>
+		<property
+			name="oprTime"
+			column="OPRTIME"
+			type="string"/>
+		<property
+			name="checkTime"
+			column="CHECKTIME"
+			type="string"/>
+		<property
+			name="srcRspCodeLOld"
+			column="SRC_RSP_CODE_L_OLD"
+			type="string"/>
+		<property
+			name="destRspCodeLOld"
+			column="DEST_RSP_CODE_L_OLD"
+			type="string"/>
+		<property
+			name="rspCodeDspOld"
+			column="RSP_CODE_DSP_OLD"
+			type="string"/>
+	</class>	
+</hibernate-mapping>

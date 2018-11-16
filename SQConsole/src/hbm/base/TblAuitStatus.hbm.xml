@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class
+		name="TblAuitStatus"
+		table="TBL_ADUIT_STATUS"
+	>
+		<id
+			name="ID"
+			type="string"
+			column="ID"
+		>
+		<generator class="assigned"/>
+		</id>
+
+		<property
+			name="STATUE_ID"
+			column="STATUE_ID"
+		/>
+		<property
+			name="STATUE_NAME"
+			column="STATUE_NAME"
+		/>
+		<property
+			name="TYPE"
+			column="TYPE"
+		/>
+	</class>	
+</hibernate-mapping>

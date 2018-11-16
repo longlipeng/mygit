@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.risk">
+	<class
+		name="CstAfterRuleInf"
+		table="cst_after_rule_inf"
+	>
+	    <meta attribute="sync-DAO">true</meta>
+	   <composite-id name="id" class="CstAfterRuleInfPK">
+			<key-property
+				name="ruleId"
+				column="RULE_ID"
+				type="string"/>
+			<key-property
+				name="instId"
+				column="INST_ID"
+				type="string"/>
+			<key-property
+				name="mcc"
+				column="MCC"
+				type="string"/>
+		</composite-id><!-- 主键：ruleId、instId、mcc -->
+		<property
+			name="days"
+			column="DAYS"
+			type="string"
+			length="3"
+		/><!-- 天数 -->
+		<property
+			name="warnLvt"
+			column="WARNLVT"
+			type="string"
+			length="10"
+		/><!-- 预警系数 -->
+		<property
+			name="warnCount"
+			column="WARNCOUNT"
+			type="string"
+			length="10"
+		/><!-- 预警笔数 -->
+		<property
+			name="warnAmt"
+			column="WARNAMT"
+			type="string"
+			length="15"
+		/><!-- 预警金额 -->
+		<property
+			name="saState"
+			column="SA_STATE"
+			type="string"
+			length="1"
+		/><!-- 状态 :0-新增待审核，1－删除，2－正常，3－修改待审核，4－删除待审核-->
+		<property
+			name="daysOld"
+			column="DAYS_OLD"
+			type="string"
+			length="3"
+		/><!-- 修改前的天数 -->
+		<property
+			name="warnLvtOld"
+			column="WARNLVT_OLD"
+			type="string"
+			length="10"
+		/><!-- 修改前的预警系数 -->
+		<property
+			name="warnCountOld"
+			column="WARNCOUNT_OLD"
+			type="string"
+			length="10"
+		/><!-- 修改前的预警笔数 -->
+		<property
+			name="warnAmtOld"
+			column="WARNAMT_OLD"
+			type="string"
+			length="15"
+		/><!-- 修改前的预警金额 -->
+		<property
+			name="createTime"
+			column="CREATETIME"
+			type="string"
+			length="14"
+		/><!-- 创建时间 -->
+		<property
+			name="updateTime"
+			column="UPDATETIME"
+			type="string"
+			length="14"
+		/><!-- 更新时间 -->
+		<property
+			name="creator"
+			column="CREATOR"
+			type="string"
+			length="14"
+		/><!-- 创建者 -->
+		<property
+			name="updateOpr"
+			column="UPDATEOPR"
+			type="string"
+			length="14"
+		/><!-- 更新者 -->
+		<property
+			name="caseid"
+			column="CASE_ID"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

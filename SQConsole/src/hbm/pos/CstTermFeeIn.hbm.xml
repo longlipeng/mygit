@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.pos">
+	<class
+		name="CstTermFeeIn"
+		table="CST_TERM_FEE_INF"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		
+		<composite-id name="id" class="CstTermFeePK">
+			<key-property name="mchtcd" column="MCHT_CD" type="string" />
+			<key-property name="termid" column="TERM_ID" type="string" />
+			<key-property name="cardtype" column="CARD_TYPE" type="string" />
+		</composite-id>
+		
+		<property
+			name="txnnum"
+			column="TXN_NUM"
+			type="string"
+		/>
+		
+		<property
+			name="channel"
+			column="CHANNEL"
+            type="string"
+		/>
+		<property
+			name="daynum"
+			column="DAY_NUM"
+			type="string"
+		/>
+		<property
+			name="dayamt"
+			column="DAY_AMT"
+			type="java.lang.Double"
+		/>
+		<property
+			name="daysingle"
+			column="DAY_SINGLE"
+			type="java.lang.Double"
+		/>
+		<property
+			name="monnum"
+			column="MON_NUM"
+			type="string"
+		/>
+		<property
+			name="monamt"
+			column="MON_AMT"
+			type="java.lang.Double"
+		/>
+		<property
+			name="reccrtts"
+			column="REC_CRT_TS"
+			type="string"
+		/>
+        <property
+			name="recupdts"
+			column="REC_UPD_TS"
+			type="string"
+		/>
+		<property
+			name="upid"
+			column="UP_ID"
+			type="string"
+		/>
+        <property
+			name="creid"
+			column="CRE_ID"
+			type="string"
+		/>
+		<property
+			name="sastatue"
+			column="SA_STATE"
+			type="string"
+		/>
+		<property
+			name="saaction"
+			column="SA_ACTION"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

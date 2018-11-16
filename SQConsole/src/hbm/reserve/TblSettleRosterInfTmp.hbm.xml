@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-9-6 14:35:47 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblSettleRosterInfTmp" 
+    	table="TBL_SETTLE_ROSTER_INF_TMP"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="rosterId"
+        	type="string"
+        	column="ROSTER_ID"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+        <property
+			name="rosterBankCard"
+			column="ROSTER_BANK_CARD"
+			type="string"
+		/>
+		
+		<property
+			name="rosterAccount"
+			column="ROSTER_ACCOUNT"
+			type="string"
+		/>
+		
+		<property
+			name="rosterAccountName"
+			column="ROSTER_ACCOUNT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="rosterStatus"
+			column="ROSTER_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="rosterLaunchTime"
+			column="ROSTER_LAUNCH_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="rosterLaunchName"
+			column="ROSTER_LAUNCH_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="rosterAuditTime"
+			column="ROSTER_AUDIT_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="rosterAuditName"
+			column="ROSTER_AUDIT_NAME"
+			type="string"
+		/>
+		
+    </class>
+</hibernate-mapping>

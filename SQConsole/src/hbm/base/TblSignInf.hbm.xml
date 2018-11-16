@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class
+		name="TblSignInf"
+		table="TBL_SIGN_INF"
+	>
+		<id
+			name="termid"
+			type="string"
+			column="TERM_ID"
+		>
+		<generator class="assigned"/>
+		</id>
+
+		<property
+			name="instid"
+			column="INST_ID"
+		/>
+		<property
+			name="instname"
+			column="INST_NAME"
+		/>
+		<property
+			name="mchtid"
+			column="MCHT_ID"
+		/>
+		<property
+			name="termid"
+			column="TERM_ID"
+		/>
+		<property
+			name="signedflag"
+			column="SIGNED_FLAG"
+		/>
+		<property
+			name="signtime"
+			column="SIGN_TIME"
+		/>
+	</class>	
+</hibernate-mapping>

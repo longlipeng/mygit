@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po">
+	<class
+		name="TblCnpcCardInf"
+		table="tbl_cnpc_black_card_info"
+	>
+		<meta attribute="sync-DAO">true</meta>
+		<composite-id name="Id" class="TblCnpcCardInfPK" >
+			<key-property
+				name="customerProfile"
+				column="CUSTOMER_PROFILE"
+				type="string"
+			/>
+			<key-property
+				name="cardLevel"
+				column="CARD_LEVEL"
+				type="string"
+			/>
+		</composite-id>
+		<!-- 客户类别 
+		<id
+			name="Id"
+			type="string"
+			column="CUSTOMER_PROFILE"
+			length="1"
+		>
+			<generator class="assigned"/>
+		</id>-->
+		<!-- 卡片等级位 
+		<property
+			name="cardLevel"
+			column="CARD_LEVEL"
+			type="string"
+			not-null="true"
+			length="1"
+		/>-->
+		<!-- 校验 -->
+		<property
+			name="checkCode"
+			column="CHECK_CODE"
+			type="string"
+			not-null="true"
+			length="2"
+		/><!-- 状态 -->
+		<property
+			name="saState"
+			column="SA_STATE"
+			type="string"
+			not-null="true"
+			length="1"
+		/><!-- 卡bin -->
+		<property
+			name="cardBin"
+			column="CARD_BIN"
+			type="string"
+			not-null="false"
+			length="5"
+		/><!-- 卡号 -->
+		<property
+			name="cardNo"
+			column="CARD_NO"
+			type="string"
+			not-null="false"
+			length="19"
+		/>
+		<!-- 创建人ID -->
+		<property
+			name="initOprId"
+			column="INIT_OPR_ID"
+			type="string"
+			not-null="false"
+			length="40"
+		/>
+		<!-- 创建时间 -->
+		<property
+			name="initTime"
+			column="INIT_TIME"
+			type="string"
+			not-null="false"
+			length="14"
+		/>
+		<!-- 修改人ID -->
+		<property
+			name="upOprId"
+			column="UP_OPR_ID"
+			type="string"
+			not-null="false"
+			length="14"
+		/>
+		<!-- 修改时间 -->
+		<property
+			name="upTime"
+			column="UP_TIME"
+			type="string"
+			not-null="false"
+			length="14"
+		/>
+		<!-- 审核人ID -->
+		<property
+			name="verifierOprId"
+			column="VERIFIER_OPR_ID"
+			type="string"
+			not-null="false"
+			length="40"
+		/>
+		<!-- 审核時間 -->
+		<property
+			name="verifierTime"
+			column="VERIFIER_TIME"
+			type="string"
+			not-null="false"
+			length="40"
+		/>
+		<!-- 备注 -->
+		<property
+			name="remarks"
+			column="REMARKS"
+			type="string"
+			not-null="false"
+			length="40"
+		/>
+		
+	</class>	
+</hibernate-mapping>

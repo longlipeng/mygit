@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-6-14 9:30:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.mchnt">
+    <class
+    	 name="TblMchtBeneficiaryInf"
+    	 table="TBL_MCHT_BENEFICIARY_INF"
+    >
+       	<meta attribute="sync-DAO">true</meta>
+        
+        <id
+      	    name="beneficiaryId"
+        	column="BENEFICIARY_ID"
+        	type="string"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+        <property
+       	    name="mchtNo" 
+       	    column="MCHT_NO"
+       	    type="string"
+        />
+        
+        <property 
+        	name="beneficiaryName"
+       	    column="BENEFICIARY_NAME"
+       	    type="string"
+        />
+        
+         <property 
+        	name="beneficiaryAddress"
+       	    column="BENEFICIARY_ADDRESS"
+       	    type="string"
+        />
+        
+         <property 
+        	name="beneficiaryIdType"
+       	    column="BENEFICIARY_ID_TYPE"
+       	    type="string"
+        />
+        
+         <property 
+        	name="beneficiaryIdCard"
+       	    column="BENEFICIARY_ID_CARD"
+       	    type="string"
+        />
+        
+         <property 
+        	name="beneficiaryExpiration"
+       	    column="BENEFICIARY_EXPIRATION"
+       	    type="string"
+        />
+        
+    </class>
+</hibernate-mapping>

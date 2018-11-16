@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class
+		name="TblBranchManageTrue"
+		table="TBL_BRANCH_MANAGER_TRUE"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="Id"
+			type="string"
+			column="BRANCH_NO"
+		>
+			<generator class="assigned"/>
+		</id>
+		<property
+			name="branchname"
+			column="BRANCH_NAME"
+			type="string"
+		/>
+		<property
+			name="brancharea"
+			column="BRANCH_AREA"
+			type="string"
+			not-null="true"
+		/>
+		<property
+			name="phonenum"
+			column="PHONE_NUM"
+			type="string"
+			length="1"
+		/>
+		<property
+			name="branchpos"
+			column="BRANCH_POS"
+			type="string"
+			not-null="true"
+			length="1"
+		/>
+		<property
+			name="branchaddr"
+			column="BRANCH_ADDR"
+			type="string"
+			not-null="true"
+			length="10"
+		/>
+		<property
+			name="linkname"
+			column="LINKMAN"
+			type="string"
+			length="8"
+		/>
+		<property
+			name="linkmanpho"
+			column="LINKMAN_PHO"
+			type="string"
+			length="6"
+		/>
+		<property
+			name="linkmanmail"
+			column="LINKMAN_MAIL"
+			type="string"
+			length="80"
+		/>
+		<property
+			name="branchfax"
+			column="BRANCH_FAX"
+			type="string"
+			length="20"
+		/>
+		<property
+			name="branchdes"
+			column="BRANCH_DES"
+			type="string"
+			not-null="true"
+			length="40"
+		/>
+		<property name="state"
+			column="STATE"
+			type="string"
+			length="1"
+		/>
+		<property name="creoprid"
+			column="CRE_OPR_ID"
+			type="string"
+		/>
+		<property name="creoprdate"
+			column="CRE_OPR_DATE"
+			type="string"
+		/>
+		<property name="upoprid"
+			column="UP_OPR_ID"
+			type="string"
+		/>
+			<property name="upoprdate"
+			column="UP_OPR_DATE"
+			type="string"
+		/>
+		<property name="branchLevel"
+			column="BRANCH_LEVEL"
+			type="string"
+		/><!-- 分公司级别 -->
+		<property name="parentBranchId"
+			column="PARENT_BRANCH_ID"
+			type="string"
+		/><!-- 上一级分公司编号 -->
+		<property name="branchCheckTime"
+			column="BRANCH_CHECK_TIME"
+			type="string"
+		/><!-- 审核时间 -->
+		<property name="branchCheckOpr"
+			column="BRANCH_CHECK_OPR"
+			type="string"
+		/><!-- 审核人 -->
+	</class>	
+</hibernate-mapping>

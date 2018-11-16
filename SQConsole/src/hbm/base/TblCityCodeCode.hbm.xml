@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class
+		name="TblCityCodeCode"
+		table="TBL_CITY_CODE"
+	>
+		<id
+			name="CITY_CODE"
+			type="string"
+			column="CITY_CODE"
+		>
+		<generator class="assigned"/>
+		</id>
+
+		<property
+			name="CITY_DES"
+			column="CITY_DES"
+		/>
+	</class>	
+</hibernate-mapping>

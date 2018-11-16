@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class name="TblHolidays"
+		   table="TBL_HOLIDAYS">
+		<meta attribute="sync-DAO">true</meta>
+		<id name="id" 
+			type="string" 
+			column="ID">
+            <generator class="uuid"/>
+    	</id>
+    <property
+            name="holidayStart"
+            column="HOLIDAY_START"
+            type="string"/>
+    <property
+            name="holidayEnd"
+            column="HOLIDAY_END"
+            type="string"/>
+    <property
+            name="name"
+            column="NAME"
+            type="string"/>
+    <property
+			name="unionFlag"
+			column="UNION_FLAG"
+			type="string"
+			not-null="true"
+			length="1"
+		/>
+     <property
+            name="createOprId"
+            column="CREATE_OPR_ID"
+            type="string"/>
+     <property
+            name="createTime"
+            column="CREATE_TIME"
+            type="string"/>
+     <property
+            name="updOprId"
+            column="UPD_OPR_ID"
+            type="string"/>
+     <property
+            name="updTime"
+            column="UPD_TIME"
+            type="string"/>
+     <property
+            name="saState"
+            column="SA_STATE"
+            type="string"/>
+     <property
+            name="holidayStartOld"
+            column="HOLIDAY_START_OLD"
+            type="string"/>
+     <property
+            name="holidayEndOld"
+            column="HOLIDAY_END_OLD"
+            type="string"/>
+     <property
+            name="nameOld"
+            column="NAME_OLD"
+            type="string"/>
+	</class>	
+</hibernate-mapping>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class
+		name="TblTradeCode"
+		table="TBL_TRADE_CODE"
+	>
+		<id
+			name="TRADE_CODE"
+			type="string"
+			column="TRADE_CODE"
+		>
+		<generator class="assigned"/>
+		</id>
+
+		<property
+			name="TRADE_NAME"
+			column="TRADE_NAME"
+		/>
+	</class>	
+</hibernate-mapping>

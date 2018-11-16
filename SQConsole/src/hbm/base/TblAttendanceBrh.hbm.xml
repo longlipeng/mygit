@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class
+		name="TblAttendanceBrh"
+		table="ATTENDANCE_BRH"
+	>
+		<meta attribute="sync-DAO">false</meta>
+		<id
+			name="brhid"
+			type="string"
+			column="BRH_ID"
+		>
+			<generator class="assigned"/>
+		</id>
+		<property
+			name="mchtid"
+			column="MCHT_ID"
+			type="string"
+		/>
+		<property
+			name="brhtype"
+			column="BRH_TYPE"
+			type="string"
+		/>
+		<property
+			name="upddate"
+			column="UPD_DATE"
+			type="string"
+		/>
+		<property
+			name="descinfo"
+			column="DESC_INFO"
+			type="string"
+		/>
+		<property
+			name="status"
+			column="STATUS"
+			type="string"
+		/>
+		<property
+			name="termid"
+			column="TERM_ID"
+			type="string"
+		/>
+	</class>	
+</hibernate-mapping>

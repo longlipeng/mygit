@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class name="TblIssueBranchInf"
+		table="TBL_ISSUE_CARD_BRANCH_INF">
+		<meta attribute="sync-DAO">true</meta>
+		<id name="branchId" 
+			type="string" 
+			column="BRANCH_ID">
+			<!-- <generator class="uuid"/> -->
+		</id>
+		<property
+			name="id"
+			column="ID"
+			type="string"/>
+		<property
+			name="branchName"
+			column="BRANCH_NAME"
+			type="string"/>
+		<property
+			name="branchAddr"
+			column="BRANCH_ADDR"
+			type="string"/>
+		<property
+			name="reserve1"
+			column="RESERVE_1"
+			type="string"/>
+	</class>	
+</hibernate-mapping>

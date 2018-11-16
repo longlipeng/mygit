@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="com.huateng.po.base">
+	<class
+		name="Type"
+		table="TBL_TYPE"
+	>
+		<id
+			name="typeid"
+			type="string"
+			column="TYPE_ID"
+		>
+		<generator class="assigned"/>
+		</id>
+
+		<property
+			name="typename"
+			column="TYPE_NAME"
+		/>
+	</class>	
+</hibernate-mapping>
