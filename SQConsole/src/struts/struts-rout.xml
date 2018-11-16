@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="rout" extends="struts-default">
+		<!-- 公用返回类型 -->
+		<global-results>
+			<result type="plainText" >
+                <param name="charSet">UTF-8</param>
+                <param name="location">/page/system/emptyLocation.jsp</param>
+            </result>
+		</global-results>
+		<!--工行终端通道配置信息批量审核-->
+	    <action name="T11004Action" class="com.huateng.struts.rout.action.T11004Action" />
+	    <!--终端通道导出-->
+	    <action name="T11030_DwnAction" class="com.huateng.struts.rout.action.T11030_DwnAction" />
+		<!--工行终端通道信息导入-->
+	    <action name="T11005Action" class="com.huateng.struts.rout.action.T11005Action" />
+	    <!--路由信息导出-->
+	    <action name="T11031_DwnAction" class="com.huateng.struts.rout.action.T11031_DwnAction" />
+	    <!--路由信息-->
+	    <action name="T11011Action" class="com.huateng.struts.rout.action.T11011Action" />
+	    <!--审核路由信息-->
+	    <action name="T11012Action" class="com.huateng.struts.rout.action.T11012Action" />
+	    <!--路由切换信息维护-->
+	    <action name="T11014Action" class="com.huateng.struts.rout.action.T11014Action" />
+	    <!--终端通道配置信息维护-->
+	    <action name="T11015Action" class="com.huateng.struts.rout.action.T11015Action" />
+	    <!--终端通道配置信息审核-->
+	    <action name="T11016Action" class="com.huateng.struts.rout.action.T11016Action" />
+	    <!--交行终端通道配置信息维护-->
+	    <action name="T11020Action" class="com.huateng.struts.rout.action.T11020Action" />
+	    <!--交行终端通道配置信息审核-->
+	    <action name="T11021Action" class="com.huateng.struts.rout.action.T11021Action" />
+	    <!--路由信息导入-->
+	    <action name="T11018Action" class="com.huateng.struts.rout.action.T11018Action" />
+	    
+	    <action name="T11115Action" class="com.huateng.struts.rout.action.T11115Action" />
+	</package>
+</struts>

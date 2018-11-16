@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="error" extends="struts-default">
+		<!-- 公用返回类型 -->
+		<global-results>
+			<result type="plainText" >
+                <param name="charSet">UTF-8</param>
+                <param name="location">/page/system/emptyLocation.jsp</param>
+            </result>
+		</global-results>
+		<!-- 导入差错文件 -->
+		<action name="T10037Action" class="com.huateng.struts.error.T10037Action" />
+		<!-- 手工退货 -->
+		<action name="T100101Action" class="com.huateng.struts.error.T100101Action" />
+		<!-- 商户调账导出 -->
+		<action name="T10039_DwnAction" class="com.huateng.struts.error.T10039_DwnAction" />
+		<!-- 差错信息导出 -->
+		<action name="T10040_DwnAction" class="com.huateng.struts.error.T10040_DwnAction" />
+		<!-- 商户调账 -->
+		<action name="T100201Action" class="com.huateng.struts.error.T100201Action" />
+		<!-- 商户调账审核 -->
+		<action name="T100202Action" class="com.huateng.struts.error.T100202Action" />
+		<!-- 手工退货审核 -->
+		<action name="T10011Action" class="com.huateng.struts.error.T10011Action" />
+		<!-- 差错调帐登记 -->
+		<action name="T60501Action" class="com.huateng.struts.error.T60501Action" />
+		<!-- 差错调帐审核-->
+	    <action name="T60503Action" class="com.huateng.struts.error.T60503Action" />
+	    <!-- 商户终端交易挂账 -->
+	    <action name="T10020Action" class="com.huateng.struts.error.T10020Action" />
+	    <!-- 商户终端交易挂账审核 -->
+	    <action name="T10051Action" class="com.huateng.struts.error.T10051Action" />
+	     <!-- 商户终端交易解挂 -->
+	    <action name="T10041Action" class="com.huateng.struts.error.T10041Action" />
+	    <!--  商户终端交易解挂审核 -->
+	    <action name="T10030Action" class="com.huateng.struts.error.T10030Action" />
+	    <!-- 追扣已清算交易 -->
+	    <action name="T10032Action" class="com.huateng.struts.error.T10032Action" />
+	    <!-- 审核追扣 -->
+	    <action name="T10033Action" class="com.huateng.struts.error.T10033Action" />
+	    <!-- 商户差错交易明细 -->
+	    <action name="T10036Action" class="com.huateng.struts.error.T10036Action" />
+	    <!-- 手工预授权完成 -->
+	    <action name="T10071Action" class="com.huateng.struts.error.T10071Action" />
+	    <!-- 手工预授权撤销 -->
+	    <action name="T10072Action" class="com.huateng.struts.error.T10072Action" />
+	    <!-- 补电子现金消费维护 -->
+	    <action name="T10081Action" class="com.huateng.struts.error.T10081Action" />
+	    <!-- 补电子现金消费审核 -->
+	    <action name="T10082Action" class="com.huateng.struts.error.T10082Action" />
+	    <!-- 线上退货 -->
+	    <action name="T20042Action" class="com.huateng.struts.error.T20042Action" />
+	</package>
+</struts>

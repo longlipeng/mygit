@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="base" extends="struts-default">
+		<!-- 公用返回类型 -->
+		<global-results>
+			<result type="plainText" >
+                <param name="charSet">UTF-8</param>
+                <param name="location">/page/system/emptyLocation.jsp</param>
+            </result>
+		</global-results>
+		<!-- 分公司添加 -->
+		<action name="T10108Action" class="com.huateng.struts.base.action.T10108Action"/>
+		<!--上传文件至文件服务器-->               
+		<action name="T80233Action" class="com.huateng.struts.base.action.T80233Action"/>
+		<!-- 机构信息维护 -->
+		<action name="T10101Action" class="com.huateng.struts.base.action.T10101Action" />
+		<!-- 清算凭证 -->
+		<action name="T10102Action" class="com.huateng.struts.base.action.T10102Action" />
+		<!-- 地区码信息维护 -->
+		<action name="T10201Action" class="com.huateng.struts.base.action.T10201Action" />
+		<!-- 系统参数信息维护 -->
+		<action name="T10202Action" class="com.huateng.struts.base.action.T10202Action" />		
+		<!-- 交易码信息维护 -->
+		<action name="T10203Action" class="com.huateng.struts.base.action.T10203Action" />
+		<!-- 角色信息维护 -->
+		<action name="T10301Action" class="com.huateng.struts.base.action.T10301Action" />
+		<!-- 交易授权配置 -->
+		<action name="T10302Action" class="com.huateng.struts.base.action.T10302Action" />
+		<!-- 操作员信息维护 -->
+		<action name="T10401Action" class="com.huateng.struts.base.action.T10401Action" />
+		<!-- 银行账号维护 -->
+		<action name="T10801Action" class="com.huateng.struts.base.action.T10801Action" />
+		<!-- 银联卡表维护-->
+		<action name="T10205Action" class="com.huateng.struts.base.action.T10205Action" />
+		<action name="T10205_DwnAction" class="com.huateng.struts.base.action.T10205_DwnAction" />
+		<!-- CA银联公钥维护-->
+		<action name="T10206Action" class="com.huateng.struts.base.action.T10206Action" />
+		<!-- IC卡其他参数维护-->
+		<action name="T10208Action" class="com.huateng.struts.base.action.T10208Action" />
+		<!-- 虚拟柜员表维护-->
+		<action name="T10207Action" class="com.huateng.struts.base.action.T10207Action" />
+	    <!-- 签到 -->
+	    <action name="T10600Action" class="com.huateng.struts.base.action.T10600Action"/>
+	    <!-- 获取主密钥 -->
+	    <action name="T10605Action" class="com.huateng.struts.base.action.T10605Action"/>
+	    <!-- 分公司审核 -->
+	    <action name="T90102Action" class="com.huateng.struts.base.action.T90102Action"/>
+
+	    <!-- 我的机构信息添加 -->
+	    <action name="T10106Action" class="com.huateng.struts.base.action.T10106Action" />
+        <!-- 我的机构信息审核 -->
+        <action name="T1010802Action" class="com.huateng.struts.base.action.T1010802Action"/>
+        <!-- 我的机构分润信息-->
+        <action name="T10110Action" class="com.huateng.struts.base.action.T10110Action"/>
+        <!-- 机构分润信息审核 -->
+        <action name="T10112Action" class="com.huateng.struts.base.action.T10112Action"/>
+	    <!--应答码信息维护-->
+	    <action name="T20109Action" class="com.huateng.struts.base.action.T20109Action" />
+	    <!--应答码审核-->
+	    <action name="T20110Action" class="com.huateng.struts.base.action.T20110Action" />
+	    <!-- 节假日管理 -->
+	    <action name="T10209Action" class="com.huateng.struts.base.action.T10209Action"/>
+	    <!-- 门店管理 -->
+	    <action name="T60101Action" class="com.huateng.struts.base.action.T60101Action"/>
+        <!-- 节假日审核-->
+        <action name="T10210Action" class="com.huateng.struts.base.action.T10210Action"/>
+        <!-- 代理商成本费率维护 -->
+        <action name="T11521Action" class="com.huateng.struts.base.action.T11521Action"/>
+        <!-- 代理商成本费率导入 -->
+        <action name="T11522Action" class="com.huateng.struts.base.action.T11522Action"/>
+        <!-- 代理商维护 -->
+        <!-- 代理商成本费率导入 -->
+        <action name="T11524Action" class="com.huateng.struts.base.action.T11524Action"/>
+        <!-- 代理商维护 -->
+        <action name="T11501Action" class="com.huateng.struts.base.action.T11501Action"/>
+        <!-- 代理商分润维护 -->
+        <action name="T11502Action" class="com.huateng.struts.base.action.T11502Action"/>
+        <!-- 代理商分润审核 -->
+        <action name="T11506Action" class="com.huateng.struts.base.action.T11506Action"/>
+        <!-- 代理商分润信息导出 -->
+		<action name="T11502ExpAction" class="com.huateng.struts.base.action.T11502ExpAction" />
+		<!-- 代理商分润信息导入 -->
+		<action name="T11502ImpAction" class="com.huateng.struts.base.action.T11502ImpAction" />
+		<!-- 机构费率信息导入 -->
+		<action name="T10111ImpAction" class="com.huateng.struts.base.action.T10111ImpAction" />
+		<!-- 机构开户行 -->
+		<action name="T1010601Action" class="com.huateng.struts.base.action.T1010601Action" />
+		
+	</package>
+</struts>

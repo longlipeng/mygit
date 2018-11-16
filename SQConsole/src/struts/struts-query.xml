@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="query" extends="json-default">
+		
+		<!-- 系统拦截器 -->
+		<interceptors>
+			<interceptor name="logInter" class="com.huateng.interceptor.LogInter"></interceptor>
+			<interceptor-stack name="SystemInterceptor">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="logInter"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+		
+		
+		<!-- 公用返回类型 -->
+		<global-results>
+			<result type="plainText" >
+                <param name="charSet">UTF-8</param>
+                <param name="location">/page/system/emptyLocation.jsp</param>
+            </result>
+		</global-results>
+		
+		<action name="T5*_*" 
+			class="com.huateng.struts.query.action.T5{1}" method="{2}">
+			<interceptor-ref name="SystemInterceptor"></interceptor-ref>
+			<result name="success" type="json">
+				<param name="includeProperties">success,msg</param>
+			</result>
+			<result name="error" type="json">
+				<param name="includeProperties">success,msg</param>
+			</result>
+		</action>
+		
+		<!-- 交易信息统计表 -->
+		<action name="T50101Action" 
+			class="com.huateng.struts.query.action.T50101Action" />
+		<action name="T50102Action" 
+			class="com.huateng.struts.query.action.T50102Action" />
+		
+		<!-- 商户信息统计表 -->
+		<action name="T50200Action" 
+		class="com.huateng.struts.query.action.T50200Action" />
+		<!-- 终端信息统计表 -->
+		<action name="T50201Action" 
+		class="com.huateng.struts.query.action.T50201Action" />
+		
+		<!-- 商户及终端统计表 -->
+		<action name="T50202Action" 
+		class="com.huateng.struts.query.action.T50202Action" />
+		<!-- 商户及终端情况月表 -->
+		<action name="T50205Action" 
+		class="com.huateng.struts.query.action.T50205Action" />
+		<!-- 商户交易信息统计表 -->
+		<action name="T50206Action" 
+		class="com.huateng.struts.query.action.T50206Action" />
+		<!-- 商户对账单（日表） -->
+		<action name="T50301Action" 
+		class="com.huateng.struts.query.action.T50301Action" />
+		
+		<!-- 商户对账单（月表） -->
+		<action name="T50302Action" 
+		class="com.huateng.struts.query.action.T50302Action" />
+		
+		<!-- 间联POS待清算交易汇总（日表） -->
+		<action name="T50303Action" 
+		class="com.huateng.struts.query.action.T50303Action" />
+		
+		<!-- 间联POS实时清算汇总（日表） -->
+		<action name="T50304Action" 
+		class="com.huateng.struts.query.action.T50304Action" />
+		
+		<!-- 商户对账单（月表） -->
+		<action name="T50305Action" 
+		class="com.huateng.struts.query.action.T50305Action" />
+		
+		<!-- 商户对账单（日表） -->
+		<action name="T50306Action" 
+		class="com.huateng.struts.query.action.T50306Action" />
+
+		<!-- 新商户交易监测报表 -->
+		<action name="T50307Action" 
+		class="com.huateng.struts.query.action.T50307Action" />
+				
+		<!-- 移机监测报表 -->
+		<action name="T50401Action" 
+		class="com.huateng.struts.query.action.T50401Action" />
+		
+		<!-- 异常交易监控报表 -->
+		<action name="T50403Action" 
+		class="com.huateng.struts.query.action.T50403Action" />
+			
+		<!-- 疑似套现监测报表 -->
+		<action name="T50402Action" 
+			class="com.huateng.struts.query.action.T50402Action" />
+		<!-- 商户营销活动报表 -->
+		<action name="T50501Action" 
+			class="com.huateng.struts.query.action.T50501Action" />
+		<!-- 专业服务机构分润报表 -->
+		<action name="T50502Action" 
+			class="com.huateng.struts.query.action.T50502Action" />
+		<!-- 手工代发pdf -->
+		<action name="T80205S1Action" 
+			class="com.huateng.struts.settle.action.T80205S1Action" />
+	</package>
+</struts>

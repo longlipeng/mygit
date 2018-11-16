@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="risk" extends="struts-default">
+		<!-- 公用返回类型 -->
+		<global-results>
+			<result type="plainText" >
+                <param name="charSet">UTF-8</param>
+                <param name="location">/page/system/emptyLocation.jsp</param>
+            </result>
+		</global-results>
+		<!-- 设置风险模型 -->
+		<action name="T40101Action" 
+		class="com.huateng.struts.risk.action.T40101Action" />
+		<!-- 添加卡黑名单信息-->
+		<action name="T40201Action" class="com.huateng.struts.risk.action.T40201Action" />
+		<action name="T40601Action" class="com.huateng.struts.risk.action.T40601Action" />
+		<!-- 审核卡黑名单-->
+		<action name="T40206Action" class="com.huateng.struts.risk.action.T40206Action" />
+		<!-- 添加商户黑名单信息-->
+		<action name="T40202Action" class="com.huateng.struts.risk.action.T40202Action" />
+		<!-- 卡黑名单历史交易表-->
+		<action name="T40203Action" class="com.huateng.struts.risk.action.T40203Action" />
+		 <!--卡黑名单导出-->
+		<action name="T40201ExpAction" class="com.huateng.struts.risk.action.T40201ExpAction" />
+		<!-- 商户黑名单历史交易表-->
+		<action name="T40204Action" class="com.huateng.struts.risk.action.T40204Action" />
+		
+		<!-- 单户交易监测报表-->
+		<action name="T40301Action" class="com.huateng.struts.risk.action.T40301Action" />
+		
+		<!-- 单笔信用卡交易监测-->
+		<action name="T40302Action" class="com.huateng.struts.risk.action.T40302Action" />
+
+		<!-- 单月单户信用卡交易监测-->
+		<action name="T40303Action" class="com.huateng.struts.risk.action.T40303Action" />
+		
+		<!-- 信用卡整数类交易监测-->
+		<action name="T40304Action" class="com.huateng.struts.risk.action.T40304Action" />
+		
+		<!-- 单户同一卡号监控-->
+		<action name="T40305Action" class="com.huateng.struts.risk.action.T40305Action" />
+		
+		<!-- 单户同卡号相同金额交易监测-->
+		<action name="T40306Action" class="com.huateng.struts.risk.action.T40306Action" />
+		
+		<!-- 预留相同信息监测-->
+		<action name="T40307Action" class="com.huateng.struts.risk.action.T40307Action" />
+		
+		<!-- 单户交易被拒情况监测-->
+		<action name="T40308Action" class="com.huateng.struts.risk.action.T40308Action" />
+		
+		<!-- 单户退货情况监测-->
+		<action name="T40309Action" class="com.huateng.struts.risk.action.T40309Action" />
+		
+		<!-- 财务POS交易监测-->
+		<action name="T40310Action" class="com.huateng.struts.risk.action.T40310Action" />
+		<!--商户黑名单管理-->
+		<action name="T40208Action" class="com.huateng.struts.risk.action.T40208Action" />
+		
+	    <!--商户黑名单导出-->
+		<action name="T40202ExpAction" class="com.huateng.struts.risk.action.T40202ExpAction" />
+		<!-- 商户黑名单审核 -->
+		<action name="T40209Action" class="com.huateng.struts.risk.action.T40209Action" />
+		<!--商户交易权限管理-->
+		<action name="T40214Action" class="com.huateng.struts.risk.action.T40214Action" />
+		<!-- 商户交易权限审核 -->
+		<action name="T40215Action" class="com.huateng.struts.risk.action.T40215Action" />
+		<!--终端交易权限管理-->
+		<action name="T40216Action" class="com.huateng.struts.risk.action.T40216Action" />
+		<!-- 终端交易权限审核 -->
+		<action name="T40217Action" class="com.huateng.struts.risk.action.T40217Action" />
+		
+		<!-- 事前风险控制 -->
+		<action name="T40402Action" class="com.huateng.struts.risk.action.T40402Action" />
+
+		<!--商户黑名单审核-->
+		<action name="T40207Action" class="com.huateng.struts.risk.action.T40207Action" />
+        <!--渠道交易黑名单-->
+        <action name="T40210Action" class="com.huateng.struts.risk.action.T40210Action"/>
+         <!--渠道交易审核-->
+        <action name="T40211Action" class="com.huateng.struts.risk.action.T40211Action"/>
+        <!--渠道交易权限-->
+        <action name="T40212Action" class="com.huateng.struts.risk.action.T40212Action"/>
+          <!--渠道交易权限审核-->
+        <action name="T40213Action" class="com.huateng.struts.risk.action.T40213Action"/>
+        <!-- 风险监控模型审核 -->
+        <action name="T40105Action" class="com.huateng.struts.risk.action.T40105Action"/>
+        <!-- 商户事后风险预警系数管理-->
+        <action name="T40501Action" class="com.huateng.struts.risk.action.T40501Action"/>
+        <!-- 商户事后风险预警系数审核-->
+        <action name="T40502Action" class="com.huateng.struts.risk.action.T40502Action"/>
+        <!-- 事前风险控制 -->
+        <action name="T40403Action" class="com.huateng.struts.risk.action.T40403Action"/>
+        <!-- 商户白名单 -->
+        <action name="T41201Action" class="com.huateng.struts.risk.action.T41201Action"/>
+        <action name="T41202Action" class="com.huateng.struts.risk.action.T41202Action"/>
+        <!-- 商户白名单导出 -->
+        <action name="T41201ExpAction" class="com.huateng.struts.risk.action.T41201ExpAction"/>
+        
+        <!-- 风险规则查询 -->
+		<action name="T40107Action" class="com.huateng.struts.risk.action.T40107Action" />
+        
+        
+        
+	</package>
+</struts>

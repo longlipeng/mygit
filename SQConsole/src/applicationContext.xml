@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- 需要定时执行的类 -->
+	<bean id="dataSyn" class="com.huateng.startup.listener.Study" scope="prototype"></bean>
+	<bean id="focusQuartz" class="com.huateng.startup.listener.FocusQuartz" scope="prototype"></bean>
+	
+	<!-- 任务配置列表 -->
+	<bean id="runSyn"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject" ref="dataSyn"></property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod" >
+			<value>doStudy01</value>
+		</property>
+	</bean>
+	<bean id="runFocus"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 调用的类 -->
+		<property name="targetObject" ref="focusQuartz"></property>
+		<!-- 调用类中的方法 -->
+		<property name="targetMethod" >
+			<value>focus</value>
+		</property>
+	</bean>
+
+	<!-- 调用频率设置   cron表达式 -->
+	<bean id="runTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="runSyn" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每隔一分钟运行一次 -->
+			<!-- <value>0 1/1 * * * ?</value>  -->
+			<!-- 每天23点整执行 -->
+			<value>0 0 23 * * ?</value>
+		</property>
+	</bean>
+	<bean id="runFocusTime" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="runFocus" />
+		</property>
+		<property name="cronExpression">
+			<!-- 每隔5分钟运行一次 -->
+			<value>0 1/5 * * * ?</value>
+			<!-- 每天23点整执行 -->
+			<!-- <value>0 0 23 * * ?</value> -->
+		</property>
+	</bean>
+
+	 <!-- 总管理类  -->  
+	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" destroy-method="destroy" >
+		<property name="triggers">
+			<list>
+				<ref bean="runTime" />
+				<ref bean="runFocusTime" />
+			</list>
+		</property>
+	</bean>
+
+</beans>
+
+
+
+
+
+
+
