@@ -174,6 +174,7 @@ public class LoadRecordMethod {
 				//将TblMchtBaseInfTmp表的busiRangeId字段的经营范围值赋值TblMchtBaseBusiRange表的busiRange字段后把TblMchtBaseBusiRange表的busiRangeId字段赋值给TblMchtBaseInfTmp表的busiRangeId字段
 				inf.setBusiRangeId(mchtNoRandom);
 				
+				service.updateBaseInfTmp(inf);
 				service.addBaseBusiRange(tblMchtBaseBusiRange);
 			}else{
 				for (Object[] objects : lists) {
@@ -181,7 +182,10 @@ public class LoadRecordMethod {
 					tblMchtBaseBusiRange.setBusiRangeId(objects[0].toString());
 					tblMchtBaseBusiRange.setMchtNo(objects[1].toString());
 					tblMchtBaseBusiRange.setBusiRange(objects[2].toString());
+					inf.setBusiRangeId(objects[0].toString());
 				}
+				
+				service.updateBaseInfTmp(inf);
 				service.upBaseBusiRange(tblMchtBaseBusiRange);
 			}
 			
