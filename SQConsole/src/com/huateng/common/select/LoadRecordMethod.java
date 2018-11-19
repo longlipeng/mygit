@@ -182,6 +182,7 @@ public class LoadRecordMethod {
 					tblMchtBaseBusiRange.setMchtNo(objects[1].toString());
 					tblMchtBaseBusiRange.setBusiRange(objects[2].toString());
 				}
+				service.upBaseBusiRange(tblMchtBaseBusiRange);
 			}
 			
 			if(supp1Tmp==null)supp1Tmp=new TblMchtSupp1Tmp();
