@@ -752,7 +752,7 @@ Ext.onReady(function() {
 								params: { 
 									beneficiaryId: rec.get('beneficiaryId'),							
 									txnId: '201001',
-									subTxnId: '01'
+									subTxnId: '04'
 								}
 							});
 						}
@@ -1075,7 +1075,7 @@ Ext.onReady(function() {
 						params: {
 							mchtNoInPut: mchntForm.getForm().findField('mchtNoInPut').getValue(),
 							txnId: '201001',
-							subTxnId: '01'
+							subTxnId: '05'
 						}
 					});
 				}
@@ -1132,7 +1132,7 @@ Ext.onReady(function() {
 						params: {
 							mchtNoInPut: mchntForm.getForm().findField('mchtNoInPut').getValue(),
 							txnId: '201001',
-							subTxnId: '01'
+							subTxnId: '06'
 						}
 					});
 				}
