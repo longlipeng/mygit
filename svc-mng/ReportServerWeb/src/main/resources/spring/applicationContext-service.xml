@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	default-autowire="byName">
+
+	<!-- service提供者 -->
+	<bean id="serviceSubject" class="com.huateng.service.ServiceSubject">
+		<property name="serviceMap">
+			<map>
+				<entry key="WarehouseFlow" value-ref="warehouseFlowService" />
+				<entry key="seller_sell_summary" value-ref="sellerSellSummaryService" />
+				<entry key="seller_sell_detail" value-ref="sellerSellDetailService" />
+				<entry key="consumer_sell_sum" value-ref="consumerSellSummaryService" />
+				<entry key="sedimentation_funds" value-ref="sedimentationFundsService" />
+				<entry key="pos_detail" value-ref="posDetailService" />
+				<entry key="issuer_sell_summary" value-ref="issuerSellSummaryService" />
+				<entry key="issue_sell_sum" value-ref="sellerIssueSellSumService" />
+				<entry key="issue_sell_detail" value-ref="sellerIssueSellDetailService" />
+				<entry key="WarehouseSummary" value-ref="warehouseSummaryService" />
+				<entry key="tradeSummary" value-ref="tradeSummaryService" />
+				<entry key="calculate_with_merchant" value-ref="calculateWithMerchantService" />
+				<entry key="settle_month" value-ref="consumerMonthSettleService"></entry>
+				<entry key="sell_card_order" value-ref="sellerSellCardOrderDetailService"></entry>
+				<entry key="sell_card_info" value-ref="sellerSellCardInfoDetailService"></entry>
+				<entry key="tradeDetail" value-ref="sellerSellTradeDetailService"></entry>
+				<entry key="CalculateWithMerchantDetailReprt" value-ref="calculateMerchantDetailService"></entry>
+				<entry key="issuer_cardvalsum_ireport" value-ref="issuerCardValSumService" />
+				<entry key="issuer_stocksum_ireport" value-ref="issuerStockSumService" />
+				<entry key="issuer_stockstream_ireport" value-ref="issuerStockStreamService" />
+				<entry key="consumer_issuer_detail" value-ref="comsumerIssuerDetailService" />
+				<entry key="issuer_issue_sum" value-ref="issuerCardSumService" />
+				<entry key="seller_sell_balance_of_payments" value-ref="issueBalanceOfPaymentsService" />
+				<entry key="issue_personal_balanceOfPayments" value-ref="issuePersonalBalanceOfPaymentsService" />
+				<entry key="card_recharge_and_chargeback" value-ref="cardRechargeAndChargebackService" />
+				<entry key="card_consumption_detail" value-ref="cardConsumptionDetailService" />
+				<entry key="merchant_settlement_detail" value-ref="merchantSettlementDetailService" />
+			    <entry key="current_time_stock" value-ref="currentTimeStockService" />
+			    <entry key="provisions_banlance" value-ref="provisionsBanlanceService" />
+			    <entry key="issue_card_invalid" value-ref="cardInvalidIreportService" />
+			    <entry key="sell_card_invalid" value-ref="cardInvalidIreportService" />
+			    
+			</map>
+		</property>
+		<property name="reportNameMap">
+			<map>
+				<entry key="WarehouseFlow" value="WarehouseFlow" />
+				<entry key="seller_sell_summary" value="seller_sell_summary" />
+				<entry key="seller_sell_detail" value="seller_sell_detail" />
+				<entry key="consumer_sell_sum" value="consumer_sell_sum" />
+				<entry key="sedimentation_funds" value="sedimentation_funds" />
+				<entry key="pos_detail" value="POSdetail" />
+				<entry key="issuer_sell_summary" value="IssuerSellSummary" />
+				<entry key="issue_sell_sum" value="issue_sell_sum" />
+				<entry key="issue_sell_detail" value="issue_sell_detail" />
+				<entry key="WarehouseSummary" value="WarehouseSummary" />
+				<entry key="tradeSummary" value="tradeSummary" />
+				<entry key="settle_month" value="settle_month" />
+				<entry key="sell_card_order" value="sell_card_order" />
+				<entry key="sell_card_info" value="sell_card_info" />
+				<entry key="CalculateWithMerchantDetailReprt" value="CalculateWithMerchantDetailReprt"></entry>
+				<entry key="issuer_cardvalsum_ireport" value="issuer_cardvalsum_ireport" />
+				<entry key="issuer_stocksum_ireport" value="issuer_stocksum_ireport" />
+				<entry key="issuer_stockstream_ireport" value="issuer_stockstream_ireport" />
+				<entry key="consumer_issuer_detail" value="consumer_issuer_detail" />
+				<entry key="tradeDetail" value="tradeDetail" />
+				<entry key="issuer_issue_sum" value="issuer_issue_sum" />
+				<entry key="calculate_with_merchant" value="CalculateWithMerchantReport" />
+				<entry key="seller_sell_balance_of_payments" value="seller_sell_balance_of_payments" />
+				<entry key="issue_personal_balanceOfPayments" value="issue_personal_balanceOfPayments" />
+				<entry key="card_recharge_and_chargeback" value="card_recharge_and_chargeback"/>
+				<entry key="card_consumption_detail" value="card_consumption_detail" />
+				<entry key="merchant_settlement_detail" value="merchant_settlement_detail" />
+			    <entry key="current_time_stock" value="current_time_stock" />
+			    <entry key="provisions_banlance" value="provisions_banlance" />
+			    <entry key="issue_card_invalid" value="issue_card_invalid" />
+			    <entry key="sell_card_invalid" value="sell_card_invalid" />
+			</map>
+		</property>
+	</bean>
+
+	<!--库存流水报表-->
+	<bean id="warehouseFlowService"
+		class="com.huateng.service.sellOperation.warehouseFlow.service.WarehouseFlowServiceImpl">
+	</bean>
+	<!--发行机构-营销运营汇总表-->
+	<bean id="sellerSellSummaryService"
+		class="com.huateng.service.issueOperation.sellerSellSummary.service.SellerSellSummaryService">
+	</bean>
+	<!--  发行机构-预付卡充值充退报表	-->
+	<bean id="cardRechargeAndChargebackService"
+		class="com.huateng.service.issueOperation.cardRechargeAndChargeback.service.CardRechargeAndChargebackService">
+	</bean>
+	<!--发行机构-营销运营明细表-->
+	<bean id="sellerSellDetailService"
+		class="com.huateng.service.issueOperation.sellerSellDetail.service.SellerSellDetailService">
+	</bean>
+	<!--收单运营汇总表-->
+	<bean id="consumerSellSummaryService"
+		class="com.huateng.service.issueOperation.consumerSellSummary.service.ConsumerSellSummaryService">
+	</bean>
+	<!-- 资金沉淀报表 -->
+	<bean id="sedimentationFundsService"
+		class="com.huateng.service.issueOperation.fundSubsideSum.service.FundSubsideSumService">
+	</bean>
+	<!-- 发行机构-发卡情况汇总表 -->
+	<bean id="issuerCardSumService"
+		class="com.huateng.service.issueOperation.issuerCardSum.service.IssuerCardSumService">
+	</bean>
+
+	<!--POS机明细表-->
+	<bean id="posDetailService"
+		class="com.huateng.service.consumer.posDetail.service.PosDetailService">
+	</bean>
+
+	<!-- 营销机构-发行运营汇总表 -->
+	<bean id="sellerIssueSellSumService"
+		class="com.huateng.service.sellOperation.sellerIssueSellSum.service.SellerIssueSellSumService">
+	</bean>
+	<!-- 营销机构-发行运营明细表 -->
+	<bean id="sellerIssueSellDetailService"
+		class="com.huateng.service.sellOperation.sellerIssueSellDetail.service.SellerIssueSellDetailServiceImpl">
+	</bean>
+	<!-- 营销机构收支平衡表	-->
+	<bean id="issueBalanceOfPaymentsService"
+		class="com.huateng.service.sellOperation.issueBalanceOfPaymentsDTO.service.IssueBalanceOfPaymentsService">
+	</bean>
+	<!-- 个人收支平衡表	-->
+	<bean id="issuePersonalBalanceOfPaymentsService"
+		class="com.huateng.service.issueOperation.issuePersonalBalanceOfPayments.service.IssuePersonalBalanceOfPaymentsService">
+	</bean>
+
+	<!-- 营销机构-库存汇总表 -->
+	<bean id="warehouseSummaryService"
+		class="com.huateng.service.sellOperation.warehouseSummary.service.WarehouseSummaryServiceImpl">
+	</bean>
+	<!-- 营销结构-售卡订单明细表 -->
+	<bean id="sellerSellCardOrderDetailService"
+		class="com.huateng.service.sellOperation.sellerSellCardDetail.service.SellerSellCardOrderDetailService">
+	</bean>
+	<!-- 营销结构-售卡信息明细表 -->
+	<bean id="sellerSellCardInfoDetailService"
+		class="com.huateng.service.sellOperation.sellerSellCardDetail.service.SellerSellCardInfoDetailService">
+	</bean>
+	<!-- 营销结构-客户交易明细表 -->
+	<bean id="sellerSellTradeDetailService"
+		class="com.huateng.service.sellOperation.sellerSellTradeDetail.service.SellerSellTradeDetailService">
+	</bean>
+
+	<!-- 客户交易汇总报表 -->
+	<bean id="tradeSummaryService"
+		class="com.huateng.service.sellOperation.tradeSummary.service.TradeSummaryServiceImpl">
+	</bean>
+	<!--收单——商户运营汇总报表-->
+	<bean id="calculateWithMerchantService"
+		class="com.huateng.service.consumer.calculateWithMerchant.service.CalculateWithMerchantService">
+	</bean>
+
+	<!--收单——商户运营明细报表-->
+	<bean id="comsumerIssuerDetailService"
+		class="com.huateng.service.consumer.issuerSellDetail.service.ComsumerIssuerDetailService">
+	</bean>
+
+	<!--收单——财务结算汇总表-->
+	<bean id="consumerMonthSettleService"
+		class="com.huateng.service.consumer.settle.service.ConsumerMonthSettleService">
+	</bean>
+
+	<!-- 发行-卡余额汇总表 -->
+	<bean id="issuerCardValSumService"
+		class="com.huateng.service.issueOperation.issuerCardValSum.service.IssuerCardValSumService">
+	</bean>
+
+	<!--收单——发行运营汇总报表-->
+	<bean id="issuerSellSummaryService"
+		class="com.huateng.service.consumer.issuerSellSummary.service.IssuerSellSummaryService">
+	</bean>
+
+	<!-- 发行-库存汇总表 -->
+	<bean id="issuerStockSumService"
+		class="com.huateng.service.issueOperation.issuerStockSum.service.IssuerStockSumService">
+	</bean>
+
+
+	<!--收单——商户运营明细表-->
+	<bean id="calculateMerchantDetailService"
+		class="com.huateng.service.consumer.calculateWithMerchantDetail.service.CalculateMerchantDetailService">
+	</bean>
+
+
+	<bean id="issuerStockStreamService"
+		class="com.huateng.service.issueOperation.issuerStockStream.service.IssuerStockStreamService">
+	</bean>
+	<!--收单——卡消费交易明细表-->
+	<bean id="cardConsumptionDetailService"
+		class="com.huateng.service.sellOperation.cardConsumptionDetail.service.CardConsumptionDetailService">
+	</bean>
+
+	<!-- 商户结算明细表 -->
+	<bean id="merchantSettlementDetailService"
+		class="com.huateng.service.sellOperation.merchantSettlementDetail.service.MerchantSettlementDetailService">
+	</bean>
+	
+	<!-- 卡实时库存查询报表 -->
+	<bean id="currentTimeStockService" 
+		class="com.huateng.service.issueOperation.currentTimeStock.service.CurrentTimeStockService">
+	</bean>
+	
+	<!-- 备付金余额报表 -->
+	<bean id="provisionsBanlanceService"
+		class="com.huateng.service.issueOperation.provisionsBanlance.service.ProvisionsBanlanceService">
+	</bean>
+	
+	<!-- 卡作废报表 -->
+	<bean id="cardInvalidIreportService"
+		class="com.huateng.service.common.cardInvalid.service.CardInvalidReportService">
+	</bean>
+	
+</beans>

@@ -1,0 +1,2667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ORDER">
+	<select id="queryOrder" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+	<!-- 营销机构与客户间的销售订单订单类型为:10000001 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName",
+		decode(t7.INVOICE_STATE, null,'未录入','已录入') as "invoiceState",
+		to_date(t1.modify_time,'yyyy-MM-dd hh24miss') as
+		"modifyTime"
+		from tb_sell_order t1 join
+		tb_customer t2 on t1.first_entity_id= t2.entity_id join
+        tb_ent_user t6 on t6.user_id = t1.sale_man join
+		tb_product t3 on t1.product_id = t3.product_id join
+		tb_ent_user t4 on t4.user_id = t1.create_user join
+		tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+		
+		tb_order_invoice_info t7 on T1.ORDER_ID = t7.order_id
+		where  t1.order_type in ('10000001','10000002','10000011','10000012','10000003','10000005','10000006')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE = #orderState:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cardNo">
+			T1.ORDER_ID in (select order_id from TB_SELL_ORDER_CARD_LIST
+                    where card_no=#cardNo#)
+		</isNotEmpty>
+	
+		<isNotEmpty prepend="" property="invoiceState">
+			<isEqual prepend="and" property="invoiceState" compareValue="0"> 
+				t7.invoice_state is null
+			</isEqual>
+			<isEqual prepend="and" property="invoiceState" compareValue="1"> 
+				t7.invoice_state is not null
+			</isEqual>
+		</isNotEmpty>
+		
+		union
+		<!-- 营销机构与客户间的换卡订单订单类型为:60000001 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t8.product_id as "productId",
+		t8.product_name as "productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName",
+		decode(t7.INVOICE_STATE, null,'未录入','已录入') as "invoiceState",
+		to_date(t1.modify_time,'yyyy-MM-dd hh24miss') as
+		"modifyTime"
+		from 
+			tb_sell_order t1 join
+			tb_customer t2 on t1.first_entity_id= t2.entity_id join
+	        tb_ent_user t6 on t6.user_id = t1.sale_man join
+			tb_ent_user t4 on t4.user_id = t1.create_user join
+			tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+	        tb_product t8 on t1.product_id = t8.product_id left join
+			tb_order_invoice_info t7 on t1.order_id=t7.order_id 
+		where 
+		    t1.order_type in ('60000001','70000001')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE = #orderState:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cardNo">
+            T1.ORDER_ID in (select t1.order_id as t1  from   TB_SELL_ORDER_CARD_LIST t1  join   tb_sell_order_origCard_list t2 on t1.card_no = #cardNo# and t2.card_no= #cardNo#
+        union  select t2.order_id  from   TB_SELL_ORDER_CARD_LIST t1  join   tb_sell_order_origCard_list t2 on t1.card_no = #cardNo# and t2.card_no= #cardNo#)        
+                    
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="" property="invoiceState">
+			<isEqual prepend="and" property="invoiceState" compareValue="0"> 
+				t7.invoice_state is null
+			</isEqual>
+			<isEqual prepend="and" property="invoiceState" compareValue="1"> 
+				t7.invoice_state is not null
+			</isEqual>
+		</isNotEmpty>
+		
+		union
+		<!-- 营销机构之间的订单 -->
+		select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t2.seller_name as "firstEntityName",
+		    t5.seller_name as "processEnntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as "productName",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime",
+			t1.payment_term as "paymentTerm",
+			t1.payment_state as "paymentState",
+			t1.init_act_stat as "initActStat" ,
+			t1.sale_man as "salManName",
+			decode(t7.INVOICE_STATE, null,'未录入','已录入') as "invoiceState",
+			to_date(t1.modify_time,'yyyy-MM-dd hh24miss') as
+			"modifyTime"
+		    from 
+			    tb_sell_order t1 join
+			    tb_seller t2 on t1.first_entity_id= t2.entity_id join
+			    tb_product t3 on t1.product_id = t3.product_id join
+			    tb_ent_user t4 on t4.user_id = t1.create_user join
+			    tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+			    tb_order_invoice_info t7 on T1.ORDER_ID = t7.order_id
+		    where
+		        t1.order_type in ('20000001','20000002')
+		and 
+		(t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		 or t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#)
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE = #orderState:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cardNo">
+			T1.ORDER_ID in (select order_id from TB_SELL_ORDER_CARD_LIST
+                    where card_no=#cardNo#)
+		</isNotEmpty>
+		<isNotEmpty prepend="" property="invoiceState">
+			<isEqual prepend="and" property="invoiceState" compareValue="0"> 
+				t7.invoice_state is null
+			</isEqual>
+			<isEqual prepend="and" property="invoiceState" compareValue="1"> 
+				t7.invoice_state is not null
+			</isEqual>
+		</isNotEmpty>
+		
+		union
+		<!-- 营销机构与发卡机构 -->
+		select t1.order_id as "orderId",
+        t1.order_type as "orderType",
+        substr(t1.order_type,1,1) as "orderTypeDisplay",
+        t1.first_entity_id as
+        "entityId",
+        t5.seller_name as "firstEntityName",
+        t2.Issuer_Name as "processEnntityName",
+        t3.product_id as "productId",
+        t3.product_name as
+        "productName",
+        t1.order_state as "orderState",
+        t1.card_quantity as "cardQuantity",
+        t1.real_card_quantity as "realCardQuantity",
+        to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+        t1.face_value/100
+        as "faceValue",
+        t1.total_price/100 as "totalPrice",
+        t4.user_name as
+        "createUser",
+        to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+        "createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat" ,
+		t1.sale_man as "salManName",
+		decode(t7.INVOICE_STATE, null,'未录入','已录入') as "invoiceState",
+		to_date(t1.modify_time,'yyyy-MM-dd hh24miss') as
+		"modifyTime"
+         from tb_sell_order t1 join
+        tb_seller t5 on t1.first_entity_id= t5.Entity_Id join
+        TB_ISSUER t2 on t2.Entity_Id = t1.process_entity_id join
+        tb_product t3 on t1.product_id = t3.product_id join 
+        tb_ent_user t4 on  t4.user_id = t1.create_user left join
+        tb_order_invoice_info t7 on T1.ORDER_ID = t7.order_id
+<!--        and t1.order_type in ('30000001','30000002')-->
+		where
+		    t1.order_type in ('30000002')
+        and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+        <isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE = #orderState:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t2.ISSUER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cardNo">
+			T1.ORDER_ID in (select order_id from TB_SELL_ORDER_CARD_LIST
+                    where card_no=#cardNo#)
+		</isNotEmpty>
+		<isNotEmpty prepend="" property="invoiceState">
+			<isEqual prepend="and" property="invoiceState" compareValue="0"> 
+				t7.invoice_state is null
+			</isEqual>
+			<isEqual prepend="and" property="invoiceState" compareValue="1"> 
+				t7.invoice_state is not null
+			</isEqual>
+		</isNotEmpty>
+		
+		union
+		<!-- 采购记名订单 -->
+		select t1.order_id as "orderId",
+        t1.order_type as "orderType",
+        substr(t1.order_type,1,1) as "orderTypeDisplay",
+        t1.first_entity_id as
+        "entityId",
+        t5.seller_name as "firstEntityName",
+        t2.Issuer_Name as "processEnntityName",
+        t3.product_id as "productId",
+        t3.product_name as
+        "productName",
+        t1.order_state as "orderState",
+        t1.card_quantity as "cardQuantity",
+        t1.real_card_quantity as "realCardQuantity",
+        to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+        t1.face_value/100
+        as "faceValue",
+        t1.total_price/100 as "totalPrice",
+        t4.user_name as
+        "createUser",
+        to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+        "createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat" ,
+		t1.sale_man as "salManName",
+		decode(t7.INVOICE_STATE, null,'未录入','已录入') as "invoiceState",
+		to_date(t1.modify_time,'yyyy-MM-dd hh24miss') as
+		"modifyTime"
+         from tb_sell_order t1 join
+                tb_seller t5 on t1.first_entity_id= t5.Entity_Id join
+            tb_product t3 on t1.product_id = t3.product_id join
+        tb_ent_user t4 on t4.user_id = t1.create_user join
+        TB_ISSUER t2 on t2.Entity_Id = t1.process_entity_id left join
+        tb_order_invoice_info t7 on T1.ORDER_ID = t7.order_id
+        where 
+		    t1.order_type in ('30000001')
+        and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+        <isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE = #orderState:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t2.ISSUER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="cardNo">
+			T1.ORDER_ID in
+		<isNotEmpty prepend="" property="newOrderList">
+        <iterate property="newOrderList"  conjunction="," close=")" open="(" > 
+			#newOrderList[]# 
+		</iterate>
+		</isNotEmpty>
+		<isEmpty prepend="" property="newOrderList">
+			(null)
+		</isEmpty>
+		</isNotEmpty>
+		<isNotEmpty prepend="" property="invoiceState">
+			<isEqual prepend="and" property="invoiceState" compareValue="0"> 
+				t7.invoice_state is null
+			</isEqual>
+			<isEqual prepend="and" property="invoiceState" compareValue="1"> 
+				t7.invoice_state is not null
+			</isEqual>
+		</isNotEmpty>
+		
+		
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+<!-- 	<select id="queryNewOrderList" resultClass="java.lang.String"
+		remapResults="true" parameterClass="com.huateng.univer.seller.order.dto.SellOrderQueryDTO">
+		with m(new_order,old_order) as
+		(select new_order,old_order
+		 from TB_UNION_ORDER 
+		where old_order 
+		in (select ss.order_id from tb_sell_order ss,tb_sell_order_card_list cc
+					where ss.order_id=cc.order_id and cc.card_no=#cardNo:varchar#)
+		union all
+		select n.new_order,n.old_order
+		from TB_UNION_ORDER as n,m
+		where n.new_order = m.old_order)
+		select new_order from m
+	</select> -->
+	<!-- 上面的DB2语句转成下面的oracle语句，还未确认是否正确 -->
+	<select id="queryNewOrderList" resultClass="java.lang.String"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		
+		SELECT
+            n.new_order,
+            n.old_order
+        FROM
+            TB_UNION_ORDER  n,
+            (select new_order,old_order
+		 from TB_UNION_ORDER 
+		where old_order 
+		in (select ss.order_id from tb_sell_order ss,tb_sell_order_card_list cc
+					where ss.order_id=cc.order_id         
+		<isNotEmpty prepend="and" property="cardNo" > cc.card_no=#cardNo:varchar#</isNotEmpty>)) m
+        WHERE
+            n.new_order = m.old_order
+
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	
+	<select id="queryAutoActOrder" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+	<!--营销机构与客户间的销售订单,支付方式为激活前/配送前,必须是已支付 并 配送确定的订单才允许订单激活 ，支付渠道是现金、银行卡-->
+		SELECT
+		    T1.ORDER_ID      AS "orderId",
+		    T1.ORDER_TYPE    AS "orderType",
+		    T1.ORDER_STATE   AS "orderState",
+		    T1.INTO_BANK_ID  AS "intoBankId",
+		    T1.PAY_CHANNEL   AS "payChannel",
+		    T1.PAY_DETAILS   AS "payDetails",
+		    T1.INIT_ACT_STAT AS "initActStat",
+		    T1.BATCH_NO      AS "batchNo",
+		    T1.PRODUCT_ID    AS "productId"
+		FROM
+		    TB_SELL_ORDER T1,
+		    tb_product T2,
+		    tb_sell_order_payment T3,
+		    TB_ISSUER T4
+		WHERE
+		    T1.product_id = T2.product_id
+		AND T1.order_id = T3.order_id
+		AND T2.ENTITY_ID = T4.ENTITY_ID
+		AND T4.AUTO_ACT = '1'
+		AND T1.order_type IN ('10000001','10000002','10000011','10000012', '10000005','10000006')
+		AND t1.payment_term IN ('2','3')
+		AND T3.payment_type IN('1','9')
+		AND T3.DATA_STATE = '1'
+		AND t1.payment_state='1'
+		AND t1.order_state='32'
+		AND t1.init_act_stat not in('1','2')	
+		union all
+	<!-- 营销机构与客户间的销售订单,支付方式为信用支付,必须是配送确定的订单才允许订单激活，等同于 支付渠道是现金、银行卡并且已经支付 -->    		
+    	SELECT
+		    T1.ORDER_ID      AS "orderId",
+		    T1.ORDER_TYPE    AS "orderType",
+		    T1.ORDER_STATE   AS "orderState",
+		    T1.INTO_BANK_ID  AS "intoBankId",
+		    T1.PAY_CHANNEL   AS "payChannel",
+		    T1.PAY_DETAILS   AS "payDetails",
+		    T1.INIT_ACT_STAT AS "initActStat",
+		    T1.BATCH_NO      AS "batchNo",
+		    T1.PRODUCT_ID    AS "productId"
+		FROM
+		    TB_SELL_ORDER T1,
+		    tb_product T2,
+		    TB_ISSUER T4
+		WHERE
+		    T1.product_id = T2.product_id
+		AND T2.ENTITY_ID = T4.ENTITY_ID
+		AND T4.AUTO_ACT = '1'
+		AND T1.order_type IN ('10000001','10000002','10000011','10000012', '10000005','10000006')
+		AND t1.payment_term = '4'
+		AND t1.order_state='32'
+		AND t1.init_act_stat not in('1','2')
+		
+		union all
+		<!-- 营销机构与客户间的换卡订单 必须是已支付并配送确定的订单才允许订单激活，支付渠道是现金、银行卡 -->
+		SELECT
+		    T1.ORDER_ID      AS "orderId",
+		    T1.ORDER_TYPE    AS "orderType",
+		    T1.ORDER_STATE   AS "orderState",
+		    T1.INTO_BANK_ID  AS "intoBankId",
+		    T1.PAY_CHANNEL   AS "payChannel",
+		    T1.PAY_DETAILS   AS "payDetails",
+		    T1.INIT_ACT_STAT AS "initActStat",
+		    T1.BATCH_NO      AS "batchNo",
+		    T1.PRODUCT_ID    AS "productId"
+		FROM
+		    TB_SELL_ORDER T1,
+		    tb_product T2,
+		    tb_sell_order_payment T3,
+		    TB_ISSUER T4
+		WHERE
+		    T1.product_id = T2.product_id
+		AND T1.order_id = T3.order_id
+		AND T2.ENTITY_ID = T4.ENTITY_ID
+		AND T4.AUTO_ACT = '1'
+		AND T1.order_type IN ('60000001')
+		AND T3.payment_type IN('1','9')
+		AND T3.DATA_STATE = '1'
+		AND t1.payment_state='1'
+		AND t1.order_state='32'
+		AND t1.init_act_stat not in('1','2')	
+		
+	</select>
+	
+	<select id="queryOrderActUpdate" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+	<!--营销机构与客户间的销售订单,支付方式为激活前/配送前,必须是已支付 并 配送确定的订单才允许订单激活 ，支付渠道是现金、银行卡-->
+		SELECT
+		    T1.ORDER_ID      AS "orderId",
+		    T1.ORDER_TYPE    AS "orderType",
+		    T1.ORDER_STATE   AS "orderState",
+		    T1.INTO_BANK_ID  AS "intoBankId",
+		    T1.PAY_CHANNEL   AS "payChannel",
+		    T1.PAY_DETAILS   AS "payDetails",
+		    T1.INIT_ACT_STAT AS "initActStat",
+		    T1.BATCH_NO      AS "batchNo",
+		    T1.PRODUCT_ID    AS "productId"
+		FROM
+		    TB_SELL_ORDER T1,
+		    tb_product T2,
+		    tb_sell_order_payment T3,
+		    TB_ISSUER T4
+		WHERE
+		    T1.product_id = T2.product_id
+		AND T1.order_id = T3.order_id
+		AND T2.ENTITY_ID = T4.ENTITY_ID
+		AND T4.AUTO_ACT = '1'
+		AND T1.order_type IN ('10000001','10000002','10000011','10000012', '10000005','10000006')
+		AND t1.payment_term IN ('2','3')
+		AND T3.payment_type IN('1','9')
+		AND T3.DATA_STATE = '1'
+		AND t1.payment_state='1'
+		AND t1.order_state='32'
+		AND t1.init_act_stat in('2')	
+		union all
+	<!-- 营销机构与客户间的销售订单,支付方式为信用支付,必须是配送确定的订单才允许订单激活，等同于 支付渠道是现金、银行卡并且已经支付 -->    		
+    	SELECT
+		    T1.ORDER_ID      AS "orderId",
+		    T1.ORDER_TYPE    AS "orderType",
+		    T1.ORDER_STATE   AS "orderState",
+		    T1.INTO_BANK_ID  AS "intoBankId",
+		    T1.PAY_CHANNEL   AS "payChannel",
+		    T1.PAY_DETAILS   AS "payDetails",
+		    T1.INIT_ACT_STAT AS "initActStat",
+		    T1.BATCH_NO      AS "batchNo",
+		    T1.PRODUCT_ID    AS "productId"
+		FROM
+		    TB_SELL_ORDER T1,
+		    tb_product T2,
+		    TB_ISSUER T4
+		WHERE
+		    T1.product_id = T2.product_id
+		AND T2.ENTITY_ID = T4.ENTITY_ID
+		AND T4.AUTO_ACT = '1'
+		AND T1.order_type IN ('10000001','10000002','10000011','10000012', '10000005','10000006')
+		AND t1.payment_term = '4'
+		AND t1.order_state='32'
+		AND t1.init_act_stat in('2')
+		
+		union all
+		<!-- 营销机构与客户间的换卡订单 必须是已支付并配送确定的订单才允许订单激活，支付渠道是现金、银行卡 -->
+		SELECT
+		    T1.ORDER_ID      AS "orderId",
+		    T1.ORDER_TYPE    AS "orderType",
+		    T1.ORDER_STATE   AS "orderState",
+		    T1.INTO_BANK_ID  AS "intoBankId",
+		    T1.PAY_CHANNEL   AS "payChannel",
+		    T1.PAY_DETAILS   AS "payDetails",
+		    T1.INIT_ACT_STAT AS "initActStat",
+		    T1.BATCH_NO      AS "batchNo",
+		    T1.PRODUCT_ID    AS "productId"
+		FROM
+		    TB_SELL_ORDER T1,
+		    tb_product T2,
+		    tb_sell_order_payment T3,
+		    TB_ISSUER T4
+		WHERE
+		    T1.product_id = T2.product_id
+		AND T1.order_id = T3.order_id
+		AND T2.ENTITY_ID = T4.ENTITY_ID
+		AND T4.AUTO_ACT = '1'
+		AND T1.order_type IN ('60000001')
+		AND T3.payment_type IN('1','9')
+		AND T3.DATA_STATE = '1'
+		AND t1.payment_state='1'
+		AND t1.order_state='32'
+		AND t1.init_act_stat in('2')
+		
+	</select>
+	
+	<select id="queryOrderActivate" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		<!--营销机构与客户间的销售订单 支付方式为激活前/配送前：必须是已支付并配送确定的订单才允许订单激活 ，支付渠道是现金、银行卡-->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" 
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5,
+		tb_ent_user t6,
+		tb_sell_order_payment t7
+		where t1.first_entity_id= t2.entity_id
+		and	t6.user_id = t1.sale_man
+		and	t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and	t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011','10000012','10000005','10000006')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+        and t1.payment_state='1'
+        and t1.order_state='32'
+        and t1.payment_term in ('2','3')
+        and t1.init_act_stat != '1'
+        and t7.order_id = t1.order_id
+        and t7.payment_type  in('1','9')
+        AND t7.DATA_STATE = '1'
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		union all
+<!-- 营销机构与客户间的销售订单 支付方式为信用支付：必须是配送确定的订单才允许订单激活，等同于 支付渠道是现金、银行卡并且已经支付 -->
+select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" 
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5,
+		tb_ent_user t6
+		where t1.first_entity_id= t2.entity_id
+		and	t6.user_id = t1.sale_man
+		and	t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and	t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011','10000012','10000005','10000006')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+        and t1.order_state='32'
+        and t1.payment_term = '4'
+        and t1.init_act_stat != '1'
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		
+		union all
+		<!-- 营销机构与客户间的换卡订单 必须是已支付并配送确定的订单才允许订单激活，支付渠道是现金、银行卡 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t7.product_id as "productId",
+		t7.product_name as "productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" 
+		from tb_sell_order t1 join
+		tb_customer t2 on t1.first_entity_id= t2.entity_id join
+        tb_ent_user t6 on t6.user_id = t1.sale_man join
+		tb_ent_user t4 on t4.user_id = t1.create_user join
+		tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+		tb_product t7 on t1.product_id = t7.product_id join
+		tb_sell_order_payment t8 on t8.order_id = t1.order_id
+		where 
+		    t1.order_type in ('60000001')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		and t1.payment_state='1'
+        and t1.order_state='32'
+        and t1.init_act_stat != '1'
+        and t8.payment_type  in(1,9)
+        AND t8.DATA_STATE = '1'
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		
+		
+		
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="queryOrderActivateEx" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		<!-- 营销机构与客户间的销售订单 支付方式为激活前/配送前：必须是已支付并配送确定的订单才允许订单激活，支付渠道是非现金、银行卡 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" 
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5,
+		tb_ent_user t6,
+		tb_sell_order_payment t7
+		where t1.first_entity_id= t2.entity_id
+		and	t6.user_id = t1.sale_man
+		and	t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and	t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011','10000012','10000005','10000006')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+        and t1.payment_state='1'
+        and t1.order_state='32'
+        and t1.payment_term in ('2','3')
+        and t1.init_act_stat != '1'
+        and t7.order_id = t1.order_id
+        and t7.payment_type  not in('1','9')
+        AND t7.DATA_STATE = '1'
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+
+		union all
+		<!-- 营销机构与客户间的换卡订单 必须是已支付并配送确定的订单才允许订单激活，支付渠道是现金、银行卡 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t7.product_id as "productId",
+		t7.product_name as "productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" 
+		from tb_sell_order t1 join
+		tb_customer t2 on t1.first_entity_id= t2.entity_id join
+        tb_ent_user t6 on t6.user_id = t1.sale_man join
+		tb_ent_user t4 on t4.user_id = t1.create_user join
+		tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+		tb_product t7 on t1.product_id = t7.product_id join
+		tb_sell_order_payment t8 on t8.order_id = t1.order_id
+		where 
+		    t1.order_type in ('60000001')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		and t1.payment_state='1'
+        and t1.order_state='32'
+        and t1.init_act_stat != '1'
+        and t8.payment_type not in(1,9)
+        AND t8.DATA_STATE = '1'
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="validFlag">
+			T1.order_state!=0
+		</isNotEmpty>
+		
+		
+		
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<!-- 销售订单录入 -->
+	<select id="queryOrderForSellInput" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as "processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as "productName",
+		t1.order_state as "orderState",
+		decode(t1.card_quantity,'','0',t1.card_quantity) as "cardQuantity",
+    	decode(t1.real_card_quantity,'','0',t1.real_card_quantity) as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100 as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as "createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as "createTime",
+		t6.CONTRACT_STATE as "contractState",
+		t1.payment_state as "paymentState"
+		from tb_sell_order t1,
+			tb_customer t2,
+			tb_product t3,
+			tb_ent_user t4,
+			tb_seller t5,
+			tb_sell_contract  t6
+		where t1.first_entity_id= t2.entity_id
+		and
+			t1.product_id = t3.product_id
+		and 
+			t4.user_id = t1.create_user
+		and
+			t5.entity_id = t1.process_entity_id
+		and 
+			t6.CONTRACT_BUYER = t1.process_entity_id
+		and t6.contract_state = 1
+		and t1.order_type in ('10000001','10000002','10000011','10000012','10000003','10000005','10000006')
+		<dynamic>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE=#orderState#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				UPPER(T4.user_name) like UPPER('%'||#createUserName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityName" >
+				UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityId" >
+				T2.ENTITY_ID = #entityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId" >
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+		and 
+			t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		union 
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as "processEnntityName",
+		t7.product_id as "productId",
+		t7.product_name as "productName",
+		t1.order_state as "orderState",
+		decode(t1.card_quantity,'','0',t1.card_quantity) as "cardQuantity",
+    	decode(t1.real_card_quantity,'','0',t1.real_card_quantity) as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100 as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as "createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as "createTime",
+		t6.CONTRACT_STATE as "contractState",
+		t1.payment_state as "paymentState"
+		from tb_sell_order t1 join
+			tb_customer t2 on t1.first_entity_id= t2.entity_id join
+			tb_ent_user t4 on t4.user_id = t1.create_user join
+			tb_seller t5 on t5.entity_id = t1.process_entity_id join
+			tb_sell_contract  t6  on t6.CONTRACT_BUYER = t1.process_entity_id left join
+                        tb_product t7 on t1.product_id = t7.product_id
+		where 
+			t1.order_type in ('60000001','70000001')
+		
+		and t6.contract_state = 1
+		<dynamic>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE=#orderState#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				UPPER(T4.user_name) like UPPER('%'||#createUserName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityName" >
+				UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityId" >
+				T2.ENTITY_ID = #entityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId" >
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+		and 
+			t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<!-- 采购订单录入 -->
+	<select id="queryOrderForBuyInput" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select t1.order_id as "orderId",
+			    t1.order_type as "orderType",
+			    substr(t1.order_type,1,1) as "orderTypeDisplay",
+			    t1.first_entity_id as "entityId",
+			    t2.seller_name as "firstEntityName",
+			    t5.seller_name as "processEnntityName",
+			    t3.product_id as "productId",
+			    t3.product_name as "productName",
+			    t1.order_state as "orderState",
+			   	decode(t1.card_quantity,'','0',t1.card_quantity) as "cardQuantity",
+	    		decode(t1.real_card_quantity,'','0',t1.real_card_quantity) as "realCardQuantity",
+			    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+			    t1.face_value/100
+			    as "faceValue",
+			    t1.total_price/100 as "totalPrice",
+			    t4.user_name as "createUser",
+			    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+			    "createTime"
+		from tb_sell_order t1,
+			    TB_SELLER t2, 
+			    tb_product t3,
+			    tb_ent_user t4,
+			    tb_seller t5
+			    where t1.first_entity_id= t2.entity_id
+			    and t1.product_id = t3.product_id
+			    and t4.user_id = t1.create_user
+			    and t5.entity_id = t1.process_entity_id
+			    and t1.order_type in ('20000001','20000002')
+			    AND T1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR# 
+		  <dynamic>
+		  <isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID=#orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.first_entity_id=#entityId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="entityName">
+				UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName#||'%')
+				</isNotEmpty>
+		    <isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE=#orderState#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				UPPER(T4.user_name) like UPPER('%'||#createUserName:VARCHAR#||'%')
+			</isNotEmpty>
+		  </dynamic>
+		union 
+			select t1.order_id as "orderId",
+		        t1.order_type as "orderType",
+		        substr(t1.order_type,1,1) as "orderTypeDisplay",
+		        t1.first_entity_id as "entityId",
+		        t2.seller_name as "firstEntityName",
+		        t5.issuer_name as "processEnntityName",
+		        t3.product_id as "productId",
+		        t3.product_name as "productName",
+		        t1.order_state as "orderState",
+		        decode(t1.card_quantity,'','0',t1.card_quantity) as "cardQuantity",
+	    		decode(t1.real_card_quantity,'','0',t1.real_card_quantity) as "realCardQuantity",
+		        to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		        t1.face_value/100
+		        as "faceValue",
+		        t1.total_price/100 as "totalPrice",
+		        t4.user_name as
+		        "createUser",
+		        to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		        "createTime"
+		  from 	tb_sell_order t1,
+		        TB_SELLER t2,
+		        tb_product t3,
+		        tb_ent_user t4,
+		        TB_ISSUER t5
+		        where t1.first_entity_id= t2.entity_id
+		        and t1.product_id = t3.product_id
+		        and t4.user_id = t1.create_user
+		        and t5.entity_id = t1.process_entity_id
+		        and t1.order_type in ('30000001','30000002')
+			    AND (T1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR# OR T1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#)
+		    <dynamic>
+		    	<isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID=#orderId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="entityId">
+				T1.first_entity_id=#entityId#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="entityName">
+				 UPPER(t5.Issuer_NAME) like UPPER('%'||#entityName#||'%')
+				</isNotEmpty>
+			    <isNotEmpty prepend="and" property="orderState">
+					T1.ORDER_STATE=#orderState#
+				</isNotEmpty>
+				<isNotEmpty prepend="and" property="createUserName">
+					UPPER(T4.user_name) like UPPER('%'||#createUserName:VARCHAR#||'%')
+				</isNotEmpty>
+		  </dynamic>		    
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="queryOrderAtSellerHandOutReady" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+	<!-- 营销机构与客户间的销售订单订单类型为:10000001 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t3.ONYMOUS_STAT as "onymousStat",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.face_value_type as "faceValueType",
+		T1.CARD_LAYOUT_ID as "cardLayoutId",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime"
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5
+		where t1.first_entity_id= t2.entity_id
+		and
+		t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and
+		t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011','10000012','10000005','10000006')
+		<isNotEmpty prepend="and" property="orderState" >
+       		t1.order_state =	#orderState:varchar#
+       </isNotEmpty>
+	
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityId" >
+			T2.ENTITY_ID = #entityId:VARCHAR#
+		</isNotEmpty>
+			
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		union
+		<!-- 营销机构之间的订单 -->
+		select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t2.seller_name as "firstEntityName",
+		    t5.seller_name as "processEnntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as
+		    "productName",
+		    t3.ONYMOUS_STAT as "onymousStat",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.face_value_type as "faceValueType",
+		    T1.CARD_LAYOUT_ID as "cardLayoutId",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime"
+		    from tb_sell_order t1,
+		    tb_seller t2,
+		    tb_product t3,
+		    tb_ent_user t4,
+		    tb_seller t5
+		    where t1.first_entity_id= t2.entity_id
+		    and
+		    t1.product_id = t3.product_id
+		    and t4.user_id = t1.create_user
+		    and
+		    t5.entity_id = t1.process_entity_id
+		    and t1.order_type in ('20000001','20000002')
+		<isNotEmpty prepend="and" property="orderState" >
+       		t1.order_state =	#orderState:varchar#
+        </isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityId" >
+			T2.ENTITY_ID = #entityId:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		union
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t6.product_id as "productId",
+		t6.product_name as	"productName",
+		'' as "onymousStat",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.face_value_type as "faceValueType",
+		T1.CARD_LAYOUT_ID as "cardLayoutId",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime"
+			from tb_sell_order t1 join
+		tb_customer t2 on t1.first_entity_id= t2.entity_id join
+		tb_ent_user t4 on t4.user_id = t1.create_user join 
+		tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+		tb_product t6 on t1.product_id=t6.product_id
+		where 
+			t1.order_type in ('60000001')
+		<isNotEmpty prepend="and" property="orderState" >
+       		t1.order_state =	#orderState:varchar#
+       </isNotEmpty>
+	
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityId" >
+			T2.ENTITY_ID = #entityId:VARCHAR#
+		</isNotEmpty>
+			
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<!-- 销售订单确定 -->
+	<select id="queryOrderAtSellConfirm" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t3.ONYMOUS_STAT as "onymousStat",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime"
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5
+		where t1.first_entity_id= t2.entity_id
+		and t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011', '10000012','10000003','10000005','10000006')
+       	and t1.order_state ='2'
+	
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityId" >
+			T2.ENTITY_ID = #entityId:VARCHAR#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		
+		union
+			select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t2.seller_name as "firstEntityName",
+		    t5.seller_name as "processEnntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as
+		    "productName",
+		     t3.ONYMOUS_STAT as "onymousStat",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime"
+		    from tb_sell_order t1,
+		    tb_seller t2,
+		    tb_product t3,
+		    tb_ent_user t4,
+		    tb_seller t5
+		    where t1.first_entity_id= t2.entity_id
+		    and t1.product_id = t3.product_id
+		    and t4.user_id = t1.create_user
+		    and t5.entity_id = t1.process_entity_id
+		    and t1.order_type in ('20000001','20000002')
+       		and t1.order_state ='23'
+			
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityId" >
+			T2.ENTITY_ID = #entityId:VARCHAR#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		union 
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t6.product_id as "productId",
+		t6.product_name as "productName",
+		'' as "onymousStat",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime"
+		from tb_sell_order t1 join
+		tb_customer t2 on t1.first_entity_id= t2.entity_id join
+		tb_ent_user t4 on t4.user_id = t1.create_user join
+		tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+        tb_product t6 on t1.product_id = t6.product_id
+		where 
+		    t1.order_type in ('60000001','70000001')
+       	and t1.order_state ='2'
+		
+		<dynamic>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE=#orderState#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				UPPER(T4.user_name) like UPPER('%'||#createUserName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityName" >
+				UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityId" >
+				T2.ENTITY_ID = #entityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId" >
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+		and 
+			t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<!-- 采购订单确定 -->
+	<select id="queryOrderAtBuyConfirm" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t2.seller_name as "firstEntityName",
+		    t5.seller_name as "processEnntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as
+		    "productName",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime"
+		    from tb_sell_order t1,
+		    tb_seller t2,
+		    tb_product t3,
+		    tb_ent_user t4,
+		    tb_seller t5
+		    where t1.first_entity_id= t2.entity_id
+		    and t1.product_id = t3.product_id
+		    and t4.user_id = t1.create_user
+		    and t5.entity_id = t1.process_entity_id
+		    and t1.order_type in ('20000001','20000002')
+       		and t1.order_state ='2'
+			and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		union
+		<!-- 营销机构与发卡机构 -->
+		select t1.order_id as "orderId",
+        t1.order_type as "orderType",
+        substr(t1.order_type,1,1) as "orderTypeDisplay",
+        t1.first_entity_id as
+        "entityId",
+        t5.seller_name as "firstEntityName",
+        t2.Issuer_Name as "processEnntityName",
+        t3.product_id as "productId",
+        t3.product_name as
+        "productName",
+        t1.order_state as "orderState",
+        t1.card_quantity as "cardQuantity",
+        t1.real_card_quantity as "realCardQuantity",
+        to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+        t1.face_value/100
+        as "faceValue",
+        t1.total_price/100 as "totalPrice",
+        t4.user_name as
+        "createUser",
+        to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+        "createTime"
+        from tb_sell_order t1,
+        TB_ISSUER t2,
+        tb_product t3,
+        tb_ent_user t4,
+        tb_seller t5
+        where t1.first_entity_id= t5.Entity_Id
+        and t1.product_id = t3.product_id
+        and t4.user_id = t1.create_user
+        and t2.Entity_Id = t1.process_entity_id
+        and t1.order_type in ('30000001','30000002')
+       	and	t1.order_state ='2'
+        and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+        <isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.ISSUER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<!-- 订单确定 -->
+	<select id="queryOrderAtSellerConfirm" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+	<!-- 营销机构与客户间的销售订单订单类型为:10000001 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime"
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5
+		where t1.first_entity_id= t2.entity_id
+		and t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011', '10000012')
+       	and t1.order_state ='2'
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		union
+		<!-- 营销机构之间的订单 -->
+		select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t2.seller_name as "firstEntityName",
+		    t5.seller_name as "processEnntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as
+		    "productName",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime"
+		    from tb_sell_order t1,
+		    tb_seller t2,
+		    tb_product t3,
+		    tb_ent_user t4,
+		    tb_seller t5
+		    where t1.first_entity_id= t2.entity_id
+		    and t1.product_id = t3.product_id
+		    and t4.user_id = t1.create_user
+		    and t5.entity_id = t1.process_entity_id
+		    and t1.order_type in ('20000001','20000002')
+       		and t1.order_state ='2'
+			and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		union
+		<!-- 营销机构与发卡机构 -->
+		select t1.order_id as "orderId",
+        t1.order_type as "orderType",
+        substr(t1.order_type,1,1) as "orderTypeDisplay",
+        t1.first_entity_id as
+        "entityId",
+        t2.Issuer_Name as "processEnntityName",
+        t5.seller_name as "firstEntityName",
+        t3.product_id as "productId",
+        t3.product_name as
+        "productName",
+        t1.order_state as "orderState",
+        t1.card_quantity as "cardQuantity",
+        t1.real_card_quantity as "realCardQuantity",
+        to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+        t1.face_value/100
+        as "faceValue",
+        t1.total_price/100 as "totalPrice",
+        t4.user_name as
+        "createUser",
+        to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+        "createTime"
+        from tb_sell_order t1,
+        TB_ISSUER t2,
+        tb_product t3,
+        tb_ent_user t4,
+        tb_seller t5
+        where t1.first_entity_id= t5.Entity_Id
+        and t1.product_id = t3.product_id
+        and t4.user_id = t1.create_user
+        and t2.Entity_Id = t1.process_entity_id
+        and t1.order_type in ('30000001','30000002')
+       	and	t1.order_state ='2'
+        and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+        <isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.ISSUER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		union
+			select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t2.seller_name as "firstEntityName",
+		    t5.seller_name as "processEnntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as
+		    "productName",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime"
+		    from tb_sell_order t1,
+		    tb_seller t2,
+		    tb_product t3,
+		    tb_ent_user t4,
+		    tb_seller t5
+		    where t1.first_entity_id= t2.entity_id
+		    and t1.product_id = t3.product_id
+		    and t4.user_id = t1.create_user
+		    and t5.entity_id = t1.process_entity_id
+		    and t1.order_type in ('20000001','20000002')
+       		and t1.order_state ='23'
+			and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.ISSUER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<!-- 采购订单接收 -->
+	<select id="queryOrderForOrderAccept" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		<!-- 营销机构之间的订单 -->
+		select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t5.seller_name as "processEnntityName",
+		    t2.seller_name as "firstEntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as
+		    "productName",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime",
+		    t1.ORIGCARD_QUANTITY as "origCardQuantity"
+		    from tb_sell_order t1,
+		    tb_seller t2,
+		    tb_product t3,
+		    tb_ent_user t4,
+		    tb_seller t5
+		    where t1.first_entity_id= t2.entity_id
+		    and
+		    t1.product_id = t3.product_id
+		    and t4.user_id = t1.create_user
+		    and
+		    t5.entity_id = t1.process_entity_id
+		    and t1.order_type in ('20000001','20000002')
+		<isNotEmpty prepend="and" property="orderState" >
+       		t1.order_state =	#orderState:varchar#
+        </isNotEmpty>
+		    
+		and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		union
+		<!-- 营销机构与发卡机构 -->
+		select t1.order_id as "orderId",
+        t1.order_type as "orderType",
+        substr(t1.order_type,1,1) as "orderTypeDisplay",
+        t1.first_entity_id as
+        "entityId",
+        t2.Issuer_Name as "processEnntityName",
+        t5.seller_name as "firstEntityName",
+        t3.product_id as "productId",
+        t3.product_name as
+        "productName",
+        t1.order_state as "orderState",
+        t1.card_quantity as "cardQuantity",
+        t1.real_card_quantity as "realCardQuantity",
+        to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+        t1.face_value/100
+        as "faceValue",
+        t1.total_price/100 as "totalPrice",
+        t4.user_name as
+        "createUser",
+        to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+        "createTime",
+		t1.ORIGCARD_QUANTITY as "origCardQuantity"
+        from tb_sell_order t1,
+        TB_ISSUER t2,
+        tb_product t3,
+        tb_ent_user t4,
+        tb_seller t5
+        where t1.first_entity_id= t5.Entity_Id
+        and
+        t1.product_id = t3.product_id
+        and t4.user_id = t1.create_user
+        and
+        t2.Entity_Id = t1.process_entity_id
+        and t1.order_type in ('30000001','30000002')
+        <isNotEmpty prepend="and" property="orderState" >
+       		t1.order_state =	#orderState:varchar#
+       </isNotEmpty>
+        and t1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+        <isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.ISSUER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	
+	
+	<select id="queryOrderSendconfirm" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+	<!-- 营销机构与客户间的销售订单订单类型为:10000001 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as
+		"entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime"
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5
+		where t1.first_entity_id= t2.entity_id
+		and
+		t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and
+		t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011', '10000012')
+		and	T1.ORDER_STATE ='31'
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+	</select>
+	
+	
+	
+	<select id="queryOrderForOrderImmediatelyCredit" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+			select t1.order_id as "orderId",
+			t1.order_type as "orderType",
+			t1.batch_no as "batchNo",
+			substr(t1.order_type,1,1) as "orderTypeDisplay",
+			t1.first_entity_id as "entityId",
+			t2.customer_name as "firstEntityName",
+			t5.seller_name as "processEnntityName",
+			t3.product_id as "productId",
+			t3.product_name as "productName",
+			t1.order_state as "orderState",
+			decode(t1.card_quantity,'','0',t1.card_quantity) as "cardQuantity",
+	    	decode(t1.real_card_quantity,'','0',t1.real_card_quantity) as "realCardQuantity",
+			to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+			t1.face_value/100 as "faceValue",
+			t1.total_price/100 as "totalPrice",
+			t4.user_name as "createUser",
+			to_date(t1.create_time,'yyyy-MM-dd hh24miss') as "createTime"
+			from tb_sell_order t1,
+				tb_customer t2,
+				tb_product t3,
+				tb_ent_user t4,
+				tb_seller t5
+			where t1.first_entity_id= t2.entity_id
+			and
+				t1.product_id = t3.product_id
+			and 
+				t4.user_id = t1.create_user
+			and
+				t5.entity_id = t1.process_entity_id
+			and 
+				t1.order_state in ('15','33','34')
+			and 
+				t1.order_type = '10000003'
+				
+			<isNotEmpty prepend="and" property="entityId" >
+					t1.first_entity_id= #entityId:varchar#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId" >
+					T1.ORDER_ID= #orderId:varchar#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName" >
+				UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityName" >
+				UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+			</isNotEmpty>
+			and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<!-- 订单付款确认 -->
+	
+	
+	
+	<select id="queryOrderAtOrderPayment" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+	<!-- 营销机构与客户间的销售订单订单类型为:10000001 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" ,
+		decode(T1.PAY_CHANNEL,'1','现金',null,'现金','非现金') as "paymentTypeDesc"
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5,
+		tb_ent_user t6
+		where t1.first_entity_id= t2.entity_id
+		and t6.user_id = t1.sale_man
+		and t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and t5.entity_id = t1.process_entity_id
+		and t1.order_type in ('10000001','10000002','10000011', '10000012','10000005','10000006')
+       	and t1.order_state >='2'
+       	and t1.payment_state in ('0','2')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>			
+		<isNotEmpty prepend="and" property="paymentType" >			
+		  <isEqual property="paymentType" compareValue="1">
+		    (T1.PAY_CHANNEL = '1' or T1.PAY_CHANNEL is null)		 
+		  </isEqual> 
+		  <isNotEqual property="paymentType" compareValue="1">
+		    T1.PAY_CHANNEL != '1'		 
+		  </isNotEqual>		
+		</isNotEmpty>	
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE in ($orderState$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		union
+		<!-- 营销机构与客户间的销售订单订单类型为:10000003 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t3.product_id as "productId",
+		t3.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" ,
+		decode(T1.PAY_CHANNEL,'1','现金',null,'现金','非现金') as "paymentTypeDesc"
+		from tb_sell_order t1,
+		tb_customer t2,
+		tb_product t3,
+		tb_ent_user t4,
+		tb_seller t5,
+		tb_ent_user t6		
+		where t1.first_entity_id= t2.entity_id
+		and t6.user_id = t1.sale_man
+		and t1.product_id = t3.product_id
+		and t4.user_id = t1.create_user
+		and t5.entity_id = t1.process_entity_id
+		and t1.order_type='10000003' 
+       	and t1.order_state >='1'
+       	and t1.payment_state in ('0','2')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>			
+		<isNotEmpty prepend="and" property="paymentType" >			
+		  <isEqual property="paymentType" compareValue="1">
+		    (T1.PAY_CHANNEL = '1' or T1.PAY_CHANNEL is null)		 
+		  </isEqual> 
+		  <isNotEqual property="paymentType" compareValue="1">
+		    T1.PAY_CHANNEL != '1'		 
+		  </isNotEqual>		
+		</isNotEmpty>			
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>		
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE in ($orderState$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		union
+		<!-- 营销机构之间的订单 -->
+		select t1.order_id as "orderId",
+		    t1.order_type as "orderType",
+		    substr(t1.order_type,1,1) as "orderTypeDisplay",
+		    t1.first_entity_id as
+		    "entityId",
+		    t2.seller_name as "firstEntityName",
+		    t5.seller_name as "processEnntityName",
+		    t3.product_id as "productId",
+		    t3.product_name as
+		    "productName",
+		    t1.order_state as "orderState",
+		    t1.card_quantity as "cardQuantity",
+		    t1.real_card_quantity as "realCardQuantity",
+		    to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		    t1.face_value/100
+		    as "faceValue",
+		    t1.total_price/100 as "totalPrice",
+		    t4.user_name as
+		    "createUser",
+		    to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		    "createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" ,
+		decode(T1.PAY_CHANNEL,'1','现金',null,'现金','非现金') as "paymentTypeDesc"
+		    from tb_sell_order t1,
+		    tb_seller t2,
+		    tb_product t3,
+		    tb_ent_user t4,
+		    tb_seller t5,
+		    tb_ent_user t6
+		    where t1.first_entity_id= t2.entity_id
+		    and t6.user_id = t1.sale_man
+		    and t1.product_id = t3.product_id
+		    and t4.user_id = t1.create_user
+		    and t5.entity_id = t1.process_entity_id
+		    and t1.order_type in ('20000001','20000002')
+       		and t1.order_state >= '23'
+       		and t1.payment_state in ('0','2')
+			and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>		
+		<isNotEmpty prepend="and" property="paymentType" >			
+		  <isEqual property="paymentType" compareValue="1">
+		    (T1.PAY_CHANNEL = '1' or T1.PAY_CHANNEL is null)		 
+		  </isEqual> 
+		  <isNotEqual property="paymentType" compareValue="1">
+		    T1.PAY_CHANNEL != '1'		 
+		  </isNotEqual>		
+		</isNotEmpty>		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.SELLER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE in ($orderState$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		union
+		<!-- 营销机构与客户间的换卡订单订单类型为:60000001 -->
+		select t1.order_id as "orderId",
+		t1.order_type as "orderType",
+		substr(t1.order_type,1,1) as "orderTypeDisplay",
+		t1.first_entity_id as "entityId",
+		t2.customer_name as "firstEntityName",
+		t5.seller_name as
+		"processEnntityName",
+		t7.product_id as "productId",
+		t7.product_name as
+		"productName",
+		t1.order_state as "orderState",
+		t1.card_quantity as "cardQuantity",
+		t1.real_card_quantity as "realCardQuantity",
+		to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+		t1.face_value/100
+		as "faceValue",
+		t1.total_price/100 as "totalPrice",
+		t4.user_name as
+		"createUser",
+		to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+		"createTime",
+		t1.payment_term as "paymentTerm",
+		t1.payment_state as "paymentState",
+		t1.init_act_stat as "initActStat",
+		t6.user_name as "salManName" ,
+		decode(T1.PAY_CHANNEL,'1','现金',null,'现金','非现金') as "paymentTypeDesc"
+		from tb_sell_order t1 join
+		tb_customer t2 on t1.first_entity_id= t2.entity_id join
+        tb_ent_user t6 on t6.user_id = t1.sale_man join
+		tb_ent_user t4 on t4.user_id = t1.create_user join
+		tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+		tb_product t7 on t1.product_id = t7.product_id
+		where 
+		    t1.order_type in ('60000001')
+       	and t1.order_state >='2'
+       	and t1.payment_state in ('0','2')
+		and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId" >
+			T1.ORDER_ID= #orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentType" >			
+		  <isEqual property="paymentType" compareValue="1">
+		    (T1.PAY_CHANNEL = '1' or T1.PAY_CHANNEL is null)		 
+		  </isEqual> 
+		  <isNotEqual property="paymentType" compareValue="1">
+		    T1.PAY_CHANNEL != '1'		 
+		  </isNotEqual>		
+		</isNotEmpty>		
+		<isNotEmpty prepend="and" property="createUserName" >
+			UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="entityName" >
+			UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderState" >
+			T1.ORDER_STATE in ($orderState$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderTypeArray" >
+			T1.ORDER_TYPE in ($orderTypeArray$)
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName" >
+			t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentTerm" >
+			T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="paymentState" >
+			T1.PAYMENT_STATE = #paymentState:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="processEntityName" >
+			UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateStart" >
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="orderDateEnd" >
+		<![CDATA[ 
+			to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+			]]>
+		</isNotEmpty>
+		union
+    <!-- 营销机构赎回订单类型为:70000001 -->
+   SELECT T1.ORDER_ID AS "orderId",
+          T1.ORDER_TYPE AS "orderType",
+          SUBSTR(T1.ORDER_TYPE, 1, 1) AS "orderTypeDisplay",
+          T1.FIRST_ENTITY_ID AS "entityId",
+          T2.CUSTOMER_NAME AS "firstEntityName",
+          T5.SELLER_NAME AS "processEnntityName",
+          '' AS "productId",
+          '' AS "productName",
+          T1.ORDER_STATE AS "orderState",
+          T1.CARD_QUANTITY AS "cardQuantity",
+          T1.REAL_CARD_QUANTITY AS "realCardQuantity",
+          TO_DATE(T1.ORDER_DATE, 'yyyy-MM-dd') AS "orderDate",
+          T1.FACE_VALUE / 100 AS "faceValue",
+          T1.TOTAL_PRICE / 100 AS "totalPrice",
+          T4.USER_NAME AS "createUser",
+          TO_DATE(T1.CREATE_TIME, 'yyyy-MM-dd hh24miss') AS "createTime",
+          T1.PAYMENT_TERM AS "paymentTerm",
+          T1.PAYMENT_STATE AS "paymentState",
+          T1.INIT_ACT_STAT AS "initActStat",
+          T6.USER_NAME AS "salManName",
+          DECODE(T1.PAY_CHANNEL, '1', '现金', NULL, '现金', '非现金') AS "paymentTypeDesc"
+     FROM TB_SELL_ORDER T1,
+          TB_CUSTOMER   T2,
+          TB_ENT_USER   T4,
+          TB_SELLER     T5,
+          TB_ENT_USER   T6
+    WHERE T1.FIRST_ENTITY_ID = T2.ENTITY_ID
+      AND T6.USER_ID = T1.SALE_MAN
+      AND T4.USER_ID = T1.CREATE_USER
+      AND T5.ENTITY_ID = T1.PROCESS_ENTITY_ID
+      AND T1.ORDER_TYPE = '70000001'
+      AND T1.ORDER_STATE = '35'
+      AND T1.PAYMENT_STATE IN ('0', '2')
+      AND T1.PROCESS_ENTITY_ID =  #defaultEntityId:VARCHAR#
+    <isNotEmpty prepend="and" property="orderId" >
+      T1.ORDER_ID= #orderId:varchar#
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="paymentType" >      
+      <isEqual property="paymentType" compareValue="1">
+        (T1.PAY_CHANNEL = '1' or T1.PAY_CHANNEL is null)     
+      </isEqual> 
+      <isNotEqual property="paymentType" compareValue="1">
+        T1.PAY_CHANNEL != '1'     
+      </isNotEqual>    
+    </isNotEmpty>    
+    <isNotEmpty prepend="and" property="createUserName" >
+      UPPER(t4.USER_NAME) like UPPER('%'||#createUserName:VARCHAR#||'%')
+    </isNotEmpty>
+    
+    <isNotEmpty prepend="and" property="entityName" >
+      UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="orderState" >
+      T1.ORDER_STATE in ($orderState$)
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="orderTypeArray" >
+      T1.ORDER_TYPE in ($orderTypeArray$)
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="saleManName" >
+      t1.SALE_MAN in (select USER_ID from tb_ENT_USER where UPPER(USER_NAME) like UPPER('%'||#saleManName:VARCHAR#||'%') )
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="paymentTerm" >
+      T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="paymentState" >
+      T1.PAYMENT_STATE = #paymentState:VARCHAR#
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="processEntityName" >
+      UPPER(t5.SELLER_NAME) like UPPER('%'||#processEntityName:VARCHAR#||'%')
+    </isNotEmpty>
+    <isNotEmpty prepend="and" property="orderDateStart" >
+	  to_date(T1.ORDER_DATE,'YYYY-MM-DD') >= to_date(#orderDateStart:VARCHAR#,'YYYY-MM-DD')
+	</isNotEmpty>
+	<isNotEmpty prepend="and" property="orderDateEnd" >
+	<![CDATA[ 
+	  to_date(T1.ORDER_DATE,'YYYY-MM-DD') <= to_date(#orderDateEnd:VARCHAR#,'YYYY-MM-DD')
+	]]>
+	</isNotEmpty>
+    <include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="queryOrderAtSendConfirm" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select t1.order_id as "orderId",
+			t1.batch_no as "batchNo",
+			t1.order_type as "orderType",
+			substr(t1.order_type,1,1) as "orderTypeDisplay",
+			t1.first_entity_id as
+			"entityId",
+			t2.customer_name as "firstEntityName",
+			t5.seller_name as
+			"processEnntityName",
+			t3.product_id as "productId",
+			t3.product_name as
+			"productName",
+			t1.order_state as "orderState",
+			decode(t1.card_quantity,'','0',t1.card_quantity) as "cardQuantity",
+	    	decode(t1.real_card_quantity,'','0',t1.real_card_quantity) as "realCardQuantity",
+			to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+			t1.face_value/100
+			as "faceValue",
+			t1.total_price/100 as "totalPrice",
+			t4.user_name as
+			"createUser",
+			to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+			"createTime"
+			from tb_sell_order t1,
+			tb_customer t2,
+			tb_product t3,
+			tb_ent_user t4,
+			tb_seller t5
+			where t1.first_entity_id= t2.entity_id
+			and   t1.product_id = t3.product_id
+			and   t4.user_id = t1.create_user
+			and   t5.entity_id = t1.process_entity_id
+			and t1.order_type in ('10000001','10000002','10000011', '10000012','10000005','10000006')
+			and t1.order_state in ('31','33','34')
+			<dynamic>
+<!--				<isNotEmpty prepend="and" property="orderState">-->
+<!--				T1.ORDER_STATE=#orderState#-->
+<!--			</isNotEmpty>-->
+			<isNotEmpty prepend="and" property="createUserName">
+				UPPER(T4.user_name) like UPPER('%'||#createUserName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityName" >
+				UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityId" >
+				T2.ENTITY_ID = #entityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId" >
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>
+			</dynamic>
+				and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+			union
+			select t1.order_id as "orderId",
+			t1.batch_no as "batchNo",
+			t1.order_type as "orderType",
+			substr(t1.order_type,1,1) as "orderTypeDisplay",
+			t1.first_entity_id as
+			"entityId",
+			t2.customer_name as "firstEntityName",
+			t5.seller_name as
+			"processEnntityName",
+			t6.product_id as "productId",
+			t6.product_name as
+			"productName",
+			t1.order_state as "orderState",
+			decode(t1.card_quantity,'','0',t1.card_quantity) as "cardQuantity",
+	    	decode(t1.real_card_quantity,'','0',t1.real_card_quantity) as "realCardQuantity",
+			to_date(t1.order_date,'yyyy-MM-dd') as "orderDate",
+			t1.face_value/100
+			as "faceValue",
+			t1.total_price/100 as "totalPrice",
+			t4.user_name as
+			"createUser",
+			to_date(t1.create_time,'yyyy-MM-dd hh24miss') as
+			"createTime"
+			from tb_sell_order t1 join
+			tb_customer t2 on t1.first_entity_id= t2.entity_id join
+			tb_ent_user t4 on t4.user_id = t1.create_user join
+			tb_seller t5 on t5.entity_id = t1.process_entity_id left join
+			tb_product t6 on t1.product_id = t6.product_id
+			where 
+				t1.order_type in ('60000001')
+			and t1.order_state in ('31','33','34')
+			<dynamic>
+<!--				<isNotEmpty prepend="and" property="orderState">-->
+<!--				T1.ORDER_STATE=#orderState#-->
+<!--			</isNotEmpty>-->
+			<isNotEmpty prepend="and" property="createUserName">
+				UPPER(T4.user_name) like UPPER('%'||#createUserName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityName" >
+				UPPER(t2.CUSTOMER_NAME) like UPPER('%'||#entityName:VARCHAR#||'%')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityId" >
+				T2.ENTITY_ID = #entityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId" >
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>
+			</dynamic>
+				and t1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+			<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+</sqlMap>

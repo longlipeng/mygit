@@ -1,0 +1,155 @@
+body {
+	background-color: #ffffff;
+	font-family: Tahoma, "宋体";
+	font-size: 9pt;
+}
+
+table {
+	font-family: Tahoma, "宋体";
+	font-size: 9pt;
+	border-color:#000000;
+    border-collapse: collapse;
+}
+td { 
+  font-family: Tahoma, "宋体";
+  font-size: 9pt;
+  border-color:#99CCCC;
+}
+
+.black { font-family: Tahoma, "宋体"; font-size: 9pt; color: #000000;} 
+.blue { font-family: Tahoma, "宋体"; font-size: 9pt; color: #0066FF;}
+.blueTitle0 { font-family: Tahoma, "宋体"; font-size: 12pt; color: #0066FF;font-weight:bold;}
+.blueTitle1 { font-family: Tahoma, "宋体"; font-size: 9pt; color: #0066FF;font-weight:bold;}
+.red { font-family: Tahoma, "宋体"; font-size: 9pt; color: #FF0000;}
+/*input型控件*/
+input {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+}
+
+.input0 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 30px;
+}
+
+.input1 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 195px;
+}
+
+.input2 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 230px;
+}
+
+.input35px {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 35px;
+}
+
+/*inputAsTxtLink型控件*/
+.inputAsTxtLink {
+	border-left:none; border-right:none; border-top:none; border-bottom:none
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;	
+	width: 30px;
+	color:blue;
+	cursor:hand;
+}
+
+
+/*inputAsTxtLink型控件*/
+.inputAsTxtLink1 {
+	border-left:none; border-right:none; border-top:none; border-bottom:none
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;	
+	width: 10px;
+	color:blue;
+	cursor:hand;
+	background-color: #F8041B;
+}
+
+/*inputAsTxt型控件*/
+.inputAsTxt {
+	border-left:none; border-right:none; border-top:none; border-bottom:1
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 100px;
+}
+
+.inputAsTxt1 {
+	border-left:none; border-right:none; border-top:none; border-bottom:1
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 60px;
+}
+
+.inputAsTxt2 {
+	border-left:none; border-right:none; border-top:none; border-bottom:1
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 30px;
+}
+
+.inputAsTxt3 {
+	border-left:none; border-right:none; border-top:none; border-bottom:1
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 25px;
+}
+
+/*列表select型控件*/
+select {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+}
+
+.select0 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 130px;
+}
+
+.select1 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 195px;
+}
+.select2 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 230px;
+}
+/*文本域textarea型控件*/
+textarea {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+}
+
+.textarea1 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 195px;
+}
+
+.textarea2 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 230px;
+}
+
+.textarea3 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 530px;
+}
+
+.textarea4 {
+	font-family: Tahoma,"宋体";
+	font-size: 9pt;
+	width: 615px;
+}

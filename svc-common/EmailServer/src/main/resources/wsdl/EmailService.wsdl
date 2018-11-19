@@ -1,0 +1,21 @@
+<?xml version="1.0" ?><wsdl:definitions name="EmailServiceImplService" targetNamespace="http://suning.impl.services.redm.hanqinet.com/" xmlns:ns1="http://ws.esb.suning.redm.hanqinet.com/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://suning.impl.services.redm.hanqinet.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:import location="http://192.168.102.54:8080/smartredm/cxfservices/EmailService?wsdl=EmailService.wsdl" namespace="http://ws.esb.suning.redm.hanqinet.com/">
+    </wsdl:import>
+  <wsdl:binding name="EmailServiceImplServiceSoapBinding" type="ns1:EmailService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"></soap:binding>
+    <wsdl:operation name="addEmail">
+      <soap:operation soapAction="" style="document"></soap:operation>
+      <wsdl:input name="addEmail">
+        <soap:body use="literal"></soap:body>
+      </wsdl:input>
+      <wsdl:output name="addEmailResponse">
+        <soap:body use="literal"></soap:body>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EmailServiceImplService">
+    <wsdl:port binding="tns:EmailServiceImplServiceSoapBinding" name="EmailServiceImplPort">
+      <soap:address location="http://192.168.102.54:8080/smartredm/cxfservices/EmailService"></soap:address>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

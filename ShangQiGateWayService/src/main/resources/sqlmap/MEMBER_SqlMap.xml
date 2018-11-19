@@ -1,0 +1,781 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MEMBER">
+	<!-- 获取积分 -->
+
+	<!-- 消费积分 -->
+	<select id="selectIntegralConsumeDetails" parameterClass="com.huateng.accorecard.memberwebsite.dto.IntegralQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql"/>
+			select 
+			  t1.retrivl_ref as "retrivlRef",
+			  to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "time",
+			  t3.DICT_NAME as "txnType", 
+			  t2.point as "point"
+			from 
+			     tbl_txn_his t1,
+			     TB_TXN_POINT t2,
+			     tb_ent_dict_info t3
+		   where 
+			   t1.retrivl_ref = t2.retrivl_ref
+			   and to_number(t1.txn_num, '0000') = t3.DICT_ID 
+			   and t2.card_no = t1.pan
+			   and t3.DICT_NAME = '消费'
+			   and trim(t2.card_no) = #cardNo:VARCHAR#
+			   and t2.mem_email =  #memEmail:VARCHAR#
+			  <dynamic>
+			      <isNotEmpty prepend="and" property="startDate">
+			        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="endDate">
+			        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+			      </isNotEmpty>
+		      </dynamic>
+    	<include refid="Commons.suffixSql"/>
+	</select>
+	<select id="selectTransactionDetails" parameterClass="com.huateng.accorecard.memberwebsite.dto.TransactionQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+	    <include refid="Commons.prefixSql"/>
+	    	select * from (
+	   			select 
+		   			t.sys_seq_num  as  "sysSeqNum",
+		           	to_char(to_date(t.settle_date,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(lpad(t.txn_time,6,'0'),'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+		           	to_char(trim(txn_amt)/100, '9999999990.99') as "txnAmt",
+		           	decode(t.txn_type || in_out_flag,'70051','账户充值','70052','账户转账','公共事业费') as "txnType",
+		           	decode(in_out_flag,'1','充值','2','转账','其他') as "remark",
+		           	t.settle_date,t.txn_time
+			  	from  tb_txn_account t 
+				where  
+				  	t.txn_type  in ('7005','8105') and
+					t.account_no = #cardNo:VARCHAR# 
+		       <dynamic>
+			      <isNotEmpty prepend="and" property="startDate">
+			        	to_char(to_date(t.settle_date,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="endDate">
+			        	#endDate:VARCHAR# >= to_char(to_date(t.settle_date,'yyyyMMdd'),'yyyy-MM-dd')
+			      </isNotEmpty>
+		      </dynamic>
+		      union all 
+		      select 
+			     t.sys_seq_num  as  "sysSeqNum",
+		         to_char(to_date(t.settle_date,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(lpad(t.txn_time,6,'0'),'HH24MISS'),'HH24:MI:SS') as "txnTime",  
+		         to_char(trim(txn_amt)/100, '9999999990.99') as "txnAmt",
+		         decode(t.txn_type || in_out_flag,'70051','账户充值','70052','账户转账','公共事业费') as "txnType",
+		         decode(in_out_flag,'1','充值','2','转账','其他') as "remark",
+		         t.settle_date,t.txn_time
+			  from  tb_txn_account_his t 
+			    where  
+			     t.txn_type  in ('7005','8105') and
+			     t.account_no = #cardNo:VARCHAR# 
+			   <dynamic>
+			      <isNotEmpty prepend="and" property="startDate">
+			        	to_char(to_date(t.settle_date,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="endDate">
+			        	#endDate:VARCHAR# >= to_char(to_date(t.settle_date,'yyyyMMdd'),'yyyy-MM-dd')
+			      </isNotEmpty>
+		      </dynamic>
+			)      
+			order by settle_date desc,txn_time desc
+	      <include refid="Commons.suffixSql"/>
+	  </select>
+
+
+	<!-- 查询交易记录
+	  <select id="selectTransactionDetails" parameterClass="com.huateng.accorecard.memberwebsite.dto.TransactionQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+	    <include refid="Commons.prefixSql"/>
+	     select * from(
+			  select distinct
+		        t1.sys_seq_num "sysSeqNum",
+		        t3.DICT_NAME as "txnType", 
+		        to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+		        to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+		        inst_date,inst_time
+		      from 
+		        tbl_txn t1, 
+		        TB_ENT_MERCHANT t2, 
+		        tb_ent_dict_info t3
+		      where 
+		        t1.REVSAL_FLAG = '0' 
+		        and t1.RESP_CODE = '00'
+		        and t1.CARD_ACCP_ID = t2.MERCHANT_ID 
+		        and to_number(t1.txn_num, '0000') = t3.DICT_ID 
+		        and trim(T1.PAN) = #cardNo:VARCHAR# 
+				and TXN_NUM not in ('2015','4015','2105','4105','2095','4095','7010','1025','1325')
+	       <dynamic>
+	      <isNotEmpty prepend="and" property="startDate">
+	        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="endDate">
+	        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+	      </isNotEmpty>
+	      </dynamic>
+	        union
+		        select distinct
+			        t1.sys_seq_num "sysSeqNum",
+			        t3.DICT_NAME as "txnType",
+					to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+					to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+					inst_date,inst_time
+				from 
+					tbl_txn_his t1, 
+					TB_ENT_MERCHANT t2, 
+					tb_ent_dict_info t3
+				where 
+					t1.REVSAL_FLAG = '0'
+					and t1.RESP_CODE = '00'
+					and  t1.CARD_ACCP_ID = t2.MERCHANT_ID 
+					and to_number(t1.txn_num, '0000') = t3.DICT_ID 
+					and  trim(T1.PAN) = #cardNo:VARCHAR# 
+		        	and TXN_NUM not in ('2015','4015','2105','4105','2095','4095','7010','1025','1325') 
+	      <dynamic>
+	     <isNotEmpty prepend="and" property="startDate">
+	        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="endDate">
+	        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+	      </isNotEmpty>
+	      </dynamic>
+	        union
+		      select distinct
+		        t1.sys_seq_num "sysSeqNum",
+		        t3.DICT_NAME as "txnType", 
+		        to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+		        to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+		        inst_date,inst_time
+		      from 
+		        tbl_auth t1, 
+		        TB_ENT_MERCHANT t2,
+		        tb_ent_dict_info t3
+		      where 
+		        REVSAL_FLAG = '0' 
+		        and RESP_CODE = '00'
+		        and  t1.CARD_ACCP_ID = t2.MERCHANT_ID 
+		        and to_number(t1.txn_num, '0000') = t3.DICT_ID
+	        	and trim(T1.PAN) = #cardNo:VARCHAR#
+	      <dynamic>
+	     	<isNotEmpty prepend="and" property="startDate">
+	        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+	      	</isNotEmpty>
+	      <isNotEmpty prepend="and" property="endDate">
+	        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+	      </isNotEmpty>
+	      </dynamic>
+	        union
+			select distinct
+				t1.sys_seq_num "sysSeqNum", 
+				decode(t1.txn_num, 7000,'充值', 7001,'调整出账', 7002,'调整入账') as "txnType",
+				to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+				to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+				inst_date,inst_time
+			from 
+				tbl_txn t1, 
+				TB_ENT_MERCHANT t2
+			where 
+				REVSAL_FLAG = '0' 
+				and RESP_CODE = '00'
+				and  t1.CARD_ACCP_ID = t2.MERCHANT_ID 
+				and trim(T1.PAN) = #cardNo:VARCHAR# 
+	        	and t1.txn_num in (7000, 7001, 7002)
+	        	<dynamic>
+	     <isNotEmpty prepend="and" property="startDate">
+	        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="endDate">
+	        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+	      </isNotEmpty>
+	      </dynamic>
+	        union
+			select distinct
+				t1.sys_seq_num "sysSeqNum", 
+				decode(t1.txn_num, 7000,'充值', 7001,'调整出账', 7002,'调整入账') as "txnType",
+				to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+				to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+				inst_date,inst_time
+			from 
+				tbl_txn_his t1, 
+				TB_ENT_MERCHANT t2
+			where 
+				REVSAL_FLAG = '0' 
+				and RESP_CODE = '00'
+				and  t1.CARD_ACCP_ID = t2.MERCHANT_ID 
+				and trim(T1.PAN) = #cardNo:VARCHAR# 
+	        	and t1.txn_num in (7000, 7001, 7002)
+	        	<dynamic>
+	      <isNotEmpty prepend="and" property="startDate">
+	        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="endDate">
+	        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+	      </isNotEmpty>
+	      </dynamic>
+	      )
+			order by inst_date, inst_time asc
+	    <include refid="Commons.suffixSql"/>
+	</select> -->
+		
+	
+	
+
+	<!-- 查询绑定的卡号 -->
+	<select id="selectCardByEmail" parameterClass="java.lang.String" resultClass="java.lang.String" remapResults="true">
+	  select
+	      distinct T1.CARD_NO as "cardNo"
+	  from
+	      TB_MEMBER_CARD_BIND T1,
+	      TB_CARD_INFO T2,
+	      TB_REL_CARD_ACCOUNT T3,
+	      TB_ACCOUNT_INFO T4,
+	      TB_MEMBER_INFO T5
+	  where
+	      T1.CARD_NO = T2.CARD_NO AND
+	      T2.CARD_NO = T3.CARD_NO AND
+	      T3.ACCOUNT_NO = T4.ACCOUNT_NO AND
+	      T3.ACC_TYPE = T4.ACC_TYPE AND
+	      T1.MEM_EMAIL = T5.MEM_EMAIL AND
+	      T1.BIND_STAT = '1' AND
+	      LOWER(T1.MEM_EMAIL) = LOWER(#memEmail:VARCHAR#)
+	</select> 
+	
+	<!-- 查询绑定卡号对应的服务号 -->
+	<select id="selectAccountByCardNo" parameterClass="java.lang.String" resultClass="java.lang.String">
+		select
+	      	t3.ACC_TYPE as "accType"
+	    from
+	      	TB_CARD_INFO t1,
+	      	TB_REL_CARD_ACCOUNT t2,
+	      	TB_ACCOUNT_INFO t3,
+	      	TB_ENT_ACCTYPE t4,
+	      	tb_ent_product t5,
+	      	tb_rel_prod_acctype t6
+	    where
+	      	t1.CARD_NO = t2.CARD_NO and
+	      	t2.ACCOUNT_NO = t3.ACCOUNT_NO and t2.ACC_TYPE = t3.ACC_TYPE and
+	     	t4.ACC_TYPE_ID = t3.ACC_TYPE and
+	      	t6.acc_type_id = t4.acc_type_id and
+	      	t1.product_id = t5.product_id and
+	      	t5.product_id = t6.product_id and
+			t1.CARD_NO = #cardNo#
+	</select>
+	
+	
+	<!-- 查询没有绑定卡中的一张卡 -->
+	<select id="selectUnbindCardNo" resultClass="java.lang.String">
+ 		select a.card_no 
+ 		from tb_ent_issuer_stock a 
+ 		where 
+        a.data_state = '1' 
+          and a.card_no like '99999%'
+          and a.card_no not in (select b.card_no from tb_member_card_bind b)  and rownum = 1
+	</select>
+	
+	
+	<!-- 查询绑定卡的余额 -->
+	<select id="selectBindCardAccount" parameterClass="java.lang.String" resultClass="java.util.HashMap">
+		 select    
+     		distinct T1.MEM_EMAIL as "memEmail",    
+     		to_char(T4.ACC_BAL/100, '9999999990.00') as "accBal"
+ 		from    
+         	TB_MEMBER_CARD_BIND T1,    
+         	TB_CARD_INFO T2,   
+         	TB_REL_CARD_ACCOUNT T3,   
+         	TB_ACCOUNT_INFO T4,    
+         	TB_MEMBER_INFO T5,
+         	TB_ENT_ACCTYPE t6,
+         	tb_ent_product t7,
+         	tb_rel_prod_acctype t8
+   		where    
+         	T1.CARD_NO = T2.CARD_NO AND   
+         	T2.CARD_NO = T3.CARD_NO AND  
+         	T3.ACCOUNT_NO = T4.ACCOUNT_NO AND   
+         	T3.ACC_TYPE = T4.ACC_TYPE AND   
+         	T1.MEM_EMAIL = T5.MEM_EMAIL AND    
+         	T1.BIND_STAT = '1' AND
+         	T4.Acc_Type = t6.acc_type_id and
+         	t2.product_id = t7.product_id and
+         	t7.product_id = t8.product_id and
+         	t6.acc_type_id = t8.acc_type_id and 
+			T1.MEM_EMAIL = #memEmail:VARCHAR#
+	 </select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		  
+
+
+
+  <select id="selectCardsByDTO" parameterClass="com.huateng.accorecard.memberwebsite.dto.MemberQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.CARD_NO as "cardNo",
+        substr(t1.CARD_NO,1,8) || '*******' || substr(t1.CARD_NO,16,4) as "cardNoHid",
+        T1.MEM_EMAIL as "memEmail",
+        to_char(sum(T4.ACC_BAL)/100, '9999999990.00') as "accBal",
+        decode(T2.ACT_DATE,0,'',to_char(to_date(T2.ACT_DATE,'yyyyMMdd'), 'yyyy-MM-dd')) as "actDate",
+        to_char(to_date(T2.VALID_DATE,'yyyyMMdd'), 'yyyy-MM-dd') as "validDate",
+        decode(T2.PRODUCT_TYPE,1,'充值卡','礼品卡') as "productTypeDesc",
+        T2.PRODUCT_TYPE as "productType",
+        T5.MEM_NAME as "memName",
+        decode(T1.WEB_TRANSACTION_FLAG,0,'未开通','已开通') as "webTransactionFlag",
+        decode(t1.MESSAGE_MENTION,0,'未开通','已开通') as "msgMention",
+        decode(t1.MONTH_REPORT,0,'未开通','已开通') as "monthRpt"
+    from
+        TB_MEMBER_CARD_BIND T1,
+        TB_CARD_INFO T2,
+        TB_REL_CARD_ACCOUNT T3,
+        TB_ACCOUNT_INFO T4,
+        TB_MEMBER_INFO T5
+    where
+        T1.CARD_NO = T2.CARD_NO AND
+        T2.CARD_NO = T3.CARD_NO AND
+        T3.ACCOUNT_NO = T4.ACCOUNT_NO AND
+        T3.ACC_TYPE = T4.ACC_TYPE AND
+        T1.MEM_EMAIL = T5.MEM_EMAIL AND
+        T1.BIND_STAT = '1' AND
+        T1.MEM_EMAIL = #memEmail:VARCHAR#
+        group by
+        T1.CARD_NO,T1.MEM_EMAIL,T2.ACT_DATE,T2.VALID_DATE,T2.CARD_PHY_TYPE,T5.MEM_NAME,T1.WEB_TRANSACTION_FLAG,
+        t1.MESSAGE_MENTION,t1.MONTH_REPORT,T2.PRODUCT_TYPE
+    order by
+    	T2.VALID_DATE desc
+    <include refid="Commons.suffixSql"/>
+  </select>
+
+  <select id="selectTXNsByDTO" parameterClass="com.huateng.accorecard.memberwebsite.dto.MemberQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.TB_TXN_ACCOUNT as "cardNo",
+        T1.CARD_NO,
+        T1.TXN_TYPE
+    from
+        TB_MEMBER_CARD_BIND T1,
+        TB_CARD_INFO T2,
+        TB_REL_CARD_ACCOUNT T3,
+        TB_ACCOUNT_INFO T4,
+        TB_MEMBER_INFO T5
+    where
+        T1.CARD_NO = T2.CARD_NO AND
+        T2.CARD_NO = T3.CARD_NO AND
+        T3.ACCOUNT_NO = T4.ACCOUNT_NO AND
+        T3.ACC_TYPE = T4.ACC_TYPE AND
+        T1.MEM_EMAIL = T5.MEM_EMAIL AND
+        T1.BIND_STAT = '0' AND
+        T1.MEM_EMAIL = #memEmail:VARCHAR#
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <select id="selectTXNsByCard" parameterClass="com.huateng.accorecard.memberwebsite.dto.CardQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select * from(
+		select distinct
+			t1.pan as "cardNo",
+			substr(t1.pan,1,8) || '*******' || substr(t1.pan,16,4) as "cardNoHid",
+			t3.DICT_NAME as "txnType", inst_date,inst_time, 
+			t2.MERCHANT_NAME as "mchntName", 
+			to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+			<!--  to_char(decode(t3.SETTLE_TYPE,1,trim(AMT_TRANS)/100,trim(AMT_TRANS)/100*(-1)), '9999999990.99') as "txnAmt",-->
+			to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+			to_char(trim(ADDTNL_AMT)/100, '9999999990.99') as "balance"
+		from 
+			tbl_txn t1, TB_ENT_MERCHANT t2, tb_ent_dict_info t3
+		where 
+			REVSAL_FLAG = '0' and RESP_CODE = '00'
+			and  t1.CARD_ACCP_ID = t2.MERCHANT_ID and to_number(t1.txn_num, '0000') = t3.DICT_ID AND
+        	trim(T1.PAN) = #cardNo:VARCHAR# 
+        and
+        	TXN_NUM not in ('2015','4015','2105','4105','2095','4095','7010','1025','1325')
+       <dynamic>
+      <isNotEmpty prepend="and" property="startDate">
+        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="endDate">
+        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="accountNo">
+      		substr(ACCT_ID1,1,20)=#accountNo:VARCHAR#
+      </isNotEmpty>
+      </dynamic>
+        union
+		select distinct
+			t1.pan as "cardNo", 
+			substr(t1.pan,1,8) || '*******' || substr(t1.pan,16,4) as "cardNoHid",
+			t3.DICT_NAME as "txnType", inst_date,inst_time, 
+			t2.MERCHANT_NAME as "mchntName", 
+			to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+			<!--  to_char(decode(t3.SETTLE_TYPE,1,trim(AMT_TRANS)/100,trim(AMT_TRANS)/100*(-1)), '9999999990.99') as "txnAmt",-->
+			to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+			to_char(trim(ADDTNL_AMT)/100, '9999999990.99') as "balance"
+		from 
+			tbl_txn_his t1, TB_ENT_MERCHANT t2, tb_ent_dict_info t3
+		where 
+			REVSAL_FLAG = '0' and RESP_CODE = '00'
+			and  t1.CARD_ACCP_ID = t2.MERCHANT_ID and to_number(t1.txn_num, '0000') = t3.DICT_ID AND
+        	trim(T1.PAN) = #cardNo:VARCHAR#
+        and
+        	TXN_NUM not in ('2015','4015','2105','4105','2095','4095','7010','1025','1325')
+      <dynamic>
+     <isNotEmpty prepend="and" property="startDate">
+        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="endDate">
+        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="accountNo">
+      		substr(ACCT_ID1,1,20)=#accountNo:VARCHAR#
+      </isNotEmpty>
+      </dynamic>
+        union
+		select distinct
+			t1.pan as "cardNo", 
+			substr(t1.pan,1,8) || '*******' || substr(t1.pan,16,4) as "cardNoHid",
+			t3.DICT_NAME as "txnType", inst_date,inst_time, 
+			t2.MERCHANT_NAME as "mchntName", 
+			to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+			<!--  to_char(decode(t3.SETTLE_TYPE,1,trim(AMT_TRANS)/100,trim(AMT_TRANS)/100*(-1)), '9999999990.99') as "txnAmt",-->
+			to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+			to_char(trim(ADDTNL_AMT)/100, '9999999990.99') as "balance"
+		from 
+			tbl_auth t1, TB_ENT_MERCHANT t2, tb_ent_dict_info t3
+		where 
+			REVSAL_FLAG = '0' and RESP_CODE = '00'
+			and  t1.CARD_ACCP_ID = t2.MERCHANT_ID and to_number(t1.txn_num, '0000') = t3.DICT_ID AND
+        	trim(T1.PAN) = #cardNo:VARCHAR#
+        	<dynamic>
+     <isNotEmpty prepend="and" property="startDate">
+        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="endDate">
+        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="accountNo">
+      		substr(ACCT_ID1,1,20)=#accountNo:VARCHAR#
+      </isNotEmpty>
+      
+      </dynamic>
+        union
+		select distinct
+			t1.pan as "cardNo", 
+			substr(t1.pan,1,8) || '*******' || substr(t1.pan,16,4) as "cardNoHid",
+			decode(t1.txn_num, 7000,'充值', 7001,'调整出账', 7002,'调整入账') as "txnType", inst_date,inst_time, 
+			t2.MERCHANT_NAME as "mchntName", 
+			to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+			<!-- to_char(decode(t1.txn_num,7001,trim(AMT_TRANS)/100*(-1),trim(AMT_TRANS)/100), '9999999990.99') as "txnAmt", -->
+			to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+			to_char(trim(ADDTNL_AMT)/100, '9999999990.99') as "balance"
+		from 
+			tbl_txn t1, TB_ENT_MERCHANT t2
+		where 
+			REVSAL_FLAG = '0' and RESP_CODE = '00'
+			and  t1.CARD_ACCP_ID = t2.MERCHANT_ID and
+        	trim(T1.PAN) = #cardNo:VARCHAR# and t1.txn_num in (7000, 7001, 7002)
+        	<dynamic>
+     <isNotEmpty prepend="and" property="startDate">
+        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="endDate">
+        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="accountNo">
+      		substr(ACCT_ID1,1,20)=#accountNo:VARCHAR#
+      </isNotEmpty>
+      </dynamic>
+        union
+		select distinct
+			t1.pan as "cardNo", 
+			substr(t1.pan,1,8) || '*******' || substr(t1.pan,16,4) as "cardNoHid",
+			decode(t1.txn_num, 7000,'充值', 7001,'调整出账', 7002,'调整入账') as "txnType", inst_date,inst_time, 
+			t2.MERCHANT_NAME as "mchntName", 
+			to_char(to_date(INST_DATE,'YYYYMMDD'),'YYYY-MM-DD') || ' ' || to_char(to_date(INST_TIME,'HH24MISS'),'HH24:MI:SS') as "txnTime", 
+			<!-- to_char(decode(t1.txn_num,7001,trim(AMT_TRANS)/100*(-1),trim(AMT_TRANS)/100), '9999999990.99') as "txnAmt", -->
+			to_char(trim(AMT_TRANS)/100, '9999999990.99') as "txnAmt",
+			to_char(trim(ADDTNL_AMT)/100, '9999999990.99') as "balance"
+		from 
+			tbl_txn_his t1, TB_ENT_MERCHANT t2
+		where 
+			REVSAL_FLAG = '0' and RESP_CODE = '00'
+			and  t1.CARD_ACCP_ID = t2.MERCHANT_ID and 
+        	trim(T1.PAN) = #cardNo:VARCHAR# and t1.txn_num in (7000, 7001, 7002)
+        	<dynamic>
+      <isNotEmpty prepend="and" property="startDate">
+        	to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd') >= #startDate:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="endDate">
+        	#endDate:VARCHAR# >= to_char(to_date(t1.INST_DATE,'yyyyMMdd'),'yyyy-MM-dd')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="accountNo">
+      		substr(ACCT_ID1,1,20)=#accountNo:VARCHAR#
+      </isNotEmpty>
+      </dynamic>
+      )
+		order by inst_date, inst_time asc
+    <include refid="Commons.suffixSql"/>
+  </select>
+
+  <select id="selectCardBalancesByDTO" parameterClass="com.huateng.accorecard.memberwebsite.dto.CardQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+	select 
+		trim(to_char(t3.ACC_BAL, '0000000000')) as accBal, 
+		t3.ACC_TYPE, 
+		t4.PRODUCT_TYPE as cardType, 
+		to_char(to_date((select max( decode(trim(to_char(f.LAST_TXN_DATE, '09999999')),'00000000','19000101',trim(to_char(f.LAST_TXN_DATE, '09999999'))) || trim(to_char(f.LAST_TXN_TIME,'099999'))) from tb_card_info e, tb_account_info f, tb_rel_card_account g where 
+		e.card_no = #cardNo:VARCHAR# and e.CARD_NO = g.CARD_NO and g.ACCOUNT_NO = f.ACCOUNT_NO), 'YYYYMMDDHH24MISS'), 'YYYYMMDD HH24:MI:SS') as lastDate,
+		decode(trim(to_char(t6.POINTS, '0000000000')),'','0000000000',trim(to_char(t6.POINTS, '0000000000'))) as "points",
+		t1.valid_date as "validDate"
+	from 
+		tb_card_info t1, 
+		TB_REL_CARD_ACCOUNT t2, 
+		TB_ACCOUNT_INFO t3, 
+		TB_ENT_PRODUCT t4,
+		TB_MEMBER_CARD_BIND t5,
+		TB_MEMBER_INFO t6
+	where 
+		t1.CARD_NO = t2.CARD_NO and 
+		t2.ACCOUNT_NO = t3.ACCOUNT_NO and 
+		t2.ACC_TYPE = t3.ACC_TYPE and 
+		t1.PRODUCT_ID = t4.PRODUCT_ID and 
+		t1.CARD_NO = #cardNo:VARCHAR# and
+		t5.CARD_NO(+) = t1.CARD_NO and
+		t5.MEM_EMAIL = t6.MEM_EMAIL(+)
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <select id="selectAcctLimitsByCardNo" parameterClass="java.lang.String" resultClass="com.huateng.accorecard.memberwebsite.dto.ProdAcctypeDTO">
+  	select
+  		t3.ACC_TYPE_ID as "accTypeId",
+  		t3.WEB_MAX_DAY_TXN_AMT as "webMaxDayTxnAmt",
+  		t4.ACC_TYPE_NAME as "accTypeName"
+  	from
+  		TB_CARD_INFO t1,
+  		TB_ENT_PRODUCT t2,
+  		TB_REL_PROD_ACCTYPE t3,
+  		TB_ENT_ACCTYPE t4
+  	where
+  		t1.PRODUCT_ID = t2.PRODUCT_ID and
+  		t2.PRODUCT_ID = t3.PRODUCT_ID and
+  		t4.ACC_TYPE_ID = t3.ACC_TYPE_ID and
+  		t1.CARD_NO = #cardNo#
+  </select>
+  
+  <select id="selectAcctsByCardNo" parameterClass="java.lang.String" resultClass="com.huateng.accorecard.memberwebsite.dto.CardAccountDTO">
+  	select
+  		t3.ACCOUNT_NO as "accountNo",
+  		substr(t3.ACCOUNT_NO,1,8) || '*******' || substr(t3.ACCOUNT_NO,16,4) as "cardNoHid",
+  		t3.ACC_TYPE as "accType",
+  		t3.ACC_STAT as "accStat",
+  		trim(to_char(t3.MAX_DAY_TXN_AMT2/100, '9999999990.00')) as "maxDayTxnAmt2Desc",
+  		t4.ACC_TYPE_NAME as "accTypeName"
+  	from
+  		TB_CARD_INFO t1,
+  		TB_REL_CARD_ACCOUNT t2,
+  		TB_ACCOUNT_INFO t3,
+  		TB_ENT_ACCTYPE t4
+  	where
+  		t1.CARD_NO = t2.CARD_NO and
+  		t2.ACCOUNT_NO = t3.ACCOUNT_NO and t2.ACC_TYPE = t3.ACC_TYPE and
+  		t4.ACC_TYPE_ID = t3.ACC_TYPE and
+  		t1.CARD_NO = #cardNo#
+  </select>
+  
+  <select id="getCardFlags" parameterClass="com.huateng.accorecard.memberwebsite.dto.CardAccountDTO" resultClass="com.huateng.accorecard.memberwebsite.dto.CardAccountDTO">
+  	select
+  		t1.card_no as "cardNo",
+  		product_type as "productType",
+  		month_report as "monthReport",
+  		message_mention as "messageMetion",
+  		bind_stat as "bindStat",
+  		web_transaction_flag as "webTransactionFlag",
+  		MAIL_MENTION as "mailMention"
+  	from
+  		TB_MEMBER_CARD_BIND t2, TB_CARD_INFO t1
+  	where
+  		t1.CARD_NO = t2.CARD_NO and
+  		t1.CARD_NO = #cardNo#
+  </select>
+  
+  <select id="getCardHolderCards" parameterClass="java.lang.String" resultClass="java.lang.String">
+  	select
+  		t2.CARD_NO
+  	from
+  		TB_ENT_CARDHOLDER_CARDLIST t1, TB_ENT_CARDHOLDER_CARDLIST t2, TB_ENT_PRODUCT t3
+  	where
+  		t1.CARD_NO = #cardNo# and
+  		t2.CARD_NO not in (#cardNo#) and
+  		t1.CARDHOLDER_ID = t2.CARDHOLDER_ID and
+  		t2.CARD_STATE = 3 and
+  		t2.PRODUCT_ID = t3.PRODUCT_ID and
+  		t3.PRODUCT_TYPE = 1
+  		and t2.CARD_NO not in (select card_no from TB_MEMBER_CARD_BIND where BIND_STAT = 1)
+  </select>
+  
+  <update id="updateReloadCardByMemberEmail" parameterClass="java.lang.String">
+	update     
+		TB_MEMBER_CARD_BIND t1  
+	set   
+		t1.WEB_TRANSACTION_FLAG = '0'  
+	where   
+		trim(t1.MEM_EMAIL) = #memEmail# and  
+		exists(select 1 from TB_CARD_INFO t2 where t1.CARD_NO = t2.CARD_NO and   t2.PRODUCT_TYPE = 1)
+  </update>
+  
+  <update id="updateMemberInfoEmail" parameterClass="com.huateng.accorecard.memberwebsite.dto.MemberInfoDTO">
+    update
+    	TB_MEMBER_INFO
+    set
+    	MEM_EMAIL = #resv#
+    where
+    	MEM_EMAIL = #memEmail#
+  </update>
+
+  <update id="updateMemberInfoAppendEmail" parameterClass="com.huateng.accorecard.memberwebsite.dto.MemberInfoDTO">
+    update
+    	TB_MEMBER_INFO_APPEND
+    set
+    	MEM_EMAIL = #resv#
+    where
+    	MEM_EMAIL = #memEmail#
+  </update>
+
+  <update id="updateMemberCardBindEmail" parameterClass="com.huateng.accorecard.memberwebsite.dto.MemberInfoDTO">
+    update
+    	TB_MEMBER_CARD_BIND
+    set
+    	MEM_EMAIL = #resv#
+    where
+    	MEM_EMAIL = #memEmail#
+  </update>
+	
+  <select id="selectAll" parameterClass="com.huateng.accorecard.memberwebsite.dto.MemberInfoQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+  	<include refid="Commons.prefixSql"/>
+  	  select
+  	  	mem_id as "memId",
+  	  	mem_email as "memEmail",
+  	  	mem_name as "memName",
+  	  	MEM_NATIONAL_ID as "memNationalId"
+  	  from
+  	  	tb_member_info
+  	  where
+  	  	1 = 1
+	    <dynamic>
+	      <isNotEmpty prepend="and" property="memEmail">
+	        mem_email = #memEmail#
+	      </isNotEmpty>
+	      <isNotEmpty prepend="and" property="memName">
+	        mem_name like '%'||#memName#||'%'
+	      </isNotEmpty>
+	    </dynamic>
+  	<include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectMember" parameterClass="java.lang.String" resultClass="com.huateng.accor.ibatis.model.MemberInfo">
+  	select 
+  		MEM_EMAIL as "memEmail", 
+  		MEM_PASSWORD as "memPassword", 
+  		MEM_NAME as "memName", 
+  		MEM_GENDER as "memGender", 
+  		MEM_BIRTHDAY as "memBirthday", 
+  		MEM_NATIONAL_ID as "memNational", 
+  		MEM_CELL as "memCell",
+      	MEM_STAT as "memStat", 
+      	DYN_PWD_AUTH as "DynPwdAuth", 
+      	SALES_INF_FLAG as "salesInfFlag",  
+      	POINTS as "points", 
+      	MEM_ADDRESS as "memAddress", 
+      	MEM_ZIP as "memZip", 
+      	COM_NAME as "comName", 
+      	COM_ADDRESS as "comAddress",
+      	COM_PHONE as "comPhone", 
+      	COM_ZIP as "comZip", 
+      	RESV as "resv", 
+      	CREAT_DATE as "creatDate", 
+      	MEM_ID as "memId"
+    from 
+    	TB_MEMBER_INFO
+    where
+    	LOWER(MEM_EMAIL) = LOWER(#memEmail#)
+  </select>
+  <select id="selectMemberAppend" parameterClass="java.lang.String" resultClass="com.huateng.accor.ibatis.model.MemberInfoAppend">
+  	select 
+  	  	MEM_EMAIL as "memEmail", 
+  	  	EMAIL_ACTIVE_FLAG as "emailActiveFlag", 
+  	  	EMAIL_ACTIVE_NO as "emailActiveNo", 
+  	  	EMAIL_ACTIVE_SEND_TIME as "emailActiveSendTime", 
+  	  	EMAIL_ACTIVE_TIME as "emailActiveTime",
+      	PHONE_VALIDATE as "phoneValidate", 
+      	PHONE_VALIDAT_NO as "phoneValdatNo", 
+      	PHONE_VALIDATE_SEND_TIME as "phoneValidateSendTime", 
+      	PHONE_VALIDATE_TIME as "phoneVaildateTime",
+      	PASSWORD_RESET_CODE as "passwordResetCode", 
+      	PASSWORD_RESET_SEND_TIME as "passwordResetSendTime", 
+      	PASSWORD_RESET_TIME as "passwordResetTime", 
+      	SEND_LOCKED as "sendLocked",
+      	MODIFY_SEND_LOCKED as "modifySendLocked", 
+      	RESET_PHONE as "resetPhone"
+    from 
+    	TB_MEMBER_INFO_APPEND
+    where 
+    	LOWER(MEM_EMAIL) = LOWER(#memEmail:VARCHAR#)
+  </select>
+  
+  
+  
+  <select id="selectProdcutByCardNo" parameterClass="java.lang.String" resultClass="com.huateng.accorecard.memberwebsite.dto.MemberCardBindDTO">
+  select 
+      T2.PRODUCT_NAME as "productName",
+      T3.MEM_NAME     as "memberName"
+    from 
+      TB_CARD_INFO T1,
+      TB_ENT_PRODUCT T2,
+      TB_MEMBER_INFO T3,
+      TB_MEMBER_CARD_BIND T4
+    where 
+    T2.PRODUCT_ID=T1.PRODUCT_ID
+    AND T4.MEM_EMAIL=T3.MEM_EMAIL
+    AND T4.CARD_NO=T1.CARD_NO
+    AND  T1.CARD_NO=#cardNo:VARCHAR2#
+  </select>
+  
+  
+  <select id="selectCardByExchageDTO" parameterClass="com.huateng.accor.transfer.dto.ExchangeDTO" resultClass="java.util.HashMap" remapResults="true">
+    select
+        T1.CARD_NO as "cardNo",
+        T1.MEM_EMAIL as "email",
+        T4.ACC_TYPE as "accountNo",
+        to_char(T4.ACC_BAL/100, '9999999990.00') as "amount",
+        T5.POINTS as "points"
+    from
+        TB_MEMBER_CARD_BIND T1,
+        TB_CARD_INFO T2,
+        TB_REL_CARD_ACCOUNT T3,
+        TB_ACCOUNT_INFO T4,
+        TB_MEMBER_INFO T5
+    where
+        T1.CARD_NO = T2.CARD_NO AND
+        T2.CARD_NO = T3.CARD_NO AND
+        T3.ACCOUNT_NO = T4.ACCOUNT_NO AND
+        T3.ACC_TYPE = T4.ACC_TYPE AND
+        T1.MEM_EMAIL = T5.MEM_EMAIL AND
+        T1.BIND_STAT = '1' AND
+        T1.MEM_EMAIL = #email:VARCHAR#
+  </select>
+  
+  
+  
+</sqlMap>

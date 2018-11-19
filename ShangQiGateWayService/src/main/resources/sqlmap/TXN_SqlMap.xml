@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TXN">
+	<select id="selectTransaction"
+		parameterClass="com.huateng.accorecard.merchantwebsite.dto.TxnQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.shopprefixSql" />
+		select T1.Retrivl_Ref as "tranCode", 
+		to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyyMMddhh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		 T2.SHOP_NAME as "shopName", T1.PAN as "cardNo",
+		 T2.SHOP_ID   as "shopId",
+		to_char(TO_NUMBER(decode(T1.TXN_NUM,3105,-T1.AMT_TRANS,5105,-T1.AMT_TRANS,T1.AMT_TRANS))/100,'99,999,999,999,990.00')  AS "tranFee", 
+		T1.TXN_NUM as "tranType" from TBL_TXN T1, TB_ENT_SHOP T2 where
+		decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T2.SHOP_ID(+) and
+		T1.RESP_CODE='00' and to_date(T1.INST_DATE,'yyyyMMdd') = trunc(sysdate)
+		 and    T1.REVSAL_FLAG='0'
+		 AND    T1.TRANS_STATE!='0'
+		<dynamic>
+			<isNull prepend="and" property="txnNums">
+				T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+			</isNull>
+			<isNotNull prepend="and" property="txnNums">
+				to_number(T1.TXN_NUM) in
+				<iterate property="txnNums" conjunction="," open="("
+					close=")">
+					#txnNums[]#
+				</iterate>
+			</isNotNull>
+			<isNotEmpty prepend="and" property="cardAccpId">
+				T1.CARD_ACCP_ID=#cardAccpId:VARCHAR#
+			</isNotEmpty>
+			<isNotNull prepend="and" property="shopId">
+				<isNotEqual property="shopId" compareValue="0">
+					decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=#shopId:DECIMAL#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		union
+		select T1.Retrivl_Ref as "tranCode", 
+		to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyyMMddhh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		 T2.SHOP_NAME as "shopName", T1.PAN as "cardNo",
+		 T2.SHOP_ID   as "shopId",
+		to_char(TO_NUMBER(decode(TXN_NUM,3105,-T1.AMT_TRANS,5105,-T1.AMT_TRANS,T1.AMT_TRANS))/100,'99,999,999,999,990.00')  AS "tranFee", 
+		T1.TXN_NUM as "tranType" from  tbl_auth T1, TB_ENT_SHOP T2 where
+		decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T2.SHOP_ID(+) and
+		T1.RESP_CODE='00' and to_date(T1.INST_DATE,'yyyyMMdd') = trunc(sysdate)
+		 and    T1.REVSAL_FLAG='0'
+		 AND    T1.TRANS_STATE!='0'
+		<dynamic>
+			<isNull prepend="and" property="txnNums">
+				T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+			</isNull>
+			<isNotNull prepend="and" property="txnNums">
+				to_number(T1.TXN_NUM) in
+				<iterate property="txnNums" conjunction="," open="("
+					close=")">
+					#txnNums[]#
+				</iterate>
+			</isNotNull>
+			<isNotEmpty prepend="and" property="cardAccpId">
+				T1.CARD_ACCP_ID=#cardAccpId:VARCHAR#
+			</isNotEmpty>
+			<isNotNull prepend="and" property="shopId">
+				<isNotEqual property="shopId" compareValue="0">
+					decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=#shopId:DECIMAL#
+				</isNotEqual>
+			</isNotNull>
+		</dynamic>
+		
+		<include refid="Commons.shopsuffixSql" />
+	</select>
+
+
+
+
+	<select id="selectTransactionhis"
+		parameterClass="com.huateng.accorecard.merchantwebsite.dto.TxnQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.shopprefixSql" />
+		select T1.Retrivl_Ref as "tranCode", 
+		to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyy-MM-dd hh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		 T2.SHOP_NAME as "shopName", 
+		 T2.SHOP_ID   as "shopId",
+		T1.PAN as "cardNo",
+		 to_char(TO_NUMBER(decode(T1.TXN_NUM,3105,-T1.AMT_TRANS,5105,-T1.AMT_TRANS,T1.AMT_TRANS))/100,'99,999,999,999,990.00')  AS "tranFee", 
+		 T1.TXN_NUM as "tranType" from tbl_txn_his T1, TB_ENT_SHOP T2 where
+		decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T2.SHOP_ID(+) 
+		and     T1.RESP_CODE='00'
+		 and    T1.REVSAL_FLAG='0'
+		 AND    T1.TRANS_STATE!='0'
+		<dynamic>
+			<isNull prepend="and" property="txnNums">
+				T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+			</isNull>
+			<isNotNull prepend="and" property="txnNums">
+				to_number(T1.TXN_NUM) in
+				<iterate property="txnNums" conjunction="," open="("
+					close=")">
+					#txnNums[]#
+				</iterate>
+			</isNotNull>
+			<isNotNull prepend="and" property="shopId">
+				<isNotEqual property="shopId" compareValue="0">
+					decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=#shopId:DECIMAL#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startDate">
+				<isNotNull property="stopDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between
+					#startDate:DATE# and #stopDate:DATE#
+				</isNotNull>
+			</isNotNull>
+			<isNull prepend="and" property="startDate">
+				<isNull property="startDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between sysdate-30
+					and sysdate
+				</isNull>
+			</isNull>
+			<isNull prepend="and" property="startDate">
+				<isNotNull property="stopDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between
+					add_months(#stopDate:DATE#,-1) and #stopDate:DATE#
+				</isNotNull>
+			</isNull>
+			<isNull prepend="and" property="stopDate">
+				<isNotNull property="startDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between
+					#startDate:DATE# and add_months(#startDate:DATE#,1)
+				</isNotNull>
+			</isNull>
+			<isNotEmpty prepend="and" property="cardAccpId">
+				T1.CARD_ACCP_ID=#cardAccpId:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+		union
+		select T1.Retrivl_Ref as "tranCode", 
+		to_char(to_date(T1.INST_DATE||T1.INST_TIME,'yyyy-MM-dd hh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "tranTime",
+		 T2.SHOP_NAME as "shopName", 
+		 T2.SHOP_ID   as "shopId",
+		T1.PAN as "cardNo",
+		 to_char(TO_NUMBER(decode(T1.TXN_NUM,3105,-T1.AMT_TRANS,5105,-T1.AMT_TRANS,T1.AMT_TRANS))/100,'99,999,999,999,990.00')  AS "tranFee", 
+		 T1.TXN_NUM as "tranType" from tbl_auth T1, TB_ENT_SHOP T2 where
+		decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=T2.SHOP_ID(+)
+		 and    T1.RESP_CODE='00'
+		 and    T1.REVSAL_FLAG='0'
+		 AND    T1.TRANS_STATE!='0'
+		<dynamic>
+		<isNull prepend="and" property="txnNums">
+				T1.TXN_NUM in (1105,3105,1015,3015,1095,5105,1095)
+			</isNull>
+			<isNotNull prepend="and" property="txnNums">
+				to_number(T1.TXN_NUM) in
+				<iterate property="txnNums" conjunction="," open="("
+					close=")">
+					#txnNums[]#
+				</iterate>
+			</isNotNull>
+			
+			<isNotNull prepend="and" property="shopId">
+				<isNotEqual property="shopId" compareValue="0">
+					decode(TRIM(T1.RCVG_CODE),'',0,T1.RCVG_CODE)=#shopId:DECIMAL#
+				</isNotEqual>
+			</isNotNull>
+			<isNotNull prepend="and" property="startDate">
+				<isNotNull property="stopDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between
+					#startDate:DATE# and #stopDate:DATE#
+				</isNotNull>
+			</isNotNull>
+			<isNull prepend="and" property="startDate">
+				<isNull property="startDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between sysdate-30
+					and sysdate
+				</isNull>
+			</isNull>
+			<isNull prepend="and" property="startDate">
+				<isNotNull property="stopDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between
+					add_months(#stopDate:DATE#,-1) and #stopDate:DATE#
+				</isNotNull>
+			</isNull>
+			<isNull prepend="and" property="stopDate">
+				<isNotNull property="startDate">
+					to_date(T1.INST_DATE,'yyyyMMdd') between
+					#startDate:DATE# and add_months(#startDate:DATE#,1)
+				</isNotNull>
+			</isNull>
+			<isNotEmpty prepend="and" property="cardAccpId">
+				T1.CARD_ACCP_ID=#cardAccpId:VARCHAR#
+			</isNotEmpty>
+		</dynamic>
+		<include refid="Commons.shopsuffixSql" />
+	</select>
+
+	<select id="selectMerchantSettleListByDTO"
+		parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		SELECT t.mchnt_settle_id as "settleId",
+		 t.ACC_TYPE as "accType",
+		t1.acc_type_name as "acctypeName",
+		t.settle_start_date  as "startDate", 
+		t.settle_end_date   as    "endDate", 
+		to_char(sum(t.txn_amt)/100,'99,999,999,999,990.00') as "txtAmt",
+	    to_char(sum(t.fee_amt)/100,'99,999,999,999,990.00') as "feeAmt" FROM
+		TB_ENT_MCHNT_SETTLE_LIST t, tb_ent_acctype t1 where
+		t.acc_type=t1.acc_type_id(+)
+		and t.data_state=1 
+		and t.mchnt_settle_id=#mchntSettleId:DECIMAL#
+		group by  t.mchnt_settle_id, t.ACC_TYPE,t1.acc_type_name,t.settle_start_date,t.settle_end_date
+	</select>
+
+	
+	
+	 <select id="getMchntSettleTxnDetailForweb" parameterClass="com.huateng.accor.mchntsettle.dto.MchntSettleDetailQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+		select 
+		    t2.MCHNT_SETTLE_ID as "mchntSettleId",
+		    t6.ACC_TYPE_NAME as "accTypeName",
+			RETRIVL_REF as "retrivlRef",
+            PAN as "pan",
+            t4.MERCHANT_NAME as "merchantName",
+            t5.SHOP_NAME as "shopName",
+            t3.TXN_TYPE_NAME as "txnTypeName",
+            to_char(decode(t1.TXN_NUM,3105,-T1.AMT_TRANS,5105,-T1.AMT_TRANS,T1.AMT_TRANS)/100, '9999999990.00') as "amt",
+            decode(RESP_CODE, '00', '成功','失败') as "respCode",
+            to_char(to_date(DATE_SETTLMT,'YYYYMMDD'), 'YYYY-MM-DD') as "settleDate",
+            to_char(to_date(INST_DATE || INST_TIME, 'YYYYMMDDHH24MISS'), 'YYYY-MM-DD HH24:MI:SS') as "txnTime"
+		from 
+			tbl_txn_his t1, 
+			TB_ENT_MCHNT_SETTLE_LIST t2, 
+			TB_ENT_TXN_TYPE t3, 
+			TB_ENT_MERCHANT t4,
+			TB_ENT_SHOP t5,
+			TB_ENT_ACCTYPE t6
+		where 
+			t2.MERCHANT_ID = t1.CARD_ACCP_ID and 
+			trim(to_char(t2.ACC_TYPE,'9999')) = substr(t1.ACCT_ID1,22, 4) and 
+			t1.CARD_ACCP_ID = t4.MERCHANT_ID and t1.RCVG_CODE = t5.SHOP_ID and 
+			t2.MCHNT_SETTLE_ID = #mchntSettleId# and 
+			t2.ACC_TYPE = #accType# and
+			t6.ACC_TYPE_ID =t2.ACC_TYPE and
+			t1.DATE_SETTLMT between to_char(t2.SETTLE_START_DATE, 'YYYYMMDD') and 
+			to_char(t2.SETTLE_END_DATE, 'YYYYMMDD') and 
+			RESP_CODE = '00' and 
+			t1.TXN_NUM = trim(to_char(t3.TXN_TYPE_ID,'9999'))
+    <include refid="Commons.suffixSql"/>
+    </select>
+	
+
+
+</sqlMap>

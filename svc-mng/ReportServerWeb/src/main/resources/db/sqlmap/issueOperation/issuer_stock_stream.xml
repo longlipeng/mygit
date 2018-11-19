@@ -1,0 +1,231 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="issuer_stockstream_ireport">
+	<select id="issuer_stockstream_ireport" resultClass="com.allinfinance.service.issueOperation.issuerStockStream.dto.IssuerStockStreamDTO"
+		parameterClass="com.allinfinance.service.issueOperation.issuerStockStream.dto.IssuerStockStreamDTO">
+select *
+  from (select distinct t1.order_id as orderId,
+                        t4.dict_name as orderType,
+                        to_date(t1.order_date, 'yyyyMMdd') as orderDate,
+                        t2.product_name as productName,
+                        decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡') as onymousStat,
+                        decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡') as cardType,
+                        decode(t6.face_value_type,'0','固定','非固定') as faceType,
+                        decode(t6.face_value,null,0,to_number(t6.face_value))/100 as faceValue,
+                        t3.issuer_name as issuerName1,
+                        t5.issuer_name as issuerName2,
+                        0 as inNum,
+                        to_number(t6.card_amount) as outNum,
+                        t8.user_name as userName,
+                        to_date(max(t7.create_time),'yyyyMMddhh24miss') as stockDate
+          from tb_sell_order t1
+                left join
+               tb_sell_order_list t6 on  t1.order_id = t6.order_id,
+               tb_product t2,
+               tb_issuer t3,
+               tb_dict_info t4,
+               (select o.order_id, i.issuer_name
+                  from tb_sell_order o, tb_issuer i
+                 where o.process_entity_id = i.entity_id) t5,
+               tb_entity_stock_operater t7,
+               tb_ent_user t8
+         where t1.order_type = t4.dict_code
+           and t4.dict_type_code = 205
+           and t1.order_id = t7.order_id
+           and t1.product_id = t2.product_id
+           and t1.first_entity_id = t3.entity_id
+           and t7.modify_user = t8.user_id
+           and t7.entity_id = t1.process_entity_id
+           and t5.order_id = t1.order_id
+           and t7.stock_state = 3
+           and t7.operater_type = '1'
+           and t7.order_flow_node = '29'
+           and t1.order_type in ('40000001', '40000002')
+           and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+           and t1.process_entity_id = #issuerId#
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &gt;=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &lt;=
+               to_date(#endDate#, 'yyyy-MM-dd')
+         group by t1.order_id,
+                  t4.dict_name,
+                  to_date(t1.order_date, 'yyyyMMdd'),
+                  t2.product_name,
+                  decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡'),
+                  decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡'),
+                  t3.issuer_name,
+                  t5.issuer_name,
+                  t6.card_amount,
+                  t8.user_name,
+                  decode(t6.face_value_type,'0','固定','非固定'),
+                  t6.face_value
+        union all
+        select distinct t1.order_id as orderId,
+                        t4.dict_name as orderType,
+                        to_date(t1.order_date, 'yyyyMMdd') as orderDate,
+                        t2.product_name as productName,
+                        decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡') as onymousStat,
+                        decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡') as cardType,
+                        decode(t6.face_value_type,'0','固定','非固定') as faceType,
+                        decode(t6.face_value,null,0,to_number(t6.face_value))/100 as faceValue,
+                        t3.issuer_name as issuerName1,
+                        t5.issuer_name as issuerName2,
+                        to_number(t6.card_amount) as inNum,
+                        0 as outNum,
+                        t8.user_name as userName,
+                        to_date(max(t7.create_time),'yyyyMMddhh24miss') as stockDate
+          from tb_sell_order t1
+               left join
+               tb_sell_order_list t6 on  t1.order_id = t6.order_id,
+               tb_product t2,
+               tb_issuer t3,
+               tb_dict_info t4,
+               (select o.order_id, i.issuer_name
+                  from tb_sell_order o, tb_issuer i
+                 where o.process_entity_id = i.entity_id) t5,
+               tb_entity_stock_operater t7,
+               tb_ent_user t8
+         where t1.order_type = t4.dict_code
+           and t4.dict_type_code = 205
+           and t1.order_id = t7.order_id
+           and t1.product_id = t2.product_id
+           and t1.first_entity_id = t3.entity_id
+           and t7.modify_user = t8.user_id
+           and t7.entity_id = t1.first_entity_id
+           and t5.order_id = t1.order_id
+           and t7.stock_state = 1
+           and t7.operater_type = '1'
+           and t7.order_flow_node = '26'
+           and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+           and t1.order_type in ('40000001', '40000002')
+           and t1.first_entity_id = #issuerId#
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &gt;=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &lt;=
+               to_date(#endDate#, 'yyyy-MM-dd')
+         group by t1.order_id,
+                  t4.dict_name,
+                  to_date(t1.order_date, 'yyyyMMdd'),
+                  t2.product_name,
+                  decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡'),
+                  decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡'),
+                  t3.issuer_name,
+                  t5.issuer_name,
+                  t6.card_amount,
+                  t8.user_name,
+                  decode(t6.face_value_type,'0','固定','非固定'),
+                  t6.face_value
+        union all
+        select distinct t1.order_id as orderId,
+                        t4.dict_name as orderType,
+                        to_date(t1.order_date, 'yyyyMMdd') as orderDate,
+                        t2.product_name as productName,
+                        decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡') as onymousStat,
+                        decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡') as cardType,
+                        decode(t6.face_value_type,'0','固定','非固定') as faceType,
+                        decode(t6.face_value,null,0,to_number(t6.face_value))/100 as faceValue,
+                        t3.seller_name as issuerName1,
+                        t5.issuer_name as issuerName2,
+                        0 as inNum,
+                        to_number(t6.card_amount) as outNum,
+                        t8.user_name as userName,
+                        to_date(max(t7.create_time),'yyyyMMddhh24miss') as sockDate
+          from tb_sell_order t1
+               left join
+               tb_sell_order_list t6 on t1.order_id = t6.order_id,
+               tb_product t2,
+               tb_seller t3,
+               tb_dict_info t4,
+               (select o.order_id, i.issuer_name
+                  from tb_sell_order o, tb_issuer i
+                 where o.process_entity_id = i.entity_id) t5,
+               tb_entity_stock_operater t7,
+               tb_ent_user t8
+         where t1.order_type = t4.dict_code
+           and t4.dict_type_code = 205
+           and t1.order_id = t7.order_id
+           and t1.product_id = t2.product_id
+           and t1.first_entity_id = t3.entity_id
+           and t7.modify_user = t8.user_id
+           and t7.entity_id = t1.process_entity_id
+           and t5.order_id = t1.order_id
+           and t7.stock_state = 3
+           and t7.operater_type = '1'
+           and t7.order_flow_node = '29'
+           and t6.DATA_STATE='1'
+           and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+           and t1.order_type in ('30000001', '30000002')
+           and t1.process_entity_id = #issuerId#
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &gt;=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &lt;=
+               to_date(#endDate#, 'yyyy-MM-dd')
+         group by t1.order_id,
+                  t4.dict_name,
+                  to_date(t1.order_date, 'yyyyMMdd'),
+                  t2.product_name,
+                  decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡'),
+                  decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡'),
+                  t3.seller_name,
+                  t5.issuer_name,
+                  t6.card_amount,
+                  t8.user_name,
+                  decode(t6.face_value_type,'0','固定','非固定'),
+                        t6.face_value
+        union all
+        select distinct t1.order_id as orderId,
+                        t4.dict_name as orderType,
+                        to_date(t1.order_date, 'yyyyMMdd') as orderDate,
+                        t2.product_name as productName,
+                        decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡') as onymousStat,
+                        decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡') as cardType,
+                        decode(t1.face_value_type,'0','固定','非固定') as faceType,
+                        decode(t1.face_value,null,0,to_number(t1.face_value))/100 as faceValue,
+                        t3.issuer_name as issuerName1,
+                        t5.issuer_name as issuerName2,
+                        count(t7.card_no) as inNum,
+                        0 as outNum,
+                        t8.user_name as userName,
+                        to_date(max(t7.create_time),'yyyyMMddhh24miss') as sockDate
+          from tb_sell_order t1
+                left join
+                 tb_sell_order_list t6 on t1.order_id = t6.order_id,
+               tb_product t2,
+               tb_issuer t3,
+               tb_dict_info t4,
+               (select o.order_id, i.issuer_name
+                  from tb_sell_order o, tb_issuer i
+                 where o.process_entity_id = i.entity_id) t5,
+               tb_entity_stock_operater t7,
+               tb_ent_user t8
+         where t1.order_type = t4.dict_code
+           and t4.dict_type_code = 205
+           and t1.order_id = t7.order_id
+           and t1.product_id = t2.product_id
+           and t1.first_entity_id = t3.entity_id
+           and t7.modify_user = t8.user_id
+           and t7.entity_id = t1.process_entity_id
+           and t5.order_id = t1.order_id
+           and t7.stock_state = 1
+           and t7.operater_type = '1'
+           and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+           and t1.order_type = '50000001'
+           and t1.first_entity_id = #issuerId#
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &gt;=
+            to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(substr(t7.create_time, 1, 8), 'yyyy-MM-dd') &lt;=
+               to_date(#endDate#, 'yyyy-MM-dd')
+         group by t1.order_id,
+                  t4.dict_name,
+                  to_date(t1.order_date, 'yyyyMMdd'),
+                  t2.product_name,
+                  decode(t2.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡'),
+                  decode(t2.CARD_TYPE, '1', 'IC卡', '磁条卡'),
+                  t3.issuer_name,
+                  t5.issuer_name,
+                  decode(t1.face_value_type,'0','固定','非固定'),
+                  t1.face_value,
+                  t8.user_name) t
+ order by stockDate
+	</select>
+</sqlMap>

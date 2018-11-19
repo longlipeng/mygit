@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="sapInfo" extends="struts-global" namespace="/sapInfo">
+
+		<global-results>
+			<result name="list">/WEB-INF/pages/univer/coupon/sapInfoList.jsp
+			</result>
+			<result name="input">/WEB-INF/pages/univer/coupon/sapInfoList.jsp
+			</result>
+		</global-results>
+
+		<!-- 可以查询所有机构 -->
+		<action name="inquiry" class="sapInfoAction" method="list" />
+
+		<!-- 只能查询本机构 -->
+		<action name="query" class="sapInfoAction2" method="list" />
+
+	</package>
+</struts>

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CONSUMER">
+  <select id="selectConsumer" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/> 
+   SELECT C.ENTITY_ID as "entityId",
+          C.CONSUMER_NAME as "consumerName",
+       	  C.CONSUMER_ENGLISH_NAME as "consumerEnglishName",
+          C.CONSUMER_CODE as "consumerCode",
+          C.EXTERNAL_ID as "externalId",
+          decode(C.CONSUMER_STATE,'1','有效','无效') as "consumerState",
+          C.user_id as "userId"
+    FROM TB_CONSUMER C
+   WHERE C.DATA_STATE='1'
+    <dynamic>
+      <isNotEmpty prepend="and" property="defaultEntityId">
+        C.FATHER_ENTITY_ID= #defaultEntityId:VARCHAR#
+      </isNotEmpty>
+     <isNotEmpty prepend="and" property="entityId">
+        C.ENTITY_ID= #entityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="consumerName">
+        UPPER(C.CONSUMER_NAME) like UPPER('%'||#consumerName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="consumerCode">
+        C.CONSUMER_CODE= #consumerCode:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="externalId">
+         C.EXTERNAL_ID= #externalId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="consumerState">
+        C.CONSUMER_STATE = #consumerState:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectEntityId" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/>
+	   select entityNo as "queryId",Max(entityName) as "queryName"       
+     from (select t1.entity_id as entityNo,
+                    t1.issuer_name as entityName
+             from tb_issuer t1
+             where t1.father_entity_id=#entityId:VARCHAR#
+              and t1.data_state='1'
+              and t1.entity_id not in( select t3.entity_id
+                                     from tb_consumer t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t1.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t1.issuer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                          
+              union 
+                 select t2.entity_id as entityNo,
+                       t2.seller_name as entityName
+                 from tb_seller t2
+                 where t2.father_entity_id=#entityId:VARCHAR#
+                 and t2.data_state='1'
+                  and t2.entity_id not in( select t3.entity_id
+                                     from tb_consumer t3
+                                     where t3.data_state='1')
+               <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t2.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t2.seller_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                                 
+                                     ) 
+                            
+             group by entityNo   
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectEntityIdFromIssuer" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/>
+             select t1.entity_id as "queryId",
+                    t1.issuer_name as "queryName"
+             from tb_issuer t1
+             where t1.father_entity_id=#entityId:VARCHAR#
+              and t1.data_state='1'
+              and t1.entity_id not in( select t3.entity_id
+                                     from tb_consumer t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t1.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t1.issuer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                        
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectEntityIdFromSeller" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/> 
+                 select t2.entity_id as "queryId",
+                       t2.seller_name as "queryName"
+                 from tb_seller t2
+                 where t2.father_entity_id=#entityId:VARCHAR#
+                 and t2.data_state='1'
+                  and t2.entity_id not in( select t3.entity_id
+                                     from tb_consumer t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t2.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t2.seller_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                          
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectIssuer" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/> 
+                select issuer.entity_id as "entityId"  ,issuer.issuer_name as "issuerName",issuer.issuer_code as "issuerCode",issuer.issuer_english_name as "englishName"
+    from tb_consumer consumer,tb_issuer issuer where consumer.father_entity_id=issuer.entity_id and consumer.entity_id=#entityId:VARCHAR#
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  
+   <select id="selectWebSizeName" resultClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerDTO" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerDTO" remapResults="true">
+	
+                select t.entity_id as "entityId" ,
+                t.consumer_name as "consumerName",
+       	  t.consumer_english_name as "consumerEnglishName",
+          t.consumer_code as "consumerCode",
+          t.external_id as "externalId",
+          t.website_user_name as "websiteUserName"
+    from tb_consumer t where upper(t.website_user_name)= UPPER(#websiteUserName:VARCHAR#)
+            
+  </select>
+  
+   <select id="selectAcqPay" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/> 
+  select 
+   t1.acq_ins_cd as "entityId",
+   t2.consumer_name as "consumerName",
+   t1.rec_upd_ts as "modifyTime" 
+   from tbl_hsa_acq_cert_inf t1,tb_consumer t2 
+   where t1.acq_ins_cd=t2.entity_id
+    <dynamic>
+    	<isNotEmpty prepend="and" property="fatherEntityId">
+     t2.father_entity_id=#fatherEntityId:DECIMAL#
+    	</isNotEmpty>
+     <isNotEmpty prepend="and" property="entityId">
+        t2.ENTITY_ID= #entityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="consumerName">
+        UPPER(t2.CONSUMER_NAME) like UPPER('%'||#consumerName:VARCHAR#||'%')
+      </isNotEmpty>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+    <select id="choose" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/> 
+   SELECT distinct t2.ENTITY_ID as "entityId",
+          t2.CONSUMER_NAME as "consumerName",
+       	  t2.CONSUMER_ENGLISH_NAME as "consumerEnglishName",
+          t2.CONSUMER_CODE as "consumerCode",
+          t2.EXTERNAL_ID as "externalId",
+          decode(t2.CONSUMER_STATE,'1','有效','无效') as "consumerState",
+          t2.user_id as "userId"
+    from tb_consumer_contract t1,tb_consumer t2,tb_issuer t3 
+    where t1.contract_seller=t3.entity_id and t1.contract_buyer=t2.entity_id
+     and t1.data_state='1'  and t1.contract_type='1' and t2.entity_id not in (select t4.acq_ins_cd from tbl_hsa_acq_cert_inf t4)
+    <dynamic>
+      <isNotEmpty prepend="and" property="defaultEntityId">
+        t1.contract_seller= #defaultEntityId:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectBank" resultClass="com.allinfinance.univer.entity.dto.BankDTO" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO" remapResults="true">
+  select 
+    t1.dict_code as "bankId",
+    t1.dict_name as "bankName",
+    t2.mchnt_cd as "mchantCode"
+    from 
+    tb_dict_info t1,tbl_hsa_acq_pay_chnl_cfg t2
+    where t1.dict_code=t2.chnl_cd
+    and t1.dict_type_code='902' 
+    and t1.dict_state='1'
+    and t2.acq_ins_cd=#entityId:DECIMAL#
+  </select>
+  <select id="chooseBank" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.consumer.ConsumerQueryDTO" remapResults="true">
+  	 <include refid="Commons.prefixSql"/> 
+   select 
+    t1.dict_code as "bankId",
+    t1.dict_name as "bankName"
+    from 
+    tb_dict_info t1
+    where t1.dict_type_code='902' 
+    and t1.dict_state='1'
+    and t1.dict_code not in (select t2.chnl_cd from tbl_hsa_acq_pay_chnl_cfg t2 where t2.acq_ins_cd=#entityId:DECIMAL#)
+     <include refid="Commons.suffixSql"/>
+  </select>
+      <select id="selectProd" resultClass="com.allinfinance.univer.issuer.dto.product.ProductDTO" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO" remapResults="true">
+  select 
+  distinct t4.product_id as "productId",
+   t5.product_name as "productName"
+     from 
+     tb_consumer_contract t1,
+     tb_acctype_contract t2,
+     tb_service t3,
+     tb_rel_product_service t4 ,
+     tb_product t5
+     where 
+     t1.consumer_contract_id=t2.consumer_contract_id
+     and t2.acctype_id=t3.service_id 
+     and t3.service_id=t4.service_id 
+     and t4.product_id=t5.product_id
+    <dynamic>
+      <isNotEmpty prepend="and" property="entityId">
+        t1.contract_buyer= #entityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="entityId">
+        t2.contract_buyer= #entityId:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+  </select>
+
+   <insert id="insertCert" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   insert into tbl_hsa_acq_cert_inf(seq_id,acq_ins_cd,cert_tp,sign_md,cert_path,cert_pwd,rec_upd_oper_id,rec_upd_trans_id,Rec_Crt_Ts,Rec_Upd_Ts)
+                             values(#seqId:CHAR#,#entityId:VARCHAR#,'1','0',#certs:VARCHAR#,#certsPwd:VARCHAR#,'SYS','SYS',to_date(#crtTs#,'yyyyMMdd'),to_date(#updTs#,'yyyyMMdd'))
+   </insert>
+   <insert id="insertCardproduct" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   insert into Tbl_Hsa_Acq_Cardproduct_Rlt(seq_id,acq_ins_cd,Product_Id,Rec_Upd_Oper_Id,Rec_Upd_Trans_Id,Rec_Crt_Ts,rec_upd_ts)
+                                   values(#seqId#,#entityId#,#productId#,'SYS','SYS',to_date(#crtTs#,'yyyyMMdd'),to_date(#updTs#,'yyyyMMdd'))
+   </insert>
+      <insert id="insertPayChnl" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+  insert into Tbl_Hsa_Acq_Pay_Chnl_Cfg(seq_id,Acq_Ins_Cd,Chnl_Cd,Mchnt_Cd,Rec_Upd_Oper_Id,Rec_Upd_Trans_Id,Rec_Crt_Ts,Rec_Upd_Ts)
+                               values(#seqId#,#entityId#,#bank#,#mchantCode#,'SYS','SYS',to_date(#crtTs#,'yyyyMMdd'),to_date(#updTs#,'yyyyMMdd'))
+   </insert>
+         <insert id="insertCmsCfg" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+ insert into Tbl_Hsa_Svr_Cms_Cfg(seq_id,Ins_Cd,Ins_Tp,Logo_Path,Misc,Rec_Upd_Oper_Id,Rec_Upd_Trans_Id,Rec_Crt_Ts,Rec_Upd_Ts,Ins_NM,DOMAIN_URL)
+                           values(#seqId#,#entityId#,'1',#logo#,#copyright#,'SYS','SYS',to_date(#crtTs#,'yyyyMMdd'),to_date(#updTs#,'yyyyMMdd'),#insNm#,#domainUrl#)
+   </insert>
+            <insert id="insertSysPara" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+ insert into tbl_hsa_sys_para(seq_id,para_id,magic_id,para_val,rec_upd_opr_id,rec_upd_txn_id,rec_crt_ts,rec_upd_ts)
+                         values(#seqId#,#entityId#,'01',#sms#,'SYS','SYS',to_date(#crtTs#,'yyyyMMdd'),to_date(#updTs#,'yyyyMMdd'))
+   </insert>
+   
+   <select id="editAcqPay" resultClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+select t1.acq_ins_cd    as "entityId",
+       t5.consumer_name as "consumerName",
+       t1.cert_path     as "certs",
+       t1.cert_pwd      as "certsPwd",
+       t3.logo_path     as "logo",
+      t3.misc       as "copyright",
+       t4.para_val      as "sms",
+       t3.ins_nm      as "insNm",
+       t3.domain_url   as "domainUrl"
+  from tbl_hsa_acq_cert_inf     t1,
+       tbl_hsa_svr_cms_cfg      t3,
+       tbl_hsa_sys_para         t4,
+       tb_consumer              t5
+ where  t1.acq_ins_cd = t3.ins_cd
+   and t1.acq_ins_cd = replace(t4.para_id, ' ', '')
+   and t3.ins_cd = replace(t4.para_id, ' ', '')
+   and t1.acq_ins_cd = t5.entity_id
+and t1.acq_ins_cd=#entityId#
+   
+   </select>
+   <update id="updateCert" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   		update tbl_hsa_acq_cert_inf
+   		<dynamic prepend="set">
+   			<isNotNull prepend="," property="certs">
+   				cert_path=#certs#
+   			</isNotNull>
+   			<isNotNull prepend="," property="certsPwd">
+   				cert_pwd=#certsPwd#
+   			</isNotNull>
+   			<isNotNull prepend="," property="updTs">
+   				rec_upd_ts=to_date(#updTs#,'yyyyMMdd')
+   			</isNotNull>
+   		</dynamic>
+   		where acq_ins_cd=#entityId#
+   </update>
+   <update id="updateCms" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   		update Tbl_Hsa_Svr_Cms_Cfg
+   		<dynamic prepend="set">
+   			<isNotNull prepend="," property="logo">
+   				logo_path=#logo#
+   			</isNotNull>
+   			<isNotNull prepend="," property="copyright">
+   				misc=#copyright#
+   			</isNotNull>
+   			<isNotNull prepend="," property="insNm">
+   				ins_nm=#insNm#
+   			</isNotNull>
+   			<isNotNull prepend="," property="domainUrl">
+   				domain_url=#domainUrl#
+   			</isNotNull>
+   			<isNotNull prepend="," property="updTs">
+   				rec_upd_ts=to_date(#updTs#,'yyyyMMdd')
+   			</isNotNull>
+   		</dynamic>
+   		where ins_cd=#entityId#
+   </update>
+   <update id="updateSysPara" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   		update tbl_hsa_sys_para
+   		<dynamic prepend="set">
+   			<isNotNull prepend="," property="sms">
+   				para_val=#sms#
+   			</isNotNull>
+   			<isNotNull prepend="," property="updTs">
+   				rec_upd_ts=to_date(#updTs#,'yyyyMMdd')
+   			</isNotNull>
+   		</dynamic>
+   		where replace(para_id, ' ', '')=#entityId#
+   </update>
+   <delete id="delBank" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   	delete Tbl_Hsa_Acq_Pay_Chnl_Cfg t1 where t1.acq_ins_cd =#entityId# 
+   	<dynamic>
+   	<isNotNull prepend="and" property="bank">
+   				chnl_cd=#bank#
+   			</isNotNull>
+   			</dynamic>
+   </delete>
+    <delete id="delCert" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   	delete tbl_hsa_acq_cert_inf t1 where t1.acq_ins_cd =#entityId# 
+   	</delete>
+   	<delete id="delCardProduct" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   	delete Tbl_Hsa_Acq_Cardproduct_Rlt t1 where t1.acq_ins_cd =#entityId# 
+   	</delete>
+   		<delete id="delCms" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   	delete Tbl_Hsa_Svr_Cms_Cfg t1 where t1.ins_cd =#entityId# 
+   	</delete>
+   	<delete id="delSysPara" parameterClass="com.allinfinance.univer.issuer.dto.consumer.AcqPayDTO">
+   	delete tbl_hsa_sys_para t1 where replace(t1.para_id, ' ', '') =#entityId# 
+   	</delete>
+</sqlMap>

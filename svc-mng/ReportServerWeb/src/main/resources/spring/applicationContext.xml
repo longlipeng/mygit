@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	default-autowire="byName">
+	<!-- 数据库配置 -->
+
+<!--    <bean id="annotationPropertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+<!--        <property name="locations">-->
+<!--            <list>-->
+<!--                <value>file:jdbc.properties</value>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean> -->
+<!--    -->
+<!--    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+<!--        <property name="driverClassName" value="${connection.driver_class}" />-->
+<!--        <property name="url" value="${jdbc.connection.url}" />-->
+<!--        <property name="username" value="${jdbc.connection.username}" />-->
+<!--        <property name="password" value="${jdbc.connection.password}" />-->
+<!--			连接池启动时的初始值 -->
+<!--		<property name="initialSize" value="1" />-->
+<!--			连接池的最大值 -->
+<!--		<property name="maxActive" value="120" />-->
+<!--			最大空闲值.当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，一直减少到maxIdle为止 -->
+<!--		<property name="maxIdle" value="8" />-->
+<!--			最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去一些连接，以免洪峰来时来不及申请 -->
+<!--		<property name="minIdle" value="1" />-->
+<!--    </bean>-->
+
+
+
+<!-- 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+	 		<property name="jndiName" value="jdbc/htddb"></property>
+			<property name="jndiName" value="java:comp/env/jdbc/htddb"></property>
+	</bean> -->
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>com.ibm.db2.jcc.DB2Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:db2://10.100.163.111:60016/svcdb</value>
+		</property>
+		<property name="username">
+			<value>svc_mng</value>
+		</property>
+		<property name="password">
+			<value>svc_mng</value>
+		</property>
+		<property name="maxActive">
+			<value>20</value>
+		</property>
+		<property name="initialSize">
+			<value>1</value>
+		</property>  
+		<property name="maxWait">
+			<value>60000</value>
+		</property>  
+		<property name="maxIdle">
+			<value>20</value>
+		</property>  
+		<property name="minIdle">
+			<value>3</value>
+		</property>  
+		<property name="removeAbandoned">
+			<value>true</value>
+		</property>  
+		<property name="removeAbandonedTimeout">
+			<value>180</value>
+		</property>  
+	</bean>
+
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:config/SqlMapConfig.xml">
+		</property>
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<bean id="baseTransactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>  <!--  事务传播特性 -->
+			<!--	报表使用无事务查询	-->
+				<prop key="*">PROPAGATION_NOT_SUPPORTED</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ISSUERGROUPSTOCKCOUNT">
+  <select id="selectIssuerGroupStockCountByDTO" parameterClass="com.huateng.accorecard.issuerGroupStockCount.dto.IssuerGroupStockCountQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+    	T1.ISSUER_GROUP_STOCK_COUNT_ID as "stockCountId",
+        T1.STOCK_COUNT_NAME as "stockCountName",
+        T1.STOCK_COUNT_MEMO as "stockCountMemo",
+        to_char(T1.CREATE_TIME,'yyyy-MM-dd')      as   "createTime",
+        DECODE(T1.FINISH_FLAG,1,'完成','未完成')      as "finishFlag"
+    from
+     	TB_ENT_ISSUERGROUP_STOCK_COUNT T1
+     where
+     	T1.DATA_STATE='1'
+     	AND
+     	T1.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+    <dynamic>
+     		<isNotNull prepend="and" property="stockCountId">
+       			 T1.ISSUER_GROUP_STOCK_COUNT_ID = #stockCountId:DECIMAL#
+      		</isNotNull>
+      		<isNotEmpty prepend="and" property="stockCountName">
+       			 UPPER(T1.STOCK_COUNT_NAME) like UPPER('%'||#stockCountName:VARCHAR#||'%')
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="stockCountMemo">
+       			 UPPER(T1.STOCK_COUNT_MEMO) like UPPER('%'||#stockCountMemo:VARCHAR#||'%')
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="createTime">
+       			 T1.CREATE_TIME like '%'||#createTime:DATE#||'%'
+      		</isNotEmpty>
+					
+      		
+    	</dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

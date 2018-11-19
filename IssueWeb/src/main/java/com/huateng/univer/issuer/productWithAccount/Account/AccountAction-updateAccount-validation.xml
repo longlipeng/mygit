@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="serviceDTO.serviceShortName">
+		<field-validator type="requiredstring">
+			<message>请填写账户短名称(3位以内汉字)</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">^[\u4E00-\u9FA5\uF900-\uFA2D]+$</param>
+			<message>必须是汉字(3位以内)</message>
+		</field-validator>
+		
+		<!-- <field-validator type="stringlength">
+			<param name="maxLength">3</param>
+			<param name="minLength">1</param>
+			<message>必须是汉字(3位以内)</message>
+		</field-validator> -->
+	</field>
+	<field name="serviceDTO.serviceEnglishName">
+		<!-- <field-validator type="requiredstring">
+			<message>必须是英文字母(128位以内)</message>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="maxLength">128</param>
+			<message>必须是英文字母(128位内)</message>
+		</field-validator> -->
+		<field-validator type="regex">
+			<param name="expression">^[a-zA-Z_ ]+$</param>
+			<message>必须是英文字母(128位内)</message>
+		</field-validator>
+	</field>
+</validators>

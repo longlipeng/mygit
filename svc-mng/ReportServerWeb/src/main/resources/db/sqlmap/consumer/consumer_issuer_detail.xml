@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="consumer_issuer_detail">
+	<select id="consumer_issuer_detail" resultClass="com.allinfinance.service.consumer.issuerSellDetail.dto.ComsumerIssuerDetailDTO"
+		parameterClass="com.allinfinance.service.consumer.issuerSellDetail.dto.ComsumerIssuerDetailDTO">
+
+SELECT tc.entity_id as CONSUMER_ID,
+  TC.CONSUMER_NAME,
+  TSP.MCHNT_CD,
+  TM.MERCHANT_NAME,
+  SUBSTR(TSP.PRI_ACCT_NO,3,LENGTH(TSP.PRI_ACCT_NO)-2) AS CARD_NO,
+  TSP.TRANS_AT_SGL/100 as TRANS_AT_SGL,
+  TSP.TRANS_NM,
+  TSP.TRANS_FEE_SGL/100 as TRANS_FEE_SGL,
+  TSP.TERM_ID,
+  TSP.TXN_SEQ_NO,
+  to_char(to_date(TSP.SETTLE_DT,'yyyyMMdd'),'yyyy-MM-dd')||' '||TSP.TRANS_TIME as  SETTLE_DT
+   FROM TB_SETTLE_TRANS_PRE TSP,TB_MERCHANT TM,TB_CONSUMER TC
+   WHERE TSP.MCHNT_CD=TM.MERCHANT_CODE 
+   AND TSP.SETTLE_FLAG='1'
+   and tm.father_entity_id=tc.entity_id
+   and tc.entity_id=#consumerId#
+   and to_date(TSP.settle_dt, 'yyyyMMdd') &gt;=
+       to_date(#startDate#, 'yyyy-MM-dd')
+   and to_date(TSP.settle_dt, 'yyyyMMdd') &lt;=
+       to_date(#endDate#, 'yyyy-MM-dd')
+	</select>
+
+</sqlMap>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TB_SELL_ORDER_LIST">
+	<select id="selectOrderList" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderListQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    	select     t.order_list_id as "orderListId",
+		           t2.card_layout_name as "cardLayoutName",
+		           decode(t.FACE_VALUE_TYPE,0,'固定','非固定') as "faceValueType",
+		           t.face_value/100 as "faceValue",
+		           decode('',to_char(to_date(null,'yyyy-MM-dd'),'yyyy-MM-dd'),to_char(to_date(t.validity_period,'yyyy-MM-dd'),'yyyy-MM-dd')) as "validityPeriod",
+		           to_char(t.package_fee/100,'9999999990.99') as "packageFee",
+		           to_char(t.card_issue_fee/100,'9999999990.99') as "cardIssueFee",
+		           nvl(t.card_amount,0) as "cardAmount" ,
+              	   nvl(t.REAL_AMOUNT,0) as "realAmount"		           
+   		from   	   tb_sell_order_list t,tb_card_layout t2
+        where      t.card_layout_id =t2.CARD_LAYOUT_ID
+    	and 	   t.ORDER_ID = #orderId:DECIMAL#
+    	and		   t.DATA_STATE = 1
+    <include refid="Commons.suffixSql"/>
+    </select>
+    <select id="selectChangeCardOrderList" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderListQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    	select     t.order_list_id as "orderListId",
+    				t.product_id as "productId",
+    				p.product_name as "productName",
+    				t.service_id as "serviceId",
+    				s.service_name as "serviceName",
+		           t2.card_layout_name as "cardLayoutName",
+		           decode(t.FACE_VALUE_TYPE,0,'固定','非固定') as "faceValueType",
+		           t.face_value/100 as "faceValue",
+		           to_char(to_date(decode(trim(t.validity_period),'',null,t.validity_period),'yyyy-MM-dd'),'yyyy-MM-dd') as "validityPeriod",
+		           to_char(t.package_fee/100,'9999999990.99') as "packageFee",
+		           to_char(t.card_issue_fee/100,'9999999990.99') as "cardIssueFee",
+		           nvl(t.card_amount,0) as "cardAmount" ,
+              	   nvl(t.REAL_AMOUNT,0) as "realAmount"		           
+   		from   	   tb_sell_order_list t,tb_card_layout t2,
+   					tb_product p ,tb_service s 
+        where      t.card_layout_id =t2.CARD_LAYOUT_ID
+    	and 	   t.ORDER_ID = #orderId:DECIMAL#
+    	and		   t.DATA_STATE = 1
+    	and        t.product_id = p.product_id
+    	and       t.service_id =  s.service_id 
+    <include refid="Commons.suffixSql"/>
+  </select>
+
+</sqlMap>

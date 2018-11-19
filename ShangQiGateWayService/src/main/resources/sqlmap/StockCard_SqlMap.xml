@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="STOCKCARD">
+  <!-- 2015-01-05 xiehao 新增group by b.FUNCTION_ROLE_ID 用于区分发行机构库存和一级营销机构库存 -->
+  <select id="selectStockCardByDTO" parameterClass="com.allinfinance.univer.stockcard.dto.StockCardQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+ 			select  a.product_id as "productId", 
+					a.product_name as "productName", 
+					decode(b.face_value_type,'0','固定','1','非固定') as "faceValueType",
+					TO_CHAR(b.face_value/100,'9999999999990.00') as "faceValue",
+			        c.card_layout_name as "faceLayoutName", 
+			        decode(a.onymous_stat,'1','记名（个性化卡）','3','记名（库存卡）','2','不记名') as "onymousStat",
+			        to_char(to_date(b.card_valid_date,'YYYYMMDD'),'YYYY-MM-DD') as "cardValidDate",
+			        count(b.card_No) as "stockNumber",
+			        TO_CHAR(sum(b.face_value) /100,'9999999999990.00') as "totalAmount"
+			from 
+				    tb_product a left join tb_entity_stock b on a.product_id = b.product_id left join tb_card_layout c on b.card_layout_id = c.card_layout_id 
+			where 
+				    a.data_state = '1'
+			      and b.data_state = '1'
+			      and (b.stock_state = '1' or b.stock_state = '2')
+			      and c.data_state = '1'
+			      and b.FUNCTION_ROLE_ID = #functionRoleId:VARCHAR#
+			    <dynamic>
+			      <isNotEmpty prepend="and" property="productId">
+			        a.product_id = #productId:VARCHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="productName">
+			        a.product_name like '%'||#productName:VARCHAR#||'%'
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="faceValueType">
+			        b.face_value_type = #faceValueType:CHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="faceValue">
+			        b.face_value = #faceValue:VARCHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="onymousStat">
+			        a.onymous_stat = #onymousStat:CHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="cardValidDate">
+			        to_date(substr(b.card_valid_date,1,8), 'yyyy-MM-dd')&lt;=to_date(#cardValidDate:CHAR#,'yyyy-MM-dd')
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="entityId">
+			        b.ENTITY_ID = #entityId:VARCHAR#
+			      </isNotEmpty>
+			    </dynamic>
+			group  by a.product_id,a.product_name,b.face_value_type,b.face_value,
+			       c.card_layout_name,a.onymous_stat,b.card_valid_date, b.FUNCTION_ROLE_ID
+			order by a.product_id,a.product_name,b.face_value,c.card_layout_name,b.card_valid_date
+			
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+ 
+  <select id="selectAllocateList" parameterClass="com.allinfinance.univer.issuer.dto.stock.StockAllocateDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select t1.order_id as "allocateId",
+                        t2.entity_id as "allocateOut",
+                        t1.entity_id as "allocateIn",
+                        t1.cardCount as "allocateCount",
+                        t1.create_user as "allocateUser",
+                        t3.user_name as "allocateUserName",
+                        t1.createTime as "allocateTime"
+                   from (select order_id,
+                                entity_id,
+                                count(*) as cardCount,
+                                to_date(substr(create_time, 1, 8), 'yyyy-MM-dd') as createTime,
+                                create_user
+                           from tb_entity_stock_operater
+                          where stock_state = '1'
+                            and order_flow_node = '16'
+                            and operater_type = '1'
+                            <dynamic>
+			      <isNotEmpty prepend="and" property="allocateIn">
+			        entity_id = #allocateIn:VARCHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="allocateId">
+			        order_id =#allocateId:VARCHAR#
+			      </isNotEmpty>
+			     </dynamic>
+                          group by order_id,
+                                   entity_id,
+                                   to_date(substr(create_time, 1, 8), 'yyyy-MM-dd'),
+                                   create_user) t1,
+                        (select order_id,
+                                entity_id,
+                                count(*),
+                                to_date(substr(create_time, 1, 8), 'yyyy-MM-dd') as createTime,
+                                create_user
+                           from tb_entity_stock_operater
+                          where stock_state = '3'
+                            and order_flow_node = '16'
+                            and operater_type = '1'
+                            <dynamic>
+			      <isNotEmpty prepend="and" property="allocateOut">
+			        entity_id = #allocateOut:VARCHAR#
+			      </isNotEmpty>
+			      <isNotEmpty prepend="and" property="allocateId">
+			        order_id =#allocateId:VARCHAR#
+			      </isNotEmpty>
+			     </dynamic>
+                          group by order_id,
+                                   entity_id,
+                                   to_date(substr(create_time, 1, 8), 'yyyy-MM-dd'),
+                                   create_user) t2,
+                        tb_ent_user t3
+                  where t1.order_id = t2.order_id
+                    and t1.create_user = t3.user_id
+                    and t3.entity_id =#defaultEntityId#
+     <dynamic>
+      <isNotEmpty prepend="and" property="allocateUserName">
+			       t3.user_name  like '%'||#allocateUserName:VARCHAR#||'%'
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="startDate">
+      t1.createTime &gt;= to_date(subStr(#startDate#,1,8),'yyyy-MM-dd')
+      	</isNotEmpty>
+      	<isNotEmpty prepend="and" property="endDate">
+      t1.createTime &lt;= to_date(subStr(#endDate#,1,8),'yyyy-MM-dd') 
+      	</isNotEmpty>
+      	</dynamic>
+       <include refid="Commons.suffixSql"/>
+  </select>
+
+  
+  <select id="selectAllocateOrgan" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO" remapResults="true">
+  select t2.entity_id as "entityId",t2.issuer_name as "issuerName"
+   from tb_loyalty_contract t1,tb_issuer t2 
+   where t1.contract_seller=#defaultEntityId:VARCHAR# and t1.contract_buyer=t2.entity_id and t1.data_state='1' 
+   and to_date(substr(t1.expiry_date,1,8), 'yyyy-MM-dd')>= sysdate
+   union all
+    select t2.entity_id as "entityId",t2.seller_name as "issuerName"
+   from tb_sell_contract t1,tb_seller t2 
+   where t1.contract_seller=#defaultEntityId:VARCHAR# and t1.contract_buyer=t2.entity_id and t1.data_state='1' and contract_type='1'
+   and to_date(substr(t1.expiry_date,1,8), 'yyyy-MM-dd')>= sysdate
+   union all
+   SELECT I.ENTITY_ID AS "entityId",
+ 		         I.ISSUER_NAME AS "issuerName"
+ 		    FROM  TB_ISSUER I 
+ 		   WHERE  I.DATA_STATE='1' and entity_id=#defaultEntityId:VARCHAR#
+  </select>
+  
+  <select id="getStockAmount" parameterClass="com.allinfinance.univer.issuer.dto.stock.StockAllocateDTO" resultClass="java.util.HashMap" remapResults="true">
+      <include refid="Commons.prefixSql"/>
+       select p.product_id as "productId",
+               p.product_name as "productName",
+               decode(s.face_value_type,'0','固定','1','非固定') as "faceValueType",
+               s.face_value/100 as "faceValue",
+               c.card_layout_id as "cardId",
+               c.card_layout_name as "cardName",
+               s.card_valid_date as "cardValidDate",
+               count(*) as "stockAmount" 
+     from tb_entity_stock s, tb_product p, tb_card_layout c
+    where s.entity_id = #allocateOut#
+      and s.data_state = '1'
+      and s.stock_state = '1'
+      and s.product_id = p.product_id
+      and s.card_layout_id = c.card_layout_id
+      group by p.product_id,p.product_name,s.face_value_type, s.face_value, c.card_layout_id,c.card_layout_name, s.card_valid_date
+      
+      <include refid="Commons.suffixSql"/>  
+  </select>
+  
+   <select id="getOrderCardList" parameterClass="com.allinfinance.univer.issuer.dto.stock.StockAllocateDTO" resultClass="java.util.HashMap" remapResults="true">
+      <include refid="Commons.prefixSql"/>
+   select t1.card_no as "cardNo",
+  t2.face_value/100 as "faceValue",
+  decode(t2.face_value_type,'0','固定','1','非固定') as "faceValueType"
+  from (select card_no
+          from tb_entity_stock_operater
+         where order_flow_node = '16'
+           and operater_type = '1'
+           and order_id = #allocateId#
+           and data_state = '1'
+           and stock_state = '2') t1,
+       tb_entity_stock t2,
+       tb_product t3,
+       tb_card_layout t4       
+       where t1.card_no=t2.card_no
+       and t2.product_id=t3.product_id
+       and t2.card_layout_id=t4.card_layout_id
+         <include refid="Commons.suffixSql"/> 
+  </select>
+  
+   <select id="getView" parameterClass="com.allinfinance.univer.issuer.dto.stock.StockAllocateDTO" resultClass="java.util.HashMap" remapResults="true">
+      <include refid="Commons.prefixSql"/>
+   	select t1.card_no as "cardNo",
+  t2.face_value/100 as "faceValue",
+  decode(t2.face_value_type,'0','固定','1','非固定') as "faceValueType",
+  t3.product_name as "productName",
+   t4.card_layout_name as "cardLayoutName"
+  from (select card_no
+          from tb_entity_stock_operater
+         where order_flow_node = '16'
+           and operater_type = '1'
+           and order_id = #allocateId#
+           and data_state = '1'
+           and stock_state = '1') t1,
+       tb_entity_stock t2,
+       tb_product t3,
+       tb_card_layout t4       
+       where t1.card_no=t2.card_no
+       and t2.product_id=t3.product_id
+       and t2.card_layout_id=t4.card_layout_id
+         <include refid="Commons.suffixSql"/> 
+  </select>
+  
+   <select id="getOrderList" parameterClass="com.allinfinance.univer.issuer.dto.stock.StockAllocateDTO" resultClass="java.util.HashMap" remapResults="true">
+      <include refid="Commons.prefixSql"/>
+   select count(*) as "cardAmount",
+         t2.face_value / 100 as "faceValue",
+         decode(t2.face_value_type,'0','固定','1','非固定') as "faceValueType",
+         t3.product_name as "productName",
+         t4.card_layout_name as "cardLayoutName"
+    from (select card_no
+            from tb_entity_stock_operater
+           where order_flow_node = '16'
+             and operater_type = '1'
+             and order_id = #allocateId#
+             and data_state = '1'
+             and stock_state = '1'
+             and card_no not in (select card_no
+                                   from tb_entity_stock_operater
+                                  where order_flow_node = '16'
+                                    and operater_type = '0'
+                                    and order_id = #allocateId#
+                                    and data_state = '1'
+                                    and stock_state = '2')) t1,
+         tb_entity_stock t2,
+         tb_product t3,
+         tb_card_layout t4
+   where t1.card_no = t2.card_no
+     and t2.product_id = t3.product_id
+     and t2.card_layout_id = t4.card_layout_id
+   group by t2.face_value, t2.face_value_type,t3.product_name,t4.card_layout_name
+            <include refid="Commons.suffixSql"/> 
+  </select>
+  <select id="selectCardSegmentReady"  resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.OrderReadyDTO">  
+	  select
+		* from
+		(select 
+		        rownum as numb,
+	   		t.*
+	   from (select distinct s.card_no as "cardNo",
+         s.product_id as "productId",
+          s.card_layout_id as cardLayoutId,
+             decode(s.face_value_type,
+          '0',
+           '固定',
+           '1',
+          '非固定') as "faceValueType",
+           s.face_value / 100 as "faceValue",
+            s.card_valid_date as "cardValidDate",
+             s.STOCK_STATE as "stockState",
+            c.card_layout_name as "cardLayoutName" 
+           from tb_entity_stock s,tb_card_layout c
+            where s.card_layout_id=c.card_layout_id and s.data_state='1' and s.stock_state='1' 
+             <isNotEmpty prepend="and" property="processEntityId">
+            	s.entity_id=#processEntityId# 
+            </isNotEmpty>                          
+            <isNotEmpty prepend="and" property="productId">
+            	s.product_id=#productId:varchar#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="cardLayoutId">
+            	s.card_layout_id=#cardLayoutId:varchar#
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="faceValueType">
+            	s.face_value_type=#faceValueType:varchar#
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="faceValue">
+            	s.face_value=#faceValue:varchar#
+            </isNotEmpty>
+            <isNotEmpty prepend="and" property="cardValidDate">
+            	<![CDATA[ 
+              to_date(s.card_valid_date,'YYYY-MM-DD') >=to_date(#cardValidDate#,'YYYY-MM-DD')
+             	]]>
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="startCardNo">
+      		<isNotEmpty property="endCardNo">
+      			  s.card_no between #startCardNo:varchar# and #endCardNo:varchar#
+      		</isNotEmpty>
+      	</isNotEmpty>   	   
+	    ORDER BY
+			     s.card_no
+			     )t )
+			     where 
+			     	<![CDATA[ 
+			     	numb <= #realAmount:varchar#
+			     	]]>
+	 </select>
+</sqlMap>

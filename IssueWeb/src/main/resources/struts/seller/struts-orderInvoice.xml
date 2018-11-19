@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="orderInvoice" extends="struts-global" namespace="/orderInvoice">
+<!--  TODO 默认选项  稍后要修改  -->
+        <global-results>
+            <result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+
+        </global-results>
+        
+        <action name="list" class="orderInvoiceAction" method="list">
+            <result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+             <result name="input">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        </action>
+		<!--发票编辑  跳转-->
+        <action name="toEditInvoice" class="orderInvoiceAction" method="toEditInvoice" >
+        	<result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        	<result name="toEditInvoice">/WEB-INF/pages/univer/seller/invoice/orderInvoiceEdit.jsp</result>
+        	<result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        	<result name="input" type="redirectAction">
+ 				<param name="actionName">list</param>    
+				<param name="namespace">/orderInvoice</param>        	
+        	</result>
+        </action>
+		<!--    编辑发票页面       -->
+        <action name="editInvoice" class="orderInvoiceAction" method="editInvoice" >
+        	<result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        	<result name="editInvoice" type="redirectAction">
+				<param name="actionName">list</param>    
+				<param name="namespace">/orderInvoice</param>    	
+        	</result>
+        	<result name="input">/WEB-INF/pages/univer/seller/invoice/orderInvoiceEdit.jsp</result>
+        </action>
+        
+        <action name="addInvoice" class="orderInvoiceAction" method="addInvoice">
+            <result name="add">/WEB-INF/pages/univer/seller/invoice/orderInvoiceAdd.jsp</result>
+        	<result name="input">/WEB-INF/pages/univer/seller/invoice/orderInvoiceAdd.jsp</result>
+        </action>
+        
+        <action name="inquery" class="cardholderAction" method="list">
+        <result name="cardManageQuery" type="redirectAction">
+         <param name="actionName">cardQuery</param>
+        <param name="namespace">/cardManage</param>
+         <param name="cardManagementDTO.transferOutCard">${cardManagementDTO.transferOutCard}</param>
+        
+        </result>
+        	<result name="input">/WEB-INF/pages/univer/seller/cardholder/cardholderList.jsp</result>
+        </action>
+        
+        <action name="viewInvoice" class="orderInvoiceAction" method="view">
+        	<result name="view">/WEB-INF/pages/univer/seller/invoice/orderInvoiceView.jsp</result>
+        </action>
+        <action name="cancelInvoice" class="orderInvoiceAction" method="cancelInvoice">
+        	<result name="input">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        	<result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        </action>       
+        
+        <action name="toAddOrderInvoiceConfirm" class="orderInvoiceAction" method="toAddOrderInvoiceConfirm">
+        	<result name="input">/WEB-INF/pages/univer/seller/invoice/orderInvoiceConfirm.jsp</result>
+        	<result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        	<result name="orderInvoiceMessage">/WEB-INF/pages/univer/seller/invoice/orderInvoiceMessage.jsp</result>
+        </action> 
+        
+         <action name="addOrderInvoiceConfirm" class="orderInvoiceAction" method="addOrderInvoiceConfirm">
+        	<result name="input">/WEB-INF/pages/univer/seller/invoice/orderInvoiceConfirm.jsp</result>
+        	<result name="list">/WEB-INF/pages/univer/seller/invoice/orderInvoiceList.jsp</result>
+        	<result name="orderInvoiceMessage">/WEB-INF/pages/univer/seller/invoice/orderInvoiceMessage.jsp</result>
+        </action>  
+        <!-- 发票交票、收票查询-->
+        <action name="invoiceReceive" class="invoiceReceiveAction" method="list">
+            <result name="list">/WEB-INF/pages/univer/seller/invoice/InvoiceReceive.jsp</result>
+            <result name="input">/WEB-INF/pages/univer/seller/invoice/InvoiceReceive.jsp</result>
+        </action>
+        <!-- 发票交票操作 -->
+        <action name="receiveInvoice" class="invoiceReceiveAction" method="receiveInvoice">
+            <result name="list">/WEB-INF/pages/univer/seller/invoice/InvoiceReceive.jsp</result>
+        </action>
+        <!-- 发票收票操作 -->
+         <action name="handInvoice" class="invoiceReceiveAction" method="handInvoice">
+            <result name="list">/WEB-INF/pages/univer/seller/invoice/InvoiceReceive.jsp</result>
+        </action>
+    </package>
+</struts>

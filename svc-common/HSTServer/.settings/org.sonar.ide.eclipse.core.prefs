@@ -1,0 +1,8 @@
+#Wed Dec 12 17:11:02 CST 2012
+analyseLocally=false
+eclipse.preferences.version=1
+projectArtifactId=HSTServer
+projectBranch=
+projectGroupId=com.huashu
+serverUrl=http\://192.168.100.111\:9000
+version=1

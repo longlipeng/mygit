@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="OUTER_POS_INF" >
+  <select id="selectOuterPosInfByDTO" parameterClass="com.allinfinance.univer.consumer.pos.dto.PosInfoQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+      T1.TERM_ID  as "termId",
+      T1.Mchnt_Id as "mchntId",
+      T2.merchant_name as "mchntName",
+       to_date(substr(T2.create_time,1,8), 'yyyy-mm-dd') as "createTime",
+      t4.shop_id as "shopId",
+	  ' ' as "shopAddress",
+	  ' ' as "prmChangeFlag1",
+	  ' ' as "prmChangeFlag2",
+	  T4.shop_Telephone  as "phone",
+    	T4.shop_name as "shopName",
+	   decode(T1.TERM_STAT,'0','无效','有效')  as "termStat",
+      2 as "termType",
+       '外部' as "termTypeName",
+       T4.shop_code as "shopCode"
+    from
+      tb_shop T4  right join
+      TB_OUTER_POS_INFO T1  on T4.shop_id=T1.SHOP_ID  left join 
+      TB_MERCHANT T2 on T1.MCHNT_ID=T2.MERCHANT_CODE 
+    where
+    T1.TERM_STAT in ('0','1')
+      AND T2.merchant_STATE=1
+      AND T1.DATA_STATE='1'
+      AND T2.DATA_STATE='1'
+     AND T2.FATHER_ENTITY_ID=#defaultEntityId:VARCHAR#
+    <dynamic>
+      <isNotEmpty prepend="and" property="termId">
+        T1.TERM_ID = #termId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="termStat">
+        T1.TERM_STAT = #termStat:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="mchntName">
+        UPPER(T2.merchant_name) like UPPER('%'||#mchntName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotNull prepend="and" property="merchantCodeArray">
+		T2.MERCHANT_CODE IN ($merchantCodeArray$)
+	  </isNotNull>
+       <isNotEmpty prepend="and" property="mchntId">
+		t1.Mchnt_Id = #mchntId:VARCHAR#
+	  </isNotEmpty>
+       <isNotEmpty prepend="and" property="shopCode">
+        T4.SHOP_Code = #shopCode#
+      </isNotEmpty> 
+      <isNotEmpty prepend="and" property="shopName">
+        T4.SHOP_NAME  like '%'||#shopName:VARCHAR#||'%'
+      </isNotEmpty>      
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

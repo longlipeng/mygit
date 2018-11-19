@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="systemLog"  extends="struts-global" namespace="/systemLog">
+		<global-results>
+			<result name="list">/WEB-INF/pages/univer/system/syslog/systemLogList.jsp</result>
+		</global-results>
+		
+		<action name="initSystemLog" class="systemLogAction" method="init">
+			<result name="input">/WEB-INF/pages/univer/system/syslog/systemLogList.jsp</result>
+		</action>
+		<action name="inquerySysLog" class="systemLogAction" method="inquery">
+			<result name="input">/WEB-INF/pages/univer/system/syslog/systemLogList.jsp</result>
+		</action>
+		<action name="loadSysLog" class="systemLogAction" method="loadSysLog">
+			<result name="view">/WEB-INF/pages/univer/system/syslog/systemLogView.jsp</result>
+			<result name="input">/WEB-INF/pages/univer/system/syslog/systemLogList.jsp</result>
+		</action>
+		
+	</package>
+</struts>

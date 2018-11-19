@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd"
+	default-autowire="byName">
+
+	<!-- 事务模板 -->
+	<bean id="transactionTemplate"
+		class="org.springframework.transaction.support.TransactionTemplate">
+		<property name="name" value="通用事务模板" />
+		<property name="transactionManager" ref="transactionManager"></property>
+	</bean>
+
+	<!-- 发票需求 -->
+	<bean id="invoiceRequirementService" parent="baseTransactionProxy">
+		<property name="target">
+		<bean class="com.suning.svc.coupon.service.impl.InvoiceRequirementServiceImpl">
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 充值处理器 -->
+	<bean id="depositProcessor" class="com.suning.svc.coupon.service.impl.DepositProcessor">
+		<property name="virtualCardDAO" ref="virtualCardDAO" />
+		<property name="virtualCardService" ref="virtualCardService" />
+		<property name="depositProcessorDAO" ref="depositProcessorDAO" />
+		<property name="depositOrderDAO" ref="depositOrderDAO" />
+		<property name="invoiceRequirementService" ref="invoiceRequirementService" />
+		<property name="cardAmountManager" ref="cardAmountManager" />
+		<property name="transactionTemate" ref="transactionTemplate" />
+	</bean>
+
+	<!-- 扒券处理器 -->
+	<bean id="shareDepositProcessor"
+		class="com.suning.svc.coupon.service.impl.ShareDepositProcessor">
+		<property name="tradeItemDealedDAO" ref="tradeItemDealedDAO"></property>
+		<property name="depositOrderDAO" ref="depositOrderDAO"></property>
+		<property name="virtualCardDAO" ref="virtualCardDAO"></property>
+		<property name="depositProcessorDAO" ref="depositProcessorDAO"></property>
+		<property name="invoiceRequirementService" ref="invoiceRequirementService"></property>
+		<property name="entitySystemParameterDAO" ref="entitySystemParameterDAO"></property>
+		<property name="cardAmountManager" ref="cardAmountManager"></property>
+		<property name="transactionTemate" ref="transactionTemplate" />
+	</bean>
+	<!-- 充退处理器 -->
+	<bean id="depositRefundProcessor"
+		class="com.suning.svc.coupon.service.impl.DepositRefundProcessor">
+		<property name="depositProcessorDAO" ref="depositProcessorDAO" />
+		<property name="virtualCardDAO" ref="virtualCardDAO" />
+		<property name="virtualCardService" ref="virtualCardService" />
+		<property name="depositRefundOrderDao" ref="depositRefundOrderDAO" />
+		<property name="depositOrderDAO" ref="depositOrderDAO" />
+		<property name="invoiceRequirementService" ref="invoiceRequirementService" />
+		<property name="cardAmountManager" ref="cardAmountManager" />
+		<property name="tradeItemDealedDAO" ref="tradeItemDealedDAO" />
+		<property name="transactionTemate" ref="transactionTemplate" />
+	</bean>
+	<!-- 公共支持service -->
+	<bean id="commonSupportService"
+		class="com.suning.svc.coupon.service.impl.CommonSupportServiceImpl">
+		<property name="commonSupportServiceDao" ref="commonSupportServiceDao" />
+		<property name="dealBatchDAO" ref="dealBatchDAO" />
+	</bean>
+	<!-- 触发的job -->
+	<bean id="couponProcessTrigger" class="com.suning.svc.coupon.trigger.CouponProcessTrigger">
+		<property name="depositProcessor" ref="depositProcessor"></property>
+		<property name="shareDepositProcessor" ref="shareDepositProcessor"></property>
+		<property name="consumeProcessor" ref="consumeProcessor"></property>
+		<property name="consumeRefundProcessor" ref="consumeRefundProcessor"></property>
+		<property name="depositRefundProcessor" ref="depositRefundProcessor"></property>
+	</bean>
+	<!-- 消费退货 -->
+	<bean id="consumeRefundProcessor"
+		class="com.suning.svc.coupon.service.impl.ConsumeRefundProcessor">
+		<!-- 父类定义属性 -->
+		<property name="commonSupportService" ref="commonSupportService"></property>
+		<property name="transactionTemate" ref="transactionTemplate"></property>
+		<property name="dealBatchDAO" ref="dealBatchDAO"></property>
+		<property name="tradeItemDao" ref="tradeItemDao"></property>
+		<property name="tradeItemTempDAO" ref="tradeItemTempDAO"></property>
+		<property name="cardAmountManager" ref="cardAmountManager"></property>
+		<!-- 子类定义属性 -->
+		<property name="tradeItemDealedDAO" ref="tradeItemDealedDAO"></property>
+		<property name="consumeOrderDAO" ref="consumeOrderDAO"></property>
+		<property name="consumeOrderDao" ref="consumeOrderDao"></property>
+
+	</bean>
+	<!-- 消费 -->
+	<bean id="consumeProcessor" class="com.suning.svc.coupon.service.impl.ConsumeProcessor">
+		<!-- 父类定义属性 -->
+		<property name="commonSupportService" ref="commonSupportService"></property>
+		<property name="transactionTemate" ref="transactionTemplate"></property>
+		<property name="dealBatchDAO" ref="dealBatchDAO"></property>
+		<property name="tradeItemDao" ref="tradeItemDao"></property>
+		<property name="tradeItemTempDAO" ref="tradeItemTempDAO"></property>
+		<property name="cardAmountManager" ref="cardAmountManager"></property>
+		<!-- 子类定义属性 -->
+		<property name="consumeOrderDAO" ref="consumeOrderDAO"></property>
+		<property name="virtualCardService" ref="virtualCardService"></property>
+
+	</bean>
+
+	<bean id="cardAmountManager"
+		class="com.suning.svc.coupon.service.impl.CardAmountManagerImpl">
+		<property name="txTemplate" ref="transactionTemplate"></property>
+		<property name="virtualCardDao" ref="virtualCardDao"></property>
+	</bean>
+
+	<bean id="tradeItemTmpService"
+		class="com.suning.svc.coupon.service.impl.TradeItemTmpServiceImpl"></bean>
+	<bean id="tradeItemDealedService"
+		class="com.suning.svc.coupon.service.impl.TradeItemDealedServiceImpl"></bean>
+    <bean id="sqlOperationService" class="com.suning.svc.coupon.service.impl.SqlOperationServiceImpl">
+        <property name="dao" ref="sqlOperationDao"></property>
+    </bean>
+</beans>

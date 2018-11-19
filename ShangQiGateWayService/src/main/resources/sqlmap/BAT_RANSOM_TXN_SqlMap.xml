@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RANSOM">
+	<insert id="insertRansomActTxn" parameterClass="com.allinfinance.univer.businessbatch.dto.RansomBatchDTO">
+		insert into
+		tbl_bat_card_state_txn
+		(txn_seq,
+		txn_type,
+		settle_dt,
+		txn_amt,
+		txn_fee,
+		txn_state,
+		card_no,
+		cancel_flag,
+		rec_crt_ts,
+		upd_crt_ts)
+		values
+		(#txnSeq:CHAR#,#txnType:CHAR#, #smltDt:CHAR#,
+		#txnAmt:CHAR#,#txnFee:CHAR#, #txnState:CHAR#,
+		#cardNo:VARCHAR#,
+		#cancelFlag:VARCHAR#, #recCrtTs:CHAR#,
+		#recUpdTs:CHAR#)
+	</insert>
+	<select id="getRansomState" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.businessbatch.dto.BatchFileDetailDTO">
+		<include refid="Commons.prefixSql" />
+		select t2.order_id as "orderId",
+		t2.batch_no as "batchNo",
+		t1.card_no as
+		"cardNo",
+		t1.txn_amt/100 as "txnAmt",
+		t1.resp_code as "respCode"
+		from
+		tbl_bat_card_state_txn t1,
+		tbl_acc_batch_sum t2,
+		tbl_acc_batch_detail
+		t3
+		where t2.batch_no = t3.batch_no
+		and t3.txn_seq = t1.txn_seq
+		and
+		t1.txn_state = '2'
+		<isNotNull prepend="and" property="orderId">
+			t2.order_id =
+			#orderId:VARCHAR#
+	   </isNotNull>
+		<isNotNull prepend="and" property="batchNO">
+			t2.batch_no =
+			#batchNO:VARCHAR#
+	   </isNotNull>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+	<select id="getSucAmt" resultClass="java.lang.String"
+		parameterClass="java.lang.String">
+		select sum(txn_amt) from tbl_acc_batch_detail where
+		batch_no = #batchNo:CHAR# 
+	</select>
+
+	<update id="cardStateChange" parameterClass="java.lang.String">
+	UPDATE TB_ENTITY_STOCK T
+	   SET T.STOCK_STATE = DECODE((SELECT CST.CANCEL_STATE
+	      FROM TBL_ACC_BATCH_DETAIL   BD,
+	           TBL_BAT_CARD_STATE_TXN CST
+	     WHERE BD.TXN_SEQ = CST.TXN_SEQ
+	       AND T.CARD_NO = CST.CARD_NO
+	       AND BD.BATCH_NO = #batchNo:VARCHAR#
+	       ), '0' , '1' , '1' , '5' , '5' )
+	 WHERE T.CARD_NO IN (SELECT CST.CARD_NO CARD_NO
+	       FROM TBL_ACC_BATCH_DETAIL BD, TBL_BAT_CARD_STATE_TXN CST
+	      WHERE BD.TXN_SEQ = CST.TXN_SEQ
+	        AND BD.BATCH_NO = #batchNo:VARCHAR#)
+	</update>
+	
+	<select id="getCardNos" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.businessbatch.dto.RansomBatchDTO">
+		SELECT CST.CARD_NO as "cardNo", decode(cancel_state,'0' , '1' , '1' , '5' , '5') as  "cancelState"
+	       FROM TBL_ACC_BATCH_DETAIL BD, TBL_BAT_CARD_STATE_TXN CST
+	      WHERE BD.TXN_SEQ = CST.TXN_SEQ
+	        AND BD.BATCH_NO = #batchNo:VARCHAR#
+	</select>
+</sqlMap>

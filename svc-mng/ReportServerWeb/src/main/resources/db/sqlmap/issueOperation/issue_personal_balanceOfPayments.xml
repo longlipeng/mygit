@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="issue_personal_balanceOfPayments">
+	<select id="issue_personal_balanceOfPayments" resultClass="com.allinfinance.service.issueOperation.issuePersonalBalanceOfPayments.dto.IssuePersonalBalanceOfPaymentsDTO"
+		parameterClass="com.allinfinance.service.issueOperation.issuePersonalBalanceOfPayments.dto.IssuePersonalBalanceOfPaymentsDTO">
+select 
+    p.USER_NAME as "userName",
+    sum(decode(paymenttype1, null, 0, paymenttype1)) / 100 as "num1",
+    sum(decode(paymenttype2, null, 0, paymenttype2)) / 100 as "num2",
+    sum(decode(paymenttype3, null, 0, paymenttype3)) / 100 as "num3",
+    sum(decode(paymenttype4, null, 0, paymenttype4)) / 100 as "num4",
+    sum(decode(paymenttype5, null, 0, paymenttype5)) / 100 as "num5",
+    sum(decode(paymenttype1, null, 0, paymenttype1)) / 100 +
+    sum(decode(paymenttype2, null, 0, paymenttype2)) / 100 +
+    sum(decode(paymenttype3, null, 0, paymenttype3)) / 100 +
+	sum(decode(paymenttype4, null, 0, paymenttype4)) / 100 +
+	sum(decode(paymenttype5, null, 0, paymenttype5)) / 100 as "sum1" 
+from 
+	(select
+     n.USER_NAME,
+    (case n.payment_type
+    	when '1' then n.payment_amount
+    	else 0
+  		end) as paymenttype1,
+  	(case n.payment_type
+    	when '2' then n.payment_amount
+    	else 0
+  		end) as paymenttype2,
+  	(case n.payment_type
+    	when '3' then n.payment_amount
+    	else 0
+  		end) as paymenttype3,
+  	(case n.payment_type
+    	when '4' then n.payment_amount
+    	else 0
+  		end) as paymenttype4,
+  	(case n.payment_type
+    	when '9' then n.payment_amount
+    	else 0
+  		end) as paymenttype5
+from   
+    TB_SELL_ORDER m
+    right join
+	(select 
+    	a.ORDER_ID,a.PAYMENT_TYPE,a.PAYMENT_AMOUNT,c.USER_NAME
+	from 
+    	TB_SELL_ORDER_PAYMENT a
+        left join
+    	TB_ENT_USER c on a.MODIFY_USER = c.USER_ID
+	where 
+    	a.data_state='1'
+	and  
+     	to_date(substr(a.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate:varchar#,'yyyy-MM-dd')
+	and 
+    	to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(a.CREATE_TIME,1,8),'yyyyMMdd')     
+	and 
+   		c.USER_ID=#userId#) n on m.ORDER_ID = n.ORDER_ID
+where
+    m.PROCESS_ENTITY_ID =#IssuerId#
+and
+    m.PAYMENT_STATE in('1', '2') )  p
+group by p.USER_NAME
+
+</select>
+</sqlMap>

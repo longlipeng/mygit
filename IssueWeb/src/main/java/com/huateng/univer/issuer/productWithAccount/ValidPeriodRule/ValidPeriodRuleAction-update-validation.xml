@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="validPeriodRuleDspDTO.ruleName">
+		<field-validator type="requiredstring">
+			<message>请填写规则名称(25位内)</message>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="maxLength">128</param>
+			<message>请填写规则名称(25位内)</message>
+		</field-validator>
+	</field>
+	<field name="validPeriodRuleDspDTO.deadLine">
+		<field-validator type="requiredstring">
+			<message>请选择截止日期</message>
+		</field-validator>
+	</field>
+</validators>

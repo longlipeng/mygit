@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="INVOICE">
+	<select id="queryInvoice" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.allinfinance.univer.seller.invoice.dto.OrderInvoiceInfoQueryDTO">
+		<include refid="Commons.prefixSql" />
+		select distinct x.invoice_id as "invoiceId",
+		x.order_id as "orderId",
+		x.invoice_type as "invoiceType",
+		x.invoice_proj as "invoiceProj",
+		to_date(x.invoice_date,'yyyy-MM-dd') as "invoiceDate",
+		x.invoice_state as
+		"invoiceState",
+		x.total_price / 100 as "totalPrice",
+		x.invoice_Amount / 100 as "invoiceAmount",
+	    (case when (x.CUSTOMER_EXPECTED_DATE =null  or trim(x.CUSTOMER_EXPECTED_DATE) = '') then ''
+               else subStr(x.CUSTOMER_EXPECTED_DATE, 1, 4) || '-' || subStr(x.CUSTOMER_EXPECTED_DATE, 5, 2) || '-' || subStr(x.CUSTOMER_EXPECTED_DATE, 7, 2) 
+        end) as "customerExpectedDate" ,
+		to_date(x.CREATE_TIME,'yyyy-MM-dd hh24miss') as "createTime",
+		x.BILLING_SUBJECT as "billingSubject",
+		to_date(x.BILLING_DATE,'yyyy-MM-dd') as "billingDate",
+		x.first_entity_id as
+		"entityId",
+		x.order_type as "orderType",
+		x.customer_name as
+		"firstEntityName",
+		x.product_id as "productId",
+		x.product_name as
+		"productName",
+		x.user_name as "saleManName",
+		x.customer_name as
+		"customerName",
+		to_date(substr(y.MODIFY_TIME,1,8),'yyyyMMdd') as
+		"saleDate"
+		from
+		
+		(select t1.invoice_id,
+		t1.order_id,
+		t1.invoice_type,
+		t1.invoice_proj,
+		t1.invoice_date,
+		t1.create_time,
+		t1.invoice_state,
+		t2.total_price,
+		t1.invoice_Amount,
+		t1.CUSTOMER_EXPECTED_DATE,
+		t1.BILLING_SUBJECT,
+		t1.BILLING_DATE,
+		t2.first_entity_id,
+		t2.order_type,
+		t3.customer_name,
+		t4.product_id,
+		t4.product_name,
+		t5.user_name
+		
+		from tb_order_invoice_info t1,
+		tb_sell_order t2
+		left join
+		tb_product t4 on t2.product_id =
+		t4.product_id,
+		tb_customer t3,
+		tb_ent_user t5
+		where t1.order_id =
+		t2.order_id
+		and t2.first_entity_id = t3.entity_id
+		and t5.user_id = t2.sale_man
+		and t2.order_type in
+		('10000001','10000002','10000011','10000012','10000003','10000005','10000006','60000001','70000001')
+		and t2.process_entity_id = #defaultEntityId:VARCHAR#
+		<isNotEmpty prepend="and" property="orderId">
+			T1.ORDER_ID=#orderId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="saleManName">
+			t5.user_name=#saleManName:varchar# 
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="userId">
+			T1.USER_ID=#userId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="firstEntityName">
+			UPPER(t3.CUSTOMER_NAME)
+			like
+			UPPER('%'||#firstEntityName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="customerName">
+			UPPER(t3.CUSTOMER_NAME)
+			like UPPER('%'||#customerName:VARCHAR#||'%')
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="invoiceType">
+			T1.INVOICE_TYPE =
+			#invoiceType:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="invoiceProj">
+			T1.INVOICE_PROJ =
+			#invoiceProj:VARCHAR#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="invoiceState">
+			T1.INVOICE_STATE =
+			#invoiceState:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="billingSubject">
+			t1.BILLING_SUBJECT =
+			#billingSubject:VARCHAR#
+		</isNotEmpty>
+		) x, 
+		(select 
+			ORDER_ID,MODIFY_TIME
+		from 
+			TB_SELL_ORDER_PAYMENT 
+		<isNotEmpty prepend="where" property="saleDate">
+			to_date(substr(MODIFY_TIME,1,8),'yyyyMMdd') =
+			to_date(#saleDate#,'yyyy-MM-dd')
+		</isNotEmpty>
+		) y
+		where
+    		x.ORDER_ID  = y.ORDER_ID 
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="querySaleManName" parameterClass="com.allinfinance.univer.seller.customer.CustomerDTO"
+		remapResults="true" resultClass="java.util.List">
+		select
+		s.ENTITY_ID as "entityId",
+		s.USER_NAME as "customerName"
+		from tb_ent_user s
+		where
+		s.ENTITY_ID = #entityId:varchar#
+	</select>
+	<select id="queryInvoiceForUpdate"
+		parameterClass="com.allinfinance.univer.seller.invoice.dto.OrderInvoiceInfoDTO"
+		resultClass="com.allinfinance.univer.seller.invoice.dto.OrderInvoiceInfoDTO">
+	SELECT
+	t1.invoice_id as "invoiceId",
+	t1.order_id as "orderId",
+	t1.invoice_title as	"invoiceTitle",
+	t1.invoice_type as "invoiceType",
+	t1.invoice_proj as "invoiceProj",
+	t1.CUSTOMER_EXPECTED_DATE as "customerExpectedDate",
+	t1.sendout_way as "sendoutWay",
+	t1.INVOICE_CUSTOMER_ADDRESS as "invoiceCustomerAddress",
+	t1.invoice_code as "invoiceCode",
+	t1.comment1 as "comment",
+	t1.invoice_state as "invoiceState",
+	t2.total_price / 100 as "totalPrice",
+	t3.customer_name as "customerName",
+	t4.user_name as "saleManName"
+	FROM
+	tb_order_invoice_info t1,
+	tb_sell_order t2,
+	tb_customer t3,
+	tb_ent_user t4
+	WHERE
+	t1.order_id = t2.order_id
+	and t2.first_entity_id = t3.entity_id
+	and t4.user_id = t2.sale_man
+	and t2.order_type in('10000001','10000002','10000011','10000012','10000003','10000005','10000006','60000001','70000001')
+	and t1.invoice_id = #invoiceId:varchar#
+	</select>
+</sqlMap>

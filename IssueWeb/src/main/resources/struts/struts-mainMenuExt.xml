@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="mainMenuAction" extends="struts-global" >
+        <action name="mainMenu" class="mainMenuAction">
+<!--             <result name="list">main.jsp</result> -->
+            <result name="list" type="redirect">/cardManageExt/cardQueryInit.action</result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="MERCHANT_STATE">
+  <select id="selectMerchantStateByDTO" parameterClass="com.huateng.accor.merchantstate.dto.MerchantStateQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.MERCHANT_GROUP_ID as "merchantGrpId",
+        T2.MERCHANT_GRP_NAME as "merchantGrpName",
+        T1.MERCHANT_ID as "merchantId",
+        T1.MERCHANT_NAME as "merchantName",
+        T1.ENGLISH_NAME as "englishName",
+        T1.EXTERNAL_ID as "externalId",
+        T3.ISSUER_NAME as "issuerName",
+        decode(T1.STATE,'1','有效','0','无效') as "state"
+    from
+        TB_ENT_MERCHANT T1,
+        TB_ENT_MERCHANT_GROUP T2,
+        TB_ENT_ISSUER T3
+    where
+        T2.MERCHANT_GRP_ID(+) = T1.MERCHANT_GROUP_ID
+        AND T3.ISSUER_ID = T1.ISSUER_ID
+        AND T1.DATA_STATE = '1'
+        AND T2.DATA_STATE(+) = '1'
+        AND T3.DATA_STATE = '1'
+    <dynamic>
+      <isNotEmpty prepend="and" property="merchantGrpId">
+        T1.MERCHANT_GROUP_ID = #merchantGrpId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantGrpName">
+        T2.MERCHANT_GRP_NAME like '%'||#merchantGrpName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantId">
+        T1.MERCHANT_ID = #merchantId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        T1.MERCHANT_NAME like '%'||#merchantName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotNull prepend="and" property="issuerId">
+        T1.ISSUER_ID = #issuerId:DECIMAL#
+      </isNotNull>
+      <isNull prepend="and" property="issuerId">
+        <isNotEqual property="defaultIssuerId" compareValue="0">
+          T1.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotEqual>
+        <isEqual property="defaultIssuerId" compareValue="0">
+          T1.ISSUER_GROUP_ID = #defaultIssuerGroupId:DECIMAL#
+        </isEqual>
+      </isNull>
+      <isNotEmpty prepend="and" property="externalId">
+        T1.EXTERNAL_ID= #externalId:VARCHAR#
+      </isNotEmpty>
+      <isNotNull prepend="and" property="state">
+        T1.STATE = #state:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

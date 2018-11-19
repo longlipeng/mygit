@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jasperPrint PUBLIC "-//JasperReports//DTD JasperPrint//EN" "http://jasperreports.sourceforge.net/dtds/jasperprint.dtd">
+
+<jasperPrint name="IssuerStockSumReport" pageWidth="842" pageHeight="196" topMargin="0" leftMargin="0" bottomMargin="0" rightMargin="0" orientation="Landscape" locale="zh_CN" timezone="Asia/Shanghai">
+	<property name="net.sf.jasperreports.export.xml.start.page.index" value="0"/>
+	<property name="net.sf.jasperreports.export.xml.end.page.index" value="0"/>
+	<property name="net.sf.jasperreports.export.xml.page.count" value="1"/>
+	<origin band="title"/>
+	<origin band="columnHeader"/>
+	<origin band="detail"/>
+	<origin band="columnFooter"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<page>
+		<frame>
+			<reportElement x="71" y="0" width="709" height="119" origin="0"/>
+			<box>
+				<pen lineWidth="1.0"/>
+				<topPen lineWidth="1.0"/>
+				<leftPen lineWidth="1.0"/>
+				<bottomPen lineWidth="1.0"/>
+				<rightPen lineWidth="1.0"/>
+			</box>
+			<text textAlignment="Center" textHeight="31.9375" lineSpacingFactor="1.140625" leadingOffset="-1.96875">
+				<reportElement x="0" y="0" width="709" height="44" origin="0"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<font fontName="宋体" size="28"/>
+				<textContent><![CDATA[发行机构库存汇总表]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="99" y="44" width="159" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[null]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="258" y="44" width="98" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[机构名称：]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="1" y="44" width="98" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[机构编号：]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="356" y="44" width="256" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[null]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="99" y="69" width="159" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[null]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="1" y="69" width="98" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[产品编号：]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="258" y="69" width="98" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[产品名称：]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="356" y="69" width="256" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[null]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="0" y="94" width="98" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[数据期间：]]></textContent>
+			</text>
+			<text textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="98" y="94" width="258" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[null——null]]></textContent>
+			</text>
+			<text textAlignment="Right" textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375">
+				<reportElement x="356" y="94" width="98" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[制表时间：]]></textContent>
+			</text>
+			<text textAlignment="Right" textHeight="15.96875" lineSpacingFactor="1.140625" leadingOffset="-0.984375" valueClass="java.util.Date" pattern="yyyy-MM-dd">
+				<reportElement x="454" y="94" width="158" height="25" origin="0"/>
+				<font fontName="宋体" size="14"/>
+				<textContent><![CDATA[2013-03-29]]></textContent>
+			</text>
+		</frame>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="329" y="119" width="64" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[介质类型]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="544" y="119" width="76" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[入库数量]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="620" y="119" width="78" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[出库数量]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="262" y="119" width="67" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[署名类型]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="169" y="119" width="93" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[产品名称]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="71" y="119" width="98" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[日期]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="698" y="119" width="82" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[期末库存量]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="393" y="119" width="67" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[面额值]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="460" y="119" width="84" height="29" origin="1"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[期初库存量]]></textContent>
+		</text>
+		<text textHeight="0.0" lineSpacingFactor="0.0" leadingOffset="0.0">
+			<reportElement x="329" y="148" width="64" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="71" y="148" width="98" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[汇总：]]></textContent>
+		</text>
+		<text textHeight="0.0" lineSpacingFactor="0.0" leadingOffset="0.0">
+			<reportElement x="393" y="148" width="67" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textHeight="0.0" lineSpacingFactor="0.0" leadingOffset="0.0">
+			<reportElement x="262" y="148" width="67" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textHeight="0.0" lineSpacingFactor="0.0" leadingOffset="0.0">
+			<reportElement x="169" y="148" width="93" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textHeight="0.0" lineSpacingFactor="0.0" leadingOffset="0.0">
+			<reportElement x="460" y="148" width="84" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textHeight="0.0" lineSpacingFactor="0.0" leadingOffset="0.0" valueClass="java.lang.Long">
+			<reportElement x="544" y="148" width="76" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textHeight="0.0" lineSpacingFactor="0.0" leadingOffset="0.0" valueClass="java.lang.Long">
+			<reportElement x="620" y="148" width="78" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[]]></textContent>
+		</text>
+		<text textHeight="13.6875" lineSpacingFactor="1.140625" leadingOffset="-0.84375">
+			<reportElement x="698" y="148" width="82" height="20" origin="3"/>
+			<box>
+				<pen lineWidth="0.5"/>
+				<topPen lineWidth="0.5"/>
+				<leftPen lineWidth="0.5"/>
+				<bottomPen lineWidth="0.5"/>
+				<rightPen lineWidth="0.5"/>
+			</box>
+			<font fontName="宋体" size="12"/>
+			<textContent><![CDATA[null]]></textContent>
+		</text>
+	</page>
+</jasperPrint>

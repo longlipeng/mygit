@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 批量的bean -->  
+   <bean id="batchIssueCard" class="com.allinfinance.prepay.batch.BatchIssueCard" /> 
+   <bean id="CXSFTPuploadFile" class="com.allinfinance.prepay.batch.CXSFTPuploadFile">
+   <property name="SFTPFilePath">  
+           <value>#{env.SFTPFilePath}</value>  
+       </property>
+         <property name="SFTPLocalFilePath">  
+           <value>#{env.SFTPLocalFilePath}</value>  
+       </property>
+       <property name="SFTPHost">  
+           <value>#{env.SFTPHost}</value>  
+       </property> 
+       <property name="SFTPPort">  
+           <value>#{env.SFTPPort}</value>  
+       </property> 
+       <property name="SFTPUserName">  
+           <value>#{env.SFTPUserName}</value>  
+       </property> 
+       <property name="SFTPPassWord">  
+           <value>#{env.SFTPPassWord}</value>  
+       </property>   
+   </bean> 
+     <bean id="createCardInfoTOProtal" class="com.allinfinance.prepay.batch.CreateCardInfoTOProtal">
+   <property name="SFTPFilePath">  
+           <value>#{env.ProtalSFTPFilePath}</value>  
+       </property>
+         <property name="SFTPLocalFilePath">  
+           <value>#{env.ProtalSFTPLocalFilePath}</value>  
+       </property>
+       <property name="SFTPHost">  
+           <value>#{env.ProtalSFTPHost}</value>  
+       </property> 
+       <property name="SFTPPort">  
+           <value>#{env.ProtalSFTPPort}</value>  
+       </property> 
+       <property name="SFTPUserName">  
+           <value>#{env.ProtalSFTPUserName}</value>  
+       </property> 
+       <property name="SFTPPassWord">  
+           <value>#{env.ProtalSFTPPassWord}</value>  
+       </property>   
+   </bean>
+  
+   <!-- job的配置开始 -->  
+   <bean id="myJobDetail"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="batchIssueCard" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>batchIssueCardQuartz</value>  
+       </property>  
+   </bean>  
+   <!-- job的配置结束 -->  
+  
+  
+   <!-- 调度的配置开始 -->  
+   <bean id="crontestJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="myJobDetail" />  
+       </property>  
+       <property name="cronExpression">  
+         <value>#{env.cronExpressionValue}</value>   <!-- Cron表达式“0 10 23 * * ?”意为：每天23:10执行一次。  -->  
+        <!--  <value>0/5 * * * * ?</value> --> <!-- Cron表达式“0/5 * * * * ?”意为：每5秒执行一次。  --> 
+       </property>  
+   </bean>  
+   <!-- 调度的配置结束 -->  
+  
+  <!-- 证件有效期检查的bean -->  
+   <bean id="checkInfo" class="com.allinfinance.prepay.batch.ValidityCheckForIDCard" />  
+  
+   <!-- job的配置开始 -->  
+   <bean id="checkInfoJobDetail"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="checkInfo" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>CheckInfo</value>  
+       </property>  
+   </bean>  
+   <!-- job的配置结束 -->  
+  
+  
+   <!-- 调度的配置开始 -->  
+   <bean id="checkInfoJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="checkInfoJobDetail" />  
+       </property>  
+       <property name="cronExpression">  
+         <value>#{env.cronValue}</value>   <!-- Cron表达式“0 10 00 * * ?”意为：每天00:10执行一次。  -->  
+        <!--  <value>0/5 * * * * ?</value> --> <!-- Cron表达式“0/5 * * * * ?”意为：每5秒执行一次。  --> 
+       </property>  
+   </bean>  
+   <!-- 调度的配置结束 -->  
+   
+   
+   <!-- 同步CRM的bean -->
+   <bean id="synchCRM" class="com.allinfinance.prepay.batch.SynchCRM" />
+   
+   <!-- job的配置开始 --> 
+   <bean id="synchCRMJobDetail"  class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="synchCRM" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>SynchCRMQuartz</value>  
+       </property>  
+   </bean>  
+   <!-- job的配置结束 --> 
+   
+   <!-- 调度的配置开始 -->  
+   <bean id="synchCRMJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="synchCRMJobDetail" />  
+       </property>  
+       <property name="cronExpression">  
+         <value>#{env.cronSynchValue}</value>   <!-- Cron表达式“0 10 00 * * ?”意为：每天00:10执行一次。  -->  
+       </property>  
+   </bean>  
+   <!-- 调度的配置结束 -->  
+   
+   
+   <!-- 启动触发器的配置开始 -->  
+   <bean name="startQuertz" lazy-init="false" autowire="no"  
+       class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+       <property name="triggers">  
+           <list>  
+               <ref bean="crontestJobTrigger" />  
+  			   <ref bean="checkInfoJobTrigger" />
+  			   <ref bean="synchCRMJobTrigger" />  
+  			   <ref bean="CXSFTPuploadFileTrigger" />  
+  			   <ref bean="createCardInfoTOProtalJobTrigger" /> 
+           </list>  
+       </property>  
+   </bean>  
+   <!-- 启动触发器的配置结束 -->
+	
+	 <!-- cxf 卡用户关系同步-->
+		<bean id="CXSFTPuploadFileDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="CXSFTPuploadFile" />
+		<property name="targetMethod" value="sftpJob" />
+		<property name="concurrent"   value="false"/>
+	</bean>
+
+	<!-- Run the job every 2 seconds with initial delay of 1 second -->
+<bean id="CXSFTPuploadFileTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="CXSFTPuploadFileDetail" />
+		<property name="cronExpression">
+        <value>#{env.SFTPcronValue}</value>    <!-- 12点     0 00 00 ? * *    -->
+    	</property>
+	</bean>
+
+
+
+   <!-- job的配置开始  定时发送protal 多用途制卡成功的记名卡 -->  
+   <bean id="createCardInfoTOProtalJobDetail"  
+       class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+       <property name="targetObject">  
+           <ref bean="createCardInfoTOProtal" />  
+       </property>  
+       <property name="targetMethod">  
+           <value>job</value>  
+       </property>  
+   </bean>  
+   <!-- job的配置结束 -->  
+  
+  
+   <!-- 调度的配置开始 -->  
+   <bean id="createCardInfoTOProtalJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+       <property name="jobDetail">  
+           <ref bean="createCardInfoTOProtalJobDetail" />  
+       </property>  
+       <property name="cronExpression">  
+         <value>#{env.ProtalSFTPcronValue}</value>   <!-- Cron表达式“0 10 23 * * ?”意为：每天23:10执行一次。  -->  
+        <!--  <value>0/5 * * * * ?</value> --> <!-- Cron表达式“0/5 * * * * ?”意为：每5秒执行一次。  --> 
+       </property>  
+   </bean>  
+
+	<!-- Scheduler factory bean to glue together jobDetails and triggers to 
+		Configure Quartz Scheduler -->
+
+	
+	
+	
+</beans>

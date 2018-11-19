@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="refund" extends="struts-global" namespace="/refund">
+       <action name="refundList" class="refundAction" method="refundList">
+       		<result name="refundList">/WEB-INF/pages/univer/consumer/refund/refundList.jsp</result>
+       		<result name="input">/WEB-INF/pages/univer/consumer/refund/refundList.jsp</result>
+       </action>
+       
+       <action name="refundDetail" class="refundAction" method="refundDetail">
+       		<result name="refundDetail">/WEB-INF/pages/univer/consumer/refund/refundDetail.jsp</result>
+       		<result name="input">/WEB-INF/pages/univer/consumer/refund/refundList.jsp</result>
+       		<result name="refundList">/WEB-INF/pages/univer/consumer/refund/refundList.jsp</result>
+       </action>
+       
+       <action name="refundVerify" class="refundAction" method="refundVerify">
+       		<result name="refundSuc">/WEB-INF/pages/univer/consumer/refund/refundTransLogQuery.jsp</result>
+       		<result name="refuseSuc" type="chain">refundList</result>
+       		<result name="input">/WEB-INF/pages/univer/consumer/refund/refundDetail.jsp</result>
+       </action>
+       
+       <action name="refundTransLogQuery" class="refundAction" method="refundTransLogQuery">
+       		<result name="refundTransLogQuery">/WEB-INF/pages/univer/consumer/refund/refundTransLogQuery.jsp</result>
+       		<result name="input">/WEB-INF/pages/univer/consumer/refund/refundTransLogQuery.jsp</result>
+       </action>
+    </package>
+</struts>

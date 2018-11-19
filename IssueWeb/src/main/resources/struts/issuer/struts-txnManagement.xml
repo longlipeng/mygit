@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>                                                              
+    <package name="txnManagement" extends="struts-global"  namespace="/txnManagement">
+        <global-results>
+		     <result name="list">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteList.jsp</result>          
+		     <result name="add">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteAdd.jsp</result>
+        </global-results>
+                
+        <action name="cardRouteList" class="txnManagementAction" method="cardRouteList">          
+          <result name="input">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteList.jsp</result>
+        </action>
+        <action name="reCardRouteAdd" class="txnManagementAction" method="reCardRouteAdd">
+          <result name="input">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteAdd.jsp</result>
+        </action>
+         <action name="addCardRoute" class="txnManagementAction" method="addCardRoute">
+         	<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteList.jsp</result>
+          <result name="input">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteAdd.jsp</result>
+        </action>
+        <action name="delCardRoute" class="txnManagementAction" method="delCardRoute">
+        	<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteList.jsp</result>
+          <result name="input">/WEB-INF/pages/univer/issuer/txnManagement/cardRouteList.jsp</result>
+        </action>
+    </package>
+</struts>

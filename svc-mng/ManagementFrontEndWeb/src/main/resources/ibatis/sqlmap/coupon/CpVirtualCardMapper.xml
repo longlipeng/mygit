@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="VirtualCard">
+
+	<!-- 锁定卡记录 -->
+	<select id="lockRecord" resultClass="java.lang.String">
+		select CARD_NO from CP_VIRTUAL_CARD where CARD_NO = #cardNO# for update with rs
+	</select>
+	
+	<!-- 增加卡金额 -->
+    <update id="addAmount">
+        update CP_VIRTUAL_CARD set AVAILABLE_BALANCE = AVAILABLE_BALANCE + #amount# where CARD_NO = #cardNO#
+    </update>
+    
+    <update id="minusAmount">
+        update CP_VIRTUAL_CARD set AVAILABLE_BALANCE = AVAILABLE_BALANCE - #amount# 
+        where CARD_NO = #cardNO# and AVAILABLE_BALANCE + #tolerance# >= #amount#
+    </update>
+    
+    <select id="getBalance" resultClass="Long">
+        select AVAILABLE_BALANCE from CP_VIRTUAL_CARD where CARD_NO = #cardNO#
+    </select>
+</sqlMap>
