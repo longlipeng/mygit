@@ -499,6 +499,7 @@ public class T20101Action extends BaseSupport{
 				//将原有的经营范围值赋值TblMchtBaseBusiRange表的busiRange字段后把TblMchtBaseBusiRange表的busiRangeId字段赋值给TblMchtBaseInfTmp表的busiRangeId字段
 				tmp.setBusiRangeId(mchtNoRandom);
 				
+				service.updateBaseInfTmp(tmp);
 				service.addBaseBusiRange(tblMchtBaseBusiRange);
 			}else{
 				tblMchtBaseBusiRange = new TblMchtBaseBusiRange();
@@ -506,8 +507,10 @@ public class T20101Action extends BaseSupport{
 					tblMchtBaseBusiRange.setBusiRangeId(baseList[0].toString());
 					tblMchtBaseBusiRange.setMchtNo(baseList[1].toString());
 					tblMchtBaseBusiRange.setBusiRange(busiRange);
+					tmp.setBusiRangeId(baseList[0].toString());
 				}
 				
+				service.updateBaseInfTmp(tmp);
 				service.upBaseBusiRange(tblMchtBaseBusiRange);
 			}
 			
