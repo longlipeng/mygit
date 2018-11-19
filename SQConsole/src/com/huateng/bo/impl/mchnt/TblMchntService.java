@@ -265,7 +265,6 @@ public interface TblMchntService {
 	 */
 	public String upBaseBusiRange(TblMchtBaseBusiRange tblMchtBaseBusiRange);
 	
-	
 	  //新增商户审核通过
 	public String acceptAdd(String mchntId, String mchntInd,String oprInfo, CstMchtFeeInfTmp cstMchtFeeInfTmpDebit,
 			CstMchtFeeInfTmp cstMchtFeeInfTmpCredit, String isRoute, String isWhite) throws IllegalAccessException, InvocationTargetException;
