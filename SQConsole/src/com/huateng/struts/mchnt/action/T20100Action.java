@@ -401,10 +401,10 @@ public class T20100Action extends BaseSupport{
 			
 			tblMchtBaseBusiRange.setBusiRangeId(mchtNoRandom);
 			tblMchtBaseBusiRange.setMchtNo(mchtNo);
-			tblMchtBaseBusiRange.setBusiRange(busiRange);
+			tblMchtBaseBusiRange.setBusiRanges(busiRanges);
 			
 			//营业范围
-			tblMchtBaseInfTmp.setBusiRangeId(mchtNoRandom);
+			tblMchtBaseInfTmp.setBusiRange(mchtNoRandom);
 	
 			rspCode = service.saveTmp(tblMchtBaseInfTmp, tblMchtSettleInfTmp,supp1Tmp ,tblMchtBaseBusiRange);
 			
@@ -3285,7 +3285,7 @@ public class T20100Action extends BaseSupport{
 	private String mchtENAbbr;
 	
 	//经营范围
-	private String busiRange;
+	private String busiRanges;
 	
 	//邮政编号
 	private String postalCode;
@@ -3460,12 +3460,12 @@ public class T20100Action extends BaseSupport{
 		this.mchtENAbbr = mchtENAbbr;
 	}
 
-	public String getBusiRange() {
-		return busiRange;
+	public String getBusiRanges() {
+		return busiRanges;
 	}
 
-	public void setBusiRange(String busiRange) {
-		this.busiRange = busiRange;
+	public void setBusiRanges(String busiRanges) {
+		this.busiRanges = busiRanges;
 	}
 
 	public String getPostalCode() {
