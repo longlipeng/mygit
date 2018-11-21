@@ -838,7 +838,7 @@ public   ICommQueryDAO commQueryDAO ;
 		}else{
 			tmp.setFaxNo("  ");//税务登记证号码
 		}
-		tmp.setBusiRangeId(tblDefMchtInf.getBusiScope());//经营范围
+		tmp.setBusiRange(tblDefMchtInf.getBusiScope());//经营范围
 		tmp.setBelInd(tblDefMchtInf.getIndustry());//所属行业
 		tmp.setLicenceEndDate(tblDefMchtInf.getRegDate());//注册日期
 		tmp.setApplyDate(tblDefMchtInf.getRegDate());//注册日期
