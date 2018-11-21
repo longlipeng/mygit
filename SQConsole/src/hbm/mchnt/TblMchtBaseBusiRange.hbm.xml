@@ -27,8 +27,8 @@
 		/>
         
         <property
-			name="busiRange"
-			column="BUSI_RANGE"
+			name="busiRanges"
+			column="BUSI_RANGES"
 			type="string"
 			not-null="false"
 			length="500"
