@@ -15,9 +15,15 @@ public class TblMchtBaseBusiRange implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String busiRangeId;    //商户编号
 	private String mchtNo;       //商户编号
-	private String busiRange;  //经营范围
+	private String busiRanges;  //经营范围
 	
 	
+	public String getBusiRanges() {
+		return busiRanges;
+	}
+	public void setBusiRanges(String busiRanges) {
+		this.busiRanges = busiRanges;
+	}
 	public String getMchtNo() {
 		return mchtNo;
 	}
@@ -29,12 +35,6 @@ public class TblMchtBaseBusiRange implements Serializable {
 	}
 	public void setBusiRangeId(String busiRangeId) {
 		this.busiRangeId = busiRangeId;
-	}
-	public String getBusiRange() {
-		return busiRange;
-	}
-	public void setBusiRange(String busiRange) {
-		this.busiRange = busiRange;
 	}
 	
 	
