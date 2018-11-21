@@ -376,7 +376,12 @@ function showMchntDetailS(mchntId,El){
 			{name:'preAuthor',mapping:'preAuthor'},
 			{name:'returnFunc',mapping:'returnFunc'},
 			
-			{name:'mchntInd',mapping:'mchntInd'}
+			{name:'mchntInd',mapping:'mchntInd'},
+			
+			//经营范围外建表字段
+			{name:'busiRangeId',mapping:'busiRangeId'},
+			{name:'mchtNo',mapping:'mchtNo'},
+			{name:'busiRanges',mapping:'busiRanges'},
 		]),
 		autoLoad: false
 	});
@@ -1760,8 +1765,8 @@ function showMchntDetailS(mchntId,El){
 				        xtype: 'displayfield',
 						fieldLabel: '经营范围',
 						labelStyle: 'padding-left: 5px',
-						id: 'busiRange',
-						hiddenName: 'busiRange'
+						id: 'busiRanges',
+						hiddenName: 'busiRanges'
 				}]
 				},{
                 	columnWidth: .33,
