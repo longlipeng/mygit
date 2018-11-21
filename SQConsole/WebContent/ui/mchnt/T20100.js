@@ -1599,8 +1599,8 @@ Ext.onReady(function() {
 						fieldLabel: '经营范围*',
 						maxLength: 60,
 						allowBlank: false,
-						id: 'busiRange',
-						name: 'busiRange'
+						id: 'busiRanges',
+						name: 'busiRanges'
 		        	}]
 				},{
 					columnWidth: .33,
