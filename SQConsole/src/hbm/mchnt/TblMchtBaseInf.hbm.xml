@@ -786,8 +786,8 @@
 		/><!-- 记录创建时间 -->
 		
 		<property
-			name="busiRangeId"
-			column="BUSI_RANGE_ID"
+			name="busiRange"
+			column="BUSI_RANGE"
 			type="string"
 			not-null="false"
 			length="100"
