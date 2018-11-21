@@ -157,7 +157,7 @@ public class LoadRecordMethod {
 //			TblMchtSettleInfTmp settle = service.getSettleInfTmp(request.getParameter("mchntId"));
 			TblMchtSupp1Tmp supp1Tmp=service.getMchtSupp1Tmp(request.getParameter("mchntId"));
 			
-			String sql1 = "select BUSI_RANGE_ID,MCHT_NO,BUSI_RANGE from TBL_MCHT_BASE_BUSI_RANGE where MCHT_NO = '" + request.getParameter("mchntId") + "'";
+			String sql1 = "select BUSI_RANGE_ID,MCHT_NO,BUSI_RANGES from TBL_MCHT_BASE_BUSI_RANGE where MCHT_NO = '" + request.getParameter("mchntId") + "'";
 			List<Object[]> lists = CommonFunction.getCommQueryDAO().findBySQLQuery(sql1);
 			
 			TblMchtBaseBusiRange tblMchtBaseBusiRange = null;
@@ -170,9 +170,9 @@ public class LoadRecordMethod {
 				
 				tblMchtBaseBusiRange.setBusiRangeId(mchtNoRandom);
 				tblMchtBaseBusiRange.setMchtNo(request.getParameter("mchntId"));
-				tblMchtBaseBusiRange.setBusiRange(inf.getBusiRangeId());
+				tblMchtBaseBusiRange.setBusiRanges(inf.getBusiRange());
 				//将TblMchtBaseInfTmp表的busiRangeId字段的经营范围值赋值TblMchtBaseBusiRange表的busiRange字段后把TblMchtBaseBusiRange表的busiRangeId字段赋值给TblMchtBaseInfTmp表的busiRangeId字段
-				inf.setBusiRangeId(mchtNoRandom);
+				inf.setBusiRange(mchtNoRandom);
 				
 				service.updateBaseInfTmp(inf);
 				service.addBaseBusiRange(tblMchtBaseBusiRange);
@@ -181,8 +181,8 @@ public class LoadRecordMethod {
 					tblMchtBaseBusiRange = new TblMchtBaseBusiRange();
 					tblMchtBaseBusiRange.setBusiRangeId(objects[0].toString());
 					tblMchtBaseBusiRange.setMchtNo(objects[1].toString());
-					tblMchtBaseBusiRange.setBusiRange(objects[2].toString());
-					inf.setBusiRangeId(objects[0].toString());
+					tblMchtBaseBusiRange.setBusiRanges(objects[2].toString());
+					inf.setBusiRange(objects[0].toString());
 				}
 				
 				service.updateBaseInfTmp(inf);
