@@ -372,7 +372,7 @@ public class T20105Action extends BaseAction {
 							tblMchtBaseInfTmp.setMchtCnAbbr(data[60]);//商户简称*
 							tblMchtBaseInfTmp.setEngName(data[61]);//商户英文名称
 							tblMchtBaseInfTmp.setMchtEnAbbr(data[62]);//商户英文简称
-							tblMchtBaseInfTmp.setBusiRangeId(data[63]);//经营范围
+							tblMchtBaseInfTmp.setBusiRange(data[63]);//经营范围
 							tblMchtBaseInfTmp.setPostalCode(data[64]);//邮政编号*
 							tblMchtBaseInfTmp.setInsAddr(data[65]);//装机地址
 							tblMchtBaseInfTmp.setBelInd(data[66]);//所属行业
