@@ -2212,7 +2212,7 @@ public abstract class BaseTblMchtBaseInfTmp  implements Serializable {
 	
 	/************************************************************************************************************/
 	//添加字段 BY张骏恺 20140730
-	private java.lang.String busiRangeId ;
+	private java.lang.String busiRange ;
 	private java.lang.String postalCode  ;
 	private java.lang.String insAddr     ;
 	private java.lang.String belInd      ;
@@ -2235,12 +2235,12 @@ public abstract class BaseTblMchtBaseInfTmp  implements Serializable {
 	private java.lang.String agentType   ;
 	private java.lang.String regionBel   ;
 
-	public java.lang.String getBusiRangeId() {
-		return busiRangeId;
+	public java.lang.String getBusiRange() {
+		return busiRange;
 	}
 
-	public void setBusiRangeId(java.lang.String busiRangeId) {
-		this.busiRangeId = busiRangeId;
+	public void setBusiRange(java.lang.String busiRange) {
+		this.busiRange = busiRange;
 	}
 
 	public java.lang.String getPostalCode() {
