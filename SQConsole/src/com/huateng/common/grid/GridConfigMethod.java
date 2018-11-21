@@ -11755,7 +11755,7 @@ public class GridConfigMethod {
 		sql += " order by a.RESERVE_ID";
 		
 		//查询所有未入账客户的赎回金额     1未入账
-		/*String sql1 = "select sum(REDEMPTION_MONEY) from TBL_SETTLE_REDEMPTION_INF_TMP where REDEMPTION_ACCOUNT_STATUS = '1'";
+		String sql1 = "select sum(REDEMPTION_MONEY) from TBL_SETTLE_REDEMPTION_INF_TMP where REDEMPTION_ACCOUNT_STATUS = '1'";
 		String accountMoney = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
 		//查询前一日的商户结算金额
 		String sql2 = "select sum(RESERVE_SETTLE_MONEY) from TBL_MCHT_SETTLE_RESERVE  where RESERVE_TIME = '" + predate + "'";
@@ -11765,16 +11765,16 @@ public class GridConfigMethod {
 			sum = Double.parseDouble(accountMoney);
 		}else{
 			sum = Double.parseDouble(accountMoney) + Double.parseDouble(accountSettleMoney);
-		}*/
+		}
 		
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		
-		/*for (Object[] objects : dataList) {
+		for (Object[] objects : dataList) {
 			//备款金额
 			objects[4] = String.valueOf(sum);
 		//	String sql3 = "update TBL_MCHT_SETTLE_RESERVE_TMP set RESERVE_MONEY = '" + String.valueOf(sum) + "' where RESERVE_ID = '" + objects[0] + "'";
 		//	CommonFunction.getCommQueryDAO().excute(sql3);
-		}*/
+		}
 		
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
 		ret[0] = dataList;
@@ -11903,9 +11903,9 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
 		
-		/*if(isNotEmpty(request.getParameter("rosterAccount"))){
+		if(isNotEmpty(request.getParameter("rosterAccount"))){
 			sb.append(" and ROSTER_ACCOUNT = '" + request.getParameter("rosterAccount") + "'");
-		}*/
+		}
 		
 		String sql = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE "
 				   + "from TBL_FOCUS_RESERVE "
@@ -11931,9 +11931,9 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
 		
-		/*if(isNotEmpty(request.getParameter("rosterAccount"))){
+		if(isNotEmpty(request.getParameter("rosterAccount"))){
 			sb.append(" and ROSTER_ACCOUNT = '" + request.getParameter("rosterAccount") + "'");
-		}*/
+		}
 		
 		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE "
 				   + "from TBL_PAYMENT_RESERVE "
