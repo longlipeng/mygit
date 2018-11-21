@@ -483,7 +483,7 @@ public class T20101Action extends BaseSupport{
 			//商户补充信息
 			TblMchtSupp1Tmp supp1Tmp=service.getMchtSupp1Tmp(mchtNo);
 			
-			String sql1 = "select BUSI_RANGE_ID,MCHT_NO,BUSI_RANGE from TBL_MCHT_BASE_BUSI_RANGE where MCHT_NO = '" + mchtNo + "'";
+			/*String sql1 = "select BUSI_RANGE_ID,MCHT_NO,BUSI_RANGE from TBL_MCHT_BASE_BUSI_RANGE where MCHT_NO = '" + mchtNo + "'";
 			List<Object[]> lists = CommonFunction.getCommQueryDAO().findBySQLQuery(sql1);
 			TblMchtBaseBusiRange tblMchtBaseBusiRange = null;
 			if(null == lists || lists.isEmpty() || lists.size() == 0){
@@ -512,9 +512,7 @@ public class T20101Action extends BaseSupport{
 				
 				service.updateBaseInfTmp(tmp);
 				service.upBaseBusiRange(tblMchtBaseBusiRange);
-			}
-			
-			
+			}*/
 			
 			if (null == tmp /*|| null == settleTmp*/) {
 				return returnService("没有找到指定的商户信息，请重试");
