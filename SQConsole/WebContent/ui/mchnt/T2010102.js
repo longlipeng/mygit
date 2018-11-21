@@ -3138,7 +3138,7 @@ Ext.onReady(function() {
 			{name: 'closeTlr',mapping: 'closeTlr'},
 			//基本信息-2 by zhangqy
 			{name: 'engName',mapping: 'engName'},
-			{name: 'busiRangeId',mapping: 'busiRangeId'},
+			{name: 'busiRange',mapping: 'busiRange'},
 			{name: 'postalCode',mapping: 'postalCode'},
 			{name: 'insAddr',mapping: 'insAddr'},
 			{name: 'belInd',mapping: 'belInd'},
@@ -3311,9 +3311,9 @@ Ext.onReady(function() {
 			{name:'preAuthor',mapping:'preAuthor'},
 			{name:'returnFunc',mapping:'returnFunc'},
 			//经营范围外建表字段
-			{name:'busiRangeIds',mapping:'busiRangeIds'},
+			{name:'busiRangeId',mapping:'busiRangeId'},
 			{name:'mchtNo',mapping:'mchtNo'},
-			{name:'busiRange',mapping:'busiRange'},
+			{name:'busiRanges',mapping:'busiRanges'},
 		]),
 		autoLoad: false
 	});
@@ -4367,8 +4367,8 @@ Ext.onReady(function() {
 						fieldLabel: '经营范围*',
 						maxLength: 60,
 						allowBlank: false,
-						id: 'busiRange',
-						name: 'busiRange'
+						id: 'busiRanges',
+						name: 'busiRanges'
 		        	}]
 				},/*{
                 	columnWidth: .33,
