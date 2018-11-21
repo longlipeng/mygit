@@ -605,7 +605,7 @@ public class T20106Action extends ReportBaseAction{
 				  "A.POSTAL_CODE,"+          //8邮政编码
 				  "A.COMM_EMAIL,"+          //9电子邮件
 				  "A.LICENCE_NO,"+         //10营业执照编号
-				  "A.BUSI_RANGE,"+         //11经营范围
+				  "F.BUSI_RANGES,"+         //11经营范围
 				  "C.BUS_MAIN,"+         //12主营业务
 				  "A.BEL_IND,"+         //13所属行业
 				  "A.LICENCE_END_DATE,"+         //14注册日期
@@ -692,6 +692,7 @@ public class T20106Action extends ReportBaseAction{
 				+ "left join TBL_MCHT_SUPP1_TMP C on A.MCHT_NO = C.MCHT_NO "
 				+ "left join TBL_MCHT_SETTLE_INF_TMP D on A.MCHT_NO = D.MCHT_NO AND trim(D.TERM_ID) = '*'"
 				+ "left join  tbl_his_disc_algo2_tmp E on E.mcht_no=A.MCHT_NO and E.SA_SATUTE='2' and E.term_id='*'"
+				+ "left join TBL_MCHT_BASE_BUSI_RANGE F on A.BUSI_RANGE = F.BUSI_RANGE_ID"
 		        + " ORDER BY A.MCHT_NO");
 		String sql = sb.toString();		
 		
