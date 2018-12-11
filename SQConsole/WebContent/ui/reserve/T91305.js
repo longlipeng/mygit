@@ -45,7 +45,9 @@ Ext.onReady(function(){
 			return '<font color="green">成功</font>';
 		}else if(val=='1'){
 			return '<font color="red">失败</font>';
-		}
+		}else if(val=='2'){
+   			return '<font color="gray">备款已受理</font>';
+   		}
 	}
 
    	/**
@@ -110,7 +112,7 @@ Ext.onReady(function(){
 				var amount = 0;
 				for(var i = 0; i < redempRecords.length; i++){
 					var count = redempRecords[i];
-					amount = accAdd(count.get('redempTionMoney'), amount);
+					amount = accAdd(count.get('focusMoney'), amount);
 				}
 				showConfirm('你勾选了'+ redempRecords.length +'条记录，金额：'+ amount +'.确认回填！',redempGrid,function(bt) {
 					if(bt == 'yes') {
@@ -123,22 +125,17 @@ Ext.onReady(function(){
 						for(var index = 0; index < redempRecords.length; index++) {
 							var record = redempRecords[index];
 							var data = {
-								reserveId: record.get('reserveId'),//主键
-								reserveTime: record.get('reserveTime'),//日期
-								redemptionMoney: record.get('redemptionMoney'),//赎回金额
-								reserveSettleMoney: record.get('reserveSettleMoney'),//结算金额
-								reserveMoney: record.get('reserveMoney'),//备款金额(可修改)
-								reserveStatus: record.get('reserveStatus'),//审核状态(0.正常, 1.修改待审核, 2.备款待审核)
-								reserveSettleStatus: record.get('reserveSettleStatus'),//备款状态(0.成功, 1.失败)
-								reserveLaunchTime: record.get('reserveLaunchTime'),//发起日期
-								reserveLaunchName: record.get('reserveLaunchName'),//发起人员
-								reserveAuditTime: record.get('reserveAuditTime'),//审核时间
-								reserveAuditName: record.get('reserveAuditName'),//审核人员
+								focusId: record.get('focusId'),//主键
+								focusAccount: record.get('focusAccount'),//备款账户
+								focusAccountName: record.get('focusAccountName'),//备款账户名称
+								focusMoney: record.get('focusMoney'),//备款金额
+								focusStatus: record.get('focusStatus'),//备款状态
+								focusDate: record.get('focusDate'),//备款日期
 							};
 							array.push(data);
 						}
 						Ext.Ajax.request({
-						url: '.asp',
+						url: 'T91301Action_focusBackFill.asp',
 						params: {
 							infList: Ext.encode(array),
 							txnId: '80601',
@@ -278,6 +275,8 @@ Ext.onReady(function(){
 	};
 		
 	//menuArr.push(refresh);  //[1]
+	menuArr.push('-');
+	menuArr.push(BackFillMenu);  //[3]
 	menuArr.push('-');
 	menuArr.push(BackFillMenuSDFail);  //[5]
 	menuArr.push('-');

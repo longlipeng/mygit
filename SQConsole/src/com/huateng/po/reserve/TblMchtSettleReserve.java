@@ -21,9 +21,15 @@ public class TblMchtSettleReserve implements Serializable {
 	private String reserveLaunchName;  //发起人员
 	private String reserveAuditTime;  //审核日期
 	private String reserveAuditName;  //审核人员
+	private String reserveBatch;  //交易流水号
 	
 	
-	
+	public String getReserveBatch() {
+		return reserveBatch;
+	}
+	public void setReserveBatch(String reserveBatch) {
+		this.reserveBatch = reserveBatch;
+	}
 	public String getReservePayStatus() {
 		return reservePayStatus;
 	}

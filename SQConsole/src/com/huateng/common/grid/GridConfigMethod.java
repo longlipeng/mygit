@@ -86,7 +86,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 代理商成本费率维护
 	 * 
@@ -95,16 +95,15 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] gettblAgentFee(int begin,
-			HttpServletRequest request) {
+	public static Object[] gettblAgentFee(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("extend1"))){
+
+		if (isNotEmpty(request.getParameter("extend1"))) {
 			whereSql.append(" and a.extend1 = '"
-		            + request.getParameter("extend1")+"' ");
+					+ request.getParameter("extend1") + "' ");
 		}
-		
+
 		if (isNotEmpty(request.getParameter("agentNo"))) {
 			whereSql.append(" AND a.agent_no = '"
 					+ request.getParameter("agentNo") + "' ");
@@ -126,21 +125,21 @@ public class GridConfigMethod {
 					+ request.getParameter("feeValue") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("state"))) {
-			whereSql.append(" AND a.state = '"
-					+ request.getParameter("state") + "' ");
+			whereSql.append(" AND a.state = '" + request.getParameter("state")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("feeType"))) {
 			whereSql.append(" AND a.fee_type = '"
 					+ request.getParameter("feeType") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("mccGrp"))) {
-			whereSql.append(" and a.MCC_CODE in (select mchnt_tp from TBL_INF_MCHNT_TP WHERE MCHNT_TP_GRP = '"+ request.getParameter("mccGrp").trim()+ "') ") ;
+			whereSql.append(" and a.MCC_CODE in (select mchnt_tp from TBL_INF_MCHNT_TP WHERE MCHNT_TP_GRP = '"
+					+ request.getParameter("mccGrp").trim() + "') ");
 		}
 		if (isNotEmpty(request.getParameter("state_query"))) {
 			whereSql.append(" AND a.state = '"
 					+ request.getParameter("state_query") + "' ");
 		}
-
 
 		String sql = "SELECT a.UUID,trim(a.AGENT_NO) ||' - '|| trim(b.AGENT_NM),a.MCC_CODE,a.AGENT_NM,a.FEE_MIN,a.FEE_MAX,a.FEE_VALUE,a.FEE_TYPE,a.STATE,a.CRT_PER,a.CRT_DATE,a.UP_PER,a.UP_DATE,a.extend1,a.extend2,a.extend3,a.extend4,a.extend5 "
 				+ " FROM tbl_agent_fee_tmp a left join tbl_agent_info b on a.agent_no = b.agent_no where 1=1 "
@@ -155,7 +154,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 代理商成本费率拒绝原因查看
 	 * 
@@ -168,12 +167,12 @@ public class GridConfigMethod {
 			HttpServletRequest request) {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("extend1"))){
+
+		if (isNotEmpty(request.getParameter("extend1"))) {
 			whereSql.append(" and a.extend1 = '"
-					+request.getParameter("extend1")+ "' ");
+					+ request.getParameter("extend1") + "' ");
 		}
-		
+
 		if (isNotEmpty(request.getParameter("agentNo"))) {
 			whereSql.append(" AND a.agent_no = '"
 					+ request.getParameter("agentNo") + "' ");
@@ -195,17 +194,17 @@ public class GridConfigMethod {
 					+ request.getParameter("feeValue") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("state"))) {
-			whereSql.append(" AND a.state = '"
-					+ request.getParameter("state") + "' ");
+			whereSql.append(" AND a.state = '" + request.getParameter("state")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("feeType"))) {
 			whereSql.append(" AND a.fee_type = '"
 					+ request.getParameter("feeType") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("mccGrp"))) {
-			whereSql.append(" and a.MCC_CODE in (select mchnt_tp from TBL_INF_MCHNT_TP WHERE MCHNT_TP_GRP = '"+ request.getParameter("mccGrp").trim()+ "') ") ;
+			whereSql.append(" and a.MCC_CODE in (select mchnt_tp from TBL_INF_MCHNT_TP WHERE MCHNT_TP_GRP = '"
+					+ request.getParameter("mccGrp").trim() + "') ");
 		}
-
 
 		String sql = "SELECT a.UUID,trim(a.AGENT_NO) ||' - '|| trim(b.AGENT_NM),a.MCC_CODE,a.AGENT_NM,a.FEE_MIN,a.FEE_MAX,a.FEE_VALUE,a.FEE_TYPE,a.STATE,a.CRT_PER,a.CRT_DATE,a.UP_PER,a.UP_DATE,a.extend1,a.extend2,a.extend3,a.extend4,a.extend5,a.remark "
 				+ " FROM tbl_agent_fee_refuse_info a left join tbl_agent_info b on a.agent_no = b.agent_no where 1=1 "
@@ -220,7 +219,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 代理商成本费率维护check
 	 * 
@@ -233,12 +232,12 @@ public class GridConfigMethod {
 			HttpServletRequest request) {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("extend1"))){
+
+		if (isNotEmpty(request.getParameter("extend1"))) {
 			whereSql.append(" and a.extend1 = '"
-					+ request.getParameter("extend1")+ "' ");
+					+ request.getParameter("extend1") + "' ");
 		}
-		
+
 		if (isNotEmpty(request.getParameter("agentNo"))) {
 			whereSql.append(" AND a.agent_no = '"
 					+ request.getParameter("agentNo") + "' ");
@@ -260,21 +259,21 @@ public class GridConfigMethod {
 					+ request.getParameter("feeValue") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("state"))) {
-			whereSql.append(" AND a.state = '"
-					+ request.getParameter("state") + "' ");
+			whereSql.append(" AND a.state = '" + request.getParameter("state")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("feeType"))) {
 			whereSql.append(" AND a.fee_type = '"
 					+ request.getParameter("feeType") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("mccGrp"))) {
-			whereSql.append(" and a.MCC_CODE in (select mchnt_tp from TBL_INF_MCHNT_TP WHERE MCHNT_TP_GRP = '"+ request.getParameter("mccGrp").trim()+ "') ") ;
+			whereSql.append(" and a.MCC_CODE in (select mchnt_tp from TBL_INF_MCHNT_TP WHERE MCHNT_TP_GRP = '"
+					+ request.getParameter("mccGrp").trim() + "') ");
 		}
 		if (isNotEmpty(request.getParameter("state_query"))) {
 			whereSql.append(" AND a.state = '"
 					+ request.getParameter("state_query") + "' ");
 		}
-
 
 		String sql = "SELECT a.UUID,trim(a.AGENT_NO) ||' - '|| trim(b.AGENT_NM),a.MCC_CODE,a.AGENT_NM,a.FEE_MIN,a.FEE_MAX,a.FEE_VALUE,a.FEE_TYPE,a.STATE,a.CRT_PER,a.CRT_DATE,a.UP_PER,a.UP_DATE,a.extend1,a.extend2,a.extend3,a.extend4,a.extend5 "
 				+ " FROM tbl_agent_fee_tmp a left join tbl_agent_info b on a.agent_no = b.agent_no where state not in(1,2) "
@@ -289,7 +288,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户调账信息列表 01041000
 	 * 
@@ -302,12 +301,10 @@ public class GridConfigMethod {
 			HttpServletRequest request) {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
-		
-		
-		
+
 		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" AND MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
+			whereSql.append(" AND MCHT_NO = '" + request.getParameter("mchtNo")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("instCode"))) {
 			whereSql.append(" AND INST_CODE = '"
@@ -326,8 +323,7 @@ public class GridConfigMethod {
 					+ request.getParameter("changeFlag") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("stQ"))) {
-			whereSql.append(" AND ST <> '"
-					+ request.getParameter("stQ") + "' ");
+			whereSql.append(" AND ST <> '" + request.getParameter("stQ") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("enterTpQ"))) {
 			whereSql.append(" AND ENTER_TP = '"
@@ -350,7 +346,6 @@ public class GridConfigMethod {
 					+ request.getParameter("aprTsQ") + "' ");
 		}
 
-
 		String sql = "SELECT MCHT_NO,TERM_ID,CHANGE_ACCOUNT/100,CHANGE_REASON,CHANGE_FLAG,COMFIRM_ACCOUNT,CHANGE_DATE,INS_TS,INS_OPR,UPD_TS,UPD_OPR,APR_TS,APR_OPR,ST,ENTER_TP,INST_CODE "
 				+ " FROM tbl_change_acc_inf_tmp a where 1=1 "
 				+ whereSql.toString();
@@ -364,6 +359,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 商户调账信息列表 01041000
 	 * 
@@ -376,12 +372,10 @@ public class GridConfigMethod {
 			HttpServletRequest request) {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
-		
-		
-		
+
 		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" AND MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
+			whereSql.append(" AND MCHT_NO = '" + request.getParameter("mchtNo")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("instCode"))) {
 			whereSql.append(" AND INST_CODE = '"
@@ -400,8 +394,7 @@ public class GridConfigMethod {
 					+ request.getParameter("changeFlag") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("stQ"))) {
-			whereSql.append(" AND ST <> '"
-					+ request.getParameter("stQ") + "' ");
+			whereSql.append(" AND ST <> '" + request.getParameter("stQ") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("enterTpQ"))) {
 			whereSql.append(" AND ENTER_TP = '"
@@ -424,7 +417,6 @@ public class GridConfigMethod {
 					+ request.getParameter("aprTsQ") + "' ");
 		}
 
-
 		String sql = "SELECT MCHT_NO,TERM_ID,CHANGE_ACCOUNT/100,CHANGE_REASON,CHANGE_FLAG,COMFIRM_ACCOUNT,CHANGE_DATE,INS_TS,INS_OPR,UPD_TS,UPD_OPR,APR_TS,APR_OPR,ST,ENTER_TP,INST_CODE "
 				+ " FROM tbl_change_acc_inf_tmp a where 1=1 "
 				+ whereSql.toString();
@@ -438,7 +430,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户调账信息列表 01041000
 	 * 
@@ -451,12 +443,10 @@ public class GridConfigMethod {
 			HttpServletRequest request) {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
-		
-		
-		
+
 		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" AND MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
+			whereSql.append(" AND MCHT_NO = '" + request.getParameter("mchtNo")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("instCode"))) {
 			whereSql.append(" AND INST_CODE = '"
@@ -475,8 +465,7 @@ public class GridConfigMethod {
 					+ request.getParameter("changeFlag") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("stQ"))) {
-			whereSql.append(" AND ST = '"
-					+ request.getParameter("stQ") + "' ");
+			whereSql.append(" AND ST = '" + request.getParameter("stQ") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("enterTpQ"))) {
 			whereSql.append(" AND ENTER_TP = '"
@@ -498,7 +487,6 @@ public class GridConfigMethod {
 			whereSql.append(" AND substr(APR_TS,1,8) = '"
 					+ request.getParameter("aprTsQ") + "' ");
 		}
-
 
 		String sql = "SELECT MCHT_NO,TERM_ID,CHANGE_ACCOUNT/100,CHANGE_REASON,CHANGE_FLAG,COMFIRM_ACCOUNT,CHANGE_DATE,INS_TS,INS_OPR,UPD_TS,UPD_OPR,APR_TS,APR_OPR,ST,ENTER_TP,INST_CODE "
 				+ " FROM tbl_change_acc_inf_tmp a where 1=1 "
@@ -515,7 +503,7 @@ public class GridConfigMethod {
 	}
 
 	/**
-	 * 商户调账拒绝列表 
+	 * 商户调账拒绝列表
 	 * 
 	 * @param begin
 	 * @param request
@@ -526,12 +514,10 @@ public class GridConfigMethod {
 			HttpServletRequest request) {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
-		
-		
-		
+
 		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" AND MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
+			whereSql.append(" AND MCHT_NO = '" + request.getParameter("mchtNo")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("instCode"))) {
 			whereSql.append(" AND INST_CODE = '"
@@ -550,8 +536,7 @@ public class GridConfigMethod {
 					+ request.getParameter("changeFlag") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("stQ"))) {
-			whereSql.append(" AND ST = '"
-					+ request.getParameter("stQ") + "' ");
+			whereSql.append(" AND ST = '" + request.getParameter("stQ") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("enterTpQ"))) {
 			whereSql.append(" AND ENTER_TP = '"
@@ -573,7 +558,6 @@ public class GridConfigMethod {
 			whereSql.append(" AND substr(APR_TS,1,8) = '"
 					+ request.getParameter("aprTsQ") + "' ");
 		}
-
 
 		String sql = "SELECT MCHT_NO,TERM_ID,CHANGE_ACCOUNT/100,CHANGE_REASON,CHANGE_FLAG,COMFIRM_ACCOUNT,CHANGE_DATE,INS_TS,INS_OPR,UPD_TS,UPD_OPR,APR_TS,APR_OPR,ST,ENTER_TP,remark,INST_CODE "
 				+ " FROM tbl_change_acc_inf_refuse a where 1=1 "
@@ -587,6 +571,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 商户调账审核信息列表 01041000
 	 * 
@@ -600,12 +585,12 @@ public class GridConfigMethod {
 		Object[] ret = new Object[6];
 		StringBuffer whereSql = new StringBuffer();
 		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" AND MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
+			whereSql.append(" AND MCHT_NO = '" + request.getParameter("mchtNo")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("termId"))) {
-			whereSql.append(" AND TERM_ID = '"
-					+ request.getParameter("termId") + "' ");
+			whereSql.append(" AND TERM_ID = '" + request.getParameter("termId")
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("changeAccount"))) {
 			whereSql.append(" AND CHANGE_ACCOUNT/100 = '"
@@ -636,7 +621,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 向中行签到信息列表 01041000
 	 * 
@@ -664,12 +649,13 @@ public class GridConfigMethod {
 		//
 		// + whereSql.toString();
 
-		String wheresql = "SELECT trim(KEY) FROM CST_SYS_PARAM WHERE OWNER = '"+request.getParameter("Aowner")+"' ";
-    	List list =  CommonFunction.getCommQueryDAO().findBySQLQuery(wheresql);
-    	System.out.println(request.getParameter("Aowner"));
+		String wheresql = "SELECT trim(KEY) FROM CST_SYS_PARAM WHERE OWNER = '"
+				+ request.getParameter("Aowner") + "' ";
+		List list = CommonFunction.getCommQueryDAO().findBySQLQuery(wheresql);
+		System.out.println(request.getParameter("Aowner"));
 		String sql = "SELECT INST_ID,INST_NAME,MCHT_ID,TERM_ID,SIGNED_FLAG,SIGN_TIME,BATCHNO,RESP_CODE "
-				+ " FROM tbl_sign_inf a where a.TERMID_VALID='1' and trim(INST_ID) ='"+list.get(0)+"' "
-				+ whereSql.toString();
+				+ " FROM tbl_sign_inf a where a.TERMID_VALID='1' and trim(INST_ID) ='"
+				+ list.get(0) + "' " + whereSql.toString();
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
@@ -836,11 +822,12 @@ public class GridConfigMethod {
 					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("key"))) {
-			whereSql.append(" AND key like '%" + request.getParameter("key") + "%' ");
+			whereSql.append(" AND key like '%" + request.getParameter("key")
+					+ "%' ");
 		}
 		if (isNotEmpty(request.getParameter("value"))) {
-			whereSql.append(" AND value like '%" + request.getParameter("value")
-					+ "%' ");
+			whereSql.append(" AND value like '%"
+					+ request.getParameter("value") + "%' ");
 		}
 		String sql = "select owner,key,type,value,descr,reserve from cst_sys_param where type = '00'"
 				+ whereSql.toString();
@@ -956,7 +943,8 @@ public class GridConfigMethod {
 
 		return dataList;
 	}
-    //FIXME
+
+	// FIXME
 	/**
 	 * 路由信息查询
 	 */
@@ -981,7 +969,10 @@ public class GridConfigMethod {
 			whereSql.append(" and t.CHANNEL = '"
 					+ request.getParameter("channel") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("areaNo"))/*&&!"*".equals(request.getParameter("areaNo"))*/) {
+		if (isNotEmpty(request.getParameter("areaNo"))/*
+													 * &&!"*".equals(request.
+													 * getParameter("areaNo"))
+													 */) {
 			whereSql.append(" and t.AREA_NO = '"
 					+ request.getParameter("areaNo") + "' ");
 		}
@@ -989,7 +980,11 @@ public class GridConfigMethod {
 			whereSql.append(" and t.CARD_TYPE = '"
 					+ request.getParameter("cardType") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("mchntId"))/*&&!"*".equals(request.getParameter("mchntId"))*/) {
+		if (isNotEmpty(request.getParameter("mchntId"))/*
+														 * &&!"*".equals(request.
+														 * getParameter
+														 * ("mchntId"))
+														 */) {
 			whereSql.append(" and t.MERCH_ID = '"
 					+ request.getParameter("mchntId") + "' ");
 		}
@@ -1018,23 +1013,32 @@ public class GridConfigMethod {
 			whereSql.append(" and t.MCHT_MCC = '"
 					+ request.getParameter("mchtMcc") + "' ");
 		}
-//		String sql = "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,"
-//			+ "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
-//			+ " FROM tbl_txn_route_inf_temp t,tbl_city_code c,TBL_MCHT_BASE_INF m "
-//			+ " where trim(c.city_code)=trim(t.area_no) And m.mcht_no=t.merch_id "
-//			+ whereSql.toString()
-		/*String sql = "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
-				+ "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100  FROM tbl_txn_route_inf_temp t"
-				+ " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
-				+ " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where 1=1"
-				+ whereSql.toString()
-				+ " Union "
-				+ "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,d.Value as MERCH_ID,"
-				+ "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE ,t.MAX_AMT/100,t.MIN_AMT/100"
-				+ " FROM tbl_txn_route_inf_temp t,tbl_city_code c,cst_sys_param d "
-				+ " where trim(c.city_code)=trim(t.area_no) And trim(t.merch_id)=d.Key "
-				+ " and d.owner='ALLMCHNT' and d.type='00' And d.Key='*' "
-				+ whereSql.toString() + " )";*/
+		// String sql =
+		// "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,"
+		// +
+		// "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
+		// +
+		// " FROM tbl_txn_route_inf_temp t,tbl_city_code c,TBL_MCHT_BASE_INF m "
+		// +
+		// " where trim(c.city_code)=trim(t.area_no) And m.mcht_no=t.merch_id "
+		// + whereSql.toString()
+		/*
+		 * String sql =
+		 * "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
+		 * +
+		 * "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100  FROM tbl_txn_route_inf_temp t"
+		 * + " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
+		 * +
+		 * " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where 1=1"
+		 * + whereSql.toString() + " Union " +
+		 * "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,d.Value as MERCH_ID,"
+		 * +
+		 * "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE ,t.MAX_AMT/100,t.MIN_AMT/100"
+		 * + " FROM tbl_txn_route_inf_temp t,tbl_city_code c,cst_sys_param d " +
+		 * " where trim(c.city_code)=trim(t.area_no) And trim(t.merch_id)=d.Key "
+		 * + " and d.owner='ALLMCHNT' and d.type='00' And d.Key='*' " +
+		 * whereSql.toString() + " )";
+		 */
 		String sql = "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
 				+ "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100,t.MCHT_MCC  FROM tbl_txn_route_inf_temp t"
 				+ " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
@@ -1075,7 +1079,7 @@ public class GridConfigMethod {
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
 				countSql);
 
-//		dataList = getBankName(dataList, 0);
+		// dataList = getBankName(dataList, 0);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -1106,7 +1110,10 @@ public class GridConfigMethod {
 			whereSql.append(" and t.CHANNEL = '"
 					+ request.getParameter("channel") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("areaNo"))/*&&!"*".equals(request.getParameter("areaNo"))*/) {
+		if (isNotEmpty(request.getParameter("areaNo"))/*
+													 * &&!"*".equals(request.
+													 * getParameter("areaNo"))
+													 */) {
 			whereSql.append(" and t.AREA_NO = '"
 					+ request.getParameter("areaNo") + "' ");
 		}
@@ -1114,7 +1121,11 @@ public class GridConfigMethod {
 			whereSql.append(" and t.CARD_TYPE = '"
 					+ request.getParameter("cardType") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("mchntId"))/*&&!"*".equals(request.getParameter("mchntId"))*/) {
+		if (isNotEmpty(request.getParameter("mchntId"))/*
+														 * &&!"*".equals(request.
+														 * getParameter
+														 * ("mchntId"))
+														 */) {
 			whereSql.append(" and t.MERCH_ID = '"
 					+ request.getParameter("mchntId") + "' ");
 		}
@@ -1143,29 +1154,38 @@ public class GridConfigMethod {
 			whereSql.append(" and t.MCHT_MCC = '"
 					+ request.getParameter("mchtMcc") + "' ");
 		}
-//		String sql = "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,"
-//			+ "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
-//			+ " FROM tbl_txn_route_inf_temp t,tbl_city_code c,TBL_MCHT_BASE_INF m "
-//			+ " where trim(c.city_code)=trim(t.area_no) And m.mcht_no=t.merch_id "
-//			+ whereSql.toString()
-		/*String sql = "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
-				+ "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100  FROM tbl_txn_route_inf_temp t"
-				+ " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
-				+ " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where 1=1 "
-				+ whereSql.toString()
-				+ " Union "
-				+ "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,d.Value as MERCH_ID,"
-				+ "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
-				+ " FROM tbl_txn_route_inf_temp t,tbl_city_code c,cst_sys_param d "
-				+ " where trim(c.city_code)=trim(t.area_no) And trim(t.merch_id)=d.Key "
-				+ " and d.owner='ALLMCHNT' and d.type='00' And d.Key='*' "
-				+ whereSql.toString() + " )";*/
+		// String sql =
+		// "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,"
+		// +
+		// "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
+		// +
+		// " FROM tbl_txn_route_inf_temp t,tbl_city_code c,TBL_MCHT_BASE_INF m "
+		// +
+		// " where trim(c.city_code)=trim(t.area_no) And m.mcht_no=t.merch_id "
+		// + whereSql.toString()
+		/*
+		 * String sql =
+		 * "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
+		 * +
+		 * "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100  FROM tbl_txn_route_inf_temp t"
+		 * + " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
+		 * +
+		 * " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where 1=1 "
+		 * + whereSql.toString() + " Union " +
+		 * "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,d.Value as MERCH_ID,"
+		 * +
+		 * "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
+		 * + " FROM tbl_txn_route_inf_temp t,tbl_city_code c,cst_sys_param d " +
+		 * " where trim(c.city_code)=trim(t.area_no) And trim(t.merch_id)=d.Key "
+		 * + " and d.owner='ALLMCHNT' and d.type='00' And d.Key='*' " +
+		 * whereSql.toString() + " )";
+		 */
 		String sql = "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
 				+ "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100,t.MCHT_MCC  FROM tbl_txn_route_inf_temp t"
 				+ " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
 				+ " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where 1=1 "
 				+ whereSql.toString();
-		
+
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 		if (isNotEmpty(request.getParameter("orderOption"))) {
 			if ("binasc".equals(request.getParameter("orderOption").trim())) {
@@ -1200,7 +1220,7 @@ public class GridConfigMethod {
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
 				countSql);
-	//	dataList = getBankName(dataList, 0);
+		// dataList = getBankName(dataList, 0);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -1231,7 +1251,10 @@ public class GridConfigMethod {
 			whereSql.append(" and t.CHANNEL = '"
 					+ request.getParameter("channel") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("areaNo"))/*&&!"*".equals(request.getParameter("areaNo"))*/) {
+		if (isNotEmpty(request.getParameter("areaNo"))/*
+													 * &&!"*".equals(request.
+													 * getParameter("areaNo"))
+													 */) {
 			whereSql.append(" and t.AREA_NO = '"
 					+ request.getParameter("areaNo") + "' ");
 		}
@@ -1239,7 +1262,11 @@ public class GridConfigMethod {
 			whereSql.append(" and t.CARD_TYPE = '"
 					+ request.getParameter("cardType") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("mchntId"))/*&&!"*".equals(request.getParameter("mchntId"))*/) {
+		if (isNotEmpty(request.getParameter("mchntId"))/*
+														 * &&!"*".equals(request.
+														 * getParameter
+														 * ("mchntId"))
+														 */) {
 			whereSql.append(" and t.MERCH_ID = '"
 					+ request.getParameter("mchntId") + "' ");
 		}
@@ -1260,35 +1287,43 @@ public class GridConfigMethod {
 			whereSql.append(" and t.UPDATE_TIME <= '"
 					+ request.getParameter("endDate") + "235959' ");
 		}
-		
+
 		if (isNotEmpty(request.getParameter("mchtMcc"))) {
 			whereSql.append(" and t.MCHT_MCC = '"
 					+ request.getParameter("mchtMcc") + "' ");
 		}
-//		String sql = "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,"
-//			+ "t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
-//			+ " FROM tbl_txn_route_inf_temp t,tbl_city_code c,TBL_MCHT_BASE_INF m "
-//			+ " where trim(c.city_code)=trim(t.area_no) And m.mcht_no=t.merch_id and t.SA_STATE in('0','3','4') "
-//			+ whereSql.toString()
-		/*String sql = "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
-				+ "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100  FROM tbl_txn_route_inf_temp t  "
-				+ " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
-				+ " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where t.SA_STATE in('0','3','4') "
-				+ whereSql.toString()
-				+ " Union "
-				+ "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,d.Value as MERCH_ID,"
-				+ "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100"
-				+ " FROM tbl_txn_route_inf_temp t,tbl_city_code c,cst_sys_param d "
-				+ " where trim(c.city_code)=trim(t.area_no) And trim(t.merch_id)=d.Key and t.SA_STATE in('0','3','4') "
-				+ " and d.owner='ALLMCHNT' and d.type='00' And d.Key='*' "
-				+ whereSql.toString() + " )";*/
+		// String sql =
+		// "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,"
+		// +
+		// "t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100 "
+		// +
+		// " FROM tbl_txn_route_inf_temp t,tbl_city_code c,TBL_MCHT_BASE_INF m "
+		// +
+		// " where trim(c.city_code)=trim(t.area_no) And m.mcht_no=t.merch_id and t.SA_STATE in('0','3','4') "
+		// + whereSql.toString()
+		/*
+		 * String sql =
+		 * "select * from (SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
+		 * +
+		 * "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100  FROM tbl_txn_route_inf_temp t  "
+		 * + " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
+		 * +
+		 * " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where t.SA_STATE in('0','3','4') "
+		 * + whereSql.toString() + " Union " +
+		 * "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,d.Value as MERCH_ID,"
+		 * +
+		 * "t.DEST_INST_ID,t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100"
+		 * + " FROM tbl_txn_route_inf_temp t,tbl_city_code c,cst_sys_param d " +
+		 * " where trim(c.city_code)=trim(t.area_no) And trim(t.merch_id)=d.Key and t.SA_STATE in('0','3','4') "
+		 * + " and d.owner='ALLMCHNT' and d.type='00' And d.Key='*' " +
+		 * whereSql.toString() + " )";
+		 */
 		String sql = "SELECT t.CARD_BIN as CARD_BIN,t.BUSS_TYPE,t.TXN_NUM,t.CHANNEL,t.AREA_NO||'-'||c.CITY_DES,t.MERCH_ID||'-'||m.MCHT_NM as MERCH_ID,t.DEST_INST_ID,"
 				+ "t.RESERVED,t.SA_STATE,t.CRE_TIME,t.CRE_OPR_ID,t.CREATOR_ID,t.UPDATE_TIME,t.CHECK_TIME,t.CHECK_ID,t.CARD_TYPE,t.MAX_AMT/100,t.MIN_AMT/100,t.MCHT_MCC  FROM tbl_txn_route_inf_temp t  "
 				+ " left join tbl_city_code c on trim(c.city_code)=trim(t.area_no) "
 				+ " left join TBL_MCHT_BASE_INF m on trim(m.mcht_no)=trim(t.merch_id) where t.SA_STATE in('0','3','4') "
 				+ whereSql.toString();
-				
-				
+
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 		if (isNotEmpty(request.getParameter("orderOption"))) {
 			if ("binasc".equals(request.getParameter("orderOption").trim())) {
@@ -1322,7 +1357,7 @@ public class GridConfigMethod {
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
 				countSql);
-	//	dataList = getBankName(dataList, 0);
+		// dataList = getBankName(dataList, 0);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -1428,8 +1463,7 @@ public class GridConfigMethod {
 
 		sql.append(
 				"select uuid,mcht_no,begin_dt,validity,ins_opr,ins_dt,upd_opr,upd_dt,state,app_remark,add_type from tbl_white_list_tmp where 1=1 ")
-				.append(sqlsel)
-				.append("order by state,mcht_no");
+				.append(sqlsel).append("order by state,mcht_no");
 
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 
@@ -1447,6 +1481,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 待审核商户白名单信息
 	 * 
@@ -1454,21 +1489,21 @@ public class GridConfigMethod {
 	 * @return 2014-08-06
 	 */
 
-	public static Object[] getToCheckWhiteList(int begin, HttpServletRequest request) {
+	public static Object[] getToCheckWhiteList(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sql = new StringBuffer();
 		StringBuffer sqlsel = new StringBuffer();
 
-	/*	String mchtNo_query = request.getParameter("mchtNo_query");
-		if (isNotEmpty(mchtNo_query)) {
-			sqlsel.append(" and MCHT_NO like '%").append(mchtNo_query)
-					.append("%'");
-		}
-   */
+		/*
+		 * String mchtNo_query = request.getParameter("mchtNo_query"); if
+		 * (isNotEmpty(mchtNo_query)) {
+		 * sqlsel.append(" and MCHT_NO like '%").append(mchtNo_query)
+		 * .append("%'"); }
+		 */
 		sql.append(
 				"select uuid,mcht_no,begin_dt,validity,ins_opr,ins_dt,upd_opr,upd_dt,state,app_remark,add_type from tbl_white_list_tmp where STATE in (0,3,4)")
-				.append(sqlsel)
-				.append("order by ins_dt desc");
+				.append(sqlsel).append("order by ins_dt desc");
 
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 
@@ -1486,6 +1521,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询代理商信息
 	 * 
@@ -1566,8 +1602,7 @@ public class GridConfigMethod {
 					.append("%'");
 		}
 		if (isNotEmpty(state_query)) {
-			sqlsel.append(" and state = '").append(state_query)
-					.append("'");
+			sqlsel.append(" and state = '").append(state_query).append("'");
 		}
 
 		sql.append(
@@ -1591,6 +1626,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询代理商分润信息(待审核)
 	 * 
@@ -1598,7 +1634,8 @@ public class GridConfigMethod {
 	 * @return 2014-08-11
 	 */
 
-	public static Object[] getAgentDivideToShenHe(int begin, HttpServletRequest request) {
+	public static Object[] getAgentDivideToShenHe(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sql = new StringBuffer();
 		StringBuffer sqlsel = new StringBuffer();
@@ -1616,8 +1653,7 @@ public class GridConfigMethod {
 					.append("%'");
 		}
 		if (isNotEmpty(state_query)) {
-			sqlsel.append(" and state = '").append(state_query)
-					.append("'");
+			sqlsel.append(" and state = '").append(state_query).append("'");
 		}
 		sql.append(
 				"SELECT uuid,AGENT_NO,DIVIDE_TYPE,DISC_CD,PROFIT,MIN_VALUE/10000,MAX_VALUE/10000,STATE,CRT_PER,CRT_DATE,UP_PER,UP_DATE from TBL_AGENT_DIVIDE_TMP where state in ('0','3','4') ")
@@ -1640,7 +1676,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 冻结商户信息
 	 * 
@@ -1675,61 +1711,12 @@ public class GridConfigMethod {
 					.append("'");
 		}
 
-		sql.append("SELECT ID,FROZEN_DATE,MCHT_NO,TERM_ID,FROZEN_ACCOUNT,FROZEN_ACCOUNT_FINISH,FROZEN_ACCOUNT_NO_FINISH,FROZEN_ROUTE,FROZEN_REASON,FROZEN_FINISH_FLAG,OPR_FLAG,STATS,SALESSTATS,DEST_ID from TBL_FROZEN_ACC_INF where 1=1")
-		   .append(sqlsel);
+		sql.append(
+				"SELECT ID,FROZEN_DATE,MCHT_NO,TERM_ID,FROZEN_ACCOUNT,FROZEN_ACCOUNT_FINISH,FROZEN_ACCOUNT_NO_FINISH,FROZEN_ROUTE,FROZEN_REASON,FROZEN_FINISH_FLAG,OPR_FLAG,STATS,SALESSTATS,DEST_ID from TBL_FROZEN_ACC_INF where 1=1")
+				.append(sqlsel);
 
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql.toString(), begin, Constants.QUERY_RECORD_COUNT);
-		Object[] data;
-		for (int i = 0; i < dataList.size(); i++) {
-			data = dataList.get(i);
-			dataList.set(i, data);
-		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql);
-		ret[0] = dataList;
-		ret[1] = count;
-		return ret;
-	}
-	/**
-	 * 冻结商户信息S
-	 * 
-	 * @author shiyiwen
-	 * @return 2014-08-18
-	 */
-	
-	public static Object[] getFrozenS(int begin, HttpServletRequest request) {
-		Object[] ret = new Object[2];
-		StringBuffer sql = new StringBuffer();
-		StringBuffer sqlsel = new StringBuffer();
-		
-		String frozenDate_query = request.getParameter("frozenDate_query");
-		String mchtNo_query = request.getParameter("mchtNo_query");
-		String termId_query = request.getParameter("termId_query");
-		String frozenRoute_query = request.getParameter("frozenRoute_query");
-		
-		if (isNotEmpty(frozenDate_query)) {
-			sqlsel.append(" and FROZEN_DATE like '%").append(frozenDate_query)
-			.append("%'");
-		}
-		if (isNotEmpty(mchtNo_query)) {
-			sqlsel.append(" and MCHT_NO like '%").append(mchtNo_query)
-			.append("%'");
-		}
-		if (isNotEmpty(termId_query)) {
-			sqlsel.append(" and TERM_ID like '%").append(termId_query)
-			.append("%'");
-		}
-		if (isNotEmpty(frozenRoute_query)) {
-			sqlsel.append(" and FROZEN_ROUTE = '").append(frozenRoute_query)
-			.append("'");
-		}
-		
-		sql.append("SELECT ID,FROZEN_DATE,MCHT_NO,TERM_ID,FROZEN_ACCOUNT,FROZEN_ACCOUNT_FINISH,FROZEN_ACCOUNT_NO_FINISH,FROZEN_ROUTE,FROZEN_REASON,FROZEN_FINISH_FLAG,OPR_FLAG,STATS,DEST_ID from TBL_FROZEN_ACC_INF where 1=1 AND STATS != '2' AND STATS != '5' ")
-		.append(sqlsel);
-		
-		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
-		
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql.toString(), begin,
 						Constants.QUERY_RECORD_COUNT);
@@ -1744,46 +1731,105 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
+	/**
+	 * 冻结商户信息S
+	 * 
+	 * @author shiyiwen
+	 * @return 2014-08-18
+	 */
+
+	public static Object[] getFrozenS(int begin, HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sql = new StringBuffer();
+		StringBuffer sqlsel = new StringBuffer();
+
+		String frozenDate_query = request.getParameter("frozenDate_query");
+		String mchtNo_query = request.getParameter("mchtNo_query");
+		String termId_query = request.getParameter("termId_query");
+		String frozenRoute_query = request.getParameter("frozenRoute_query");
+
+		if (isNotEmpty(frozenDate_query)) {
+			sqlsel.append(" and FROZEN_DATE like '%").append(frozenDate_query)
+					.append("%'");
+		}
+		if (isNotEmpty(mchtNo_query)) {
+			sqlsel.append(" and MCHT_NO like '%").append(mchtNo_query)
+					.append("%'");
+		}
+		if (isNotEmpty(termId_query)) {
+			sqlsel.append(" and TERM_ID like '%").append(termId_query)
+					.append("%'");
+		}
+		if (isNotEmpty(frozenRoute_query)) {
+			sqlsel.append(" and FROZEN_ROUTE = '").append(frozenRoute_query)
+					.append("'");
+		}
+
+		sql.append(
+				"SELECT ID,FROZEN_DATE,MCHT_NO,TERM_ID,FROZEN_ACCOUNT,FROZEN_ACCOUNT_FINISH,FROZEN_ACCOUNT_NO_FINISH,FROZEN_ROUTE,FROZEN_REASON,FROZEN_FINISH_FLAG,OPR_FLAG,STATS,DEST_ID from TBL_FROZEN_ACC_INF where 1=1 AND STATS != '2' AND STATS != '5' ")
+				.append(sqlsel);
+
+		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql.toString(), begin,
+						Constants.QUERY_RECORD_COUNT);
+		Object[] data;
+		for (int i = 0; i < dataList.size(); i++) {
+			data = dataList.get(i);
+			dataList.set(i, data);
+		}
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+
 	/**
 	 * 冻结商户信息--临时
 	 * 
 	 * @author shiyiwen
 	 * @return 2014-08-18
 	 */
-	
+
 	public static Object[] getFrozenTmp(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sql = new StringBuffer();
 		StringBuffer sqlsel = new StringBuffer();
-		
+
 		String frozenDate_query = request.getParameter("frozenDate_query");
 		String mchtNo_query = request.getParameter("mchtNo_query");
 		String termId_query = request.getParameter("termId_query");
 		String frozenRoute_query = request.getParameter("frozenRoute_query");
-		
+
 		if (isNotEmpty(frozenDate_query)) {
 			sqlsel.append(" and FROZEN_DATE like '%").append(frozenDate_query)
-			.append("%'");
+					.append("%'");
 		}
 		if (isNotEmpty(mchtNo_query)) {
 			sqlsel.append(" and MCHT_NO like '%").append(mchtNo_query)
-			.append("%'");
+					.append("%'");
 		}
 		if (isNotEmpty(termId_query)) {
 			sqlsel.append(" and TERM_ID like '%").append(termId_query)
-			.append("%'");
+					.append("%'");
 		}
 		if (isNotEmpty(frozenRoute_query)) {
 			sqlsel.append(" and FROZEN_ROUTE = '").append(frozenRoute_query)
-			.append("'");
+					.append("'");
 		}
-		
-		sql.append("SELECT ID,FROZEN_DATE,MCHT_NO,TERM_ID,FROZEN_ACCOUNT,FROZEN_ACCOUNT_FINISH,FROZEN_ACCOUNT_NO_FINISH,FROZEN_ROUTE,FROZEN_REASON,FROZEN_FINISH_FLAG,OPR_FLAG,STATS from TBL_FROZEN_ACC_INF_TMP where 1=1")
-		.append(sqlsel);
-		
+
+		sql.append(
+				"SELECT ID,FROZEN_DATE,MCHT_NO,TERM_ID,FROZEN_ACCOUNT,FROZEN_ACCOUNT_FINISH,FROZEN_ACCOUNT_NO_FINISH,FROZEN_ROUTE,FROZEN_REASON,FROZEN_FINISH_FLAG,OPR_FLAG,STATS from TBL_FROZEN_ACC_INF_TMP where 1=1")
+				.append(sqlsel);
+
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql.toString(), begin, Constants.QUERY_RECORD_COUNT);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql.toString(), begin,
+						Constants.QUERY_RECORD_COUNT);
 		Object[] data;
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
@@ -2171,11 +2217,12 @@ public class GridConfigMethod {
 	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getCnpcCardRiskInfo(int begin, HttpServletRequest request) {
+	public static Object[] getCnpcCardRiskInfo(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		String sql = "select CUSTOMER_PROFILE, CARD_LEVEL, CHECK_CODE, SA_STATE, INIT_OPR_ID, INIT_TIME, VERIFIER_OPR_ID from TBL_CNPC_BLACK_CARD_INFO_TMP where 1=1 ";
 		String countSql = "SELECT COUNT(*) FROM TBL_CNPC_BLACK_CARD_INFO_TMP where 1=1 ";
-		
+
 		String whereSql = "";
 		String saState = null;
 		if (isNotEmpty(request.getParameter("saState"))) {
@@ -2188,7 +2235,7 @@ public class GridConfigMethod {
 		// }
 		sql += whereSql;
 		sql += " order by INIT_TIME DESC ";
-		
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;
@@ -2203,6 +2250,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询卡黑名单信息：正常和已删除
 	 * 
@@ -2215,8 +2263,13 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		String sql = "SELECT SA_CARD_NO,SA_LIMIT_AMT,SA_ACTION,SA_INIT_ZONE_NO,SA_INIT_OPR_ID,SA_INIT_TIME,"
 				+ "SA_MODI_OPR_ID,SA_MODI_TIME,SA_STATE,SA_LIMIT_AMT_OLD,SA_ACTION_OLD,RISK_ROLE,REMARK_ADD FROM TBL_CTL_CARD_INF where 1=1 ";
-/*		String sql = "SELECT SA_CARD_NO,SA_LIMIT_AMT,SA_ACTION,SA_INIT_ZONE_NO,SA_INIT_OPR_ID,SA_INIT_TIME,"
-				+ "SA_MODI_OPR_ID,SA_MODI_TIME,SA_STATE,SA_LIMIT_AMT_OLD,SA_ACTION_OLD FROM TBL_CTL_CARD_INF where 1=1 ";*/
+		/*
+		 * String sql =
+		 * "SELECT SA_CARD_NO,SA_LIMIT_AMT,SA_ACTION,SA_INIT_ZONE_NO,SA_INIT_OPR_ID,SA_INIT_TIME,"
+		 * +
+		 * "SA_MODI_OPR_ID,SA_MODI_TIME,SA_STATE,SA_LIMIT_AMT_OLD,SA_ACTION_OLD FROM TBL_CTL_CARD_INF where 1=1 "
+		 * ;
+		 */
 		String countSql = "SELECT COUNT(*) FROM TBL_CTL_CARD_INF where 1=1 ";
 
 		String whereSql = "";
@@ -2246,13 +2299,16 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 卡Bin地区路由配置
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
-	public static Object[] getCardbinAreaRouteInf(int begin, HttpServletRequest request) {
+	public static Object[] getCardbinAreaRouteInf(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		String sql = "select card_bin, area_no, inst_code, state, crt_per, crt_date, upt_per, upt_date from tbl_cardbin_area_route_inf_tmp where 1=1 ";
 		String countSql = "select count(*) from tbl_cardbin_area_route_inf_tmp where 1=1 ";
@@ -2264,18 +2320,20 @@ public class GridConfigMethod {
 		}
 		sql += whereSql;
 		sql += " order by crt_date desc ";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			dataList.set(i, data);
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql + whereSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql + whereSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 查询待审核的卡黑名单，根据状态来排序
 	 * 
@@ -2343,22 +2401,28 @@ public class GridConfigMethod {
 		}
 
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,")
-		.append("d.SA_INIT_OPR_ID,d.SA_INIT_TIME,d.SA_MODI_ZONE_NO,d.SA_MODI_OPR_ID,d.SA_MODI_TIME,d.SA_STATE,d.SA_LIMIT_AMT_OLD,")
-		.append("d.SA_ACTION_OLD,d.SA_MER_CH_NAME,d.SA_MER_NO,d.DATE_PK,d.MANAGER_TEL,d.ADD_TYPE,d.BANK_LICENCE_NO,d.LICENCE_NO,d.IDENTITY_NO,d.SA_AREA FROM TBL_CTL_MCHT_INF d where 1=1 ")
-		.append(sqlsel);
-		/*sql.append("SELECT SA_LIMIT_AMT,SA_ACTION,SA_ZONE_NO,SA_ADMI_BRAN_NO,")
-				.append("SA_CONN_OR,SA_CONN_TEL,SA_INIT_ZONE_NO,SA_INIT_OPR_ID,SA_INIT_TIME,SA_MODI_ZONE_NO,SA_MODI_OPR_ID,")
-				.append("SA_MODI_TIME,SA_STATE,SA_LIMIT_AMT_OLD,SA_ACTION_OLD,MCC,RISL_LVL,LICENCE_NO,MCHT_NM,apply_date,bank_no,mcht_no,TERM_COUNT,IDENTITY_NO,BANK_LICENCE_NO ")
-				.append("FROM ")
-				.append("(SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,")
+		sql.append(
+				"SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,")
 				.append("d.SA_INIT_OPR_ID,d.SA_INIT_TIME,d.SA_MODI_ZONE_NO,d.SA_MODI_OPR_ID,d.SA_MODI_TIME,d.SA_STATE,d.SA_LIMIT_AMT_OLD,")
-				.append("d.SA_ACTION_OLD,c.MCC,c.RISL_LVL,c.LICENCE_NO,c.MCHT_NM,c.apply_date,c.bank_no,c.mcht_no,c.IDENTITY_NO,c.BANK_LICENCE_NO FROM TBL_MCHT_BASE_INF c,TBL_CTL_MCHT_INF d where c.MCHT_NO=d.SA_MER_NO ")
-				.append(whereSql)
-				.append(sqlsel.toString() + ") A ")
-				.append("left outer join ")
-				.append("(select MCHT_CD,count(term_id) AS TERM_COUNT from TBL_TERM_INF group by MCHT_CD) B ")
-				.append("ON (A.MCHT_NO = B.MCHT_CD) ORDER BY A.SA_STATE");*/
+				.append("d.SA_ACTION_OLD,d.SA_MER_CH_NAME,d.SA_MER_NO,d.DATE_PK,d.MANAGER_TEL,d.ADD_TYPE,d.BANK_LICENCE_NO,d.LICENCE_NO,d.IDENTITY_NO,d.SA_AREA FROM TBL_CTL_MCHT_INF d where 1=1 ")
+				.append(sqlsel);
+		/*
+		 * sql.append("SELECT SA_LIMIT_AMT,SA_ACTION,SA_ZONE_NO,SA_ADMI_BRAN_NO,"
+		 * ) .append(
+		 * "SA_CONN_OR,SA_CONN_TEL,SA_INIT_ZONE_NO,SA_INIT_OPR_ID,SA_INIT_TIME,SA_MODI_ZONE_NO,SA_MODI_OPR_ID,"
+		 * ) .append(
+		 * "SA_MODI_TIME,SA_STATE,SA_LIMIT_AMT_OLD,SA_ACTION_OLD,MCC,RISL_LVL,LICENCE_NO,MCHT_NM,apply_date,bank_no,mcht_no,TERM_COUNT,IDENTITY_NO,BANK_LICENCE_NO "
+		 * ) .append("FROM ") .append(
+		 * "(SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,"
+		 * ) .append(
+		 * "d.SA_INIT_OPR_ID,d.SA_INIT_TIME,d.SA_MODI_ZONE_NO,d.SA_MODI_OPR_ID,d.SA_MODI_TIME,d.SA_STATE,d.SA_LIMIT_AMT_OLD,"
+		 * ) .append(
+		 * "d.SA_ACTION_OLD,c.MCC,c.RISL_LVL,c.LICENCE_NO,c.MCHT_NM,c.apply_date,c.bank_no,c.mcht_no,c.IDENTITY_NO,c.BANK_LICENCE_NO FROM TBL_MCHT_BASE_INF c,TBL_CTL_MCHT_INF d where c.MCHT_NO=d.SA_MER_NO "
+		 * ) .append(whereSql) .append(sqlsel.toString() + ") A ")
+		 * .append("left outer join ") .append(
+		 * "(select MCHT_CD,count(term_id) AS TERM_COUNT from TBL_TERM_INF group by MCHT_CD) B "
+		 * ) .append("ON (A.MCHT_NO = B.MCHT_CD) ORDER BY A.SA_STATE");
+		 */
 
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 
@@ -2397,28 +2461,35 @@ public class GridConfigMethod {
 			whereSql.append(" and d.SA_MER_CH_NAME '%")
 					.append(request.getParameter("saMerChName")).append("%'");
 		}
-/*		if (isNotEmpty(request.getParameter("srBrhNo"))) {
-			whereSql.append(" and d.SA_MER_NO like '%")
-					.append(request.getParameter("srBrhNo")).append("%'");
-		}
-*/
+		/*
+		 * if (isNotEmpty(request.getParameter("srBrhNo"))) {
+		 * whereSql.append(" and d.SA_MER_NO like '%")
+		 * .append(request.getParameter("srBrhNo")).append("%'"); }
+		 */
 		StringBuffer sql = new StringBuffer();
-		sql.append("SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,")
-		.append("d.SA_INIT_OPR_ID,d.SA_INIT_TIME,d.SA_MODI_ZONE_NO,d.SA_MODI_OPR_ID,d.SA_MODI_TIME,d.SA_STATE,d.SA_LIMIT_AMT_OLD,")
-		.append("d.SA_ACTION_OLD,d.SA_MER_CH_NAME,d.SA_MER_NO,d.DATE_PK,d.MANAGER_TEL,d.ADD_TYPE,d.BANK_LICENCE_NO,d.LICENCE_NO,d.IDENTITY_NO,d.APP_REMARK,d.SA_AREA FROM TBL_CTL_MCHT_INF d where 1=1 and d.SA_STATE in (0,3,4)")
-		.append(whereSql);
-		/*sql.append("SELECT SA_LIMIT_AMT,SA_ACTION,SA_ZONE_NO,SA_ADMI_BRAN_NO,")
-				.append("SA_CONN_OR,SA_CONN_TEL,SA_INIT_ZONE_NO,SA_INIT_OPR_ID,SA_INIT_TIME,SA_MODI_ZONE_NO,SA_MODI_OPR_ID,")
-				.append("SA_MODI_TIME,SA_STATE,SA_LIMIT_AMT_OLD,SA_ACTION_OLD,MCC,RISL_LVL,LICENCE_NO,MCHT_NM,apply_date,bank_no,mcht_no,TERM_COUNT,IDENTITY_NO,BANK_LICENCE_NO FROM ")
-				.append("(SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,")
+		sql.append(
+				"SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,")
 				.append("d.SA_INIT_OPR_ID,d.SA_INIT_TIME,d.SA_MODI_ZONE_NO,d.SA_MODI_OPR_ID,d.SA_MODI_TIME,d.SA_STATE,d.SA_LIMIT_AMT_OLD,")
-				.append("d.SA_ACTION_OLD,c.MCC,c.RISL_LVL,c.LICENCE_NO,c.MCHT_NM,c.apply_date,c.bank_no,c.mcht_no,c.IDENTITY_NO,c.BANK_LICENCE_NO FROM TBL_MCHT_BASE_INF c,TBL_CTL_MCHT_INF d ")
-				.append("where c.MCHT_NO=d.SA_MER_NO and d.SA_STATE in (0,3,4)")
-				.append(whereSql)
-				.append(") A ")
-				.append("left outer join ")
-				.append("(select MCHT_CD,count(term_id) AS TERM_COUNT from TBL_TERM_INF group by MCHT_CD) B ")
-				.append("ON (A.MCHT_NO = B.MCHT_CD) ORDER BY A.SA_STATE");*/
+				.append("d.SA_ACTION_OLD,d.SA_MER_CH_NAME,d.SA_MER_NO,d.DATE_PK,d.MANAGER_TEL,d.ADD_TYPE,d.BANK_LICENCE_NO,d.LICENCE_NO,d.IDENTITY_NO,d.APP_REMARK,d.SA_AREA FROM TBL_CTL_MCHT_INF d where 1=1 and d.SA_STATE in (0,3,4)")
+				.append(whereSql);
+		/*
+		 * sql.append("SELECT SA_LIMIT_AMT,SA_ACTION,SA_ZONE_NO,SA_ADMI_BRAN_NO,"
+		 * ) .append(
+		 * "SA_CONN_OR,SA_CONN_TEL,SA_INIT_ZONE_NO,SA_INIT_OPR_ID,SA_INIT_TIME,SA_MODI_ZONE_NO,SA_MODI_OPR_ID,"
+		 * ) .append(
+		 * "SA_MODI_TIME,SA_STATE,SA_LIMIT_AMT_OLD,SA_ACTION_OLD,MCC,RISL_LVL,LICENCE_NO,MCHT_NM,apply_date,bank_no,mcht_no,TERM_COUNT,IDENTITY_NO,BANK_LICENCE_NO FROM "
+		 * ) .append(
+		 * "(SELECT d.SA_LIMIT_AMT,d.SA_ACTION,d.SA_ZONE_NO,d.SA_ADMI_BRAN_NO,d.SA_CONN_OR,d.SA_CONN_TEL,d.SA_INIT_ZONE_NO,"
+		 * ) .append(
+		 * "d.SA_INIT_OPR_ID,d.SA_INIT_TIME,d.SA_MODI_ZONE_NO,d.SA_MODI_OPR_ID,d.SA_MODI_TIME,d.SA_STATE,d.SA_LIMIT_AMT_OLD,"
+		 * ) .append(
+		 * "d.SA_ACTION_OLD,c.MCC,c.RISL_LVL,c.LICENCE_NO,c.MCHT_NM,c.apply_date,c.bank_no,c.mcht_no,c.IDENTITY_NO,c.BANK_LICENCE_NO FROM TBL_MCHT_BASE_INF c,TBL_CTL_MCHT_INF d "
+		 * ) .append("where c.MCHT_NO=d.SA_MER_NO and d.SA_STATE in (0,3,4)")
+		 * .append(whereSql) .append(") A ") .append("left outer join ")
+		 * .append(
+		 * "(select MCHT_CD,count(term_id) AS TERM_COUNT from TBL_TERM_INF group by MCHT_CD) B "
+		 * ) .append("ON (A.MCHT_NO = B.MCHT_CD) ORDER BY A.SA_STATE");
+		 */
 
 		String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ")";
 
@@ -2474,7 +2545,7 @@ public class GridConfigMethod {
 			date = request.getParameter("idCardNo");
 			whereSql += " and PARAM1 like '%" + date + "%'";
 		}
-		
+
 		if (isNotEmpty(request.getParameter("saMerChName"))) {
 			date = request.getParameter("saMerChName");
 			whereSql += " and PARAM1 like '%" + date + "%'";
@@ -2483,7 +2554,7 @@ public class GridConfigMethod {
 			date = request.getParameter("mchtNo_query");
 			whereSql += " and PARAM1 like '%" + date + "%'";
 		}
-		
+
 		sql += whereSql;
 		sql += " order by TXN_TIME desc ";
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
@@ -2507,6 +2578,7 @@ public class GridConfigMethod {
 
 	/**
 	 * 查询t_lst_entity实体表
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
@@ -2526,12 +2598,13 @@ public class GridConfigMethod {
 			date = request.getParameter("care");
 			whereSql += " and care like '%" + date + "%'";
 		}
-		/*if (!StringUtil.isNull(request.getParameter("startDate"))) {
-			whereSql += " and TXN_TIME >= '" + request.getParameter("startDate") + "000000'";
-		}
-		if (!StringUtil.isNull(request.getParameter("endDate"))) {
-			whereSql += " and TXN_TIME <= '" + request.getParameter("endDate") + "000000'";
-		}*/
+		/*
+		 * if (!StringUtil.isNull(request.getParameter("startDate"))) { whereSql
+		 * += " and TXN_TIME >= '" + request.getParameter("startDate") +
+		 * "000000'"; } if (!StringUtil.isNull(request.getParameter("endDate")))
+		 * { whereSql += " and TXN_TIME <= '" + request.getParameter("endDate")
+		 * + "000000'"; }
+		 */
 		if (isNotEmpty(request.getParameter("ciid"))) {
 			date = request.getParameter("ciid");
 			whereSql += " and ciid like '%" + date + "%'";
@@ -2546,19 +2619,23 @@ public class GridConfigMethod {
 		}
 		sql += whereSql;
 		sql += " order by create_time desc ";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			dataList.set(i, data);
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql + whereSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql + whereSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询t_lst_region实体表
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
@@ -2567,7 +2644,7 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		String sql = "select id,lskd,region_type,region_code,region_name,remark,status,create_time,creator,update_time,updator from t_lst_region where 1=1 ";
 		String countSql = "SELECT COUNT(1) FROM t_lst_region WHERE 1=1 ";
-		
+
 		String whereSql = "";
 		String date = null;
 		if (isNotEmpty(request.getParameter("rgtp"))) {
@@ -2582,38 +2659,41 @@ public class GridConfigMethod {
 			date = request.getParameter("status");
 			whereSql += " and status = '" + date + "'";
 		}
-		
+
 		sql += whereSql;
 		sql += " order by create_time desc ";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			dataList.set(i, data);
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql + whereSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql + whereSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 	/**
 	 * 查询TBL_BLACKLIST_REGION实体表
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
-	public static Object[] getLstBlackRegions(int begin, HttpServletRequest request) {
+	public static Object[] getLstBlackRegions(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		String sql = "select BLACK_REGION_ID,BLACK_REGION_TYPE,BLACK_REGION_NO,BLACK_REGION_NAME,BLACK_REGION_HOME,UPDATETIME from TBL_BLACKLIST_REGION where 1=1 ";
 		String countSql = "SELECT COUNT(1) FROM TBL_BLACKLIST_REGION WHERE 1=1 ";
-		
+
 		String whereSql = "";
 		String date = null;
 		if (isNotEmpty(request.getParameter("regionNo"))) {
 			date = request.getParameter("regionNo");
-			whereSql += " and BLACK_REGION_NO like '%"  + date + "%'";
+			whereSql += " and BLACK_REGION_NO like '%" + date + "%'";
 		}
 		if (isNotEmpty(request.getParameter("regionName"))) {
 			date = request.getParameter("regionName");
@@ -2623,36 +2703,40 @@ public class GridConfigMethod {
 			date = request.getParameter("regionHome");
 			whereSql += " and BLACK_REGION_HOME like '%" + date + "%'";
 		}
-		
+
 		sql += whereSql;
 		sql += " order by UPDATETIME desc ";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			dataList.set(i, data);
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql + whereSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql + whereSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 	/**
 	 * 查询TBL_BLACKLIST_OBSERVE实体表
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
-	public static Object[] getListBlackObserve(int begin, HttpServletRequest request) {
+	public static Object[] getListBlackObserve(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		String sql = "select BLACK_OBSERVE_ID,BLACK_OBSERVE_NAME,BLACK_OBSERVE_SEX,BLACK_OBSERVE_BIR,BLACK_OBSERVE_COUNTRY,BLACK_OBSERVE_NO,BLACK_OBSERVE_TYPE,BLACK_OBSERVE_HOME,BLACK_OBSERVE_ENTITY,BLACK_OBSERVE_ADDRESS,BLACK_OBSERVE_CON,BLACK_OBSERVE_UPDATETIME from TBL_BLACKLIST_OBSERVE where 1=1 ";
 		String countSql = "SELECT COUNT(1) FROM TBL_BLACKLIST_OBSERVE WHERE 1=1 ";
-		
+
 		String whereSql = "";
 		String date = null;
-		//blackObserveName blackObserveCountry  blackObserveNo blackObserveHome blackObserveEntity
+		// blackObserveName blackObserveCountry blackObserveNo blackObserveHome
+		// blackObserveEntity
 		if (isNotEmpty(request.getParameter("blackObserveName"))) {
 			date = request.getParameter("blackObserveName");
 			whereSql += " and BLACK_OBSERVE_NAME like '%" + date + "%'";
@@ -2673,21 +2757,23 @@ public class GridConfigMethod {
 			date = request.getParameter("blackObserveEntity");
 			whereSql += " and BLACK_OBSERVE_ENTITY like '%" + date + "%'";
 		}
-		
+
 		sql += whereSql;
 		sql += " order by BLACK_OBSERVE_UPDATETIME desc ";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			dataList.set(i, data);
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql + whereSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql + whereSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 拒绝原因查询
 	 */
@@ -2722,7 +2808,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户交易限额操作记录查询
 	 */
@@ -2739,10 +2825,11 @@ public class GridConfigMethod {
 
 		String whereSql = "";
 		String date = null;
-		/*if (isNotEmpty(request.getParameter("refuseType"))) {
-			date = request.getParameter("refuseType");
-			whereSql += " and REFUSE_TYPE = '" + date + "'";
-		}*/
+		/*
+		 * if (isNotEmpty(request.getParameter("refuseType"))) { date =
+		 * request.getParameter("refuseType"); whereSql +=
+		 * " and REFUSE_TYPE = '" + date + "'"; }
+		 */
 		if (isNotEmpty(request.getParameter("mchnNoQ"))) {
 			date = request.getParameter("mchnNoQ");
 			whereSql += " and PARAM1 = '" + date + "'";
@@ -2751,25 +2838,27 @@ public class GridConfigMethod {
 			date = request.getParameter("cardTypeQ");
 			whereSql += " and PARAM2 = '" + date + "'";
 		}
-		/*if (!StringUtil.isNull(request.getParameter("startDate"))) {
-			whereSql += " and TXN_TIME >= '"
-					+ request.getParameter("startDate") + "000000'";
-		}*/
+		/*
+		 * if (!StringUtil.isNull(request.getParameter("startDate"))) { whereSql
+		 * += " and TXN_TIME >= '" + request.getParameter("startDate") +
+		 * "000000'"; }
+		 */
 
-		/*if (!StringUtil.isNull(request.getParameter("endDate"))) {
-			whereSql += " and TXN_TIME <= '" + request.getParameter("endDate")
-					+ "000000'";
-		}*/
-		/*if (isNotEmpty(request.getParameter("idCardNo"))) {
-			date = request.getParameter("idCardNo");
-			whereSql += " and PARAM1 like '%" + date + "%'";
-		}
-		
-		if (isNotEmpty(request.getParameter("saMerChName"))) {
-			date = request.getParameter("saMerChName");
-			whereSql += " and PARAM1 like '%" + date + "%'";
-		}*/
-		
+		/*
+		 * if (!StringUtil.isNull(request.getParameter("endDate"))) { whereSql
+		 * += " and TXN_TIME <= '" + request.getParameter("endDate") +
+		 * "000000'"; }
+		 */
+		/*
+		 * if (isNotEmpty(request.getParameter("idCardNo"))) { date =
+		 * request.getParameter("idCardNo"); whereSql += " and PARAM1 like '%" +
+		 * date + "%'"; }
+		 * 
+		 * if (isNotEmpty(request.getParameter("saMerChName"))) { date =
+		 * request.getParameter("saMerChName"); whereSql +=
+		 * " and PARAM1 like '%" + date + "%'"; }
+		 */
+
 		sql += whereSql;
 		sql += " order by TXN_TIME desc ";
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
@@ -2790,7 +2879,6 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-
 
 	/**
 	 * 差错信息查询
@@ -3069,87 +3157,72 @@ public class GridConfigMethod {
 			whereSql.append(" and trim(TERM_ID) = '"
 					+ request.getParameter("termId").trim() + "'");
 		}
-		if (isNotEmpty(request.getParameter("dateSettlmt"))) {  // 清算日期
+		if (isNotEmpty(request.getParameter("dateSettlmt"))) { // 清算日期
 			whereSql.append(" and DATE_SETTLMT = '"
 					+ request.getParameter("dateSettlmt") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("orgDateTime"))) {  // 交易日期
+		if (isNotEmpty(request.getParameter("orgDateTime"))) { // 交易日期
 			whereSql.append(" and ORG_DATE_TIME = '"
 					+ request.getParameter("orgDateTime") + "' ");
 		}
-		if (isNotEmpty(request.getParameter("errType"))) {  // 差错类型
+		if (isNotEmpty(request.getParameter("errType"))) { // 差错类型
 			whereSql.append(" and ERR_TYPE like '%"
 					+ request.getParameter("errType") + "%' ");
 		}
-		if (isNotEmpty(request.getParameter("txnName"))) {  // 交易名称
+		if (isNotEmpty(request.getParameter("txnName"))) { // 交易名称
 			whereSql.append(" and TXN_NAME like '%"
 					+ request.getParameter("txnName") + "%' ");
 		}
-		if (isNotEmpty(request.getParameter("errCode"))) {  // 差错交易代码
+		if (isNotEmpty(request.getParameter("errCode"))) { // 差错交易代码
 			whereSql.append(" and ERR_CODE = '"
 					+ request.getParameter("errCode") + "' ");
 		}
-		/*if (isNotEmpty(request.getParameter("errFlag"))) {// 差错交易类型,errFlag为交易挂账和交易解挂的查询条件不同20121211
-			whereSql.append(" and trim(ERR_FLAG) ='")
-					.append(request.getParameter("errFlag").trim())
-					.append("' ");
-		}
-		if (isNotEmpty(request.getParameter("txnSsn"))) {// 差错系统跟踪号
-			whereSql.append(" and TXN_SSN = '" + request.getParameter("txnSsn")
-					+ "'");
-		}
-		if (isNotEmpty(request.getParameter("txnNum"))) {// 原交易类型
-			if (!"*".equals(request.getParameter("txnNum"))) {
-				whereSql.append(" and TXN_NUM = '"
-						+ request.getParameter("txnNum") + "'");
-			}
-		}
-		if (isNotEmpty(request.getParameter("startDate"))) {// 原交易起始日期
-			whereSql.append(" and TRANS_DATE_TIME >= '"
-					+ request.getParameter("startDate") + "' ");
-		}
-		if (!StringUtil.isNull(request.getParameter("endDate"))) {
-			whereSql.append(" and TRANS_DATE_TIME <= '"
-					+ request.getParameter("endDate") + "' ");
-		}
-		if (isNotEmpty(request.getParameter("startTime"))) {// 原交易清算起始时间20121205
-			whereSql.append(" and DATE_SETTLMT >= '"
-					+ request.getParameter("startTime") + "' ");
-		}
-		if (!StringUtil.isNull(request.getParameter("endTime"))) {// 原交易清算起始时间20121205
-			whereSql.append(" and DATE_SETTLMT <= '"
-					+ request.getParameter("endTime") + "' ");
-		}
-		if (isNotEmpty(request.getParameter("pan"))) {// 原交易卡号
-			whereSql.append(" and trim(PAN) = '"
-					+ request.getParameter("pan").trim() + "'");
-		}
-		if (isNotEmpty(request.getParameter("minOrgTransAmt"))) {// 原交易最小金额
-			whereSql.append(" and to_number(ORG_TRANS_AMT) >= "
-					+ request.getParameter("minOrgTransAmt") + " ");
-		}
-		if (isNotEmpty(request.getParameter("maxOrgTransAmt"))) {// 原交易最大金额
-			whereSql.append(" and to_number(ORG_TRANS_AMT) <= "
-					+ request.getParameter("maxOrgTransAmt") + " ");
-		}
-		if (isNotEmpty(request.getParameter("orgTxnSsn"))) {// 原收单行流水号
-			whereSql.append(" and trim(ORG_TXN_SSN) = '"
-					+ request.getParameter("orgTxnSsn").trim() + "'");
-		}
-		if (isNotEmpty(request.getParameter("orgRetrivlRef"))) {// 原系统参考号
-			whereSql.append(" and trim(ORG_RETRIVL_REF) = '"
-					+ request.getParameter("orgRetrivlRef").trim() + "'");
-		}
-		if (isNotEmpty(request.getParameter("orgTermSsn"))) {// 原终端流水号
-			whereSql.append(" and trim(ORG_TERM_SSN) = '"
-					+ request.getParameter("orgTermSsn").trim() + "'");
-		}*/
+		/*
+		 * if (isNotEmpty(request.getParameter("errFlag"))) {//
+		 * 差错交易类型,errFlag为交易挂账和交易解挂的查询条件不同20121211
+		 * whereSql.append(" and trim(ERR_FLAG) ='")
+		 * .append(request.getParameter("errFlag").trim()) .append("' "); } if
+		 * (isNotEmpty(request.getParameter("txnSsn"))) {// 差错系统跟踪号
+		 * whereSql.append(" and TXN_SSN = '" + request.getParameter("txnSsn") +
+		 * "'"); } if (isNotEmpty(request.getParameter("txnNum"))) {// 原交易类型 if
+		 * (!"*".equals(request.getParameter("txnNum"))) {
+		 * whereSql.append(" and TXN_NUM = '" + request.getParameter("txnNum") +
+		 * "'"); } } if (isNotEmpty(request.getParameter("startDate"))) {//
+		 * 原交易起始日期 whereSql.append(" and TRANS_DATE_TIME >= '" +
+		 * request.getParameter("startDate") + "' "); } if
+		 * (!StringUtil.isNull(request.getParameter("endDate"))) {
+		 * whereSql.append(" and TRANS_DATE_TIME <= '" +
+		 * request.getParameter("endDate") + "' "); } if
+		 * (isNotEmpty(request.getParameter("startTime"))) {// 原交易清算起始时间20121205
+		 * whereSql.append(" and DATE_SETTLMT >= '" +
+		 * request.getParameter("startTime") + "' "); } if
+		 * (!StringUtil.isNull(request.getParameter("endTime"))) {//
+		 * 原交易清算起始时间20121205 whereSql.append(" and DATE_SETTLMT <= '" +
+		 * request.getParameter("endTime") + "' "); } if
+		 * (isNotEmpty(request.getParameter("pan"))) {// 原交易卡号
+		 * whereSql.append(" and trim(PAN) = '" +
+		 * request.getParameter("pan").trim() + "'"); } if
+		 * (isNotEmpty(request.getParameter("minOrgTransAmt"))) {// 原交易最小金额
+		 * whereSql.append(" and to_number(ORG_TRANS_AMT) >= " +
+		 * request.getParameter("minOrgTransAmt") + " "); } if
+		 * (isNotEmpty(request.getParameter("maxOrgTransAmt"))) {// 原交易最大金额
+		 * whereSql.append(" and to_number(ORG_TRANS_AMT) <= " +
+		 * request.getParameter("maxOrgTransAmt") + " "); } if
+		 * (isNotEmpty(request.getParameter("orgTxnSsn"))) {// 原收单行流水号
+		 * whereSql.append(" and trim(ORG_TXN_SSN) = '" +
+		 * request.getParameter("orgTxnSsn").trim() + "'"); } if
+		 * (isNotEmpty(request.getParameter("orgRetrivlRef"))) {// 原系统参考号
+		 * whereSql.append(" and trim(ORG_RETRIVL_REF) = '" +
+		 * request.getParameter("orgRetrivlRef").trim() + "'"); } if
+		 * (isNotEmpty(request.getParameter("orgTermSsn"))) {// 原终端流水号
+		 * whereSql.append(" and trim(ORG_TERM_SSN) = '" +
+		 * request.getParameter("orgTermSsn").trim() + "'"); }
+		 */
 		sql.append(
-			//	"SELECT DATE_SETTLMT,TXN_NUM,TXN_SSN,ERR_FLAG,STLM_FLG,TRANS_DATE_TIME,PAN,AMT_TRANS,MCHT_ID,TERM_ID,"
-			//			+ "TXN_KEY,MCHT_NM,ORG_TRANS_AMT FROM BTH_CUP_ERR_INF WHERE 1=1 ")
-				"SELECT MCHT_ID,MCHT_NM,MCHT_TP,TERM_ID,TXN_SSN,CHANNEL_NUM,ORG_DATE_TIME,ORG_TRANS_AMT,TXN_NAME,PAN,ERR_TYPE,ERR_CODE,INST_DATE,DATE_SETTLMT,AMT_FLAG " +
-				"FROM BTH_KQ_ERR_TXN WHERE 1=1")
-				.append(whereSql);
+		// "SELECT DATE_SETTLMT,TXN_NUM,TXN_SSN,ERR_FLAG,STLM_FLG,TRANS_DATE_TIME,PAN,AMT_TRANS,MCHT_ID,TERM_ID,"
+		// + "TXN_KEY,MCHT_NM,ORG_TRANS_AMT FROM BTH_CUP_ERR_INF WHERE 1=1 ")
+				"SELECT MCHT_ID,MCHT_NM,MCHT_TP,TERM_ID,TXN_SSN,CHANNEL_NUM,ORG_DATE_TIME,ORG_TRANS_AMT,TXN_NAME,PAN,ERR_TYPE,ERR_CODE,INST_DATE,DATE_SETTLMT,AMT_FLAG "
+						+ "FROM BTH_KQ_ERR_TXN WHERE 1=1").append(whereSql);
 
 		sql.append(" order by DATE_SETTLMT desc");
 
@@ -3496,7 +3569,6 @@ public class GridConfigMethod {
 			whereSql += " and MCC_CODE in (select mchnt_tp from TBL_INF_MCHNT_TP WHERE MCHNT_TP_GRP = '"
 					+ request.getParameter("mccGrp").trim() + "')";
 		}
-		
 
 		Object[] ret = new Object[2];
 		String sql = "Select AGEN_ID,FEE_ID,TERM_ID,MTCH_NO,MCC_CODE,TRADE_ACCEPT_REG,b.STATUE_NAME STATUE from TBL_AGENCY_FEE_LUB_TMP a,"
@@ -3868,6 +3940,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询当前操作员下属操作员信息
 	 * 
@@ -3880,17 +3953,17 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
-		
+
 		StringBuffer whereSql = new StringBuffer();
 		whereSql.append(" WHERE " + "BRH_ID IN " + operator.getBrhBelowId());
 		if (isNotEmpty(request.getParameter("oprId"))) {
 			whereSql.append(" AND OPR_ID = '" + request.getParameter("oprId")
-			+ "' ");
+					+ "' ");
 		}
-		
+
 		if (isNotEmpty(request.getParameter("brhId"))) {
 			whereSql.append(" AND BRH_ID = '" + request.getParameter("brhId")
-			+ "' ");
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("startDate"))) {
 			whereSql.append(" AND REGISTER_DT >= '"
@@ -3900,13 +3973,13 @@ public class GridConfigMethod {
 			whereSql.append(" AND REGISTER_DT <= '"
 					+ request.getParameter("endDate") + "' ");
 		}
-		
+
 		String sql = "SELECT OPR_ID,BRH_ID,OPR_DEGREE,OPR_NAME,OPR_GENDER,REGISTER_DT,OPR_TEL,"
 				+ "OPR_MOBILE,PWD_OUT_DATE,OPR_STA,OPR_EMAIL,AUDIT_STAT,ADD_OPR_ID,LAST_UPD_OPR_ID FROM TBL_OPR_INFO_TMP "
 				+ whereSql;
 		sql += " order by REGISTER_DT desc";
 		String countSql = "SELECT COUNT(*) FROM TBL_OPR_INFO_TMP " + whereSql;
-		
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
@@ -3915,88 +3988,112 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 查询银行账户信息
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	public static Object[] getBankNoS(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
 		StringBuffer whereSql = new StringBuffer();
-		whereSql.append(" WHERE " + "1 = 1 " );
+		whereSql.append(" WHERE " + "1 = 1 ");
 		if (isNotEmpty(request.getParameter("bankName"))) {
-			whereSql.append(" AND BANK_NAME like '%" + request.getParameter("bankName") + "%' ");
+			whereSql.append(" AND BANK_NAME like '%"
+					+ request.getParameter("bankName") + "%' ");
 		}
 		if (isNotEmpty(request.getParameter("bankAccount"))) {
-			whereSql.append(" AND BANK_ACCOUNT like '%" + request.getParameter("bankAccount") + "%' ");
+			whereSql.append(" AND BANK_ACCOUNT like '%"
+					+ request.getParameter("bankAccount") + "%' ");
 		}
-		String sql = "SELECT BANK_NO,BANK_NAME,ACCOUNT_NAME,BANK_ACCOUNT,REGION FROM TBL_BANKNO_INFO_TMP " + whereSql;
+		String sql = "SELECT BANK_NO,BANK_NAME,ACCOUNT_NAME,BANK_ACCOUNT,REGION FROM TBL_BANKNO_INFO_TMP "
+				+ whereSql;
 		sql += " order by UPD_TIME desc";
-		String countSql = "SELECT COUNT(*) FROM TBL_BANKNO_INFO_TMP " + whereSql;
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql);
+		String countSql = "SELECT COUNT(*) FROM TBL_BANKNO_INFO_TMP "
+				+ whereSql;
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 查询银行账户信息
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	public static Object[] getBankNoStat(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
 		StringBuffer whereSql = new StringBuffer();
-		whereSql.append(" WHERE " + "1 = 1 " );
+		whereSql.append(" WHERE " + "1 = 1 ");
 		if (isNotEmpty(request.getParameter("bankName"))) {
-			whereSql.append(" AND BANK_NAME like '%" + request.getParameter("bankName") + "%' ");
+			whereSql.append(" AND BANK_NAME like '%"
+					+ request.getParameter("bankName") + "%' ");
 		}
 		if (isNotEmpty(request.getParameter("bankAccount"))) {
-			whereSql.append(" AND BANK_ACCOUNT like '%" + request.getParameter("bankAccount") + "%' ");
+			whereSql.append(" AND BANK_ACCOUNT like '%"
+					+ request.getParameter("bankAccount") + "%' ");
 		}
-		String sql = "SELECT BANK_NO,BANK_NAME,ACCOUNT_NAME,BANK_ACCOUNT, CRE_TIME, BANK_STATUS,REGION FROM TBL_BANKNO_INFO_TMP " + whereSql;
+		String sql = "SELECT BANK_NO,BANK_NAME,ACCOUNT_NAME,BANK_ACCOUNT, CRE_TIME, BANK_STATUS,REGION FROM TBL_BANKNO_INFO_TMP "
+				+ whereSql;
 		sql += " order by UPD_TIME desc";
-		String countSql = "SELECT COUNT(*) FROM TBL_BANKNO_INFO_TMP " + whereSql;
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql);
+		String countSql = "SELECT COUNT(*) FROM TBL_BANKNO_INFO_TMP "
+				+ whereSql;
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询银行账户信息审核
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	public static Object[] getBankNoStatA(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
 		StringBuffer whereSql = new StringBuffer();
-		whereSql.append(" WHERE " + "1 = 1 AND BANK_STATUS IN ('2', '3') " );
+		whereSql.append(" WHERE " + "1 = 1 AND BANK_STATUS IN ('2', '3') ");
 		if (isNotEmpty(request.getParameter("bankName"))) {
-			whereSql.append(" AND BANK_NAME like '%" + request.getParameter("bankName") + "%' ");
+			whereSql.append(" AND BANK_NAME like '%"
+					+ request.getParameter("bankName") + "%' ");
 		}
 		if (isNotEmpty(request.getParameter("bankAccount"))) {
-			whereSql.append(" AND BANK_ACCOUNT like '%" + request.getParameter("bankAccount") + "%' ");
+			whereSql.append(" AND BANK_ACCOUNT like '%"
+					+ request.getParameter("bankAccount") + "%' ");
 		}
-		String sql = "SELECT BANK_NO,BANK_NAME,ACCOUNT_NAME,BANK_ACCOUNT, CRE_TIME, BANK_STATUS, UPD_OPR_ID,REGION FROM TBL_BANKNO_INFO_TMP " + whereSql;
+		String sql = "SELECT BANK_NO,BANK_NAME,ACCOUNT_NAME,BANK_ACCOUNT, CRE_TIME, BANK_STATUS, UPD_OPR_ID,REGION FROM TBL_BANKNO_INFO_TMP "
+				+ whereSql;
 		sql += " order by UPD_TIME desc";
-		String countSql = "SELECT COUNT(*) FROM TBL_BANKNO_INFO_TMP " + whereSql;
+		String countSql = "SELECT COUNT(*) FROM TBL_BANKNO_INFO_TMP "
+				+ whereSql;
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 查询当前操作员下属操作员信息
 	 * 
@@ -4009,20 +4106,20 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
-		
+
 		StringBuffer whereSql = new StringBuffer();
 		whereSql.append(" WHERE " + "BRH_ID IN " + operator.getBrhBelowId());
-		
+
 		whereSql.append(" AND AUDIT_STAT != '0' AND AUDIT_STAT != '1' AND AUDIT_STAT != '4' ");
-		
+
 		if (isNotEmpty(request.getParameter("oprId"))) {
 			whereSql.append(" AND OPR_ID = '" + request.getParameter("oprId")
-			+ "' ");
+					+ "' ");
 		}
-		
+
 		if (isNotEmpty(request.getParameter("brhId"))) {
 			whereSql.append(" AND BRH_ID = '" + request.getParameter("brhId")
-			+ "' ");
+					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("startDate"))) {
 			whereSql.append(" AND REGISTER_DT >= '"
@@ -4032,13 +4129,13 @@ public class GridConfigMethod {
 			whereSql.append(" AND REGISTER_DT <= '"
 					+ request.getParameter("endDate") + "' ");
 		}
-		
+
 		String sql = "SELECT OPR_ID,BRH_ID,OPR_DEGREE,OPR_NAME,OPR_GENDER,REGISTER_DT,OPR_TEL,"
 				+ "OPR_MOBILE,PWD_OUT_DATE,OPR_STA,OPR_EMAIL,AUDIT_STAT FROM TBL_OPR_INFO_TMP "
 				+ whereSql;
 		sql += " order by REGISTER_DT desc";
 		String countSql = "SELECT COUNT(*) FROM TBL_OPR_INFO_TMP " + whereSql;
-		
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
@@ -4326,6 +4423,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 商户分店临时表查询
 	 * 
@@ -4334,7 +4432,8 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getMchntMccInfomcc(int begin, HttpServletRequest request) {
+	public static Object[] getMchntMccInfomcc(int begin,
+			HttpServletRequest request) {
 		String whereSql = " WHERE 1=1 ";
 		// Operator operator = (Operator)
 		// request.getSession().getAttribute(Constants.OPERATOR_INFO);
@@ -4344,14 +4443,15 @@ public class GridConfigMethod {
 		}
 		if (isNotEmpty(request.getParameter("mcc"))) {
 			whereSql += " AND MCHNT_TP = '" + request.getParameter("mcc")
-			+ "' ";
+					+ "' ";
 		}
-		
+
 		Object[] ret = new Object[2];
 		String sql = "SELECT MCHNT_TP,MCHNT_TP_GRP,DESCR,REC_ST,STATUSIDMCC FROM TBL_INF_MCHNT_TP_TMP"
 				+ whereSql + " order by MCHNT_TP";
-		String countSql = "SELECT COUNT(*) FROM TBL_INF_MCHNT_TP_TMP " + whereSql;
-		
+		String countSql = "SELECT COUNT(*) FROM TBL_INF_MCHNT_TP_TMP "
+				+ whereSql;
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
@@ -4460,14 +4560,15 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getMchntInfoTmp1(int begin, HttpServletRequest request) {
-		
+	public static Object[] getMchntInfoTmp1(int begin,
+			HttpServletRequest request) {
+
 		String whereSql = " WHERE 1=1 ";
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
 		if (isNotEmpty(request.getParameter("mchntId"))) {
 			whereSql += " AND MCHT_NO = '" + request.getParameter("mchntId")
-			+ "' ";
+					+ "' ";
 		}
 		if (isNotEmpty(request.getParameter("mchtStatus"))) {
 			whereSql += " AND MCHT_STATUS = '"
@@ -4475,7 +4576,7 @@ public class GridConfigMethod {
 		}
 		if (isNotEmpty(request.getParameter("mchtGrp"))) {
 			whereSql += " AND MCHT_GRP = '" + request.getParameter("mchtGrp")
-			+ "' ";
+					+ "' ";
 		}
 		if (isNotEmpty(request.getParameter("startDate"))) {
 			whereSql += " AND APPLY_DATE >= '"
@@ -4487,20 +4588,20 @@ public class GridConfigMethod {
 		}
 		if (isNotEmpty(request.getParameter("brhId"))) {
 			whereSql += " AND ACQ_INST_ID = '" + request.getParameter("brhId")
-			+ "' ";
+					+ "' ";
 		}
 		// else {
 		// whereSql += " AND ACQ_INST_ID IN " + operator.getBrhBelowId() + " ";
 		// }
 		whereSql += "AND MCHT_STATUS IN ('0', '1', '3', '5', '6', '7', '8', '9', 'I', 'J') ";
 		Object[] ret = new Object[2];
-		
+
 		// String sql =
 		// "SELECT MCHT_NO,MCHT_NM,ENG_NAME,MCC,LICENCE_NO,ADDR,POST_CODE,"
 		// +
 		// "COMM_EMAIL,MANAGER,CONTACT,COMM_TEL,APPLY_DATE,MCHT_STATUS FROM TBL_MCHT_BASE_INF_TMP "
 		// + whereSql + " ORDER BY MCHT_NO";
-		
+
 		String sql = "SELECT MCHT_NO,MCHT_NM,CUST_NO,RISK_GRADE,ENG_NAME,ROUTE_FLAG,MCC,LICENCE_NO,A.USC_CODE,ADDR,POST_CODE,"
 				+ "COMM_EMAIL,MANAGER,CONTACT,COMM_TEL,APPLY_DATE,MCHT_STATUS,nvl(B.TERM_COUNT,0),CRT_OPR_ID,UPD_OPR_ID,"
 				+ "SUBSTR(REC_UPD_TS,1,8)||' '||SUBSTR(REC_UPD_TS,9,2)||':'||SUBSTR(REC_UPD_TS,11,2)||':'||SUBSTR(REC_UPD_TS,13,2),RISL_LVL FROM "
@@ -4511,7 +4612,7 @@ public class GridConfigMethod {
 				+ "(select MCHT_CD,count(1) AS TERM_COUNT from TBL_TERM_INF group by MCHT_CD) B "
 				+ "ON (A.MCHT_NO = B.MCHT_CD) ORDER BY APPLY_DATE desc";
 		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
-		
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
@@ -4520,6 +4621,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询商户信息TMP
 	 * 
@@ -4598,7 +4700,7 @@ public class GridConfigMethod {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Object[] getMchntInfoAll(int begin, HttpServletRequest request) {
-//		String whereSql = " WHERE 1=1 and MCHT_STATUS<>'2' ";
+		// String whereSql = " WHERE 1=1 and MCHT_STATUS<>'2' ";
 		String whereSql = " WHERE 1=1 ";
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
@@ -4678,6 +4780,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询全部商户信息
 	 * 
@@ -4686,8 +4789,9 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getMchntInfoQueryAre(int begin, HttpServletRequest request) {
-//		String whereSql = " WHERE 1=1 and MCHT_STATUS<>'2' ";
+	public static Object[] getMchntInfoQueryAre(int begin,
+			HttpServletRequest request) {
+		// String whereSql = " WHERE 1=1 and MCHT_STATUS<>'2' ";
 		String whereSql = " WHERE 1=1 ";
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
@@ -4703,13 +4807,17 @@ public class GridConfigMethod {
 			whereSql += " AND MCHT_GRP = '" + request.getParameter("mchtGrp")
 					+ "' ";
 		}
-		if (isNotEmpty(request.getParameter("crtDate"))&&isNotEmpty(request.getParameter("crtEndDate"))) {
+		if (isNotEmpty(request.getParameter("crtDate"))
+				&& isNotEmpty(request.getParameter("crtEndDate"))) {
 			whereSql += " AND SUBSTR(REC_CRT_TS,0,8) between "
-					+ request.getParameter("crtDate") + " and  "+ request.getParameter("crtEndDate");
+					+ request.getParameter("crtDate") + " and  "
+					+ request.getParameter("crtEndDate");
 		}
-		if (isNotEmpty(request.getParameter("updDate"))&&isNotEmpty(request.getParameter("updEndDate"))) {
+		if (isNotEmpty(request.getParameter("updDate"))
+				&& isNotEmpty(request.getParameter("updEndDate"))) {
 			whereSql += " AND SUBSTR(REC_UPD_TS,0,8) between "
-					+ request.getParameter("updDate") + " and "+ request.getParameter("updEndDate");
+					+ request.getParameter("updDate") + " and "
+					+ request.getParameter("updEndDate");
 		}
 		if (isNotEmpty(request.getParameter("brhId"))) {
 			whereSql += " AND ACQ_INST_ID = '" + request.getParameter("brhId")
@@ -4767,6 +4875,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询全部商户信息(不包括黑名单)
 	 * 
@@ -4775,8 +4884,9 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getMchntInfoAll2(int begin, HttpServletRequest request) {
-//		String whereSql = " WHERE 1=1 and MCHT_STATUS<>'2' ";
+	public static Object[] getMchntInfoAll2(int begin,
+			HttpServletRequest request) {
+		// String whereSql = " WHERE 1=1 and MCHT_STATUS<>'2' ";
 		String whereSql = " WHERE 1=1 and MCHT_STATUS<>'H'";
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
@@ -4923,6 +5033,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询修改待复审商户信息
 	 * 
@@ -4931,15 +5042,17 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getMchntCheckInfo4Upd1(int begin, HttpServletRequest request) {
+	public static Object[] getMchntCheckInfo4Upd1(int begin,
+			HttpServletRequest request) {
 		String whereSql = " WHERE 1=1  ";
-		Operator operator = (Operator) request.getSession().getAttribute( Constants.OPERATOR_INFO);
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
 		whereSql += " AND ACQ_INST_ID IN " + operator.getBrhBelowId() + " ";
 		whereSql += "AND MCHT_STATUS IN ('J','K','L') ";
 		Object[] ret = new Object[2];
 		if (isNotEmpty(request.getParameter("mchntId"))) {
 			whereSql += " AND MCHT_NO = '" + request.getParameter("mchntId")
-			+ "' ";
+					+ "' ";
 		}
 		if (isNotEmpty(request.getParameter("mchtStatus"))) {
 			whereSql += " AND MCHT_STATUS = '"
@@ -4947,7 +5060,7 @@ public class GridConfigMethod {
 		}
 		if (isNotEmpty(request.getParameter("mchtGrp"))) {
 			whereSql += " AND MCHT_GRP = '" + request.getParameter("mchtGrp")
-			+ "' ";
+					+ "' ";
 		}
 		if (isNotEmpty(request.getParameter("startDate"))) {
 			whereSql += " AND APPLY_DATE >= '"
@@ -4959,11 +5072,11 @@ public class GridConfigMethod {
 		}
 		if (isNotEmpty(request.getParameter("brhId"))) {
 			whereSql += " AND ACQ_INST_ID = '" + request.getParameter("brhId")
-			+ "' ";
+					+ "' ";
 		} else {
 			whereSql += " AND ACQ_INST_ID IN " + operator.getBrhBelowId() + " ";
 		}
-		
+
 		String sql = "SELECT MCHT_NO,MCHT_NM,ENG_NAME,MCC,LICENCE_NO,ADDR,POST_CODE,"
 				+ "COMM_EMAIL,MANAGER,CONTACT,COMM_TEL,APPLY_DATE,MCHT_STATUS,nvl(B.TERM_COUNT,0),CRT_OPR_ID,PART_NUM,"
 				+ "SUBSTR(REC_UPD_TS,1,8)||' '||SUBSTR(REC_UPD_TS,9,2)||':'||SUBSTR(REC_UPD_TS,11,2)||':'||SUBSTR(REC_UPD_TS,13,2),AGENT_NO,AUDIT_OPR_ID,RISL_LVL FROM "
@@ -4973,9 +5086,9 @@ public class GridConfigMethod {
 				+ "left outer join "
 				+ "(select MCHT_CD,count(1) AS TERM_COUNT from TBL_TERM_INF group by MCHT_CD) B "
 				+ "ON (A.MCHT_NO = B.MCHT_CD) " + "ORDER BY APPLY_DATE desc";
-		
+
 		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
-		
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
@@ -4984,8 +5097,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 	/**
 	 * 查询新增待审核商户信息
 	 * 
@@ -5009,10 +5121,10 @@ public class GridConfigMethod {
 			whereSql += " AND MCHT_NO = '" + request.getParameter("mchntId")
 					+ "' ";
 		}
-		/*if (isNotEmpty(request.getParameter("mchtStatus"))) {
-			whereSql += " AND MCHT_STATUS = '"
-					+ request.getParameter("mchtStatus") + "' ";
-		}*/
+		/*
+		 * if (isNotEmpty(request.getParameter("mchtStatus"))) { whereSql +=
+		 * " AND MCHT_STATUS = '" + request.getParameter("mchtStatus") + "' "; }
+		 */
 		if (isNotEmpty(request.getParameter("mchtGrp"))) {
 			whereSql += " AND MCHT_GRP = '" + request.getParameter("mchtGrp")
 					+ "' ";
@@ -5052,6 +5164,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询新增待复审商户信息
 	 * 
@@ -5065,23 +5178,23 @@ public class GridConfigMethod {
 		String whereSql = " WHERE 1=1 ";
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
-		
+
 		whereSql += " AND ACQ_INST_ID IN " + operator.getBrhBelowId() + " ";
-		
+
 		whereSql += "AND MCHT_STATUS IN ('I') ";
 		Object[] ret = new Object[2];
-		
+
 		if (isNotEmpty(request.getParameter("mchntId"))) {
 			whereSql += " AND MCHT_NO = '" + request.getParameter("mchntId")
-			+ "' ";
+					+ "' ";
 		}
-		/*if (isNotEmpty(request.getParameter("mchtStatus"))) {
-			whereSql += " AND MCHT_STATUS = '"
-					+ request.getParameter("mchtStatus") + "' ";
-		}*/
+		/*
+		 * if (isNotEmpty(request.getParameter("mchtStatus"))) { whereSql +=
+		 * " AND MCHT_STATUS = '" + request.getParameter("mchtStatus") + "' "; }
+		 */
 		if (isNotEmpty(request.getParameter("mchtGrp"))) {
 			whereSql += " AND MCHT_GRP = '" + request.getParameter("mchtGrp")
-			+ "' ";
+					+ "' ";
 		}
 		if (isNotEmpty(request.getParameter("startDate"))) {
 			whereSql += " AND APPLY_DATE >= '"
@@ -5093,11 +5206,11 @@ public class GridConfigMethod {
 		}
 		if (isNotEmpty(request.getParameter("brhId"))) {
 			whereSql += " AND ACQ_INST_ID = '" + request.getParameter("brhId")
-			+ "' ";
+					+ "' ";
 		} else {
 			whereSql += " AND ACQ_INST_ID IN " + operator.getBrhBelowId() + " ";
 		}
-		
+
 		String sql = "SELECT MCHT_NO,MCHT_NM,ENG_NAME,MCC,LICENCE_NO,ADDR,POST_CODE,"
 				+ "COMM_EMAIL,MANAGER,CONTACT,COMM_TEL,APPLY_DATE,MCHT_STATUS,nvl(B.TERM_COUNT,0),CRT_OPR_ID,PART_NUM,"
 				+ "SUBSTR(REC_UPD_TS,1,8)||' '||SUBSTR(REC_UPD_TS,9,2)||':'||SUBSTR(REC_UPD_TS,11,2)||':'||SUBSTR(REC_UPD_TS,13,2),AGENT_NO,RISL_LVL FROM "
@@ -5107,9 +5220,9 @@ public class GridConfigMethod {
 				+ "left outer join "
 				+ "(select MCHT_CD,count(1) AS TERM_COUNT from TBL_TERM_INF group by MCHT_CD) B "
 				+ "ON (A.MCHT_NO = B.MCHT_CD) " + "ORDER BY APPLY_DATE desc";
-		
+
 		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
-		
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
@@ -5118,8 +5231,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 	/**
 	 * 查询待审核商户信息
 	 * 
@@ -5186,8 +5298,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 	/**
 	 * 商户操作日志查询
 	 * 
@@ -5196,22 +5307,21 @@ public class GridConfigMethod {
 	 * @return 2010-8-19上午09:50:00
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getMchntLogs(int begin,
-			HttpServletRequest request) {
+	public static Object[] getMchntLogs(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		String whereSql = " WHERE 1=1 ";
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
-		
+
 		if (isNotEmpty(request.getParameter("mchntInd"))) {
 			whereSql += " AND MCHNT_IND = '" + request.getParameter("mchntInd")
 					+ "' ";
-		}else{
+		} else {
 			whereSql += " AND MCHNT_IND = '' ";
 		}
-		String sql = "SELECT OPR_ID,TXN_TIME,OPR_TYPE,OPR_STATUS,OPR_INFO FROM TBL_MCHNT_LOGS " +whereSql
-				+"ORDER BY TXN_TIME DESC";
-		String countSql = "SELECT COUNT(*) FROM TBL_MCHNT_LOGS " +whereSql;
+		String sql = "SELECT OPR_ID,TXN_TIME,OPR_TYPE,OPR_STATUS,OPR_INFO FROM TBL_MCHNT_LOGS "
+				+ whereSql + "ORDER BY TXN_TIME DESC";
+		String countSql = "SELECT COUNT(*) FROM TBL_MCHNT_LOGS " + whereSql;
 
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
@@ -5221,7 +5331,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户操作日志查询
 	 * 
@@ -5234,15 +5344,15 @@ public class GridConfigMethod {
 			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		String whereSql = " WHERE module_code='2' ";
-		
+
 		if (isNotEmpty(request.getParameter("mchntInd"))) {
 			whereSql += " AND tbl_key = '" + request.getParameter("mchntInd")
 					+ "' ";
-		}else{
+		} else {
 			whereSql += " AND tbl_key = '' ";
 		}
-		String sql = "SELECT MODULE_CODE,TBL_KEY,MAT_TYPE,STORE_NAME,UPLOAD_NAME,FILE_SIZE,OPR_ID,CRT_DATE FROM (select row_number() over (partition by mat_type order by crt_date desc) LEV,tbl_def_file_inf.* from tbl_def_file_inf " +whereSql
-				+") where LEV=1  order by crt_date desc ";
+		String sql = "SELECT MODULE_CODE,TBL_KEY,MAT_TYPE,STORE_NAME,UPLOAD_NAME,FILE_SIZE,OPR_ID,CRT_DATE FROM (select row_number() over (partition by mat_type order by crt_date desc) LEV,tbl_def_file_inf.* from tbl_def_file_inf "
+				+ whereSql + ") where LEV=1  order by crt_date desc ";
 		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
 
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
@@ -5253,7 +5363,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 查询新增待审核商户信息（进件系统）
 	 * 
@@ -5264,26 +5374,26 @@ public class GridConfigMethod {
 	@SuppressWarnings("unchecked")
 	public static Object[] getMchntCheckInfo4Def(int begin,
 			HttpServletRequest request) {
-		String whereSql = " WHERE 1=1 ";		
+		String whereSql = " WHERE 1=1 ";
 
 		whereSql += "AND STATUS IN ('1') ";
 		Object[] ret = new Object[2];
 
 		if (isNotEmpty(request.getParameter("mchtNm"))) {
-			whereSql += " AND MCHT_NAME like '%" + request.getParameter("mchtNm")
-					+ "%' ";
-		}		
+			whereSql += " AND MCHT_NAME like '%"
+					+ request.getParameter("mchtNm") + "%' ";
+		}
 		if (isNotEmpty(request.getParameter("mchtGrp"))) {
-			whereSql += " AND MCHNT_TP_GRP = '" + request.getParameter("mchtGrp")
-					+ "' ";
-		}		
-		/*if (isNotEmpty(request.getParameter("brhId"))) {
-			whereSql += " AND ACQ_INST_ID = '" + request.getParameter("brhId")
-					+ "' ";
-		} else {
-			whereSql += " AND ACQ_INST_ID IN " + operator.getBrhBelowId() + " ";
-		}*/
-		
+			whereSql += " AND MCHNT_TP_GRP = '"
+					+ request.getParameter("mchtGrp") + "' ";
+		}
+		/*
+		 * if (isNotEmpty(request.getParameter("brhId"))) { whereSql +=
+		 * " AND ACQ_INST_ID = '" + request.getParameter("brhId") + "' "; } else
+		 * { whereSql += " AND ACQ_INST_ID IN " + operator.getBrhBelowId() +
+		 * " "; }
+		 */
+
 		if (isNotEmpty(request.getParameter("agentNo"))) {
 			whereSql += " AND AGENT_NO = '" + request.getParameter("agentNo")
 					+ "' ";
@@ -5292,11 +5402,11 @@ public class GridConfigMethod {
 		String sql = "SELECT REC_ID,MCHT_NAME,LEGAL_NAME,MCC,BUSI_LIC_NO,REG_DATE,STATUS,"
 				+ "OPR_ID,AGENT_NO,nvl(B.TERM_COUNT,0) FROM"
 				+ " (SELECT * FROM TBL_DEF_MCHT_INF "
-				+ whereSql+") A "
+				+ whereSql
+				+ ") A "
 				+ "left outer join "
 				+ "(select MCHT_REC_ID,count(1) AS TERM_COUNT from TBL_DEF_TERM_INF group by MCHT_REC_ID) B "
-				+ "ON (A.REC_ID = B.MCHT_REC_ID) "
-				+ "  ORDER BY CRT_DATE desc";
+				+ "ON (A.REC_ID = B.MCHT_REC_ID) " + "  ORDER BY CRT_DATE desc";
 
 		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
 
@@ -5308,7 +5418,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 获取商户下挂终端（进件审核）
 	 * 
@@ -5320,8 +5430,8 @@ public class GridConfigMethod {
 	public static Object[] getMchntTermInfo4Def(int begin,
 			HttpServletRequest request) {
 		Object[] ret = new Object[2];
-		String sql = "select REC_ID,STATUS,(PRO_CODE||'-'||CITY_CODE||'-'||COUNTRY||'-'||ADDRESS) as POSADDR,TERM_TYPE,TERM_BRAND,TERM_MODEL,SN,PHONE_NO,IMEI," +
-				" PRO_CODE,CITY_CODE,COUNTRY,ADDRESS FROM TBL_DEF_TERM_INF WHERE MCHT_REC_ID = '"
+		String sql = "select REC_ID,STATUS,(PRO_CODE||'-'||CITY_CODE||'-'||COUNTRY||'-'||ADDRESS) as POSADDR,TERM_TYPE,TERM_BRAND,TERM_MODEL,SN,PHONE_NO,IMEI,"
+				+ " PRO_CODE,CITY_CODE,COUNTRY,ADDRESS FROM TBL_DEF_TERM_INF WHERE MCHT_REC_ID = '"
 				+ request.getParameter("mchntRecId").trim() + "' ";
 		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
 		// 20120823改成分页查询
@@ -5333,8 +5443,6 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-
-
 
 	/**
 	 * 终端库存查询
@@ -5452,8 +5560,8 @@ public class GridConfigMethod {
 		Operator operator = (Operator) request.getSession().getAttribute(
 				Constants.OPERATOR_INFO);
 
-		String sql = "SELECT a.TXN_TIME,a.MCHNT_ID,b.MCHT_NM,a.BRH_ID,a.OPR_ID,a.REFUSE_TYPE,a.REFUSE_INFO FROM TBL_MCHNT_REFUSE a" +
-				" left join TBL_MCHT_BASE_INF_TMP b on a.MCHNT_ID = b.MCHT_NO WHERE a.BRH_ID IN "
+		String sql = "SELECT a.TXN_TIME,a.MCHNT_ID,b.MCHT_NM,a.BRH_ID,a.OPR_ID,a.REFUSE_TYPE,a.REFUSE_INFO FROM TBL_MCHNT_REFUSE a"
+				+ " left join TBL_MCHT_BASE_INF_TMP b on a.MCHNT_ID = b.MCHT_NO WHERE a.BRH_ID IN "
 				+ operator.getBrhBelowId() + " ORDER BY a.TXN_TIME DESC";
 		String countSql = "SELECT COUNT(*) FROM TBL_MCHNT_REFUSE WHERE BRH_ID IN "
 				+ operator.getBrhBelowId();
@@ -5504,7 +5612,8 @@ public class GridConfigMethod {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Object[] getTermTmkInfo(int begin, HttpServletRequest request) {
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
 		Object[] ret = new Object[2];
 		String termNo = request.getParameter("termId");
 		String mchtCd = request.getParameter("mchnNo");
@@ -5512,7 +5621,7 @@ public class GridConfigMethod {
 		String state = request.getParameter("state");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		
+
 		StringBuffer whereSql = new StringBuffer(
 				" WHERE trim(t1.term_id) not in (select t3.term_id_id from tbl_term_tmk_log t3 where  t3.state ='0')")
 				.append(" and t1.TERM_BRANCH in " + operator.getBrhBelowId());
@@ -5520,17 +5629,21 @@ public class GridConfigMethod {
 			whereSql.append(" AND t1.MCHT_CD='").append(mchtCd).append("'");
 		}
 		if (termBranch != null && !termBranch.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_BRANCH='").append(termBranch).append("'");
+			whereSql.append(" AND t1.TERM_BRANCH='").append(termBranch)
+					.append("'");
 		}
 		if (termNo != null && !termNo.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_ID='").append(
-					CommonFunction.fillString(termNo, ' ', 12, true)).append("'");
+			whereSql.append(" AND t1.TERM_ID='")
+					.append(CommonFunction.fillString(termNo, ' ', 12, true))
+					.append("'");
 		}
 		if (startDate != null && !startDate.trim().equals("")) {
-			whereSql.append(" AND substr(t1.REC_CRT_TS,0,8) >= ").append(startDate);
+			whereSql.append(" AND substr(t1.REC_CRT_TS,0,8) >= ").append(
+					startDate);
 		}
 		if (endDate != null && !endDate.trim().equals("")) {
-			whereSql.append(" AND substr(t1.REC_CRT_TS,0,8) <= ").append(endDate);
+			whereSql.append(" AND substr(t1.REC_CRT_TS,0,8) <= ").append(
+					endDate);
 		}
 		if (state != null && !state.trim().equals("")) {
 			if (state.equals("1"))
@@ -5538,38 +5651,43 @@ public class GridConfigMethod {
 			else
 				whereSql.append(" AND t2.STATE is null");
 		}
-		
+
 		String sql = "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
-//				+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' and term_tp <> '1') t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
+				// +
+				// "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' and term_tp <> '1') t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
 				+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' ) t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
 				+ whereSql.toString() + " ORDER BY t1.term_id";
-//		String countSql = "SELECT COUNT(*) FROM tbl_term_inf_tmp t1 left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
-//				+ whereSql.toString();
-		
-//		String sql = "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
-//			+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM tbl_term_inf_tmp t1 inner join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' and t2.batch_no = (select max(batch_no) from tbl_term_tmk_log where term_id_id = t2.term_id_id)"
-//			+ " left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
-//			+ whereSql.toString() + " ORDER BY t1.term_id";
-//		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
+		// String countSql =
+		// "SELECT COUNT(*) FROM tbl_term_inf_tmp t1 left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
+		// + whereSql.toString();
 
-//		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-//				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		
+		// String sql =
+		// "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
+		// +
+		// "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM tbl_term_inf_tmp t1 inner join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' and t2.batch_no = (select max(batch_no) from tbl_term_tmk_log where term_id_id = t2.term_id_id)"
+		// + " left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
+		// + whereSql.toString() + " ORDER BY t1.term_id";
+		// String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
+
+		// List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+		// .findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-		.findBySQLQuery(sql);
-		
-		String distinctSql=" select max(batch_no), term_id_id from tbl_term_tmk_log group by term_id_id";
-		List<Object[]> distnctList=CommonFunction.getCommQueryDAO().findBySQLQuery(distinctSql);
-		
-		int removeCount=0;
-		for(int xi=0;xi<dataList.size();xi++){
-			String strTermId=(String)dataList.get(xi)[0];
-			String strBatchNo=(String)dataList.get(xi)[6];
-			for(int xx=0;xx<distnctList.size();xx++){
-				String stDisTermId=(String)distnctList.get(xx)[1];
-				String stDisBatchNo=(String)distnctList.get(xx)[0];
-				if(stDisTermId.trim().equals(strTermId.trim())){
-					if(!stDisBatchNo.trim().equals(strBatchNo.trim())){
+				.findBySQLQuery(sql);
+
+		String distinctSql = " select max(batch_no), term_id_id from tbl_term_tmk_log group by term_id_id";
+		List<Object[]> distnctList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(distinctSql);
+
+		int removeCount = 0;
+		for (int xi = 0; xi < dataList.size(); xi++) {
+			String strTermId = (String) dataList.get(xi)[0];
+			String strBatchNo = (String) dataList.get(xi)[6];
+			for (int xx = 0; xx < distnctList.size(); xx++) {
+				String stDisTermId = (String) distnctList.get(xx)[1];
+				String stDisBatchNo = (String) distnctList.get(xx)[0];
+				if (stDisTermId.trim().equals(strTermId.trim())) {
+					if (!stDisBatchNo.trim().equals(strBatchNo.trim())) {
 						dataList.remove(xi);
 						removeCount++;
 						xi--;
@@ -5577,29 +5695,30 @@ public class GridConfigMethod {
 				}
 			}
 		}
-		
-		List<Object[]> dataList1=new ArrayList();
-		int countBreak=0;
-		for(int gi=begin;gi<dataList.size();gi++){
-			if((begin+Constants.QUERY_RECORD_COUNT)<=dataList.size()){
-				if(countBreak>15-1){
+
+		List<Object[]> dataList1 = new ArrayList();
+		int countBreak = 0;
+		for (int gi = begin; gi < dataList.size(); gi++) {
+			if ((begin + Constants.QUERY_RECORD_COUNT) <= dataList.size()) {
+				if (countBreak > 15 - 1) {
 					break;
 				}
 				dataList1.add(dataList.get(gi));
 				countBreak++;
 			}
-			
-			if((begin+Constants.QUERY_RECORD_COUNT)>dataList.size()){
+
+			if ((begin + Constants.QUERY_RECORD_COUNT) > dataList.size()) {
 				dataList1.add(dataList.get(gi));
 			}
 		}
-//		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
-		String count =String.valueOf(dataList.size());
+		// String count =
+		// CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		String count = String.valueOf(dataList.size());
 		ret[0] = dataList1;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 获取终端密钥申请信息（带验证码）
 	 * 
@@ -5608,7 +5727,8 @@ public class GridConfigMethod {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Object[] getTermTmkInfo2(int begin, HttpServletRequest request) {
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
 		Object[] ret = new Object[2];
 		String termNo = request.getParameter("termId");
 		String mchtCd = request.getParameter("mchnNo");
@@ -5616,26 +5736,30 @@ public class GridConfigMethod {
 		String state = request.getParameter("state");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		
+
 		StringBuffer whereSql = new StringBuffer(
-		//		" WHERE trim(t1.term_id) not in (select t3.term_id_id from tbl_term_tmk_log t3 where  t3.state ='0')")
+		// " WHERE trim(t1.term_id) not in (select t3.term_id_id from tbl_term_tmk_log t3 where  t3.state ='0')")
 				" WHERE trim(t1.term_id) not in (select t3.term_id_id from tbl_term_tmk_log t3 where  t3.state ='0') and t2.state is not null ")
 				.append(" and t1.TERM_BRANCH in " + operator.getBrhBelowId());
 		if (mchtCd != null && !mchtCd.trim().equals("")) {
 			whereSql.append(" AND t1.MCHT_CD='").append(mchtCd).append("'");
 		}
 		if (termBranch != null && !termBranch.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_BRANCH='").append(termBranch).append("'");
+			whereSql.append(" AND t1.TERM_BRANCH='").append(termBranch)
+					.append("'");
 		}
 		if (termNo != null && !termNo.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_ID='").append(
-					CommonFunction.fillString(termNo, ' ', 12, true)).append("'");
+			whereSql.append(" AND t1.TERM_ID='")
+					.append(CommonFunction.fillString(termNo, ' ', 12, true))
+					.append("'");
 		}
 		if (startDate != null && !startDate.trim().equals("")) {
-			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) >= ").append(startDate);
+			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) >= ").append(
+					startDate);
 		}
 		if (endDate != null && !endDate.trim().equals("")) {
-			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) <= ").append(endDate);
+			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) <= ").append(
+					endDate);
 		}
 		if (state != null && !state.trim().equals("")) {
 			if (state.equals("1"))
@@ -5643,38 +5767,43 @@ public class GridConfigMethod {
 			else
 				whereSql.append(" AND t2.STATE is null");
 		}
-		
+
 		String sql = "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
-//				+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' and term_tp <> '1') t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
+				// +
+				// "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' and term_tp <> '1') t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
 				+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' ) t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
 				+ whereSql.toString() + " ORDER BY t1.term_id";
-//		String countSql = "SELECT COUNT(*) FROM tbl_term_inf_tmp t1 left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
-//				+ whereSql.toString();
-		
-//		String sql = "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
-//			+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM tbl_term_inf_tmp t1 inner join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' and t2.batch_no = (select max(batch_no) from tbl_term_tmk_log where term_id_id = t2.term_id_id)"
-//			+ " left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
-//			+ whereSql.toString() + " ORDER BY t1.term_id";
-//		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
+		// String countSql =
+		// "SELECT COUNT(*) FROM tbl_term_inf_tmp t1 left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
+		// + whereSql.toString();
 
-//		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-//				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		
+		// String sql =
+		// "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
+		// +
+		// "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM tbl_term_inf_tmp t1 inner join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' and t2.batch_no = (select max(batch_no) from tbl_term_tmk_log where term_id_id = t2.term_id_id)"
+		// + " left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
+		// + whereSql.toString() + " ORDER BY t1.term_id";
+		// String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
+
+		// List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+		// .findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-		.findBySQLQuery(sql);
-		
-		String distinctSql=" select max(batch_no), term_id_id from tbl_term_tmk_log group by term_id_id";
-		List<Object[]> distnctList=CommonFunction.getCommQueryDAO().findBySQLQuery(distinctSql);
-		
-		int removeCount=0;
-		for(int xi=0;xi<dataList.size();xi++){
-			String strTermId=(String)dataList.get(xi)[0];
-			String strBatchNo=(String)dataList.get(xi)[6];
-			for(int xx=0;xx<distnctList.size();xx++){
-				String stDisTermId=(String)distnctList.get(xx)[1];
-				String stDisBatchNo=(String)distnctList.get(xx)[0];
-				if(stDisTermId.trim().equals(strTermId.trim())){
-					if(!stDisBatchNo.trim().equals(strBatchNo.trim())){
+				.findBySQLQuery(sql);
+
+		String distinctSql = " select max(batch_no), term_id_id from tbl_term_tmk_log group by term_id_id";
+		List<Object[]> distnctList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(distinctSql);
+
+		int removeCount = 0;
+		for (int xi = 0; xi < dataList.size(); xi++) {
+			String strTermId = (String) dataList.get(xi)[0];
+			String strBatchNo = (String) dataList.get(xi)[6];
+			for (int xx = 0; xx < distnctList.size(); xx++) {
+				String stDisTermId = (String) distnctList.get(xx)[1];
+				String stDisBatchNo = (String) distnctList.get(xx)[0];
+				if (stDisTermId.trim().equals(strTermId.trim())) {
+					if (!stDisBatchNo.trim().equals(strBatchNo.trim())) {
 						dataList.remove(xi);
 						removeCount++;
 						xi--;
@@ -5682,29 +5811,30 @@ public class GridConfigMethod {
 				}
 			}
 		}
-		
-		List<Object[]> dataList1=new ArrayList();
-		int countBreak=0;
-		for(int gi=begin;gi<dataList.size();gi++){
-			if((begin+Constants.QUERY_RECORD_COUNT)<=dataList.size()){
-				if(countBreak>15-1){
+
+		List<Object[]> dataList1 = new ArrayList();
+		int countBreak = 0;
+		for (int gi = begin; gi < dataList.size(); gi++) {
+			if ((begin + Constants.QUERY_RECORD_COUNT) <= dataList.size()) {
+				if (countBreak > 15 - 1) {
 					break;
 				}
 				dataList1.add(dataList.get(gi));
 				countBreak++;
 			}
-			
-			if((begin+Constants.QUERY_RECORD_COUNT)>dataList.size()){
+
+			if ((begin + Constants.QUERY_RECORD_COUNT) > dataList.size()) {
 				dataList1.add(dataList.get(gi));
 			}
 		}
-//		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
-		String count =String.valueOf(dataList.size());
+		// String count =
+		// CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		String count = String.valueOf(dataList.size());
 		ret[0] = dataList1;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 获取终端密钥申请信息（不带验证码）
 	 * 
@@ -5713,7 +5843,8 @@ public class GridConfigMethod {
 	 */
 	@SuppressWarnings("unchecked")
 	public static Object[] getTermTmkInfo3(int begin, HttpServletRequest request) {
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
 		Object[] ret = new Object[2];
 		String termNo = request.getParameter("termId");
 		String mchtCd = request.getParameter("mchnNo");
@@ -5721,26 +5852,30 @@ public class GridConfigMethod {
 		String state = request.getParameter("state");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		
+
 		StringBuffer whereSql = new StringBuffer(
-		//		" WHERE trim(t1.term_id) not in (select t3.term_id_id from tbl_term_tmk_log t3 where  t3.state ='0')")
+		// " WHERE trim(t1.term_id) not in (select t3.term_id_id from tbl_term_tmk_log t3 where  t3.state ='0')")
 				" WHERE trim(t1.term_id) not in (select t3.term_id_id from tbl_term_tmk_log t3 where  t3.state ='0') and t2.state is  null ")
 				.append(" and t1.TERM_BRANCH in " + operator.getBrhBelowId());
 		if (mchtCd != null && !mchtCd.trim().equals("")) {
 			whereSql.append(" AND t1.MCHT_CD='").append(mchtCd).append("'");
 		}
 		if (termBranch != null && !termBranch.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_BRANCH='").append(termBranch).append("'");
+			whereSql.append(" AND t1.TERM_BRANCH='").append(termBranch)
+					.append("'");
 		}
 		if (termNo != null && !termNo.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_ID='").append(
-					CommonFunction.fillString(termNo, ' ', 12, true)).append("'");
+			whereSql.append(" AND t1.TERM_ID='")
+					.append(CommonFunction.fillString(termNo, ' ', 12, true))
+					.append("'");
 		}
 		if (startDate != null && !startDate.trim().equals("")) {
-			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) >= ").append(startDate);
+			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) >= ").append(
+					startDate);
 		}
 		if (endDate != null && !endDate.trim().equals("")) {
-			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) <= ").append(endDate);
+			whereSql.append(" AND substr(t1.REC_CRT_TS, 0, 8) <= ").append(
+					endDate);
 		}
 		if (state != null && !state.trim().equals("")) {
 			if (state.equals("1"))
@@ -5748,38 +5883,43 @@ public class GridConfigMethod {
 			else
 				whereSql.append(" AND t2.STATE is null");
 		}
-		
+
 		String sql = "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
-//				+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' and term_tp <> '1') t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
+				// +
+				// "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' and term_tp <> '1') t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
 				+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM ((select * from TBL_MCHT_BASE_INF where MCHT_STATUS = '0') t3 left outer join (select * from tbl_term_inf_tmp where term_sta = '1' ) t1 on t1.mcht_cd = t3.MCHT_NO  left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0')"
 				+ whereSql.toString() + " ORDER BY t1.term_id";
-//		String countSql = "SELECT COUNT(*) FROM tbl_term_inf_tmp t1 left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
-//				+ whereSql.toString();
-		
-//		String sql = "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
-//			+ "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM tbl_term_inf_tmp t1 inner join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' and t2.batch_no = (select max(batch_no) from tbl_term_tmk_log where term_id_id = t2.term_id_id)"
-//			+ " left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
-//			+ whereSql.toString() + " ORDER BY t1.term_id";
-//		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
+		// String countSql =
+		// "SELECT COUNT(*) FROM tbl_term_inf_tmp t1 left join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
+		// + whereSql.toString();
 
-//		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-//				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		
+		// String sql =
+		// "SELECT t1.term_id,t1.mcht_cd||' - '||t3.MCHT_NM,t1.term_branch,t1.term_sta,t1.PSAM_ID,t2.state,t2.batch_no,t2.req_opr,t2.req_date,"
+		// +
+		// "t2.chk_opr,t2.chk_date,t1.rec_crt_ts FROM tbl_term_inf_tmp t1 inner join tbl_term_tmk_log t2 on trim(t1.term_id)=t2.term_id_id and t2.state!='0' and t2.batch_no = (select max(batch_no) from tbl_term_tmk_log where term_id_id = t2.term_id_id)"
+		// + " left join TBL_MCHT_BASE_INF t3 on t1.mcht_cd = t3.MCHT_NO"
+		// + whereSql.toString() + " ORDER BY t1.term_id";
+		// String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
+
+		// List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+		// .findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-		.findBySQLQuery(sql);
-		
-		String distinctSql=" select max(batch_no), term_id_id from tbl_term_tmk_log group by term_id_id";
-		List<Object[]> distnctList=CommonFunction.getCommQueryDAO().findBySQLQuery(distinctSql);
-		
-		int removeCount=0;
-		for(int xi=0;xi<dataList.size();xi++){
-			String strTermId=(String)dataList.get(xi)[0];
-			String strBatchNo=(String)dataList.get(xi)[6];
-			for(int xx=0;xx<distnctList.size();xx++){
-				String stDisTermId=(String)distnctList.get(xx)[1];
-				String stDisBatchNo=(String)distnctList.get(xx)[0];
-				if(stDisTermId.trim().equals(strTermId.trim())){
-					if(!stDisBatchNo.trim().equals(strBatchNo.trim())){
+				.findBySQLQuery(sql);
+
+		String distinctSql = " select max(batch_no), term_id_id from tbl_term_tmk_log group by term_id_id";
+		List<Object[]> distnctList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(distinctSql);
+
+		int removeCount = 0;
+		for (int xi = 0; xi < dataList.size(); xi++) {
+			String strTermId = (String) dataList.get(xi)[0];
+			String strBatchNo = (String) dataList.get(xi)[6];
+			for (int xx = 0; xx < distnctList.size(); xx++) {
+				String stDisTermId = (String) distnctList.get(xx)[1];
+				String stDisBatchNo = (String) distnctList.get(xx)[0];
+				if (stDisTermId.trim().equals(strTermId.trim())) {
+					if (!stDisBatchNo.trim().equals(strBatchNo.trim())) {
 						dataList.remove(xi);
 						removeCount++;
 						xi--;
@@ -5787,24 +5927,25 @@ public class GridConfigMethod {
 				}
 			}
 		}
-		
-		List<Object[]> dataList1=new ArrayList();
-		int countBreak=0;
-		for(int gi=begin;gi<dataList.size();gi++){
-			if((begin+Constants.QUERY_RECORD_COUNT)<=dataList.size()){
-				if(countBreak>15-1){
+
+		List<Object[]> dataList1 = new ArrayList();
+		int countBreak = 0;
+		for (int gi = begin; gi < dataList.size(); gi++) {
+			if ((begin + Constants.QUERY_RECORD_COUNT) <= dataList.size()) {
+				if (countBreak > 15 - 1) {
 					break;
 				}
 				dataList1.add(dataList.get(gi));
 				countBreak++;
 			}
-			
-			if((begin+Constants.QUERY_RECORD_COUNT)>dataList.size()){
+
+			if ((begin + Constants.QUERY_RECORD_COUNT) > dataList.size()) {
 				dataList1.add(dataList.get(gi));
 			}
 		}
-//		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
-		String count =String.valueOf(dataList.size());
+		// String count =
+		// CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		String count = String.valueOf(dataList.size());
 		ret[0] = dataList1;
 		ret[1] = count;
 		return ret;
@@ -5862,9 +6003,14 @@ public class GridConfigMethod {
 	@SuppressWarnings("unchecked")
 	public static Object[] getTermTmkInfoAll(int begin,
 			HttpServletRequest request) {
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
-//		StringBuffer whereSql = new StringBuffer(" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp where term_tp <>'1') and t1.TERM_BRANCH in " + operator.getBrhBelowId());
-		StringBuffer whereSql = new StringBuffer(" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp ) and t1.TERM_BRANCH in " + operator.getBrhBelowId());
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
+		// StringBuffer whereSql = new
+		// StringBuffer(" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp where term_tp <>'1') and t1.TERM_BRANCH in "
+		// + operator.getBrhBelowId());
+		StringBuffer whereSql = new StringBuffer(
+				" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp ) and t1.TERM_BRANCH in "
+						+ operator.getBrhBelowId());
 		Object[] ret = new Object[2];
 		String batchNo = request.getParameter("batchNo");
 		String termIdId = request.getParameter("termIdId").trim();
@@ -5873,18 +6019,19 @@ public class GridConfigMethod {
 		String state = request.getParameter("state");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		
-		//只显示“已申请”的状态 by Mike 2013-8-7
-		if(state==""){
-			state="0";
+
+		// 只显示“已申请”的状态 by Mike 2013-8-7
+		if (state == "") {
+			state = "0";
 		}
-		
+
 		if (!StringUtil.isEmpty(mchntNo))
 			whereSql.append(" AND t1.MCHN_NO='").append(mchntNo).append("'");
 		if (!StringUtil.isEmpty(reqOpr))
 			whereSql.append(" AND t1.REQ_OPR='").append(reqOpr).append("'");
 		if (!StringUtil.isEmpty(termIdId))
-			whereSql.append(" AND t1.TERM_ID_ID='").append(termIdId).append("'");
+			whereSql.append(" AND t1.TERM_ID_ID='").append(termIdId)
+					.append("'");
 		if (!StringUtil.isEmpty(batchNo))
 			whereSql.append(" AND t1.BATCH_NO='").append(batchNo).append("'");
 		if (!StringUtil.isEmpty(startDate))
@@ -5893,22 +6040,24 @@ public class GridConfigMethod {
 			whereSql.append(" AND t1.REQ_DATE<=").append(endDate);
 		if (!StringUtil.isEmpty(state))
 			whereSql.append(" AND t1.STATE='").append(state).append("'");
-		
+
 		String sql = "select t1.BATCH_NO,t1.TERM_ID_ID,t1.MCHN_NO||' - '||t2.MCHT_NM as MCHT_NO,t1.TERM_BRANCH,t1.STATE,t1.REQ_OPR,t1.REQ_DATE,"
 				+ "t1.CHK_OPR,t1.CHK_DATE,t1.MISC,t1.REC_UPD_OPR,t1.REC_UPD_TS,t1.PRT_OPR,t1.PRT_DATE,t1.PRT_COUNT from TBL_TERM_TMK_LOG t1"
 				+ " left join TBL_MCHT_BASE_INF t2 on t2.MCHT_NO=t1.MCHN_NO "
 				+ whereSql.toString()
 				+ " ORDER BY t1.REQ_DATE DESC,t1.BATCH_NO";
-		String countSql = "SELECT COUNT(*) FROM TBL_TERM_TMK_LOG t1 " + whereSql.toString();
-		
+		String countSql = "SELECT COUNT(*) FROM TBL_TERM_TMK_LOG t1 "
+				+ whereSql.toString();
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 获取终端密钥待审核信息（不带验证）
 	 * 
@@ -5919,11 +6068,15 @@ public class GridConfigMethod {
 	@SuppressWarnings("unchecked")
 	public static Object[] getTermTmkInfoAllNoCode(int begin,
 			HttpServletRequest request) {
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
-//		StringBuffer whereSql = new StringBuffer(" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp where term_tp <>'1') and t1.TERM_BRANCH in " + operator.getBrhBelowId());
-		StringBuffer whereSql = new StringBuffer(" WHERE t1.misc = '1' and trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp ) and t1.TERM_BRANCH in " + operator.getBrhBelowId());
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
+		// StringBuffer whereSql = new
+		// StringBuffer(" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp where term_tp <>'1') and t1.TERM_BRANCH in "
+		// + operator.getBrhBelowId());
+		StringBuffer whereSql = new StringBuffer(
+				" WHERE t1.misc = '1' and trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp ) and t1.TERM_BRANCH in "
+						+ operator.getBrhBelowId());
 
-		
 		Object[] ret = new Object[2];
 		String batchNo = request.getParameter("batchNo");
 		String termIdId = request.getParameter("termIdId").trim();
@@ -5932,18 +6085,19 @@ public class GridConfigMethod {
 		String state = request.getParameter("state");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		
-		//只显示“已申请”的状态 by Mike 2013-8-7
-		if(state==""){
-			state="0";
+
+		// 只显示“已申请”的状态 by Mike 2013-8-7
+		if (state == "") {
+			state = "0";
 		}
-		
+
 		if (!StringUtil.isEmpty(mchntNo))
 			whereSql.append(" AND t1.MCHN_NO='").append(mchntNo).append("'");
 		if (!StringUtil.isEmpty(reqOpr))
 			whereSql.append(" AND t1.REQ_OPR='").append(reqOpr).append("'");
 		if (!StringUtil.isEmpty(termIdId))
-			whereSql.append(" AND t1.TERM_ID_ID='").append(termIdId).append("'");
+			whereSql.append(" AND t1.TERM_ID_ID='").append(termIdId)
+					.append("'");
 		if (!StringUtil.isEmpty(batchNo))
 			whereSql.append(" AND t1.BATCH_NO='").append(batchNo).append("'");
 		if (!StringUtil.isEmpty(startDate))
@@ -5952,22 +6106,24 @@ public class GridConfigMethod {
 			whereSql.append(" AND t1.REQ_DATE<=").append(endDate);
 		if (!StringUtil.isEmpty(state))
 			whereSql.append(" AND t1.STATE='").append(state).append("'");
-		
+
 		String sql = "select t1.BATCH_NO,t1.TERM_ID_ID,t1.MCHN_NO||' - '||t2.MCHT_NM as MCHT_NO,t1.TERM_BRANCH,t1.STATE,t1.REQ_OPR,t1.REQ_DATE,"
 				+ "t1.CHK_OPR,t1.CHK_DATE,t1.MISC,t1.REC_UPD_OPR,t1.REC_UPD_TS,t1.PRT_OPR,t1.PRT_DATE,t1.PRT_COUNT from TBL_TERM_TMK_LOG t1"
 				+ " left join TBL_MCHT_BASE_INF t2 on t2.MCHT_NO=t1.MCHN_NO "
 				+ whereSql.toString()
 				+ " ORDER BY t1.REQ_DATE DESC,t1.BATCH_NO";
-		String countSql = "SELECT COUNT(*) FROM TBL_TERM_TMK_LOG t1 " + whereSql.toString();
-		
+		String countSql = "SELECT COUNT(*) FROM TBL_TERM_TMK_LOG t1 "
+				+ whereSql.toString();
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 获取终端密钥待审核信息(带验证)
 	 * 
@@ -5978,9 +6134,14 @@ public class GridConfigMethod {
 	@SuppressWarnings("unchecked")
 	public static Object[] getTermTmkInfoAllCode(int begin,
 			HttpServletRequest request) {
-		Operator operator = (Operator) request.getSession().getAttribute(Constants.OPERATOR_INFO);
-//		StringBuffer whereSql = new StringBuffer(" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp where term_tp <>'1') and t1.TERM_BRANCH in " + operator.getBrhBelowId());
-		StringBuffer whereSql = new StringBuffer(" WHERE t1.misc is null and trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp ) and t1.TERM_BRANCH in " + operator.getBrhBelowId());
+		Operator operator = (Operator) request.getSession().getAttribute(
+				Constants.OPERATOR_INFO);
+		// StringBuffer whereSql = new
+		// StringBuffer(" WHERE trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp where term_tp <>'1') and t1.TERM_BRANCH in "
+		// + operator.getBrhBelowId());
+		StringBuffer whereSql = new StringBuffer(
+				" WHERE t1.misc is null and trim(t1.term_id_id) in (select trim(term_id) from tbl_term_inf_tmp ) and t1.TERM_BRANCH in "
+						+ operator.getBrhBelowId());
 		Object[] ret = new Object[2];
 		String batchNo = request.getParameter("batchNo");
 		String termIdId = request.getParameter("termIdId").trim();
@@ -5989,18 +6150,19 @@ public class GridConfigMethod {
 		String state = request.getParameter("state");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		
-		//只显示“已申请”的状态 by Mike 2013-8-7
-		if(state==""){
-			state="0";
+
+		// 只显示“已申请”的状态 by Mike 2013-8-7
+		if (state == "") {
+			state = "0";
 		}
-		
+
 		if (!StringUtil.isEmpty(mchntNo))
 			whereSql.append(" AND t1.MCHN_NO='").append(mchntNo).append("'");
 		if (!StringUtil.isEmpty(reqOpr))
 			whereSql.append(" AND t1.REQ_OPR='").append(reqOpr).append("'");
 		if (!StringUtil.isEmpty(termIdId))
-			whereSql.append(" AND t1.TERM_ID_ID='").append(termIdId).append("'");
+			whereSql.append(" AND t1.TERM_ID_ID='").append(termIdId)
+					.append("'");
 		if (!StringUtil.isEmpty(batchNo))
 			whereSql.append(" AND t1.BATCH_NO='").append(batchNo).append("'");
 		if (!StringUtil.isEmpty(startDate))
@@ -6009,17 +6171,19 @@ public class GridConfigMethod {
 			whereSql.append(" AND t1.REQ_DATE<=").append(endDate);
 		if (!StringUtil.isEmpty(state))
 			whereSql.append(" AND t1.STATE='").append(state).append("'");
-		
+
 		String sql = "select t1.BATCH_NO,t1.TERM_ID_ID,t1.MCHN_NO||' - '||t2.MCHT_NM as MCHT_NO,t1.TERM_BRANCH,t1.STATE,t1.REQ_OPR,t1.REQ_DATE,"
 				+ "t1.CHK_OPR,t1.CHK_DATE,t1.MISC,t1.REC_UPD_OPR,t1.REC_UPD_TS,t1.PRT_OPR,t1.PRT_DATE,t1.PRT_COUNT from TBL_TERM_TMK_LOG t1"
 				+ " left join TBL_MCHT_BASE_INF t2 on t2.MCHT_NO=t1.MCHN_NO "
 				+ whereSql.toString()
 				+ " ORDER BY t1.REQ_DATE DESC,t1.BATCH_NO";
-		String countSql = "SELECT COUNT(*) FROM TBL_TERM_TMK_LOG t1 " + whereSql.toString();
-		
+		String countSql = "SELECT COUNT(*) FROM TBL_TERM_TMK_LOG t1 "
+				+ whereSql.toString();
+
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -6050,7 +6214,7 @@ public class GridConfigMethod {
 		String city = request.getParameter("city");
 		String area = request.getParameter("area");
 		String cityCode = request.getParameter("cityCode");
-		//ADD BY张骏恺20140820 begin
+		// ADD BY张骏恺20140820 begin
 		String termTpQ = request.getParameter("termTpQ");
 		String termFactoryQ = request.getParameter("termFactoryQ");
 		String connectModeQ = request.getParameter("connectModeQ");
@@ -6060,17 +6224,17 @@ public class GridConfigMethod {
 		String termMccQ = request.getParameter("termMccQ");
 		String chk_state = request.getParameter("chk_state");
 		String UpdstartTime = null;
-		if(request.getParameter("UpdstartTime")!=null){
+		if (request.getParameter("UpdstartTime") != null) {
 			UpdstartTime = request.getParameter("UpdstartTime").split("T")[0]
 					.replaceAll("-", "");
 		}
 		String UpdendTime = null;
-		if(request.getParameter("UpdendTime")!=null){
+		if (request.getParameter("UpdendTime") != null) {
 			UpdendTime = request.getParameter("UpdendTime").split("T")[0]
 					.replaceAll("-", "");
 		}
-		
-		//ADD BY张骏恺20140820 end
+
+		// ADD BY张骏恺20140820 end
 		StringBuffer whereSql = new StringBuffer(" where t1.TERM_BRANCH in "
 				+ operator.getBrhBelowId());
 		// .append("  and  t1.TERM_STA<>'8' ");
@@ -6104,164 +6268,164 @@ public class GridConfigMethod {
 			whereSql.append(" AND t1.TERM_BRANCH='").append(termBranch)
 					.append("'");
 		}
-		//ADD BY张骏恺20140820 begin
+		// ADD BY张骏恺20140820 begin
 		if (termTpQ != null && !termTpQ.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_TP='").append(termTpQ)
-					.append("'");
+			whereSql.append(" AND t1.TERM_TP='").append(termTpQ).append("'");
 		}
-		
+
 		if (chk_state != null && !chk_state.trim().equals("")) {
 			whereSql.append(" AND t1.chk_state='").append(chk_state)
-			.append("'");
+					.append("'");
 		}
-		
+
 		if (termFactoryQ != null && !termFactoryQ.trim().equals("")) {
 			whereSql.append(" AND t1.TERM_FACTORY ='").append(termFactoryQ)
-			.append("'");
+					.append("'");
 		}
 		if (connectModeQ != null && !connectModeQ.trim().equals("")) {
 			whereSql.append(" AND t1.CONNECT_MODE='").append(connectModeQ)
-			.append("'");
+					.append("'");
 		}
 		if (propTpQ != null && !propTpQ.trim().equals("")) {
-			whereSql.append(" AND t1.PROP_TP='").append(propTpQ)
-			.append("'");
+			whereSql.append(" AND t1.PROP_TP='").append(propTpQ).append("'");
 		}
 		if (CompQ != null && !CompQ.trim().equals("")) {
-			whereSql.append(" AND t1.term_id in (" +
-					"select term_id from tbl_term_inf_tmp " +
-					"where MCHT_CD IN (" +
-					"select MCHT_NO " +
-					"FROM tbl_mcht_base_inf where ACQ_inst_id = '").append(CompQ).append("'))");
+			whereSql.append(
+					" AND t1.term_id in ("
+							+ "select term_id from tbl_term_inf_tmp "
+							+ "where MCHT_CD IN (" + "select MCHT_NO "
+							+ "FROM tbl_mcht_base_inf where ACQ_inst_id = '")
+					.append(CompQ).append("'))");
 		}
 		if (tradeTp != null && !tradeTp.trim().equals("")) {
-			//获取所有term和term_para
+			// 获取所有term和term_para
 			String str = "select term_id , term_para from TBL_TERM_INF_TMP";
-			List<Object[]> list = CommonFunction.getCommQueryDAO().findBySQLQuery(str);
+			List<Object[]> list = CommonFunction.getCommQueryDAO()
+					.findBySQLQuery(str);
 			List<String[]> tp = new ArrayList<String[]>();
 			Iterator<Object[]> it = list.iterator();
-			//遍历集合
-			while(it.hasNext()){
+			// 遍历集合
+			while (it.hasNext()) {
 				Object[] obj = it.next();
 				String[] st = new String[2];
-				//将终端号和142-144
-				st[0] = (String)obj[0];
+				// 将终端号和142-144
+				st[0] = (String) obj[0];
 				StringBuffer result = new StringBuffer();
-				if((String)obj[1]!=null && !((String)obj[1]).equals("")){
-					for (char c : ((String)obj[1]).substring(142, 144).toCharArray()){
-						//排除空格
-						if(c != (char)32){
-							result.append(CommonFunction.fillString(Integer.toBinaryString(Integer.parseInt(String.valueOf(c),16)), '0', 4, false));
-						}else{
+				if ((String) obj[1] != null && !((String) obj[1]).equals("")) {
+					for (char c : ((String) obj[1]).substring(142, 144)
+							.toCharArray()) {
+						// 排除空格
+						if (c != (char) 32) {
+							result.append(CommonFunction.fillString(Integer
+									.toBinaryString(Integer.parseInt(
+											String.valueOf(c), 16)), '0', 4,
+									false));
+						} else {
 							result.append("0000");
 						}
 					}
-				}else{
+				} else {
 					result.append("00000000");
 				}
 				st[1] = result.toString();
 				tp.add(st);
 			}
-			//拼接终端号
+			// 拼接终端号
 			StringBuffer sb = new StringBuffer();
-			if(tradeTp.trim().equals("0")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(0, 1).equals("1")){
+			if (tradeTp.trim().equals("0")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(0, 1).equals("1")) {
 						sb.append(tp.get(m)[0]).append(",");
 					}
 				}
 			}
-			if(tradeTp.trim().equals("1")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(1, 2).equals("1")){
+			if (tradeTp.trim().equals("1")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(1, 2).equals("1")) {
 						sb.append(tp.get(m)[0]).append(",");
 					}
 				}
 			}
-			if(tradeTp.trim().equals("2")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(2, 3).equals("1")){
+			if (tradeTp.trim().equals("2")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(2, 3).equals("1")) {
 						sb.append(tp.get(m)[0]).append(",");
 					}
 				}
 			}
-			if(tradeTp.trim().equals("3")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(3, 4).equals("1")){
+			if (tradeTp.trim().equals("3")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(3, 4).equals("1")) {
 						sb.append(tp.get(m)[0]).append(",");
 					}
 				}
 			}
-			if(tradeTp.trim().equals("4")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(4, 5).equals("1")){
+			if (tradeTp.trim().equals("4")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(4, 5).equals("1")) {
 						sb.append(tp.get(m)[0]).append(",");
 					}
 				}
 			}
-			if(tradeTp.trim().equals("5")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(5, 6).equals("1")){
+			if (tradeTp.trim().equals("5")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(5, 6).equals("1")) {
 						sb.append(tp.get(m)[0]).append(",");
 					}
 				}
 			}
-			if(tradeTp.trim().equals("6")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(6, 7).equals("1")){
+			if (tradeTp.trim().equals("6")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(6, 7).equals("1")) {
 						sb.append("'").append(tp.get(m)[0]).append("',");
 					}
 				}
 			}
-			if(tradeTp.trim().equals("7")){
-				for(int m = 0 ; m < tp.size() ; m ++){
-					if(tp.get(m)[1].substring(7, 8).equals("1")){
+			if (tradeTp.trim().equals("7")) {
+				for (int m = 0; m < tp.size(); m++) {
+					if (tp.get(m)[1].substring(7, 8).equals("1")) {
 						sb.append(tp.get(m)[0]).append(",");
 					}
 				}
 			}
-			
-			//凭借查询语句
+
+			// 凭借查询语句
 			String query = sb.toString();
-			if(query !=null ){
-				query = query.substring(0,query.length()-1);
-				whereSql.append("and t1.term_id in (").append(query).append(")");
-			}else{
+			if (query != null) {
+				query = query.substring(0, query.length() - 1);
+				whereSql.append("and t1.term_id in (").append(query)
+						.append(")");
+			} else {
 				whereSql.append("and t1.term_id in (null)");
 			}
-			
+
 		}
 		if (termMccQ != null && !termMccQ.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_MCC='").append(termMccQ)
-			.append("'");
+			whereSql.append(" AND t1.TERM_MCC='").append(termMccQ).append("'");
 		}
-		
-		
+
 		if (UpdstartTime != null && !UpdstartTime.trim().equals("")) {
 			if (UpdstartTime.length() == 8)
 				whereSql.append(" AND t1.REC_DEL_TS>='")
-						.append(CommonFunction.fillString(UpdstartTime, '0', 14,
-								true)).append("'");
+						.append(CommonFunction.fillString(UpdstartTime, '0',
+								14, true)).append("'");
 		}
 		if (UpdendTime != null && !UpdendTime.trim().equals("")) {
 			if (UpdendTime.length() == 8)
 				whereSql.append(" AND t1.REC_DEL_TS<='").append(UpdendTime)
 						.append("235959'");
 		}
-		
-		
-		
-		
-		//ADD BY张骏恺20140820 end
-		/*if (termNo != null && !termNo.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_ID = '")
-					.append(CommonFunction.fillString(termNo, ' ', 12, true))
-					.append("'");
-		}*/
-		//终端号改为模糊搜索
+
+		// ADD BY张骏恺20140820 end
+		/*
+		 * if (termNo != null && !termNo.trim().equals("")) {
+		 * whereSql.append(" AND t1.TERM_ID = '")
+		 * .append(CommonFunction.fillString(termNo, ' ', 12, true))
+		 * .append("'"); }
+		 */
+		// 终端号改为模糊搜索
 		if (termNo != null && !termNo.trim().equals("")) {
-			whereSql.append(" AND t1.TERM_ID like '%")
-					.append(termNo)
+			whereSql.append(" AND t1.TERM_ID like '%").append(termNo)
 					.append("%'");
 		}
 		if (termSta != null && !termSta.trim().equals("")) {
@@ -6382,25 +6546,27 @@ public class GridConfigMethod {
 
 	/**
 	 * 计算时间差
+	 * 
 	 * @param smdate
 	 * @param bdate
 	 * @return
 	 * @throws ParseException
 	 */
-    private static int daysBetween(String smdate,Date bdate) throws ParseException    
-    {    
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyyMMdd");  
-        Date sd=sdf.parse(sdf.format(sdf.parse(smdate)));  
-        bdate=sdf.parse(sdf.format(bdate));  
-        Calendar cal = Calendar.getInstance();    
-        cal.setTime(sd);    
-        long time1 = cal.getTimeInMillis();                 
-        cal.setTime(bdate);    
-        long time2 = cal.getTimeInMillis();         
-        long between_days=(time2-time1)/(1000*3600*24);  
-            
-       return Integer.parseInt(String.valueOf(between_days));           
-    }
+	private static int daysBetween(String smdate, Date bdate)
+			throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date sd = sdf.parse(sdf.format(sdf.parse(smdate)));
+		bdate = sdf.parse(sdf.format(bdate));
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(sd);
+		long time1 = cal.getTimeInMillis();
+		cal.setTime(bdate);
+		long time2 = cal.getTimeInMillis();
+		long between_days = (time2 - time1) / (1000 * 3600 * 24);
+
+		return Integer.parseInt(String.valueOf(between_days));
+	}
+
 	/**
 	 * 查询联机交易信息
 	 * 
@@ -6421,23 +6587,23 @@ public class GridConfigMethod {
 			whereSql += " UPDT_DATE>= '" + StringUtil.getcurrdate("yyyyMMdd")
 					+ "000000' ";
 		}
-		
+
 		boolean bb = true;
-		//判断开始时间，小于90天查当前表，超过90天查全部
+		// 判断开始时间，小于90天查当前表，超过90天查全部
 		try {
-			if(!StringUtil.isNull(request.getParameter("startDate"))) {
-				if(daysBetween(request.getParameter("startDate"),new Date())<=90){
+			if (!StringUtil.isNull(request.getParameter("startDate"))) {
+				if (daysBetween(request.getParameter("startDate"), new Date()) <= 90) {
 					bb = true;
-				}else{
+				} else {
 					bb = false;
 				}
-					
+
 			}
 		} catch (ParseException e) {
 
 			Log.log("日期转换错误");
 		}
-		
+
 		if (!StringUtil.isNull(request.getParameter("endDate"))) {
 			whereSql += " AND substr(UPDT_DATE,1,8) <= '"
 					+ request.getParameter("endDate") + "' ";
@@ -6476,11 +6642,13 @@ public class GridConfigMethod {
 			whereSql += " AND CARD_ACCP_TERM_ID = '"
 					+ request.getParameter("termId") + "' ";
 		}
-		System.out.println("卡BIN	idbinStaNo:		 "+request.getParameter("idbinStaNo"));
+		System.out.println("卡BIN	idbinStaNo:		 "
+				+ request.getParameter("idbinStaNo"));
 		// 卡BIN
 		if (!StringUtil.isNull(request.getParameter("idbinStaNo"))) {
 			int length = request.getParameter("idbinStaNo").trim().length();
-			whereSql += " AND substr(trim(PAN),1,"+length+") = '" + request.getParameter("idbinStaNo").trim() + "' ";
+			whereSql += " AND substr(trim(PAN),1," + length + ") = '"
+					+ request.getParameter("idbinStaNo").trim() + "' ";
 		}
 		// 卡号
 		if (!StringUtil.isNull(request.getParameter("pan"))) {
@@ -6538,53 +6706,55 @@ public class GridConfigMethod {
 		}
 		// 过滤掉签到信息
 		StringBuffer sb = new StringBuffer();
-		//90天以内
-		if(bb){sb.append("select substr(UPDT_DATE,1,8) as inst_date," +
-				"substr(UPDT_DATE,9,6) as inst_time," +
-				"SYS_SEQ_NUM," +
-				"substr(trim(PAN),1,6)||'****'||substr(trim(pan),-4,4)," +
-				"CARD_ACCP_ID," +
-				"CARD_ACCP_NAME||'-'||CARD_ACCP_ID," +
-				"CARD_ACCP_TERM_ID," +
-				"RETRIVL_REF," +
-				"AMT_TRANS," +
-				"ACQ_INST_ID_CODE," +
-				"RCVG_CODE," +
-				"t.txn_num||'-'||name.TXN_NAME,"
-				+ "(SELECT CARD_TP FROM tbl_bank_bin_inf b WHERE substr(PAN,1,length(rtrim(b.BIN_STA_NO))) = rtrim(b.BIN_STA_NO) and rownum <= 1) as CARD_TP,"
-				+ "(substr(t.POS_ENTRY_MODE,1,2)||'-'||substr(t.FLD_RESERVED,12,2)) as transWay,"
-				+ "RESP_CODE," +
-				"tt.TERM_BATCH_NM ," +
-				" trim(order_no)," +
-				" decode(trans_State,'0','失败','1','成功','2','失败','3','失败','4','失败','5','失败','6','失败','7','失败','8','失败','R','成功',trans_State)," +
-				" substr(t.misc_2,71,15) ,t.ACCT_ID1_LEN " +
-				"from tbl_n_txn t left outer join tbl_txn_name name on (t.txn_num = name.txn_num) " +
-				"left outer join tbl_term_inf tt on tt.term_id = t.CARD_ACCP_TERM_ID  " +
-				"left outer join tbl_risk_inf r on trim(r.sa_model_kind) = trim(t.order_no) " +
-				" where");
+		// 90天以内
+		if (bb) {
+			sb.append("select substr(UPDT_DATE,1,8) as inst_date,"
+					+ "substr(UPDT_DATE,9,6) as inst_time,"
+					+ "SYS_SEQ_NUM,"
+					+ "substr(trim(PAN),1,6)||'****'||substr(trim(pan),-4,4),"
+					+ "CARD_ACCP_ID,"
+					+ "CARD_ACCP_NAME||'-'||CARD_ACCP_ID,"
+					+ "CARD_ACCP_TERM_ID,"
+					+ "RETRIVL_REF,"
+					+ "AMT_TRANS,"
+					+ "ACQ_INST_ID_CODE,"
+					+ "RCVG_CODE,"
+					+ "t.txn_num||'-'||name.TXN_NAME,"
+					+ "(SELECT CARD_TP FROM tbl_bank_bin_inf b WHERE substr(PAN,1,length(rtrim(b.BIN_STA_NO))) = rtrim(b.BIN_STA_NO) and rownum <= 1) as CARD_TP,"
+					+ "(substr(t.POS_ENTRY_MODE,1,2)||'-'||substr(t.FLD_RESERVED,12,2)) as transWay,"
+					+ "RESP_CODE,"
+					+ "tt.TERM_BATCH_NM ,"
+					+ " trim(order_no),"
+					+ " decode(trans_State,'0','失败','1','成功','2','失败','3','失败','4','失败','5','失败','6','失败','7','失败','8','失败','R','成功',trans_State),"
+					+ " substr(t.misc_2,71,15) ,t.ACCT_ID1_LEN "
+					+ "from tbl_n_txn t left outer join tbl_txn_name name on (t.txn_num = name.txn_num) "
+					+ "left outer join tbl_term_inf tt on tt.term_id = t.CARD_ACCP_TERM_ID  "
+					+ "left outer join tbl_risk_inf r on trim(r.sa_model_kind) = trim(t.order_no) "
+					+ " where");
 			sb.append(whereSql);
 			sb.append(" ORDER BY UPDT_DATE DESC");
-				
-		}else{
-			//90天以外
+
+		} else {
+			// 90天以外
 			sb.append("select inst_date,inst_time,SYS_SEQ_NUM,pan,CARD_ACCP_ID,CARD_ACCP_NAME,CARD_ACCP_TERM_ID,RETRIVL_REF,AMT_TRANS,ACQ_INST_ID_CODE,RCVG_CODE,txn,CARD_TP,transWay,RESP_CODE,TERM_BATCH_NM,order_no,trans_State,misc,ACCT_ID1_LEN from("
-+" select substr(UPDT_DATE,1,8) as inst_date,substr(UPDT_DATE,9,6) as inst_time,SYS_SEQ_NUM,substr(trim(PAN),1,6)||'****'||substr(trim(pan),-4,4)as pan,"
-       +" CARD_ACCP_ID,CARD_ACCP_NAME,CARD_ACCP_TERM_ID,RETRIVL_REF,AMT_TRANS,ACQ_INST_ID_CODE,RCVG_CODE,t.txn_num||'-'||name.TXN_NAME as txn,"
-       +" (SELECT CARD_TP FROM tbl_bank_bin_inf b WHERE substr(PAN,1,length(rtrim(b.BIN_STA_NO))) = rtrim(b.BIN_STA_NO) and rownum <= 1) as CARD_TP,"
-       +" (substr(t.POS_ENTRY_MODE,1,2)||'-'||substr(t.FLD_RESERVED,12,2)) as transWay,RESP_CODE ,tt.TERM_BATCH_NM,trim(order_no)as order_no,"
-       +" decode(trans_State,'0','失败','1','成功','2','失败','3','失败','4','失败','5','失败','6','失败','7','失败','8','失败','R','成功',trans_State)as trans_State,"
-      +" substr(t.misc_2,71,15) as misc,t.UPDT_DATE , t.ACCT_ID1_LEN as ACCT_ID1_LEN  from tbl_n_txn t left outer join tbl_txn_name name on (t.txn_num = name.txn_num) left outer join tbl_term_inf tt on tt.term_id = t.CARD_ACCP_TERM_ID"             
-      +" left outer join tbl_risk_inf r on trim(r.sa_model_kind) = trim(t.order_no) where "+ whereSql                 
-      +" union all "
-+" select substr(UPDT_DATE,1,8) as inst_date,substr(UPDT_DATE,9,6) as inst_time,SYS_SEQ_NUM,substr(trim(PAN),1,6)||'****'||substr(trim(pan),-4,4)as pan,"
-       +" CARD_ACCP_ID,CARD_ACCP_NAME,CARD_ACCP_TERM_ID,RETRIVL_REF,AMT_TRANS,ACQ_INST_ID_CODE,RCVG_CODE,t.txn_num||'-'||name.TXN_NAME as txn,"
-       +" (SELECT CARD_TP FROM tbl_bank_bin_inf b WHERE substr(PAN,1,length(rtrim(b.BIN_STA_NO))) = rtrim(b.BIN_STA_NO) and rownum <= 1) as CARD_TP,"
-      +" (substr(t.POS_ENTRY_MODE,1,2)||'-'||substr(t.FLD_RESERVED,12,2)) as transWay,RESP_CODE,tt.TERM_BATCH_NM,trim(order_no)as order_no,"
-      +" decode(trans_State,'0','失败','1','成功','2','失败','3','失败','4','失败','5','失败','6','失败','7','失败','8','失败','R','成功',trans_State)as trans_State ,"
-      +" substr(t.misc_2,71,15) as misc,t.UPDT_DATE , t.ACCT_ID1_LEN as ACCT_ID1_LEN from tbl_n_txn_his t left outer join tbl_txn_name name on (t.txn_num = name.txn_num) left outer join tbl_term_inf tt on tt.term_id = t.CARD_ACCP_TERM_ID"             
-      +" left outer join tbl_risk_inf r on trim(r.sa_model_kind) = trim(t.order_no) where "+ whereSql
-      +" )ORDER BY UPDT_DATE DESC");
-			
+					+ " select substr(UPDT_DATE,1,8) as inst_date,substr(UPDT_DATE,9,6) as inst_time,SYS_SEQ_NUM,substr(trim(PAN),1,6)||'****'||substr(trim(pan),-4,4)as pan,"
+					+ " CARD_ACCP_ID,CARD_ACCP_NAME,CARD_ACCP_TERM_ID,RETRIVL_REF,AMT_TRANS,ACQ_INST_ID_CODE,RCVG_CODE,t.txn_num||'-'||name.TXN_NAME as txn,"
+					+ " (SELECT CARD_TP FROM tbl_bank_bin_inf b WHERE substr(PAN,1,length(rtrim(b.BIN_STA_NO))) = rtrim(b.BIN_STA_NO) and rownum <= 1) as CARD_TP,"
+					+ " (substr(t.POS_ENTRY_MODE,1,2)||'-'||substr(t.FLD_RESERVED,12,2)) as transWay,RESP_CODE ,tt.TERM_BATCH_NM,trim(order_no)as order_no,"
+					+ " decode(trans_State,'0','失败','1','成功','2','失败','3','失败','4','失败','5','失败','6','失败','7','失败','8','失败','R','成功',trans_State)as trans_State,"
+					+ " substr(t.misc_2,71,15) as misc,t.UPDT_DATE , t.ACCT_ID1_LEN as ACCT_ID1_LEN  from tbl_n_txn t left outer join tbl_txn_name name on (t.txn_num = name.txn_num) left outer join tbl_term_inf tt on tt.term_id = t.CARD_ACCP_TERM_ID"
+					+ " left outer join tbl_risk_inf r on trim(r.sa_model_kind) = trim(t.order_no) where "
+					+ whereSql
+					+ " union all "
+					+ " select substr(UPDT_DATE,1,8) as inst_date,substr(UPDT_DATE,9,6) as inst_time,SYS_SEQ_NUM,substr(trim(PAN),1,6)||'****'||substr(trim(pan),-4,4)as pan,"
+					+ " CARD_ACCP_ID,CARD_ACCP_NAME,CARD_ACCP_TERM_ID,RETRIVL_REF,AMT_TRANS,ACQ_INST_ID_CODE,RCVG_CODE,t.txn_num||'-'||name.TXN_NAME as txn,"
+					+ " (SELECT CARD_TP FROM tbl_bank_bin_inf b WHERE substr(PAN,1,length(rtrim(b.BIN_STA_NO))) = rtrim(b.BIN_STA_NO) and rownum <= 1) as CARD_TP,"
+					+ " (substr(t.POS_ENTRY_MODE,1,2)||'-'||substr(t.FLD_RESERVED,12,2)) as transWay,RESP_CODE,tt.TERM_BATCH_NM,trim(order_no)as order_no,"
+					+ " decode(trans_State,'0','失败','1','成功','2','失败','3','失败','4','失败','5','失败','6','失败','7','失败','8','失败','R','成功',trans_State)as trans_State ,"
+					+ " substr(t.misc_2,71,15) as misc,t.UPDT_DATE , t.ACCT_ID1_LEN as ACCT_ID1_LEN from tbl_n_txn_his t left outer join tbl_txn_name name on (t.txn_num = name.txn_num) left outer join tbl_term_inf tt on tt.term_id = t.CARD_ACCP_TERM_ID"
+					+ " left outer join tbl_risk_inf r on trim(r.sa_model_kind) = trim(t.order_no) where "
+					+ whereSql + " )ORDER BY UPDT_DATE DESC");
+
 		}
 		// 根据终端号前两位定义受理机构,总行不受控制
 		/*
@@ -6596,30 +6766,32 @@ public class GridConfigMethod {
 		 * brhId.substring(0, 2) + "'"); }
 		 */
 
-
-
-		String countSql = "SELECT COUNT(*) FROM (select  distinct * from (("+ sb.toString() +") t))";
+		String countSql = "SELECT COUNT(*) FROM (select  distinct * from (("
+				+ sb.toString() + ") t))";
 		// 卡类型
 		if (!StringUtil.isNull(request.getParameter("cardType"))
 				&& !request.getParameter("cardType").equals("*")) {
 			countSql = "select count(*) from (" + sb.toString()
 					+ ") x where card_tp = '"
 					+ request.getParameter("cardType") + "' ";
-		} /*else {
-			//countSql += " WHERE " + whereSql;
-		}*/
-		//ADD
+		} /*
+		 * else { //countSql += " WHERE " + whereSql; }
+		 */
+		// ADD
 		String sql = "";
 		// 卡类型
-		if (!StringUtil.isNull(request.getParameter("cardType")) && !request.getParameter("cardType").equals("*")) {
-			sql = "select distinct * from (" + sb.toString() + ") x where card_tp = '" + request.getParameter("cardType") + "' ";
+		if (!StringUtil.isNull(request.getParameter("cardType"))
+				&& !request.getParameter("cardType").equals("*")) {
+			sql = "select distinct * from (" + sb.toString()
+					+ ") x where card_tp = '"
+					+ request.getParameter("cardType") + "' ";
 		} else {
-			sql = "select distinct * from ( " +sb.toString()+ " )";
+			sql = "select distinct * from ( " + sb.toString() + " )";
 		}
-		
+
 		int pageSize = Constants.QUERY_RECORD_COUNT;
 		if (!StringUtil.isNull(request.getParameter("pageSize"))) {
-			pageSize=Integer.parseInt(request.getParameter("pageSize"));
+			pageSize = Integer.parseInt(request.getParameter("pageSize"));
 		}
 
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
@@ -7261,7 +7433,7 @@ public class GridConfigMethod {
 			whereSql.append(" and INS_ID_CD = '"
 					+ request.getParameter("insIdCd").trim() + "'");
 		}
-		
+
 		if (!StringUtil.isNull(request.getParameter("binStaNo"))) {
 			whereSql.append(" and BIN_STA_NO = '"
 					+ request.getParameter("binStaNo").trim() + "'");
@@ -7347,60 +7519,77 @@ public class GridConfigMethod {
 		StringBuffer whereSql = new StringBuffer();
 
 		if (!StringUtil.isNull(request.getParameter("branchId"))) {
-			whereSql.append(" and BRANCH_ID= '" + request.getParameter("branchId").trim() + "'");
+			whereSql.append(" and BRANCH_ID= '"
+					+ request.getParameter("branchId").trim() + "'");
 		}
 		if (!StringUtil.isNull(request.getParameter("branchName"))) {
-			whereSql.append(" and BRANCH_NAME>= '" + request.getParameter("branchName").trim() + "'");
+			whereSql.append(" and BRANCH_NAME>= '"
+					+ request.getParameter("branchName").trim() + "'");
 		}
 		if (!StringUtil.isNull(request.getParameter("branchAddr"))) {
-			whereSql.append(" and BRANCH_ADDR like '%" + request.getParameter("branchAddr").trim() + "%'");
+			whereSql.append(" and BRANCH_ADDR like '%"
+					+ request.getParameter("branchAddr").trim() + "%'");
 		}
 		if (!StringUtil.isNull(request.getParameter("createTime"))) {
-			whereSql.append(" and SUBSTR(RESERVE_1,1,8) = '" + request.getParameter("createTime").trim() + "'");
+			whereSql.append(" and SUBSTR(RESERVE_1,1,8) = '"
+					+ request.getParameter("createTime").trim() + "'");
 		}
-		String sql = "SELECT ID,BRANCH_ID,BRANCH_NAME,BRANCH_ADDR,RESERVE_1 FROM TBL_ISSUE_CARD_BRANCH_INF where 1=1 " + whereSql.toString() + " ORDER BY RESERVE_1";
+		String sql = "SELECT ID,BRANCH_ID,BRANCH_NAME,BRANCH_ADDR,RESERVE_1 FROM TBL_ISSUE_CARD_BRANCH_INF where 1=1 "
+				+ whereSql.toString() + " ORDER BY RESERVE_1";
 
 		String countSql = "select count(1) from (" + sql + ")";
 
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 终端发卡终端信息
 	 */
 	public static Object[] getStoresTerm(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-		
+
 		if (!StringUtil.isNull(request.getParameter("mchtNo"))) {
-			whereSql.append(" and MCHT_NO= '" + request.getParameter("mchtNo").trim() + "'");
+			whereSql.append(" and MCHT_NO= '"
+					+ request.getParameter("mchtNo").trim() + "'");
 		}
 		if (!StringUtil.isNull(request.getParameter("termId"))) {
-			whereSql.append(" and TERM_ID = '" + request.getParameter("termId").trim() + "'");
+			whereSql.append(" and TERM_ID = '"
+					+ request.getParameter("termId").trim() + "'");
 		}
 		if (!StringUtil.isNull(request.getParameter("branchId"))) {
-			whereSql.append(" and BRANCH_ID = '" + request.getParameter("branchId").trim() + "'");
+			whereSql.append(" and BRANCH_ID = '"
+					+ request.getParameter("branchId").trim() + "'");
 		}
 		if (!StringUtil.isNull(request.getParameter("termSn"))) {
-			whereSql.append(" and TERM_SN = '" + request.getParameter("termSn").trim() + "'");
+			whereSql.append(" and TERM_SN = '"
+					+ request.getParameter("termSn").trim() + "'");
 		}
 		if (!StringUtil.isNull(request.getParameter("instDate"))) {
-			whereSql.append(" and SUBSTR(INST_DATE,1,8) = '" + request.getParameter("instDate").trim() + "'");
+			whereSql.append(" and SUBSTR(INST_DATE,1,8) = '"
+					+ request.getParameter("instDate").trim() + "'");
 		}
-		
-		String sql = "SELECT MCHT_NO, TERM_ID, BRANCH_ID, TERM_SN, INST_DATE FROM TBL_ISSUE_CARD_TERM_INF where 1=1 " + whereSql.toString() + " ORDER BY INST_DATE";
-		
+
+		String sql = "SELECT MCHT_NO, TERM_ID, BRANCH_ID, TERM_SN, INST_DATE FROM TBL_ISSUE_CARD_TERM_INF where 1=1 "
+				+ whereSql.toString() + " ORDER BY INST_DATE";
+
 		String countSql = "select count(1) from (" + sql + ")";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 查询节假日日期审核
 	 * 
@@ -7896,12 +8085,13 @@ public class GridConfigMethod {
 			return ret;
 		}
 		for (File file : files) {
-			if(file.getName().indexOf(".zip")!=-1||file.getName().indexOf(".rar")!=-1)
+			if (file.getName().indexOf(".zip") != -1
+					|| file.getName().indexOf(".rar") != -1)
 				continue;
 			Object[] obj = new Object[8];
 			obj[0] = "imageSelf1" + dataList.size();
 			obj[1] = "btBig" + dataList.size();
-			obj[2] = "btDw" +dataList.size();
+			obj[2] = "btDw" + dataList.size();
 			obj[3] = "btDel" + dataList.size();
 			try {
 				BufferedImage bi = ImageIO.read(file);
@@ -7928,14 +8118,14 @@ public class GridConfigMethod {
 				e.printStackTrace();
 			}
 			obj[6] = file.getName();
-			obj[7]=basePath+"/"+file.getName();
+			obj[7] = basePath + "/" + file.getName();
 			dataList.add(obj);
 		}
 		ret[0] = dataList;
 		ret[1] = dataList.size();
 		return ret;
 	}
-	
+
 	/**
 	 * 证书影像
 	 * 
@@ -7965,22 +8155,22 @@ public class GridConfigMethod {
 			return ret;
 		}
 		for (File file : files) {
-			if(file.getName().indexOf(".jpg")!=-1||file.getName().indexOf(".png")!=-1
-					||file.getName().indexOf(".jpeg")!=-1)
+			if (file.getName().indexOf(".jpg") != -1
+					|| file.getName().indexOf(".png") != -1
+					|| file.getName().indexOf(".jpeg") != -1)
 				continue;
 			Object[] obj = new Object[5];
 			obj[0] = "imageSelf1" + dataList.size();
 			obj[1] = "btDw1" + dataList.size();
 			obj[2] = "btDel1" + dataList.size();
 			obj[3] = file.getName();
-			obj[4]=basePath+"/"+file.getName();
+			obj[4] = basePath + "/" + file.getName();
 			dataList.add(obj);
 		}
 		ret[0] = dataList;
 		ret[1] = dataList.size();
 		return ret;
 	}
-
 
 	/**
 	 * 对账任务处理
@@ -8081,7 +8271,8 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getBatchMission2(int begin, HttpServletRequest request) {
+	public static Object[] getBatchMission2(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		/*
 		 * String fileName = ""; String fileName2 = ""; String fileName3 = "";
@@ -8163,6 +8354,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	@SuppressWarnings("unchecked")
 	public static Object[] getBatchSettle(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
@@ -9083,13 +9275,15 @@ public class GridConfigMethod {
 					.append(StringUtil.replace(request.getParameter("pan")
 							.trim(), "'", "''")).append("' ");
 		}
-		
-		
-		//ADD LHF
+
+		// ADD LHF
 		if (!StringUtil.isEmpty(request.getParameter("retrivlRef"))) {
-			whereSql.append(" and t.Retrivl_Ref ='").append(StringUtil.replace(request.getParameter("retrivlRef").trim(), "'", "''")).append("' ");
+			whereSql.append(" and t.Retrivl_Ref ='")
+					.append(StringUtil.replace(
+							request.getParameter("retrivlRef").trim(), "'",
+							"''")).append("' ");
 		}
-		
+
 		if (!StringUtil.isEmpty(request.getParameter("amtTrans"))) {
 			// 接口传过来的是以元为单位的，数据库中存的是以分为单位的
 			long amtMax = (long) (Float.parseFloat(request.getParameter(
@@ -9101,8 +9295,11 @@ public class GridConfigMethod {
 		String sql = "select t.Card_Accp_Id  as mchtNo,t.card_accp_term_id as termId,t.pan as pan,cast(replace(amt_trans,' ','0') As Number)/100 As amtTrans,"
 				+ "t.Inst_Date as instDate,t.Retrivl_Ref As retrivlRef,'',to_number(amt_return)/100,t.Sys_Seq_Num,t.Term_Ssn,t.txn_num ,t.cancel_flag,t.revsal_flag,t.resp_code,"
 				+ " t.AUTHR_ID_RESP,t.FWD_INST_ID_CODE,t.acq_inst_id_code from TBL_N_TXN t where t.Card_Accp_Id='"
-				+ request.getParameter("mchtNo").trim() + "' and t.txn_num='1101' and revsal_flag='0' and cancel_flag='0' and resp_code='00'";
-//						+ "and  t.Retrivl_Ref='" + StringUtil.replace(request.getParameter("retrivlRef").trim(), "'", "''") + "' ";
+				+ request.getParameter("mchtNo").trim()
+				+ "' and t.txn_num='1101' and revsal_flag='0' and cancel_flag='0' and resp_code='00'";
+		// + "and  t.Retrivl_Ref='" +
+		// StringUtil.replace(request.getParameter("retrivlRef").trim(), "'",
+		// "''") + "' ";
 		if (!StringUtil.isEmpty(whereSql.toString())) {
 			sql += whereSql.toString();
 		}
@@ -9114,12 +9311,14 @@ public class GridConfigMethod {
 		if ("0".equals(count)) {
 			sql = "select t.Card_Accp_Id  as mchtNo,t.card_accp_term_id as termId,t.pan as pan,cast(replace(amt_trans,' ','0') As Number)/100 As amtTrans,"
 					+ "t.Inst_Date as instDate,t.Retrivl_Ref As retrivlRef,'',to_number(amt_return)/100,t.Sys_Seq_Num,t.Term_Ssn,t.txn_num ,t.cancel_flag,t.revsal_flag,t.resp_code,"
-					+ " t.AUTHR_ID_RESP,t.FWD_INST_ID_CODE,t.acq_inst_id_code from TBL_N_TXN_HIS t where t.Card_Accp_Id='" 
+					+ " t.AUTHR_ID_RESP,t.FWD_INST_ID_CODE,t.acq_inst_id_code from TBL_N_TXN_HIS t where t.Card_Accp_Id='"
 					+ request.getParameter("mchtNo").trim()
 					+ "' and t.txn_num='1101' and revsal_flag='0' and cancel_flag='0' and resp_code='00'";
-					
-					//ADD LHF
-//					+ " and  t.Retrivl_Ref='" + StringUtil.replace(request.getParameter("retrivlRef").trim(), "'", "''") + "' ";
+
+			// ADD LHF
+			// + " and  t.Retrivl_Ref='" +
+			// StringUtil.replace(request.getParameter("retrivlRef").trim(),
+			// "'", "''") + "' ";
 			if (!StringUtil.isEmpty(whereSql.toString())) {
 				sql += whereSql.toString();
 			}
@@ -9128,47 +9327,49 @@ public class GridConfigMethod {
 					countSql);
 		}
 
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 
 		if (dataList != null && dataList.size() != 0) {
 			for (int i = 0; i < dataList.size(); i++) {
-			Object[] obj = dataList.get(i);
-			List list = new ArrayList();
-			Collections.addAll(list, obj);
-			String algoDtl = "select date_settlmt,settl_amt/100,stlm_flg from tbl_algo_dtl where TRANS_DATE||TRANS_DATE_TIME='"
-					+ obj[4].toString().trim()
-					+ "' and pan='"
-					+ obj[2].toString().trim()
-					+ "' and txn_ssn='"
-					+ obj[8].toString().trim() + "' ";
-			List<Object[]> algoList = CommonFunction.getCommQueryDAO()
-					.findBySQLQuery(algoDtl, begin,
-							Constants.QUERY_RECORD_COUNT);
-			if (algoList != null && algoList.size() > 0) {
-				list.add(algoList.get(0)[0]);
-				list.add(algoList.get(0)[1]);
-				list.add(algoList.get(0)[2]);
-			} else {
-				String newGc = "select DATE_SETTLMT_8,case when AMT_SETTLMT= '            ' then 0 else  AMT_SETTLMT/100 end as settl_amt,STLM_FLAG from BTH_NEW_GC_TXN_SUCC where "
-						+ "INST_DATE||INST_TIME='"
+				Object[] obj = dataList.get(i);
+				List list = new ArrayList();
+				Collections.addAll(list, obj);
+				String algoDtl = "select date_settlmt,settl_amt/100,stlm_flg from tbl_algo_dtl where TRANS_DATE||TRANS_DATE_TIME='"
 						+ obj[4].toString().trim()
 						+ "' and pan='"
 						+ obj[2].toString().trim()
-						+ "' and SYS_SEQ_NUM='"
-						+ obj[8].toString().trim()
-						+ "'";
-				List<Object[]> newGcList = CommonFunction.getCommQueryDAO().findBySQLQuery(newGc, begin, Constants.QUERY_RECORD_COUNT);
-				if (newGcList != null && newGcList.size() > 0) {
-					list.add(newGcList.get(0)[0]);
-					list.add(newGcList.get(0)[1]);
-					list.add(newGcList.get(0)[2]);
+						+ "' and txn_ssn='"
+						+ obj[8].toString().trim() + "' ";
+				List<Object[]> algoList = CommonFunction.getCommQueryDAO()
+						.findBySQLQuery(algoDtl, begin,
+								Constants.QUERY_RECORD_COUNT);
+				if (algoList != null && algoList.size() > 0) {
+					list.add(algoList.get(0)[0]);
+					list.add(algoList.get(0)[1]);
+					list.add(algoList.get(0)[2]);
 				} else {
-					list.add("");
-					list.add("");
-					list.add("");
+					String newGc = "select DATE_SETTLMT_8,case when AMT_SETTLMT= '            ' then 0 else  AMT_SETTLMT/100 end as settl_amt,STLM_FLAG from BTH_NEW_GC_TXN_SUCC where "
+							+ "INST_DATE||INST_TIME='"
+							+ obj[4].toString().trim()
+							+ "' and pan='"
+							+ obj[2].toString().trim()
+							+ "' and SYS_SEQ_NUM='"
+							+ obj[8].toString().trim() + "'";
+					List<Object[]> newGcList = CommonFunction.getCommQueryDAO()
+							.findBySQLQuery(newGc, begin,
+									Constants.QUERY_RECORD_COUNT);
+					if (newGcList != null && newGcList.size() > 0) {
+						list.add(newGcList.get(0)[0]);
+						list.add(newGcList.get(0)[1]);
+						list.add(newGcList.get(0)[2]);
+					} else {
+						list.add("");
+						list.add("");
+						list.add("");
+					}
 				}
-			}
-			dataList.set(i, list.toArray());
+				dataList.set(i, list.toArray());
 			}
 		}
 		ret[0] = dataList;
@@ -9184,9 +9385,9 @@ public class GridConfigMethod {
 		if (!StringUtil.isEmpty(request.getParameter("saState"))) {
 			whereSql.append(" and sa_State='")
 					.append(request.getParameter("saState")).append("'");
-		} /*else {// 2 为审核拒绝状态
-			whereSql.append(" and sa_state<>'2'");
-		}*/
+		} /*
+		 * else {// 2 为审核拒绝状态 whereSql.append(" and sa_state<>'2'"); }
+		 */
 		if (!StringUtil.isEmpty(request.getParameter("createDate"))) {
 			whereSql.append(" and substr(create_date,0,8)='")
 					.append(request.getParameter("createDate")).append("'");
@@ -9208,31 +9409,34 @@ public class GridConfigMethod {
 			whereSql.append(" and t.sys_ssn='")
 					.append(request.getParameter("sysSsn").trim()).append("' ");
 		}
-		if (!StringUtil.isEmpty(request.getParameter("mchtNo"))) {//商户编 号
+		if (!StringUtil.isEmpty(request.getParameter("mchtNo"))) {// 商户编 号
 			whereSql.append(" and t.mchtNo='")
 					.append(request.getParameter("mchtNo").trim()).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("returnFee"))) {// 退货手续费
 			whereSql.append(" and t.return_fee='")
-					.append(request.getParameter("returnFee").trim()).append("' ");
+					.append(request.getParameter("returnFee").trim())
+					.append("' ");
 		}
-		if (!StringUtil.isEmpty(request.getParameter("pan"))) {// 
+		if (!StringUtil.isEmpty(request.getParameter("pan"))) {//
 			whereSql.append(" and t.pan='")
 					.append(request.getParameter("pan").trim()).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("retrivlRef"))) {// 参考号
 			whereSql.append(" and t.Retrivl_Ref='")
-					.append(StringUtil.replace(request.getParameter("retrivlRef")
-							.trim(), "'", "''")).append("' ");
+					.append(StringUtil.replace(
+							request.getParameter("retrivlRef").trim(), "'",
+							"''")).append("' ");
 		}
 		String sql = "select mchtNo,term_id,sys_ssn,pan,amt_trans/100 as amt_trans,inst_date,retrivl_ref,"
 				+ "  amt_return/100 as amt_return ,sa_state,opr_id,create_date,id,txn_num,return_fee,src_id,potal_ssn,rsp_code from tbl_manual_return t "
-				+ "where 1=1 ";/* +
-						"sa_state <> '1' ";*/
-//				+ request.getParameter("mchtNo").trim()
-//				+ "' and  t.Retrivl_Ref='"
-//				+ StringUtil.replace(request.getParameter("retrivlRef").trim(),
-//						"'", "''") + "' ";
+				+ "where 1=1 ";/*
+								 * + "sa_state <> '1' ";
+								 */
+		// + request.getParameter("mchtNo").trim()
+		// + "' and  t.Retrivl_Ref='"
+		// + StringUtil.replace(request.getParameter("retrivlRef").trim(),
+		// "'", "''") + "' ";
 		if (!StringUtil.isEmpty(whereSql.toString())) {
 			sql += whereSql.toString();
 		}
@@ -9246,8 +9450,10 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	/**
 	 * 线上交易流水
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
@@ -9256,83 +9462,87 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
 		boolean bb = true;
-		//判断开始时间，小于90天查当前表，超过90天查全部
+		// 判断开始时间，小于90天查当前表，超过90天查全部
 		try {
-			if(!StringUtil.isNull(request.getParameter("instDate"))) {
-				if(daysBetween(request.getParameter("instDate"),new Date())<=90){
+			if (!StringUtil.isNull(request.getParameter("instDate"))) {
+				if (daysBetween(request.getParameter("instDate"), new Date()) <= 90) {
 					bb = true;
-				}else{
+				} else {
 					bb = false;
 				}
-					
+
 			}
 		} catch (ParseException e) {
 
 			Log.log("日期转换错误");
-		}		
+		}
 		if (!StringUtil.isEmpty(request.getParameter("instDate"))) {// 原交易日期,20120820修改为date，原为instDate
 			whereSql.append(" and substr(inst_date,0,8)='")
-			.append(request.getParameter("instDate")).append("' ");
+					.append(request.getParameter("instDate")).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("termId"))) {// 终端号
 			whereSql.append(" and term_id='")
-			.append(request.getParameter("termId").trim()).append("' ");
+					.append(request.getParameter("termId").trim()).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("mchtId"))) {// 流水号
 			whereSql.append(" and mcht_id='")
-			.append(request.getParameter("mchtId").trim()).append("' ");
+					.append(request.getParameter("mchtId").trim()).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("pan"))) {
 			whereSql.append(" and pan like'%")
-			.append(request.getParameter("pan").trim()).append("%' ");
+					.append(request.getParameter("pan").trim()).append("%' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("orderNo"))) {
 			whereSql.append(" and order_no='")
-			.append(request.getParameter("orderNo").trim()).append("' ");
+					.append(request.getParameter("orderNo").trim())
+					.append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("transState"))) {
 			whereSql.append(" and trans_state='")
-			.append(request.getParameter("transState").trim()).append("' ");
+					.append(request.getParameter("transState").trim())
+					.append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("instId"))) {
 			whereSql.append(" and inst_id='")
-			.append(request.getParameter("instId").trim()).append("' ");
+					.append(request.getParameter("instId").trim()).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("misc1"))) {
 			whereSql.append(" and misc_1='")
-			.append(request.getParameter("misc1").trim()).append("' ");
+					.append(request.getParameter("misc1").trim()).append("' ");
 		}
 		String sql;
 		if (bb) {
 			sql = "select distinct inst_date, mcht_id, term_id, pan, order_no, amt_trans, trans_state, trim(inst_id),misc_1, resp_code, txn_num, misc_2 from tbl_xs_n_txn where 1=1 ";
-		}else{
+		} else {
 			sql = "select distinct inst_date, mcht_id, term_id, pan, order_no, amt_trans, trans_state, trim(inst_id),misc_1, resp_code, txn_num, misc_2 from tbl_xs_n_txn_his where 1=1 ";
 		}
 		if (!StringUtil.isEmpty(whereSql.toString())) {
 			sql += whereSql.toString();
 		}
 		String countSql = "SELECT COUNT(*) FROM ( " + sql + ")";
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		sql += " order by inst_date desc";
 		@SuppressWarnings("unchecked")
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 	/** 查询已退货信息 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getManualReturnWeih(int begin, HttpServletRequest request) {
+	public static Object[] getManualReturnWeih(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
 		if (!StringUtil.isEmpty(request.getParameter("saState"))) {
 			whereSql.append(" and sa_State='")
 					.append(request.getParameter("saState")).append("'");
-		} /*else {// 2 为审核拒绝状态
-			whereSql.append(" and sa_state<>'2'");
-		}*/
+		} /*
+		 * else {// 2 为审核拒绝状态 whereSql.append(" and sa_state<>'2'"); }
+		 */
 		if (!StringUtil.isEmpty(request.getParameter("createDate"))) {
 			whereSql.append(" and substr(create_date,0,8)='")
 					.append(request.getParameter("createDate")).append("'");
@@ -9354,37 +9564,47 @@ public class GridConfigMethod {
 			whereSql.append(" and t.sys_ssn='")
 					.append(request.getParameter("sysSsn").trim()).append("' ");
 		}
-		if (!StringUtil.isEmpty(request.getParameter("mchtNo"))) {//商户编 号
+		if (!StringUtil.isEmpty(request.getParameter("mchtNo"))) {// 商户编 号
 			whereSql.append(" and t.mchtNo='")
 					.append(request.getParameter("mchtNo").trim()).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("returnFee"))) {// 退货手续费
 			whereSql.append(" and t.return_fee='")
-					.append(request.getParameter("returnFee").trim()).append("' ");
+					.append(request.getParameter("returnFee").trim())
+					.append("' ");
 		}
-		if (!StringUtil.isEmpty(request.getParameter("pan"))) {// 
+		if (!StringUtil.isEmpty(request.getParameter("pan"))) {//
 			whereSql.append(" and t.pan='")
 					.append(request.getParameter("pan").trim()).append("' ");
 		}
 		if (!StringUtil.isEmpty(request.getParameter("retrivlRef"))) {// 参考号
-			whereSql.append(" and t.Retrivl_Ref='").append(StringUtil.replace(request.getParameter("retrivlRef").trim(), "'", "''")).append("' ");
+			whereSql.append(" and t.Retrivl_Ref='")
+					.append(StringUtil.replace(
+							request.getParameter("retrivlRef").trim(), "'",
+							"''")).append("' ");
 		}
-		//UPDATE 审核状态
+		// UPDATE 审核状态
 		if (!StringUtil.isEmpty(request.getParameter("saState"))) {// 审核状态
-			whereSql.append(" and t.sa_state='").append(StringUtil.replace(request.getParameter("saState").trim(), "'", "''")).append("' ");
+			whereSql.append(" and t.sa_state='")
+					.append(StringUtil.replace(request.getParameter("saState")
+							.trim(), "'", "''")).append("' ");
 		}
-		
+
 		String sql = "select mchtNo,term_id as termId,sys_ssn as sysSsn,pan,amt_trans/100,inst_date as instDate,Retrivl_Ref as retrivlRef,"
 				+ "amt_return/100 as amtReturn ,sa_state,opr_id,create_date as createDate,id,txn_num,return_fee as returnFee,src_id,potal_ssn,rsp_code from tbl_manual_return t "
-				+ "where 1=1 ";//END
-		/*String sql = "select mchtNo,term_id as termId,sys_ssn as sysSsn,pan,amt_trans/100,inst_date as instDate,Retrivl_Ref as retrivlRef,"
-				+ "amt_return/100 as amtReturn ,sa_state,opr_id,create_date as createDate,id,txn_num,return_fee as returnFee from tbl_manual_return t "
-				+ "where sa_state <> '1' and sa_state <> '4' ";*/
-		/* + "sa_state <> '1' ";*/
-//				+ request.getParameter("mchtNo").trim()
-//				+ "' and  t.Retrivl_Ref='"
-//				+ StringUtil.replace(request.getParameter("retrivlRef").trim(),
-//						"'", "''") + "' ";
+				+ "where 1=1 ";// END
+		/*
+		 * String sql =
+		 * "select mchtNo,term_id as termId,sys_ssn as sysSsn,pan,amt_trans/100,inst_date as instDate,Retrivl_Ref as retrivlRef,"
+		 * +
+		 * "amt_return/100 as amtReturn ,sa_state,opr_id,create_date as createDate,id,txn_num,return_fee as returnFee from tbl_manual_return t "
+		 * + "where sa_state <> '1' and sa_state <> '4' ";
+		 */
+		/* + "sa_state <> '1' "; */
+		// + request.getParameter("mchtNo").trim()
+		// + "' and  t.Retrivl_Ref='"
+		// + StringUtil.replace(request.getParameter("retrivlRef").trim(),
+		// "'", "''") + "' ";
 		if (!StringUtil.isEmpty(whereSql.toString())) {
 			sql += whereSql.toString();
 		}
@@ -9400,7 +9620,8 @@ public class GridConfigMethod {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static Object[] getManualReturnCheck(int begin, HttpServletRequest request) {
+	public static Object[] getManualReturnCheck(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		/*
 		 * StringBuffer whereSql=new StringBuffer();
@@ -9437,52 +9658,67 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+
 	public static Object[] getXsReturnInf(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
-		StringBuffer whereSql=new StringBuffer();
-		if(!StringUtil.isEmpty(request.getParameter("returnDate"))){
-			whereSql.append(" and substr(return_date,0,8) ='").append(request.getParameter("returnDate" )).append("'"); 
+		StringBuffer whereSql = new StringBuffer();
+		if (!StringUtil.isEmpty(request.getParameter("returnDate"))) {
+			whereSql.append(" and substr(return_date,0,8) ='")
+					.append(request.getParameter("returnDate")).append("'");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("transDate"))){
-			whereSql.append(" and substr(trans_date,0,8) ='").append(request.getParameter("transDate" )).append("'"); 
+		if (!StringUtil.isEmpty(request.getParameter("transDate"))) {
+			whereSql.append(" and substr(trans_date,0,8) ='")
+					.append(request.getParameter("transDate")).append("'");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("mchtId"))){
-			whereSql.append(" and mcht_id ='").append(request.getParameter("mchtId" )).append("'"); 
+		if (!StringUtil.isEmpty(request.getParameter("mchtId"))) {
+			whereSql.append(" and mcht_id ='")
+					.append(request.getParameter("mchtId")).append("'");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("termId"))){
-			whereSql.append(" and term_id ='").append(request.getParameter("termId" )).append("'"); 
+		if (!StringUtil.isEmpty(request.getParameter("termId"))) {
+			whereSql.append(" and term_id ='")
+					.append(request.getParameter("termId")).append("'");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("pan"))){
-			whereSql.append(" and pan like '%").append(request.getParameter("pan" )).append("%'"); 
+		if (!StringUtil.isEmpty(request.getParameter("pan"))) {
+			whereSql.append(" and pan like '%")
+					.append(request.getParameter("pan")).append("%'");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("orderNo"))){
-			whereSql.append(" and trim(order_no) ='").append(request.getParameter("orderNo" )).append("'"); 
+		if (!StringUtil.isEmpty(request.getParameter("orderNo"))) {
+			whereSql.append(" and trim(order_no) ='")
+					.append(request.getParameter("orderNo")).append("'");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("returnOrderno"))){
-			whereSql.append(" and trim(return_orderno) ='").append(request.getParameter("returnOrderno" ).trim()).append("'"); 
+		if (!StringUtil.isEmpty(request.getParameter("returnOrderno"))) {
+			whereSql.append(" and trim(return_orderno) ='")
+					.append(request.getParameter("returnOrderno").trim())
+					.append("'");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("returnFlag"))){
-			whereSql.append(" and return_flag ='").append(request.getParameter("returnFlag" ).trim()).append("' "); 
+		if (!StringUtil.isEmpty(request.getParameter("returnFlag"))) {
+			whereSql.append(" and return_flag ='")
+					.append(request.getParameter("returnFlag").trim())
+					.append("' ");
 		}
-		if(!StringUtil.isEmpty(request.getParameter("misc5"))){
-			if (request.getParameter("misc5" ).equals("0")) {
+		if (!StringUtil.isEmpty(request.getParameter("misc5"))) {
+			if (request.getParameter("misc5").equals("0")) {
 				whereSql.append(" and misc_5 is Null ");
-			}else{
-				whereSql.append(" and misc_5 = '").append(request.getParameter("misc5" )).append("' "); 
+			} else {
+				whereSql.append(" and misc_5 = '")
+						.append(request.getParameter("misc5")).append("' ");
 			}
 		}
-		if(!StringUtil.isEmpty(request.getParameter("channel"))){
-			whereSql.append(" and channel ='").append(request.getParameter("channel" )).append("'"); 
+		if (!StringUtil.isEmpty(request.getParameter("channel"))) {
+			whereSql.append(" and channel ='")
+					.append(request.getParameter("channel")).append("'");
 		}
 		String sql = "select distinct return_date,pay_date,trans_date,mcht_id,term_id,pan,order_no,return_orderno,return_amt,amt_trans,return_flag,misc_1,opr_id,channel,channel_discount,resp_code,misc_5 from tbl_xs_return_inf t where 1=1 ";
-		if(!StringUtil.isEmpty(whereSql.toString())){
-			sql+=whereSql.toString(); 
+		if (!StringUtil.isEmpty(whereSql.toString())) {
+			sql += whereSql.toString();
 		}
 		String countSql = "SELECT COUNT(*) FROM ( " + sql + ")";
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery( countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		sql += " order by return_date desc";
 		@SuppressWarnings("unchecked")
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -10284,11 +10520,14 @@ public class GridConfigMethod {
 		 */
 		Object[] ret = new Object[2];
 
-//		String sql = "SELECT MCHT_NO,TERM_ID,SETTLE_RPT,CURR_ACCOUNT,SETTLE_BANK_NM,SETTLE_BANK_NO,COMP_ACCOUNT_BANK_CODE,"
-//				+ "COMP_ACCOUNT_BANK_NAME,SETTLE_ACCT_NM,SETTLE_ACCT,BANK_ACCOUNT_CODE,CORP_BANK_NAME,FEE_ACCT_NM,"
-//				+ "FEE_ACCT,DIR_BANK_CODE,DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT,DIR_FLAG,AUTO_FLAG,HOLIDAY_SET_FLAG,CRE_FLAG,RETURN_FEE_FLAG,SETTLE_TYPE,SETTLE_CHN"
-//				+ " from TBL_MCHT_SETTLE_INF_TMP where MCHT_NO='"
-//				+ request.getParameter("mchtNo") + "'";
+		// String sql =
+		// "SELECT MCHT_NO,TERM_ID,SETTLE_RPT,CURR_ACCOUNT,SETTLE_BANK_NM,SETTLE_BANK_NO,COMP_ACCOUNT_BANK_CODE,"
+		// +
+		// "COMP_ACCOUNT_BANK_NAME,SETTLE_ACCT_NM,SETTLE_ACCT,BANK_ACCOUNT_CODE,CORP_BANK_NAME,FEE_ACCT_NM,"
+		// +
+		// "FEE_ACCT,DIR_BANK_CODE,DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT,DIR_FLAG,AUTO_FLAG,HOLIDAY_SET_FLAG,CRE_FLAG,RETURN_FEE_FLAG,SETTLE_TYPE,SETTLE_CHN"
+		// + " from TBL_MCHT_SETTLE_INF_TMP where MCHT_NO='"
+		// + request.getParameter("mchtNo") + "'";
 		String sql = "SELECT MCHT_NO,TERM_ID,SETTLE_RPT,CURR_ACCOUNT,SETTLE_BANK_NM,SETTLE_BANK_NO,COMP_ACCOUNT_BANK_CODE,"
 				+ "COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT,BANK_ACCOUNT_CODE,CORP_BANK_NAME,LEGAL_NAM,"
 				+ "FEE_ACCT,DIR_BANK_CODE,DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT,DIR_FLAG,AUTO_FLAG,HOLIDAY_SET_FLAG,CRE_FLAG,RETURN_FEE_FLAG,SETTLE_TYPE,SETTLE_CHN,DIR_OPEN_BANK , DIR_BANK_PROVINCE , DIR_BANK_CITY , COMP_OPEN_BANK , COMP_BANK_PROVINCE , COMP_BANK_CITY , CORP_OPEN_BANK , CORP_BANK_PROVINCE , CORP_BANK_CITY "
@@ -10311,6 +10550,7 @@ public class GridConfigMethod {
 
 	/**
 	 * 商户费率
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
@@ -10341,8 +10581,8 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
-	//添加机构中的发卡行添加
+
+	// 添加机构中的发卡行添加
 	public static Object[] getBankCode(int begin, HttpServletRequest request) {
 		/*
 		 * Operator operator = (Operator) request.getSession().getAttribute(
@@ -10352,8 +10592,7 @@ public class GridConfigMethod {
 
 		String sql = "select ID,TMP_NO,INST_CODE,BANK_CODE,state "
 				+ "from TBL_Inst_Bdb_Bank_Code_TMP where tmp_No='"
-				+ request.getParameter("tmpNo")
-				+ "'";
+				+ request.getParameter("tmpNo") + "'";
 		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
@@ -10363,32 +10602,31 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
-	//添加机构中的发卡行添加（修改表单）
-		public static Object[] getBankCode2(int begin, HttpServletRequest request) {
-			/*
-			 * Operator operator = (Operator) request.getSession().getAttribute(
-			 * Constants.OPERATOR_INFO);
-			 */
-			Object[] ret = new Object[2];
 
-			String sql = "select ID,TMP_NO,INST_CODE,BANK_CODE,state "
-					+ "from TBL_Inst_Bdb_Bank_Code_TMP ";
-			
-			if (!StringUtil.isEmpty(request.getParameter("agenid"))) {
-				sql += " where INST_CODE ='"
-						+ request.getParameter("agenid").trim()
-						+ "'";
-			}
-			String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
-			List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-					.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-			String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
-					countSql);
-			ret[0] = dataList;
-			ret[1] = count;
-			return ret;
+	// 添加机构中的发卡行添加（修改表单）
+	public static Object[] getBankCode2(int begin, HttpServletRequest request) {
+		/*
+		 * Operator operator = (Operator) request.getSession().getAttribute(
+		 * Constants.OPERATOR_INFO);
+		 */
+		Object[] ret = new Object[2];
+
+		String sql = "select ID,TMP_NO,INST_CODE,BANK_CODE,state "
+				+ "from TBL_Inst_Bdb_Bank_Code_TMP ";
+
+		if (!StringUtil.isEmpty(request.getParameter("agenid"))) {
+			sql += " where INST_CODE ='"
+					+ request.getParameter("agenid").trim() + "'";
 		}
+		String countSql = "SELECT COUNT(*) FROM (" + sql + ")";
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
 
 	@SuppressWarnings("unchecked")
 	public static Object[] getTblMsThread1(int begin, HttpServletRequest request) {
@@ -10544,7 +10782,8 @@ public class GridConfigMethod {
 
 		// 区分中行、工行、农行、建行
 		if (isNotEmpty(request.getParameter("insType"))) {
-			whereSql.append(" and t.TERM_INS = (SELECT trim(KEY) FROM CST_SYS_PARAM WHERE OWNER = '"+request.getParameter("insType")+"') ");
+			whereSql.append(" and t.TERM_INS = (SELECT trim(KEY) FROM CST_SYS_PARAM WHERE OWNER = '"
+					+ request.getParameter("insType") + "') ");
 		}
 		if (isNotEmpty(request.getParameter("termIns"))) {
 			whereSql.append(" and t.TERM_INS = '"
@@ -10579,8 +10818,8 @@ public class GridConfigMethod {
 					+ "' ");
 		}
 		if (isNotEmpty(request.getParameter("channelType"))) {
-			whereSql.append(" and t.CHANNEL_TYPE = '" + request.getParameter("channelType")
-					+ "' ");
+			whereSql.append(" and t.CHANNEL_TYPE = '"
+					+ request.getParameter("channelType") + "' ");
 		}
 		if (!StringUtil.isNull(request.getParameter("startDate"))) {
 			whereSql.append(" and t.CRE_TIME >= '"
@@ -10616,7 +10855,8 @@ public class GridConfigMethod {
 
 		// 区分中行、工行、农行、建行
 		if (isNotEmpty(request.getParameter("insType"))) {
-			whereSql.append(" and t.TERM_INS = (SELECT trim(KEY) FROM CST_SYS_PARAM WHERE OWNER = '"+request.getParameter("insType")+"') ");
+			whereSql.append(" and t.TERM_INS = (SELECT trim(KEY) FROM CST_SYS_PARAM WHERE OWNER = '"
+					+ request.getParameter("insType") + "') ");
 		}
 		if (isNotEmpty(request.getParameter("termIns"))) {
 			whereSql.append(" and t.TERM_INS = '"
@@ -10655,8 +10895,8 @@ public class GridConfigMethod {
 					+ request.getParameter("endDate") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("channelType"))) {
-			whereSql.append(" and t.CHANNEL_TYPE = '" + request.getParameter("channelType")
-					+ "' ");
+			whereSql.append(" and t.CHANNEL_TYPE = '"
+					+ request.getParameter("channelType") + "' ");
 		}
 
 		String sql = "SELECT t.ID,t.TERM_INS,t.MCHT_MCC,t.MCHT_ID,t.MCHT_TERM_ID,t.INS_MCC,t.INS_MCHT,t.INS_TERM,t.STAT,t.CRE_TIME,t.CRE_OPR_ID,t.MODI_TIME,"
@@ -11002,8 +11242,7 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 	@SuppressWarnings("unchecked")
 	public static Object[] getSumrzInf(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
@@ -11029,8 +11268,8 @@ public class GridConfigMethod {
 			whereSql.append(" and a.SUMRZ_DATE = '"
 					+ request.getParameter("sumrzDate") + "' ");
 		}
-		String sql = "SELECT a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS FROM TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1  and a.SUM_AMT<>0 "
+		String sql = "SELECT a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS FROM TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1  and a.SUM_AMT<>0 "
 				+ whereSql.toString();
 		sql += " order by a.INST_DATE,a.SEQ_NUM";
 		String countSql = "SELECT COUNT(*) FROM TBL_MCHT_SUMRZ_INF a where 1=1  and a.SUM_AMT<>0 "
@@ -11043,44 +11282,11 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static Object[] getSumrzInfUp(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-        whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
-		if (isNotEmpty(request.getParameter("instDate"))) {
-			whereSql.append(" and a.INST_DATE = '"
-					+ request.getParameter("instDate") + "' ");
-		}
-		if (isNotEmpty(request.getParameter("accFlag"))) {
-			whereSql.append(" and a.ACC_FLAG = '"
-					+ request.getParameter("accFlag") + "' ");
-		}
-		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" and a.MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
-		}
-		String sql = "SELECT a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS FROM TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1  and a.SUM_AMT<>0 "
-				+ whereSql.toString();
-		sql += " order by a.INST_DATE,a.SEQ_NUM";
-		String countSql = "SELECT COUNT(*) FROM TBL_MCHT_SUMRZ_INF a where 1=1  and a.SUM_AMT<>0 "
-				+ whereSql.toString();
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
-				countSql);
-		ret[0] = dataList;
-		ret[1] = count;
-		return ret;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQ(int begin, HttpServletRequest request) {
-		Object[] ret = new Object[2];
-		StringBuffer whereSql = new StringBuffer();
-		//add   lhf
 		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
 		if (isNotEmpty(request.getParameter("instDate"))) {
 			whereSql.append(" and a.INST_DATE = '"
@@ -11094,10 +11300,44 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 "
+		String sql = "SELECT a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS FROM TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1  and a.SUM_AMT<>0 "
 				+ whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM ("+  sql + whereSql.toString()+" order by a.INST_DATE DESC ) ";
+		sql += " order by a.INST_DATE,a.SEQ_NUM";
+		String countSql = "SELECT COUNT(*) FROM TBL_MCHT_SUMRZ_INF a where 1=1  and a.SUM_AMT<>0 "
+				+ whereSql.toString();
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Object[] getSumrzInfUpYQ(int begin, HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer whereSql = new StringBuffer();
+		// add lhf
+		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
+		if (isNotEmpty(request.getParameter("instDate"))) {
+			whereSql.append(" and a.INST_DATE = '"
+					+ request.getParameter("instDate") + "' ");
+		}
+		if (isNotEmpty(request.getParameter("accFlag"))) {
+			whereSql.append(" and a.ACC_FLAG = '"
+					+ request.getParameter("accFlag") + "' ");
+		}
+		if (isNotEmpty(request.getParameter("mchtNo"))) {
+			whereSql.append(" and a.MCHT_NO = '"
+					+ request.getParameter("mchtNo") + "' ");
+		}
+		String sql = "SELECT a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 "
+				+ whereSql.toString();
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
+				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
@@ -11107,18 +11347,20 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 一次划款
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQaudit(int begin, HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQaudit(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-		//add   lhf
+		// add lhf
 		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
 		if (isNotEmpty(request.getParameter("instDate"))) {
 			whereSql.append(" and a.INST_DATE = '"
@@ -11132,30 +11374,41 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
 				+ whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM ("+  sql + whereSql.toString()+" order by a.INST_DATE DESC ) ";
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
+				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
-		/*List<Object[]> datasList = null;
-		
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		List<Object[]> datasList = null;
+
 		for (Object[] objects : dataList) {
-			Object mchtNo = objects[2];//商户号
-			Object settleRpt = objects[31];//结算账户类型
-			if (settleRpt.equals("1")) {//对私
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "+mchtNo+"");
+			Object mchtNo = objects[2];// 商户号
+			Object settleRpt = objects[31];// 结算账户类型
+			if (settleRpt.equals("1")) {// 对私
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "
+										+ mchtNo + "");
 				Object[] objects2 = datasList.get(0);
-				Object corpBankName = objects2[0];//开户行名称
-				Object feeAcctNm = objects2[1];//账户名称
-				Object feeAcct = objects2[2];//账户账号
+				Object corpBankName = objects2[0];// 开户行名称
+				Object feeAcctNm = objects2[1];// 账户名称
+				Object feeAcct = objects2[2];// 账户账号
 				objects[10] = feeAcctNm;
 				objects[11] = feeAcct;
 				objects[12] = corpBankName;
-				//CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
-				//select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
-			}else if (settleRpt.equals("2")) {//对公
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+				// CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
+				// select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from
+				// TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
+			} else if (settleRpt.equals("2")) {// 对公
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects3 = datasList.get(0);
 				Object compAccountBankName = objects3[0];
 				Object settleAcctNm = objects3[1];
@@ -11163,8 +11416,12 @@ public class GridConfigMethod {
 				objects[10] = settleAcctNm;
 				objects[11] = settleAcct;
 				objects[12] = compAccountBankName;
-			}else if (settleRpt.equals("3")) {//定向
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+			} else if (settleRpt.equals("3")) {// 定向
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects4 = datasList.get(0);
 				Object dirBankNname = objects4[0];
 				Object dirAaccountNname = objects4[1];
@@ -11173,25 +11430,28 @@ public class GridConfigMethod {
 				objects[11] = dirAccount;
 				objects[12] = dirBankNname;
 			}
-			
-		}*/
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		}
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 一次划款审核
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQauditS(int begin, HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQauditS(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-		//add   lhf
+		// add lhf
 		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL ) ");
 		whereSql.append(" and a.AUDIT_STATUS = '0' ");
 		if (isNotEmpty(request.getParameter("instDate"))) {
@@ -11206,19 +11466,25 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
 				+ whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM ("+  sql + whereSql.toString()+" order by a.INST_DATE DESC ) ";
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
+				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
-		/*List<Object[]> datasList = null;
-		
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		List<Object[]> datasList = null;
+
 		for (Object[] objects : dataList) {
-			Object mchtNo = objects[2];//商户号
-			Object settleRpt = objects[31];//结算账户类型
-			if (settleRpt.equals("1")) {//对私
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "+mchtNo+"");
+			Object mchtNo = objects[2];// 商户号
+			Object settleRpt = objects[31];// 结算账户类型
+			if (settleRpt.equals("1")) {// 对私
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "
+										+ mchtNo + "");
 				Object[] objects2 = datasList.get(0);
 				Object corpBankName = objects2[0];
 				Object feeAcctNm = objects2[1];
@@ -11226,10 +11492,15 @@ public class GridConfigMethod {
 				objects[10] = feeAcctNm;
 				objects[11] = feeAcct;
 				objects[12] = corpBankName;
-				//CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
-				//select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
-			}else if (settleRpt.equals("2")) {//对公
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+				// CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
+				// select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from
+				// TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
+			} else if (settleRpt.equals("2")) {// 对公
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects3 = datasList.get(0);
 				Object compAccountBankName = objects3[0];
 				Object settleAcctNm = objects3[1];
@@ -11237,8 +11508,12 @@ public class GridConfigMethod {
 				objects[10] = settleAcctNm;
 				objects[11] = settleAcct;
 				objects[12] = compAccountBankName;
-			}else if (settleRpt.equals("3")) {//定向
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+			} else if (settleRpt.equals("3")) {// 定向
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects4 = datasList.get(0);
 				Object dirBankNname = objects4[0];
 				Object dirAaccountNname = objects4[1];
@@ -11247,25 +11522,28 @@ public class GridConfigMethod {
 				objects[11] = dirAccount;
 				objects[12] = dirBankNname;
 			}
-			
-		}*/
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		}
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 二次划款审核
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQauditSE(int begin, HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQauditSE(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-		//add   lhf
+		// add lhf
 		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL ) ");
 		whereSql.append(" and a.AUDIT_STATUS = '3' ");
 		if (isNotEmpty(request.getParameter("instDate"))) {
@@ -11280,19 +11558,25 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 "
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 "
 				+ whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM ("+  sql + whereSql.toString()+" order by a.INST_DATE DESC ) ";
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
+				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
-		/*List<Object[]> datasList = null;
-		
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		List<Object[]> datasList = null;
+
 		for (Object[] objects : dataList) {
-			Object mchtNo = objects[2];//商户号
-			Object settleRpt = objects[31];//结算账户类型
-			if (settleRpt.equals("1")) {//对私
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "+mchtNo+"");
+			Object mchtNo = objects[2];// 商户号
+			Object settleRpt = objects[31];// 结算账户类型
+			if (settleRpt.equals("1")) {// 对私
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "
+										+ mchtNo + "");
 				Object[] objects2 = datasList.get(0);
 				Object corpBankName = objects2[0];
 				Object feeAcctNm = objects2[1];
@@ -11300,10 +11584,15 @@ public class GridConfigMethod {
 				objects[10] = feeAcctNm;
 				objects[11] = feeAcct;
 				objects[12] = corpBankName;
-				//CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
-				//select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
-			}else if (settleRpt.equals("2")) {//对公
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+				// CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
+				// select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from
+				// TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
+			} else if (settleRpt.equals("2")) {// 对公
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects3 = datasList.get(0);
 				Object compAccountBankName = objects3[0];
 				Object settleAcctNm = objects3[1];
@@ -11311,8 +11600,12 @@ public class GridConfigMethod {
 				objects[10] = settleAcctNm;
 				objects[11] = settleAcct;
 				objects[12] = compAccountBankName;
-			}else if (settleRpt.equals("3")) {//定向
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+			} else if (settleRpt.equals("3")) {// 定向
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects4 = datasList.get(0);
 				Object dirBankNname = objects4[0];
 				Object dirAaccountNname = objects4[1];
@@ -11321,19 +11614,22 @@ public class GridConfigMethod {
 				objects[11] = dirAccount;
 				objects[12] = dirBankNname;
 			}
-			
-		}*/
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		}
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
+
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQF(int begin, HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQF(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-		//add   lhf
-//		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
+		// add lhf
+		// whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
 		if (isNotEmpty(request.getParameter("instDate"))) {
 			whereSql.append(" and a.INST_DATE = '"
 					+ request.getParameter("instDate") + "' ");
@@ -11346,30 +11642,34 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.SA_STATUS = '0' "
+		String sql = "SELECT a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.SA_STATUS = '0' "
 				+ whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM ("+  sql + whereSql.toString()+" order by a.INST_DATE DESC ) ";
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
+				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
 		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
 				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 二次划款
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQFe(int begin, HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQFe(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-		//add   lhf
+		// add lhf
 		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
 		if (isNotEmpty(request.getParameter("instDate"))) {
 			whereSql.append(" and a.INST_DATE = '"
@@ -11383,19 +11683,25 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.SA_STATUS = '0' "
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.SA_STATUS = '0' "
 				+ whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM ("+  sql + whereSql.toString()+" order by a.INST_DATE DESC ) ";
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
+				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
 		List<Object[]> datasList = null;
-		
+
 		for (Object[] objects : dataList) {
-			Object mchtNo = objects[2];//商户号
-			Object settleRpt = objects[31];//结算账户类型
-			if (settleRpt.equals("1")) {//对私
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "+mchtNo+"");
+			Object mchtNo = objects[2];// 商户号
+			Object settleRpt = objects[31];// 结算账户类型
+			if (settleRpt.equals("1")) {// 对私
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "
+										+ mchtNo + "");
 				Object[] objects2 = datasList.get(0);
 				Object corpBankName = objects2[0];
 				Object feeAcctNm = objects2[1];
@@ -11403,10 +11709,15 @@ public class GridConfigMethod {
 				objects[10] = feeAcctNm;
 				objects[11] = feeAcct;
 				objects[12] = corpBankName;
-				//CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
-				//select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
-			}else if (settleRpt.equals("2")) {//对公
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+				// CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
+				// select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from
+				// TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
+			} else if (settleRpt.equals("2")) {// 对公
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects3 = datasList.get(0);
 				Object compAccountBankName = objects3[0];
 				Object settleAcctNm = objects3[1];
@@ -11414,8 +11725,12 @@ public class GridConfigMethod {
 				objects[10] = settleAcctNm;
 				objects[11] = settleAcct;
 				objects[12] = compAccountBankName;
-			}else if (settleRpt.equals("3")) {//定向
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
+			} else if (settleRpt.equals("3")) {// 定向
+				datasList = CommonFunction
+						.getCommQueryDAO()
+						.findBySQLQuery(
+								"select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+										+ mchtNo + "'");
 				Object[] objects4 = datasList.get(0);
 				Object dirBankNname = objects4[0];
 				Object dirAaccountNname = objects4[1];
@@ -11424,26 +11739,29 @@ public class GridConfigMethod {
 				objects[11] = dirAccount;
 				objects[12] = dirBankNname;
 			}
-			
+
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户回填
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQFF(int begin, HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQFF(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
-		//add   lhf
-//		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
+		// add lhf
+		// whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
 		if (isNotEmpty(request.getParameter("instDate"))) {
 			whereSql.append(" and a.INST_DATE = '"
 					+ request.getParameter("instDate") + "' ");
@@ -11456,73 +11774,75 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		
-//		whereSql.append(" AND a.SA_STATUS = '2' ");
-		
-		String sql = "SELECT a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a" +
-				" left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' " + whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM ("+  sql + whereSql.toString()+" order by a.INST_DATE DESC ) ";
+
+		// whereSql.append(" AND a.SA_STATUS = '2' ");
+
+		String sql = "SELECT a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.SUMRZ_BATCH FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
+				+ whereSql.toString();
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
+				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
-		/*List<Object[]> datasList = null;
-		
-		for (Object[] objects : dataList) {
-			Object mchtNo = objects[2];//商户号
-			Object settleRpt = objects[31];//结算账户类型
-			if (settleRpt.equals("1")) {//对私
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "+mchtNo+"");
-				Object[] objects2 = datasList.get(0);
-				Object corpBankName = objects2[0];
-				Object feeAcctNm = objects2[1];
-				Object feeAcct = objects2[2];
-				objects[10] = feeAcctNm;
-				objects[11] = feeAcct;
-				objects[12] = corpBankName;
-				//CORP_BANK_NAME对私开户行名称 FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户
-				//select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
-			}else if (settleRpt.equals("2")) {//对公
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
-				Object[] objects3 = datasList.get(0);
-				Object compAccountBankName = objects3[0];
-				Object settleAcctNm = objects3[1];
-				Object settleAcct = objects3[2];
-				objects[10] = settleAcctNm;
-				objects[11] = settleAcct;
-				objects[12] = compAccountBankName;
-			}else if (settleRpt.equals("3")) {//定向
-				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"+mchtNo+"'");
-				Object[] objects4 = datasList.get(0);
-				Object dirBankNname = objects4[0];
-				Object dirAaccountNname = objects4[1];
-				Object dirAccount = objects4[2];
-				objects[10] = dirAaccountNname;
-				objects[11] = dirAccount;
-				objects[12] = dirBankNname;
-			}
-			
-		}*/
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		/*
+		 * List<Object[]> datasList = null;
+		 * 
+		 * for (Object[] objects : dataList) { Object mchtNo = objects[2];//商户号
+		 * Object settleRpt = objects[31];//结算账户类型 if (settleRpt.equals("1"))
+		 * {//对私 datasList = CommonFunction.getCommQueryDAO().findBySQLQuery(
+		 * "select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "
+		 * +mchtNo+""); Object[] objects2 = datasList.get(0); Object
+		 * corpBankName = objects2[0]; Object feeAcctNm = objects2[1]; Object
+		 * feeAcct = objects2[2]; objects[10] = feeAcctNm; objects[11] =
+		 * feeAcct; objects[12] = corpBankName; //CORP_BANK_NAME对私开户行名称
+		 * FEE_ACCT_NM对私开户行账号 FEE_ACCT对私账户 //select
+		 * CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from TBL_MCHT_SETTLE_INF where
+		 * MCHT_NO = mchtNo }else if (settleRpt.equals("2")) {//对公 datasList =
+		 * CommonFunction.getCommQueryDAO().findBySQLQuery(
+		 * "select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+		 * +mchtNo+"'"); Object[] objects3 = datasList.get(0); Object
+		 * compAccountBankName = objects3[0]; Object settleAcctNm = objects3[1];
+		 * Object settleAcct = objects3[2]; objects[10] = settleAcctNm;
+		 * objects[11] = settleAcct; objects[12] = compAccountBankName; }else if
+		 * (settleRpt.equals("3")) {//定向 datasList =
+		 * CommonFunction.getCommQueryDAO().findBySQLQuery(
+		 * "select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
+		 * +mchtNo+"'"); Object[] objects4 = datasList.get(0); Object
+		 * dirBankNname = objects4[0]; Object dirAaccountNname = objects4[1];
+		 * Object dirAccount = objects4[2]; objects[10] = dirAaccountNname;
+		 * objects[11] = dirAccount; objects[12] = dirBankNname; }
+		 * 
+		 * }
+		 */
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 查询受益人信息
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getTblMchtBeneficiaryInfTmp(int begin, HttpServletRequest request) {
+	public static Object[] getTblMchtBeneficiaryInfTmp(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
-		
+
 		String sql = "select BENEFICIARY_ID,MCHT_NO,BENEFICIARY_NAME,BENEFICIARY_ADDRESS,BENEFICIARY_ID_TYPE,BENEFICIARY_ID_CARD,BENEFICIARY_EXPIRATION "
-				+ "from TBL_MCHT_BENEFICIARY_INF_TMP where MCHT_NO = " + request.getParameter("mchtNo");
+				+ "from TBL_MCHT_BENEFICIARY_INF_TMP where MCHT_NO = "
+				+ request.getParameter("mchtNo");
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by BENEFICIARY_ID";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -11530,6 +11850,7 @@ public class GridConfigMethod {
 
 	/**
 	 * 受益所有人图片文件
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
@@ -11538,15 +11859,16 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		String imagesId = request.getParameter("imagesId");
 		String beneficiaryId = request.getParameter("beneficiaryId");
-		String beneficiaryExpiration = request.getParameter("beneficiaryExpiration");
+		String beneficiaryExpiration = request
+				.getParameter("beneficiaryExpiration");
 
 		List<Object[]> dataList = new ArrayList<Object[]>();
 		String basePath = SysParamUtil
 				.getParam(SysParamConstants.FILE_UPLOAD_DISK);
-		
-		//追加文件夹
+
+		// 追加文件夹
 		basePath += beneficiaryId + "_" + beneficiaryExpiration + "/";
-		
+
 		basePath = basePath.replace("\\", "/");
 		File fl = new File(basePath);
 		FileFilter filter = new FileFilter(imagesId);
@@ -11561,12 +11883,13 @@ public class GridConfigMethod {
 			return ret;
 		}
 		for (File file : files) {
-			if(file.getName().indexOf(".csv")!=-1||file.getName().indexOf(".CSV")!=-1)
+			if (file.getName().indexOf(".csv") != -1
+					|| file.getName().indexOf(".CSV") != -1)
 				continue;
 			Object[] obj = new Object[8];
 			obj[0] = "imageSelfs2" + dataList.size();
 			obj[1] = "btBigs" + dataList.size();
-			obj[2] = "btDws" +dataList.size();
+			obj[2] = "btDws" + dataList.size();
 			obj[3] = "btDels" + dataList.size();
 			try {
 				BufferedImage bi = ImageIO.read(file);
@@ -11593,16 +11916,17 @@ public class GridConfigMethod {
 				e.printStackTrace();
 			}
 			obj[6] = file.getName();
-			obj[7]=basePath+"/"+file.getName();
+			obj[7] = basePath + "/" + file.getName();
 			dataList.add(obj);
 		}
 		ret[0] = dataList;
 		ret[1] = dataList.size();
 		return ret;
 	}
-	
+
 	/**
 	 * 受益所有人图片文件
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
@@ -11610,20 +11934,21 @@ public class GridConfigMethod {
 	public static Object[] getZipInf1(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		String imagesId = request.getParameter("imagesId");
-		
+
 		String beneficiaryId = request.getParameter("beneficiaryId");
-		String beneficiaryExpiration = request.getParameter("beneficiaryExpiration");
+		String beneficiaryExpiration = request
+				.getParameter("beneficiaryExpiration");
 
 		List<Object[]> dataList = new ArrayList<Object[]>();
 		String basePath = SysParamUtil
 				.getParam(SysParamConstants.FILE_UPLOAD_DISK);
-		
-		//追加文件夹
+
+		// 追加文件夹
 		basePath += beneficiaryId + "_" + beneficiaryExpiration + "/";
 
 		basePath = basePath.replace("\\", "/");
 		File fl = new File(basePath);
-//		FileFilter filter = new FileFilter(imagesId);
+		// FileFilter filter = new FileFilter(imagesId);
 		// 启用过滤
 		File[] files = fl.listFiles();
 
@@ -11635,346 +11960,411 @@ public class GridConfigMethod {
 			return ret;
 		}
 		for (File file : files) {
-			if(file.getName().indexOf(".jpg")!=-1||file.getName().indexOf(".png")!=-1
-					||file.getName().indexOf(".jpeg")!=-1)
+			if (file.getName().indexOf(".jpg") != -1
+					|| file.getName().indexOf(".png") != -1
+					|| file.getName().indexOf(".jpeg") != -1)
 				continue;
 			Object[] obj = new Object[5];
 			obj[0] = "imageSelfs2" + dataList.size();
 			obj[1] = "btDws1" + dataList.size();
 			obj[2] = "btDels1" + dataList.size();
 			obj[3] = file.getName();
-			obj[4]=basePath+"/"+file.getName();
+			obj[4] = basePath + "/" + file.getName();
 			dataList.add(obj);
 		}
 		ret[0] = dataList;
 		ret[1] = dataList.size();
 		return ret;
 	}
-	
+
 	/**
 	 * 客户赎回入账查询
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getredempTionMethod(int begin, HttpServletRequest request){
+	public static Object[] getredempTionMethod(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("redempTionAccount"))){
-			sb.append(" and REDEMPTION_ACCOUNT = '" + request.getParameter("redempTionAccount") + "'");
+
+		if (isNotEmpty(request.getParameter("redempTionAccount"))) {
+			sb.append(" and REDEMPTION_ACCOUNT = '"
+					+ request.getParameter("redempTionAccount") + "'");
 		}
-		
-		String sql = "select REDEMPTION_ID,REDEMPTION_ACCOUNT_NAME,REDEMPTION_ACCOUNT,REDEMPTION_MONEY,REDEMPTION_BANK_CARD,REDEMPTION_STATUS,REDEMPTION_ACCOUNT_STATUS,REDEMPTION_PAY_STATUS,REDEMPTION_ADD_TIME,REDEMPTION_ADD_NAME,REDEMPTION_AUDIT_DATE,REDEMPTION_AUDIT_NAME,REDEMPTION_ENTRY from TBL_SETTLE_REDEMPTION_INF_TMP where 1=1 and REDEMPTION_ACCOUNT_STATUS <> '0'" + sb.toString();
+
+		String sql = "select REDEMPTION_ID,REDEMPTION_ACCOUNT_NAME,REDEMPTION_ACCOUNT,REDEMPTION_MONEY,REDEMPTION_BANK_CARD,REDEMPTION_STATUS,REDEMPTION_ACCOUNT_STATUS,REDEMPTION_PAY_STATUS,REDEMPTION_ADD_TIME,REDEMPTION_ADD_NAME,REDEMPTION_AUDIT_DATE,REDEMPTION_AUDIT_NAME,REDEMPTION_ENTRY from TBL_SETTLE_REDEMPTION_INF_TMP "
+				+ "where 1=1 and REDEMPTION_ACCOUNT_STATUS <> '0'"
+				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by REDEMPTION_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 客户赎回入账审核
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getredempTionMethods(int begin, HttpServletRequest request){
+	public static Object[] getredempTionMethods(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("redempTionAccount"))){
-			sb.append(" and REDEMPTION_ACCOUNT = '" + request.getParameter("redempTionAccount") + "'");
+
+		if (isNotEmpty(request.getParameter("redempTionAccount"))) {
+			sb.append(" and REDEMPTION_ACCOUNT = '"
+					+ request.getParameter("redempTionAccount") + "'");
 		}
-		
-		String sql = "select REDEMPTION_ID,REDEMPTION_ACCOUNT_NAME,REDEMPTION_ACCOUNT,REDEMPTION_MONEY,REDEMPTION_BANK_CARD,REDEMPTION_STATUS,REDEMPTION_ACCOUNT_STATUS,REDEMPTION_PAY_STATUS,REDEMPTION_ADD_TIME,REDEMPTION_ADD_NAME,REDEMPTION_AUDIT_DATE,REDEMPTION_AUDIT_NAME,REDEMPTION_ENTRY from TBL_SETTLE_REDEMPTION_INF_TMP where 1=1 and REDEMPTION_STATUS = '1' or REDEMPTION_STATUS = '3' or REDEMPTION_STATUS = '6'" + sb.toString();
+
+		String sql = "select REDEMPTION_ID,REDEMPTION_ACCOUNT_NAME,REDEMPTION_ACCOUNT,REDEMPTION_MONEY,REDEMPTION_BANK_CARD,REDEMPTION_STATUS,REDEMPTION_ACCOUNT_STATUS,REDEMPTION_PAY_STATUS,REDEMPTION_ADD_TIME,REDEMPTION_ADD_NAME,REDEMPTION_AUDIT_DATE,REDEMPTION_AUDIT_NAME,REDEMPTION_ENTRY from TBL_SETTLE_REDEMPTION_INF_TMP where 1=1 and REDEMPTION_STATUS = '1' or REDEMPTION_STATUS = '3' or REDEMPTION_STATUS = '6'"
+				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by REDEMPTION_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 客户赎回入账回填
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getredempTionMethodBackFill(int begin, HttpServletRequest request){
+	public static Object[] getredempTionMethodBackFill(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("redempTionAccount"))){
-			sb.append(" and REDEMPTION_ACCOUNT = '" + request.getParameter("redempTionAccount") + "'");
+
+		if (isNotEmpty(request.getParameter("redempTionAccount"))) {
+			sb.append(" and REDEMPTION_ACCOUNT = '"
+					+ request.getParameter("redempTionAccount") + "'");
 		}
-		
-		String sql = "select REDEMPTION_ID,REDEMPTION_ACCOUNT_NAME,REDEMPTION_ACCOUNT,REDEMPTION_MONEY,REDEMPTION_BANK_CARD,REDEMPTION_STATUS,REDEMPTION_ACCOUNT_STATUS,REDEMPTION_PAY_STATUS,REDEMPTION_ADD_TIME,REDEMPTION_ADD_NAME,REDEMPTION_AUDIT_DATE,REDEMPTION_AUDIT_NAME,REDEMPTION_ENTRY from TBL_SETTLE_REDEMPTION_INF_TMP where 1=1" + sb.toString();
+
+		String sql = "select REDEMPTION_ID,REDEMPTION_ACCOUNT_NAME,REDEMPTION_ACCOUNT,REDEMPTION_MONEY,REDEMPTION_BANK_CARD,REDEMPTION_STATUS,REDEMPTION_ACCOUNT_STATUS,REDEMPTION_PAY_STATUS,REDEMPTION_ADD_TIME,REDEMPTION_ADD_NAME,REDEMPTION_AUDIT_DATE,REDEMPTION_AUDIT_NAME,REDEMPTION_ENTRY,REDEMPTION_BATCH from TBL_SETTLE_REDEMPTION_INF_TMP where 1=1"
+				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by REDEMPTION_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户备款查询
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getredempGridStoreTmpBK(int begin, HttpServletRequest request){
+	public static Object[] getredempGridStoreTmpBK(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		//前一日日期
+		// 前一日日期
 		String predate = request.getParameter("predate");
-		//备款金额
+		// 备款金额
 		String reserveMoney = request.getParameter("reserveMoney");
-		
-		if(isNotEmpty(request.getParameter("date"))){
-			sb.append(" and a.RESERVE_TIME = '" + request.getParameter("date") + "'");
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and RESERVE_TIME = '" + request.getParameter("date")
+					+ "'");
 		}
-		
-		String sql = "select a.RESERVE_ID,a.RESERVE_TIME,b.REDEMPTION_MONEY,a.RESERVE_SETTLE_MONEY,a.RESERVE_MONEY,a.RESERVE_STATUS,a.RESERVE_SETTLE_STATUS,a.RESERVE_PAY_STATUS,a.RESERVE_LAUNCH_TIME,a.RESERVE_LAUNCH_NAME,a.RESERVE_AUDIT_TIME,a.RESERVE_AUDIT_NAME,b.REDEMPTION_ACCOUNT,b.REDEMPTION_ACCOUNT_NAME "
-				   + "from TBL_MCHT_SETTLE_RESERVE_TMP a,TBL_SETTLE_REDEMPTION_INF_TMP b "
-				   + "where a.REDEMPTION_MONEY = b.REDEMPTION_ID and a.RESERVE_SETTLE_STATUS <> '0'" + sb.toString();
+
+		String sql = "select RESERVE_ID,RESERVE_TIME,REDEMPTION_MONEY,RESERVE_SETTLE_MONEY,RESERVE_MONEY,RESERVE_STATUS,RESERVE_SETTLE_STATUS,RESERVE_PAY_STATUS,RESERVE_LAUNCH_TIME,RESERVE_LAUNCH_NAME,RESERVE_AUDIT_TIME,RESERVE_AUDIT_NAME,RESERVE_BATCH "
+				+ "from TBL_MCHT_SETTLE_RESERVE_TMP "
+				+ "where RESERVE_SETTLE_STATUS <> '0'" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
-		sql += " order by a.RESERVE_ID";
-		
-		//查询所有未入账客户的赎回金额     1未入账
-		String sql1 = "select sum(REDEMPTION_MONEY) from TBL_SETTLE_REDEMPTION_INF_TMP where REDEMPTION_ACCOUNT_STATUS = '1'";
-		String accountMoney = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
-		//查询前一日的商户结算金额
-		String sql2 = "select sum(RESERVE_SETTLE_MONEY) from TBL_MCHT_SETTLE_RESERVE  where RESERVE_TIME = '" + predate + "'";
-		String accountSettleMoney = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql2);
+		sql += " order by RESERVE_ID";
+
+		// 查询所有未入账客户的赎回金额 1未入账
+		/*String sql1 = "select sum(REDEMPTION_MONEY) from TBL_SETTLE_REDEMPTION_INF_TMP where REDEMPTION_ACCOUNT_STATUS = '1'";
+		String accountMoney = CommonFunction.getCommQueryDAO()
+				.findCountBySQLQuery(sql1);
+		// 查询前一日的商户结算金额
+		String sql2 = "select sum(RESERVE_SETTLE_MONEY) from TBL_MCHT_SETTLE_RESERVE  where RESERVE_TIME = '"
+				+ predate + "'";
+		String accountSettleMoney = CommonFunction.getCommQueryDAO()
+				.findCountBySQLQuery(sql2);
 		double sum;
-		if(accountSettleMoney.equals("")){
+		if (accountSettleMoney.equals("")) {
 			sum = Double.parseDouble(accountMoney);
-		}else{
-			sum = Double.parseDouble(accountMoney) + Double.parseDouble(accountSettleMoney);
-		}
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		
-		for (Object[] objects : dataList) {
-			//备款金额
+		} else {
+			sum = Double.parseDouble(accountMoney)
+					+ Double.parseDouble(accountSettleMoney);
+		}*/
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+
+		/*for (Object[] objects : dataList) {
+			// 备款金额
 			objects[4] = String.valueOf(sum);
-		//	String sql3 = "update TBL_MCHT_SETTLE_RESERVE_TMP set RESERVE_MONEY = '" + String.valueOf(sum) + "' where RESERVE_ID = '" + objects[0] + "'";
-		//	CommonFunction.getCommQueryDAO().excute(sql3);
-		}
-		
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+			// String sql3 =
+			// "update TBL_MCHT_SETTLE_RESERVE_TMP set RESERVE_MONEY = '" +
+			// String.valueOf(sum) + "' where RESERVE_ID = '" + objects[0] +
+			// "'";
+			// CommonFunction.getCommQueryDAO().excute(sql3);
+		}*/
+
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户备款审核
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getredempGridStoreTmpBK1(int begin, HttpServletRequest request){
+	public static Object[] getredempGridStoreTmpBK1(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("date"))){
-			sb.append(" and a.RESERVE_TIME = '" + request.getParameter("date") + "'");
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and RESERVE_TIME = '" + request.getParameter("date")
+					+ "'");
 		}
-		
-		String sql = "select a.RESERVE_ID,a.RESERVE_TIME,b.REDEMPTION_MONEY,a.RESERVE_SETTLE_MONEY,a.RESERVE_MONEY,a.RESERVE_STATUS,a.RESERVE_SETTLE_STATUS,a.RESERVE_PAY_STATUS,a.RESERVE_LAUNCH_TIME,a.RESERVE_LAUNCH_NAME,a.RESERVE_AUDIT_TIME,a.RESERVE_AUDIT_NAME,b.REDEMPTION_ACCOUNT,b.REDEMPTION_ACCOUNT_NAME "
-				   + "from TBL_MCHT_SETTLE_RESERVE_TMP a,TBL_SETTLE_REDEMPTION_INF_TMP b "
-				   + "where a.REDEMPTION_MONEY = b.REDEMPTION_ID and a.RESERVE_STATUS = '1' or a.RESERVE_STATUS = '2'" + sb.toString();
+
+		String sql = "select RESERVE_ID,RESERVE_TIME,REDEMPTION_MONEY,RESERVE_SETTLE_MONEY,RESERVE_MONEY,RESERVE_STATUS,RESERVE_SETTLE_STATUS,RESERVE_PAY_STATUS,RESERVE_LAUNCH_TIME,RESERVE_LAUNCH_NAME,RESERVE_AUDIT_TIME,RESERVE_AUDIT_NAME,RESERVE_BATCH "
+				+ "from TBL_MCHT_SETTLE_RESERVE_TMP "
+				+ "where RESERVE_STATUS = '1' or RESERVE_STATUS = '2'"
+				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
-		sql += " order by a.RESERVE_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		sql += " order by RESERVE_ID";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 商户备款回填
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getredempGridStoreTmpBK2(int begin, HttpServletRequest request){
+	public static Object[] getredempGridStoreTmpBK2(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("date"))){
-			sb.append(" and a.RESERVE_TIME = '" + request.getParameter("date") + "'");
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and RESERVE_TIME = '" + request.getParameter("date")
+					+ "'");
 		}
-		
-		String sql = "select a.RESERVE_ID,a.RESERVE_TIME,b.REDEMPTION_MONEY,a.RESERVE_SETTLE_MONEY,a.RESERVE_MONEY,a.RESERVE_STATUS,a.RESERVE_SETTLE_STATUS,a.RESERVE_PAY_STATUS,a.RESERVE_LAUNCH_TIME,a.RESERVE_LAUNCH_NAME,a.RESERVE_AUDIT_TIME,a.RESERVE_AUDIT_NAME,b.REDEMPTION_ACCOUNT,b.REDEMPTION_ACCOUNT_NAME "
-				   + "from TBL_MCHT_SETTLE_RESERVE_TMP a,TBL_SETTLE_REDEMPTION_INF_TMP b "
-				   + "where a.REDEMPTION_MONEY = b.REDEMPTION_ID" + sb.toString();
+
+		String sql = "select RESERVE_ID,RESERVE_TIME,REDEMPTION_MONEY,RESERVE_SETTLE_MONEY,RESERVE_MONEY,RESERVE_STATUS,RESERVE_SETTLE_STATUS,RESERVE_PAY_STATUS,RESERVE_LAUNCH_TIME,RESERVE_LAUNCH_NAME,RESERVE_AUDIT_TIME,RESERVE_AUDIT_NAME,RESERVE_BATCH "
+				+ "from TBL_MCHT_SETTLE_RESERVE_TMP " + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
-		sql += " order by a.RESERVE_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		sql += " order by RESERVE_ID";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 账户白名单
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getrosterGridStoreTmp(int begin, HttpServletRequest request){
+	public static Object[] getrosterGridStoreTmp(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("rosterAccount"))){
-			sb.append(" and ROSTER_ACCOUNT = '" + request.getParameter("rosterAccount") + "'");
+
+		if (isNotEmpty(request.getParameter("rosterAccount"))) {
+			sb.append(" and ROSTER_ACCOUNT = '"
+					+ request.getParameter("rosterAccount") + "'");
 		}
-		
-		String sql = "select ROSTER_ID, ROSTER_BANK_CARD, ROSTER_ACCOUNT, ROSTER_ACCOUNT_NAME, ROSTER_STATUS, ROSTER_LAUNCH_TIME, ROSTER_LAUNCH_NAME, ROSTER_AUDIT_TIME, ROSTER_AUDIT_NAME from TBL_SETTLE_ROSTER_INF_TMP where 1=1" + sb.toString();
+
+		String sql = "select ROSTER_ID, ROSTER_BANK_CARD, ROSTER_ACCOUNT, ROSTER_ACCOUNT_NAME, ROSTER_STATUS, ROSTER_LAUNCH_TIME, ROSTER_LAUNCH_NAME, ROSTER_AUDIT_TIME, ROSTER_AUDIT_NAME from TBL_SETTLE_ROSTER_INF_TMP where 1=1"
+				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by ROSTER_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 账户白名单审核
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getrosterGridStoreTmpSH(int begin, HttpServletRequest request){
+	public static Object[] getrosterGridStoreTmpSH(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("rosterAccount"))){
-			sb.append(" and ROSTER_ACCOUNT = '" + request.getParameter("rosterAccount") + "'");
+
+		if (isNotEmpty(request.getParameter("rosterAccount"))) {
+			sb.append(" and ROSTER_ACCOUNT = '"
+					+ request.getParameter("rosterAccount") + "'");
 		}
-		
+
 		String sql = "select ROSTER_ID, ROSTER_BANK_CARD, ROSTER_ACCOUNT, ROSTER_ACCOUNT_NAME, ROSTER_STATUS, ROSTER_LAUNCH_TIME, ROSTER_LAUNCH_NAME, ROSTER_AUDIT_TIME, ROSTER_AUDIT_NAME "
-				   + "from TBL_SETTLE_ROSTER_INF_TMP "
-				   + "where 1=1 and ROSTER_STATUS = '1' or ROSTER_STATUS = '2' or ROSTER_STATUS = '3'" + sb.toString();
+				+ "from TBL_SETTLE_ROSTER_INF_TMP "
+				+ "where 1=1 and ROSTER_STATUS = '1' or ROSTER_STATUS = '2' or ROSTER_STATUS = '3'"
+				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by ROSTER_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 人行集中缴存备款
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getfocusStore(int begin, HttpServletRequest request){
+	public static Object[] getfocusStore(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("rosterAccount"))){
-			sb.append(" and ROSTER_ACCOUNT = '" + request.getParameter("rosterAccount") + "'");
+
+		if (isNotEmpty(request.getParameter("rosterAccount"))) {
+			sb.append(" and ROSTER_ACCOUNT = '"
+					+ request.getParameter("rosterAccount") + "'");
 		}
-		
+
 		String sql = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE "
-				   + "from TBL_FOCUS_RESERVE "
-				   + "where 1=1" + sb.toString();
+				+ "from TBL_FOCUS_RESERVE " + "where 1=1" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by FOCUS_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 人行集中缴存出款
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getpayMentStore(int begin, HttpServletRequest request){
+	public static Object[] getpayMentStore(int begin, HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("rosterAccount"))){
-			sb.append(" and ROSTER_ACCOUNT = '" + request.getParameter("rosterAccount") + "'");
+
+		if (isNotEmpty(request.getParameter("rosterAccount"))) {
+			sb.append(" and ROSTER_ACCOUNT = '"
+					+ request.getParameter("rosterAccount") + "'");
 		}
-		
+
 		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE "
-				   + "from TBL_PAYMENT_RESERVE "
-				   + "where 1=1" + sb.toString();
+				+ "from TBL_PAYMENT_RESERVE " + "where 1=1" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by PAYMENT_ID";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
+
 	/**
 	 * 人行备付金余额查询
+	 * 
 	 * @param begin
 	 * @param request
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getbalanceReserveQuery(int begin, HttpServletRequest request){
+	public static Object[] getbalanceReserveQuery(int begin,
+			HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
-		
-		if(isNotEmpty(request.getParameter("date"))){
-			sb.append(" and BALANCE_DATE = '" + request.getParameter("date") + "'");
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and BALANCE_DATE = '" + request.getParameter("date")
+					+ "'");
 		}
-		
+
 		String sql = "select BALANCE_NO, BALANCE_DATE, BALANCE_ACS_BANK_NO, BALANCE_ACCT_BAL, BALANCE_AVLB_BAL, BALANCE_ACS_ACCT_BAL, BALANCE_ACS_ACCT_NAME, BALANCE_AVLB_QUOTA_AMT "
-				   + "from TBL_BALANCE_RESERVE_QUERY "
-				   + "where 1=1" + sb.toString();
+				+ "from TBL_BALANCE_RESERVE_QUERY "
+				+ "where 1=1"
+				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by BALANCE_NO";
-		
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
 	}
-	
-	
+
 }

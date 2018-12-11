@@ -379,6 +379,9 @@ function auditMchnt4Upd(mchntId,El){
 			{name:'busiRangeId',mapping:'busiRangeId'},
 			{name:'mchtNo',mapping:'mchtNo'},
 			{name:'busiRanges',mapping:'busiRanges'},
+			
+			//企业规模
+			{name:'etpsScale',mapping:'etpsScale'},
 		]),
 		autoLoad: false
 	});
@@ -1802,8 +1805,21 @@ function auditMchnt4Upd(mchntId,El){
     	                    data: [['2A','2A:农、林、牧、渔业'],['2B','2B:采矿业'],['2C','2C:制造业'],['2D','2D:电力、燃气及水的生产和供应业'],['2E','2E:建筑业'],['2F','2F:交通运输、仓储和邮政业'],['2G','2G:信息传输、计算机服务和软件业'],['2F','2F:交通运输、仓储和邮政业'],['2H','2H:批发和零售业'],['2I','2I:住宿和餐饮业'],['2J','2J:银行业'],['2K','2K:房地产业'],['2L','2L:租赁和商务服务业'],['2M','2M:科学研究、技术服务和地质勘查业'],['2N','2N:水利、环境和公共设施管理业'],['2O','2O:居民服务和其他服务业'],['2P','2P:教育'],['2Q','2Q:卫生、社会保障和社会福利业'],['2R','2R:文化、体育和娱乐业'],['2S','2S:公共管理和社会组织'],['2T','2T:国际组织']]
     	                })
 		        	}]	
-				}
-				]
+				},{
+					columnWidth: .33,
+		        	xtype: 'panel',
+		        	layout: 'form',
+	       			items: [{
+	       				xtype: 'combofordispaly',
+						labelStyle: 'padding-left: 5px',
+						fieldLabel: '企业规模*',
+						hiddenName: 'etpsScale',
+    					store: new Ext.data.ArrayStore({
+    	                    fields: ['valueField','displayField'],
+    	                    data: [['1','500人以上'],['2','200-500人'],['3','10-200人'],['4','10人以下']]
+    	                })
+	       			}]
+				}]
             },{
             
             	title:'基本信息扩充',
@@ -1840,7 +1856,7 @@ function auditMchnt4Upd(mchntId,El){
 			        	xtype: 'basecomboselect',
 			        	baseParams: 'CERTIFICATES',
 						labelStyle: 'padding-left: 5px',
-						fieldLabel: '控股股东或实际控制人身份证件种类*',
+						fieldLabel: '控股股东或实际控制人证件种类*',
 						width:130,
 						allowBlank: false,
 						id:'idshareholderTp',
@@ -1854,7 +1870,7 @@ function auditMchnt4Upd(mchntId,El){
 	       			items: [{
 			        	xtype: 'textfield',
 						labelStyle: 'padding-left: 5px',
-						fieldLabel: '控股股东或实际控制人身份证件号码*',
+						fieldLabel: '控股股东或实际控制人证件号码*',
 						allowBlank: false,
 						maxLength: 25,
 						vtype: 'is5Alphanum',
@@ -1869,7 +1885,7 @@ function auditMchnt4Upd(mchntId,El){
 	       			items: [{
 						xtype: 'textfield',
 						labelStyle: 'padding-left: 5px',
-						fieldLabel: '控股股东或实际控制人身份证件有效期*',
+						fieldLabel: '控股股东或实际控制人证件有效期*',
 						maxLength: 8,
 						minLength:8,  
 						disabled: true,

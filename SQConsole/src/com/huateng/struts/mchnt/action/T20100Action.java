@@ -339,6 +339,10 @@ public class T20100Action extends BaseSupport{
 			tblMchtBaseInfTmp.setLegalProfession(legalProfession);
 			
 			
+			//企业规模
+			tblMchtBaseInfTmp.setEtpsScale(etpsScale);
+			
+			
 			if(StringUtil.isEmpty(faxNo)||faxNo.equalsIgnoreCase("")){
 				tblMchtBaseInfTmp.setFaxNo("               ");  //税务登记证号码
 			}else{
@@ -1169,6 +1173,19 @@ public class T20100Action extends BaseSupport{
 	private String legalProfession;
 	private String foreignName;
 	
+	
+	//企业规模
+	private String etpsScale;
+	
+	
+	public String getEtpsScale() {
+		return etpsScale;
+	}
+
+	public void setEtpsScale(String etpsScale) {
+		this.etpsScale = etpsScale;
+	}
+
 	public String getForeignName() {
 		return foreignName;
 	}

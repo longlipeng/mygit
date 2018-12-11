@@ -376,6 +376,19 @@ public abstract class BaseTblMchtBaseInf implements Serializable {
 	private String legalAddr;
 	private String legalProfession;
 	private String custNo;
+	
+	
+	//企业规模
+	private String etpsScale;
+	
+	
+	public String getEtpsScale() {
+		return etpsScale;
+	}
+
+	public void setEtpsScale(String etpsScale) {
+		this.etpsScale = etpsScale;
+	}
 
 	public java.lang.String getForeignName() {
 		return foreignName;

@@ -79,6 +79,16 @@ public class T9130101BOTarget implements T9130101BO {
 		return "00";
 	}
 
+	public TblFocusReserve getFocus(String focusId) {
+		// TODO Auto-generated method stub
+		return tblReserveSettleDao.getFocus(focusId);
+	}
+
+	public TblPaymentReserve getPayment(String paymentId) {
+		// TODO Auto-generated method stub
+		return tblReserveSettleDao.getPayment(paymentId);
+	}
+
 
 	
 }

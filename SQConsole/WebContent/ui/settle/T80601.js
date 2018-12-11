@@ -4,7 +4,7 @@ Ext.onReady(function() {
 				dataIndex : "id",
 				listeners : {
 					'beforerowselect' : function(redempColModel, rowIndex, keepExisting, record) {
-						if ((record.data.redempTionStatus)=='1' || (record.data.redempTionStatus)=='3' || (record.data.redempTionAccountStatus)=='0') {
+						if ((record.data.redempTionStatus)=='1' || (record.data.redempTionStatus)=='3'/* || (record.data.redempTionAccountStatus)=='0'*/) {
 							return false; // 不能进行选择
 						} else {
 							return true;
@@ -96,7 +96,7 @@ Ext.onReady(function() {
 		}else if(val=='1'){
 			return '<font color="red">失败</font>';
 		}else if(val=='2'){
-			return '<font color="gray">赎回中</font>';
+			return '<font color="gray">赎回已受理</font>';
 		}
 	}
 	
@@ -473,12 +473,6 @@ Ext.onReady(function() {
 			var rec = redempGrid.getSelectionModel().getSelected();
 			//客户赎回按钮显示
 			if(rec.get('redempTionStatus')=='1'){
-				Ext.getCmp("redemp").disable();
-			}else if(rec.get('redempTionStatus')=='2'){
-				Ext.getCmp("redemp").enable();
-			}else if(rec.get('redempTionStatus')=='4'){
-				Ext.getCmp("redemp").disable();
-			}else if(rec.get('redempTionStatus')=='5'){
 				Ext.getCmp("redemp").disable();
 			}
 			if(rec.get('redempTionAccountStatus')=='0'){

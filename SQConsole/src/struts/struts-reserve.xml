@@ -38,6 +38,9 @@
 			</result>
 		</action>
 		
+		<!-- 回调接口 -->
+		<action name="backRcvResponse" class="com.huateng.struts.reserve.action.BackRcvResponse" />
+			
 		<!--账户白名单 -->
 		<!-- <action name="T91101Action" class="com.huateng.struts.reserve.action.T91101Action" /> -->
 

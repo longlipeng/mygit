@@ -187,10 +187,14 @@ public class SysParamConstants {
 	public static final String SIGNATURE = "SIGNATURE";  
 	//签名方法
 	public static final String SIGNMETHOD = "SIGNMETHOD"; 
-	//收付款方账号
+	//收款方账号
 	public static final String PAYEEACCTNO = "PAYEEACCTNO";  
-	//收付款方账户名称
+	//收款方账户名称
 	public static final String PAYEEACCTNAME = "PAYEEACCTNAME";
+	//付款方账号
+	public static final String PAYERACCTNO = "PAYERACCTNO";  
+	//付款方账户名称
+	public static final String PAYERACCTNAME = "PAYERACCTNAME";
 	//虚拟账号
 	public static final String ACCTNO = "ACCTNO"; 
 	//虚拟账户名称

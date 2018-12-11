@@ -2026,7 +2026,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 (审核通过)-->
 	<Grid id="sumrzInfUpYQauditS" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat,acctBankCode]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQauditS" />
@@ -2035,7 +2035,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 (二次审核通过)-->
 	<Grid id="sumrzInfUpYQauditSE" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat,acctBankCode]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQauditSE" />
@@ -2062,7 +2062,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 二次-->
 	<Grid id="sumrzInfUpYQFF" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat,sumrzBatch]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQFF" />
@@ -2098,7 +2098,7 @@
 	<!--客户赎回回填-->
 	<Grid id="redempTionMethodBackFill" type="sync">
 		<Columns>
-			<![CDATA[redempTionId,redempTionAccountName,redempTionAccount,redempTionMoney,redempTionBankCard,redempTionStatus,redempTionAccountStatus,redempTionPayStatus,redempTionAddTime,redempTionAddName,redempTionAuditDate,redempTionAuditName,redempTionEnTry]]>
+			<![CDATA[redempTionId,redempTionAccountName,redempTionAccount,redempTionMoney,redempTionBankCard,redempTionStatus,redempTionAccountStatus,redempTionPayStatus,redempTionAddTime,redempTionAddName,redempTionAuditDate,redempTionAuditName,redempTionEnTry,redemptionBatch]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getredempTionMethodBackFill" />
@@ -2107,7 +2107,7 @@
 	<!--商户备款查询-->
 	<Grid id="redempGridStoreTmpBK" type="sync">
 		<Columns>
-			<![CDATA[reserveId,reserveTime,redemptionMoney,reserveSettleMoney,reserveMoney,reserveStatus,reserveSettleStatus,reservePayStatus,reserveLaunchTime,reserveLaunchName,reserveAuditTime,reserveAuditName,redemptionAccount,redemptionAccountName]]>
+			<![CDATA[reserveId,reserveTime,redemptionMoney,reserveSettleMoney,reserveMoney,reserveStatus,reserveSettleStatus,reservePayStatus,reserveLaunchTime,reserveLaunchName,reserveAuditTime,reserveAuditName,reserveBatch]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getredempGridStoreTmpBK" />
@@ -2116,7 +2116,7 @@
 	<!--商户备款审核-->
 	<Grid id="redempGridStoreTmpBK1" type="sync">
 		<Columns>
-			<![CDATA[reserveId,reserveTime,redemptionMoney,reserveSettleMoney,reserveMoney,reserveStatus,reserveSettleStatus,reservePayStatus,reserveLaunchTime,reserveLaunchName,reserveAuditTime,reserveAuditName,redemptionAccount,redemptionAccountName]]>
+			<![CDATA[reserveId,reserveTime,redemptionMoney,reserveSettleMoney,reserveMoney,reserveStatus,reserveSettleStatus,reservePayStatus,reserveLaunchTime,reserveLaunchName,reserveAuditTime,reserveAuditName,reserveBatch]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getredempGridStoreTmpBK1" />
@@ -2125,7 +2125,7 @@
 	<!--商户备款回填-->
 	<Grid id="redempGridStoreTmpBK2" type="sync">
 		<Columns>
-			<![CDATA[reserveId,reserveTime,redemptionMoney,reserveSettleMoney,reserveMoney,reserveStatus,reserveSettleStatus,reservePayStatus,reserveLaunchTime,reserveLaunchName,reserveAuditTime,reserveAuditName,redemptionAccount,redemptionAccountName]]>
+			<![CDATA[reserveId,reserveTime,redemptionMoney,reserveSettleMoney,reserveMoney,reserveStatus,reserveSettleStatus,reservePayStatus,reserveLaunchTime,reserveLaunchName,reserveAuditTime,reserveAuditName,reserveBatch]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getredempGridStoreTmpBK2" />

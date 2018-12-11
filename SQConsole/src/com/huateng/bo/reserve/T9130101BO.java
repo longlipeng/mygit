@@ -63,6 +63,13 @@ public interface T9130101BO {
 	public String upFocus(TblFocusReserve tblFocusReserve);
 	
 	/**
+	 * 人行集中缴存备款交易表  查询
+	 * @param focusId
+	 * @return
+	 */
+	public TblFocusReserve getFocus(String focusId);
+	
+	/**
 	 * 出款交易表   新增
 	 * @param tblPaymentReserve
 	 * @return
@@ -75,6 +82,13 @@ public interface T9130101BO {
 	 * @return
 	 */
 	public String upPayment(TblPaymentReserve tblPaymentReserve);
+	
+	/**
+	 * 出款交易表   查询
+	 * @param paymentId
+	 * @return
+	 */
+	public TblPaymentReserve getPayment(String paymentId);
 	
 	/**
 	 * 人行备付金余额查询记录 新增

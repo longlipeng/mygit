@@ -56,7 +56,7 @@
 		<property name="triggers">
 			<list>
 				<ref bean="runTime" />
-				<ref bean="runFocusTime" />
+				<!-- <ref bean="runFocusTime" /> -->
 			</list>
 		</property>
 	</bean>

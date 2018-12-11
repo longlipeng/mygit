@@ -44,6 +44,7 @@ Ext.onReady(function(){
 					return;
 				}
 				queryForm.getForm().submit({
+//					url: 'T91301Action_paymentBackFails.asp',
 					url: 'T91301Action_focusReserve.asp',
 					waitMsg: '正在请求备款任务，请稍后......',
 					success: function(form,action) {

@@ -36,7 +36,7 @@ Ext.onReady(function(){
 		{header: '备付金虚拟记账余额',dataIndex: 'balanceAcctBal',width: 100,align: 'center'},
 		{header: '备付金虚拟记账可用余额',dataIndex: 'balanceAvlbBal',width: 100,align: 'center'},
 		{header: 'ACS备付金存管账户可用余额',dataIndex: 'balanceAcsAcctBal',width: 100,align: 'center'},
-		{header: 'ACS备付金存管账户名称',dataIndex: 'balanceAcsAcctName',width: 100,align: 'center'},
+//		{header: 'ACS备付金存管账户名称',dataIndex: 'balanceAcsAcctName',width: 100,align: 'center'},
 		{header: '可支取额度',dataIndex: 'balanceAvlbQuotaAmt',width: 100,align: 'center'},
 	]);
 	
@@ -163,7 +163,24 @@ Ext.onReady(function(){
 		buttons: [{
 			text: '查询',
 			handler: function() {
-				redempGridStore.load();
+//				redempGridStore.load();
+				queryForm.getForm().submit({
+					url: 'T91401Action_inits.asp',
+					success: function(rsp,opt){
+						hideMask();
+						var rspObj = Ext.decode(rsp.responseText);
+						if(rspObj.success) {
+							showSuccessMsg(rspObj.msg,redempGrid);
+						} else {
+							showErrorMsg(rspObj.msg,redempGrid);
+						}
+						redempGridStore.getStore().reload();
+					},
+					params: {
+						txnId: '80101',
+						subTxnId: '01'
+					}
+				});
 			}
 		},{
 			text: '清除查询条件',

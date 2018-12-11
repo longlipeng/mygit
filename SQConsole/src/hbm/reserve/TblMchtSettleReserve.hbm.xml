@@ -82,6 +82,11 @@
 			column="RESERVE_AUDIT_NAME"
 			type="string"
 		/>
+        <property
+			name="reserveBatch"
+			column="RESERVE_BATCH"
+			type="string"
+		/>
         
         
     </class>

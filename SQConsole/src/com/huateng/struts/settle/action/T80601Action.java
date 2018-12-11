@@ -11,8 +11,10 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 import org.apache.log4j.Logger;
 
@@ -20,10 +22,15 @@ import com.huateng.bo.settle.T80601BO;
 import com.huateng.common.SysParamConstants;
 import com.huateng.po.settle.TblSettleRedempTionInf;
 import com.huateng.po.settle.TblSettleRedempTionInfTmp;
+import com.huateng.sdk.DemoBase;
+import com.huateng.sdk.FsasService;
+import com.huateng.sdk.SDKConfig;
 import com.huateng.struts.system.action.BaseSupport;
 import com.huateng.system.util.CommonFunction;
 import com.huateng.system.util.ContextUtil;
 import com.huateng.system.util.SysParamUtil;
+import com.huateng.sdk.LogUtil;
+import com.thoughtworks.xstream.io.binary.Token.Value;
 
 public class T80601Action extends BaseSupport {
 
@@ -55,18 +62,26 @@ public class T80601Action extends BaseSupport {
 			
 			TblSettleRedempTionInfTmp tblSettleRedempTionInfTmp = new TblSettleRedempTionInfTmp();
 			
-			String sql1 = "select MAX(REDEMPTION_ID) from TBL_SETTLE_REDEMPTION_INF_TMP ";
-			String redempMax = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
-			String redempNo;
-			if (redempMax == "") {
-				redempNo = "000001";
-			}else {
-				int i = Integer.parseInt(redempMax);
-				i = i + 1;
-				//如5在前面补0  直到凑够6位数  000005
-				redempNo = String.format("%06d", i);
+//			String sql1 = "select MAX(REDEMPTION_ID) from TBL_SETTLE_REDEMPTION_INF_TMP ";
+//			String redempMax = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
+//			String redempNo;
+//			if (redempMax == "") {
+//				redempNo = "000001";
+//			}else {
+//				int i = Integer.parseInt(redempMax);
+//				i = i + 1;
+//				//如5在前面补0  直到凑够6位数  000005
+//				redempNo = String.format("%06d", i);
+//			}
+			
+			Random random = new Random();
+			StringBuffer redempNo = new StringBuffer();
+			for (int i = 0; i < 15; i++) {
+				int a = random.nextInt(10);
+				redempNo.append(String.valueOf(a));
 			}
-			tblSettleRedempTionInfTmp.setRedempTionId(redempNo);
+			
+			tblSettleRedempTionInfTmp.setRedempTionId(redempNo.toString());
 			tblSettleRedempTionInfTmp.setRedempTionAccountName(redempTionAccountName);
 			tblSettleRedempTionInfTmp.setRedempTionAccount(redempTionAccount);
 			tblSettleRedempTionInfTmp.setRedempTionMoney(redempTionMoney);
@@ -205,6 +220,11 @@ public class T80601Action extends BaseSupport {
 		String c_dbtbbk = SysParamUtil.getParam(SysParamConstants.C_DBTBBK);//付方开户地区
 		String dbtnam = SysParamUtil.getParam(SysParamConstants.DBTNAM);//付方帐户名
 		String dbtrel = SysParamUtil.getParam(SysParamConstants.DBTREL);//付方客户关系号
+		
+		String ACQINSCODE = SysParamUtil.getParam(SysParamConstants.ACQINSCODE);//机构代码
+		String PAYEEACCTNO = SysParamUtil.getParam(SysParamConstants.PAYEEACCTNO);//收款方账号
+		String PAYEEACCTNAME = SysParamUtil.getParam(SysParamConstants.PAYEEACCTNAME);//收款方账户名称
+		
 		jsonBean.parseJSONArrayData(getInfList());
 		int len = jsonBean.getArray().size();
 		int l = 0;
@@ -288,306 +308,166 @@ public class T80601Action extends BaseSupport {
 					return returnService(rspCode,e);
 				}
 			}else if(redempTionStatus.equals("3")){
-				try {
-					XmlPacket xmlPkt = new XmlPacket("Payment", lgnnam);//登陆用户名
-					Map mpPodInfo = new Properties();
-					mpPodInfo.put("BUSCOD", buscod);//业务类别
-					xmlPkt.putProperty("SDKPAYRQX", mpPodInfo);
-					Map mpPayInfo = new Properties();
-					//用于标识该笔业务的编号，企业银行编号+业务类型+业务参考号必须唯一。企业可以自定义业务参考号，也可使用银行缺省值（单笔支付），批量支付须由企业提供。直联必须用企业提供
-					String yurref;
-					
-					mpPayInfo.put("YURREF", redempTionId);//业务参考号
-					mpPayInfo.put("DBTACC", dbtacc);//付方帐号
-					mpPayInfo.put("C_DBTBBK", c_dbtbbk);//付方开户地区
-					mpPayInfo.put("DBTBNK", dbtbnk);//付方开户行
-					mpPayInfo.put("DBTNAM", dbtnam);//付方帐户名
-					mpPayInfo.put("DBTREL", dbtrel);//付方客户关系号
-					mpPayInfo.put("TRSAMT", redempTionMoney);//赎回金额
-					mpPayInfo.put("CCYNBR", "10");//币种代码
-					mpPayInfo.put("STLCHN", "N");//结算方式代码
-					mpPayInfo.put("NUSAGE", nusage);//用途
-					mpPayInfo.put("CRTACC", redempTionAccount);//收方帐号
-					mpPayInfo.put("CRTNAM", redempTionAccountName);//收方帐户名
-					mpPayInfo.put("CRTSQN", crtsqn);//收方编号
-					
-					xmlPkt.putProperty("SDKPAYDTX", mpPayInfo);//支付输入明细接口
-					// 生成请求报文
-					String date = xmlPkt.toXmlString();
-					log.info("生成请求报文:"+date);
-					// 连接前置机，发送请求报文，获得返回报文
-					String result = T80601Action.sendRequest(date);
-					result = result.replace("GBK", "UTF-8");
-					// 处理返回的结果
-					String processResult = T80601Action.processResult(result);
-					if(processResult.toUpperCase().equals("NTE")){
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");//赎回中
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus("终审完毕");
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
-									+ ",'" + sdf.format(dates) + "','" + getOperator().getOprId() + "','1')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
-						}
-					}else if (processResult.toUpperCase().equals("AUT")) {
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus("等待审批");
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
-									+ ",'" + sdf.format(dates) + "','" + getOperator().getOprId() + "','1')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
-						}
-					}else if(processResult.toUpperCase().equals("WCF")) {
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus("订单待确认");
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
-									+ ",'" + sdf.format(dates) + "','" + getOperator().getOprId() + "','1')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
-						}
-					}else if(processResult.toUpperCase().equals("BNK")) {
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus("银行处理中");
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
-									+ ",'" + sdf.format(dates) + "','" + getOperator().getOprId() + "','1')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
-						}
-					}else if(processResult.toUpperCase().equals("ACK")) {
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus("等待确认");
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
-									+ ",'" + sdf.format(dates) + "','" + getOperator().getOprId() + "','1')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
-						}
-					}else if(processResult.toUpperCase().equals("APD")) {
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus("待银行确认");
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
-									+ ",'" + sdf.format(dates) + "','" + getOperator().getOprId() + "','1')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
-						}
-					}else if(processResult.toUpperCase().equals("OPR")) {
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus("数据接收中");
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
-									+ ",'" + sdf.format(dates) + "','" + getOperator().getOprId() + "','1')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
+				
+				SDKConfig.getConfig().loadPropertiesFromSrc();// 从classpath加载fsas_sdk.properties文件
+				
+				Map<String, String> contentData = new HashMap<String, String>();
+				
+				SimpleDateFormat sdfs = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+				String txnNo = sdfs.format(new Date());
+				SimpleDateFormat sdfQuery1 = new SimpleDateFormat("yyyyMMdd");
+				String txnDate = sdfQuery1.format(new Date());
+
+				/***银联资金结算接入系统，产品参数，除了encoding自行选择外其他不需修改***/
+				contentData.put("version", DemoBase.version);                  //版本号
+				contentData.put("encoding", DemoBase.encoding);             //字符集编码 可以使用UTF-8,GBK两种方式
+				contentData.put("signMethod", SDKConfig.getConfig().getSignMethod()); //签名方法
+				contentData.put("txnType", "02");                                   //交易类型 02-商户资金结算（单笔）
+				contentData.put("backUrl", DemoBase.backUrl);                   //后台通知地址
+			    contentData.put("currencyCode", "156");                          //币种
+			    contentData.put("settleMethod", "03");                           //结算方式00:T+0  01:T+N(N>0) 02:收入费用结转 03:客户赎回
+			    
+			    contentData.put("txnNo", txnNo);                                    //交易流水号
+			    contentData.put("acqInsCode", ACQINSCODE);                    //机构代码
+			    contentData.put("txnDate", txnDate);                               //交易日期
+			    contentData.put("sndTime", DemoBase.getSendTime());      //发送时间 格式HHmmss
+			    contentData.put("merId", redempTionId);                                    //商户号
+			    contentData.put("merName", redempTionAccountName);                           //商户名称redempTionAccountName车享付商户
+			    contentData.put("payeeBankNo", redempTionBankCard);                // 403100000004  收款方开户行行 号当payeeAccType=01时，可以为空；其他情况必填
+			    contentData.put("payeeAcctNo", redempTionAccount);                //收款方账号
+//		        contentData.put("payeeAccType", payeeAccType);              //选填字段 收款方账号类型01：银联卡99：其他
+			    contentData.put("payeeAcctName", redempTionAccountName);        //收款方账户名称
+			    contentData.put("txnAmt", redempTionMoney);                                  //金额
+			    contentData.put("reqReserved", "03");                           //请求方保留域
+
+//			    contentData.put("payerAcctNo", payerAcctNo);   //付款方账号    可选字段 
+//			    contentData.put("payerAcctName", payerAcctName);//付款方账号名称  可选字段 
+			    
+//			    contentData.put("regionCd", "") ;                                        //地区代码 （4位数字代码）
+				
+			    /**对请求参数进行签名并发送http post请求，接收同步应答报文**/
+				Map<String, String> reqData = FsasService.sign(contentData,DemoBase.encoding);			//报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+				String requestBackUrl = SDKConfig.getConfig().getBackRequestUrl();   			                //交易请求url从配置文件读取对应属性文件fsas_sdk.properties中的 fsassdk.backTransUrl
+				Map<String, String> rspData = FsasService.doPost(reqData,requestBackUrl,DemoBase.encoding); //发送请求报文并接受同步应答（默认连接超时时间30秒，读取返回结果超时时间30秒）;这里调用signData之后，调用submitUrl之前不能对submitFromData中的键值对做任何修改，如果修改会导致验签不通过
+				
+				
+				/**对应答码的处理，请根据您的业务逻辑来编写程序,以下应答码处理逻辑仅供参考------------->**/
+				StringBuffer parseStr = new StringBuffer("");
+				if(!rspData.isEmpty()){
+					if(FsasService.validate(rspData, DemoBase.encoding)){
+						LogUtil.writeLog("验证签名成功");
+						String respCode = rspData.get("respCode") ;
+						if(("00").equals(respCode)){
+							//成功 
+							//TODO
+							try {
+								SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+								Date dates = new Date();
+								tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
+								tblSettleRedempTionInfTmp.setRedempTionStatus("5");
+								tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");//赎回中
+								tblSettleRedempTionInfTmp.setRedempTionPayStatus("成功");
+								//更新临时表审核时间
+								tblSettleRedempTionInfTmp.setRedempTionAuditDate(txnDate);
+								//更新临时表审核人
+								tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
+								//交易流水号
+								tblSettleRedempTionInfTmp.setRedemptionBatch(txnNo);
+								
+								String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
+								commQueryDAO.excute(redempDelInf);
+								
+								String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
+										+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
+										+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY, REDEMPTION_BATCH) "
+										+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
+										+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
+										+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','2','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
+										+ ",'" + txnDate + "','" + getOperator().getOprId() + "','1','" + txnNo + "')";
+								commQueryDAO.excute(redempDel);
+								
+								rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
+							} catch (Exception e) {
+								// TODO: handle exception
+								log.error("赎回后台处理失败："+e);
+								return returnService("赎回后台处理失败！请联系管理员！");
+							}
+						}else{
+							//其他应答码为失败请排查原因
+							//TODO
+							try {
+								SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+								Date dates = new Date();
+								tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
+								tblSettleRedempTionInfTmp.setRedempTionStatus("5");
+								tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");//赎回失败
+								if(("39").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("交易不在受理时间范围内");
+								}else if(("10").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("报文格式错误");
+								}else if(("38").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("银联风险受限");
+								}else if(("90").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("虚拟记账余额不足");
+								}else if(("91").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("划付失败");
+								}else if(("12").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("重复交易");
+								}else if(("11").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("验证签名失败");
+								}else if(("02").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("系统未开放或暂时关闭，请稍后再试");
+								}else if(("05").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("交易已受理，请稍后查询交易结果");
+								}else if(("13").equals(respCode)){
+									tblSettleRedempTionInfTmp.setRedempTionPayStatus("报文交易要素缺失");
+								}
+								//更新临时表审核时间
+								tblSettleRedempTionInfTmp.setRedempTionAuditDate(txnDate);
+								//更新临时表审核人
+								tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
+								//交易流水号
+								tblSettleRedempTionInfTmp.setRedemptionBatch(txnNo);
+								
+								String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
+								commQueryDAO.excute(redempDelInf);
+								
+								String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
+										+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
+										+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY, REDEMPTION_BATCH) "
+										+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
+										+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
+										+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','1','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
+										+ ",'" + txnDate + "','" + getOperator().getOprId() + "','1','" + txnNo + "')";
+								commQueryDAO.excute(redempDel);
+								
+								rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
+							} catch (Exception e) {
+								// TODO: handle exception
+								log.error("赎回后台处理失败："+e);
+								return returnService("赎回后台处理失败！请联系管理员！");
+							}
 						}
 					}else{
-						try {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-							Date dates = new Date();
-							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-							tblSettleRedempTionInfTmp.setRedempTionStatus("5");
-							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
-							tblSettleRedempTionInfTmp.setRedempTionPayStatus(processResult);
-							//更新临时表审核时间
-							tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(dates));
-							//更新临时表审核人
-							tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
-							
-							//思路是先删除正式表中对应的数据，在临时表添加相应的数据至正式表
-							String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
-							commQueryDAO.excute(redempDelInf);
-							
-							String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
-									+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
-									+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
-									+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','" + tblSettleRedempTionInfTmp.getRedempTionStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountStatus() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "','" + sdf.format(dates) + "','" + getOperator().getOprId() + "'"
-									+ ",'" + tblSettleRedempTionInfTmp.getRedempTionEnTry() + "')";
-							commQueryDAO.excute(redempDel);
-							
-							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-						} catch (Exception e) {
-							// TODO: handle exception
-							log.error("赎回后台处理失败："+e);
-							return returnService("赎回后台处理失败！请联系管理员！");
-						}
+//						LogUtil.writeErrorLog("验证签名失败");
+						//TODO 检查验证签名失败的原因
+						return returnService("验证签名失败");
 					}
-					
-				} catch (Exception e) {
-					// TODO: handle exception
-					System.out.println(e.getMessage());
-					return returnService(rspCode,e);
+				}else{
+					//未返回正确的http状态
+//					LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+					return returnService("未获取到返回报文或返回http状态码非200");
 				}
 			}else if(redempTionStatus.equals("6")){
 				try {
 					String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + redempTionId + "'";
 					commQueryDAO.excute(redempDelInf);
-					//删除审核通过，删除外键表数据
+					/*//删除审核通过，删除外键表数据
 					String redempDelInf1 = "delete from TBL_MCHT_SETTLE_RESERVE where REDEMPTION_MONEY = '" + redempTionId + "'";
 					commQueryDAO.excute(redempDelInf1);
 					
 					String redempDelInf2 = "delete from TBL_MCHT_SETTLE_RESERVE_TMP where REDEMPTION_MONEY = '" + redempTionId + "'";
-					commQueryDAO.excute(redempDelInf2);
+					commQueryDAO.excute(redempDelInf2);*/
 					
 					rspCode = t80601BO.redempDel(redempTionId);
 				} catch (Exception e) {
@@ -702,12 +582,15 @@ public class T80601Action extends BaseSupport {
 	}
 	
 	/**
-	 * 客户回填
+	 * 客户赎回状态查询
 	 * @return
 	 */
 	public String redempBackFill(){
 		String lgnnam = SysParamUtil.getParam(SysParamConstants.LGNNAM);//银企直连登陆用户名
 		String buscod01 = SysParamUtil.getParam(SysParamConstants.BUSCOD01);//业务类别
+		
+		String ACQINSCODE = SysParamUtil.getParam(SysParamConstants.ACQINSCODE);//机构代码
+		
 		jsonBean.parseJSONArrayData(getInfList());
 		int len = jsonBean.getArray().size();
 		//临时表
@@ -715,157 +598,118 @@ public class T80601Action extends BaseSupport {
 		for (int i = 0; i < len; i++) {
 			String redempTionId = jsonBean.getJSONDataAt(i).getString("redempTionId");//客户编号
 			String redempTionAuditDate = jsonBean.getJSONDataAt(i).getString("redempTionAuditDate");//审核日期
+			String redemptionBatch = jsonBean.getJSONDataAt(i).getString("redemptionBatch");//交易流水号
 			
-			XmlPacket xmlPkt = new XmlPacket("GetPaymentInfo", lgnnam);//函数名     登陆用户名
-			Map mpPodInfo = new Properties();
-			mpPodInfo.put("BUSCOD", buscod01);//业务类别
-			mpPodInfo.put("BGNDAT", redempTionAuditDate);//起始时间
-			mpPodInfo.put("ENDDAT", redempTionAuditDate);//结束时间
-			mpPodInfo.put("DATFLG", "B");//日期类型  A：经办日期；B：期望日期
-			mpPodInfo.put("YURREF", redempTionId);//业务参考号
-			xmlPkt.putProperty("SDKPAYQYX", mpPodInfo);
-			String date = xmlPkt.toXmlString();
-			log.info("生成查询报文:"+date);
-			// 连接前置机，发送请求报文，获得返回报文
-			String result = T80601Action.sendRequest(date);
-			result = result.replace("GBK", "UTF-8");
-			// 处理返回的结果
-			String processResult = T80601Action.processResultTS(result);
-			if (processResult.toUpperCase().equals("FIN")) {
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("0");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("完成");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}				
-			}else if(processResult.toUpperCase().equals("AUT")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("等待审批");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
+			
+			SDKConfig.getConfig().loadPropertiesFromSrc();// 从classpath加载fsas_sdk.properties文件
+			
+			Map<String, String> contentData = new HashMap<String, String>();
+			
+			SimpleDateFormat sdfs = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+			SimpleDateFormat sdfQuery1 = new SimpleDateFormat("yyyyMMdd");
+			String txnDate = sdfQuery1.format(new Date());
+
+			/*** 银联资金结算接入系统，产品参数，除了encoding自行选择外其他不需修改 ***/
+			contentData.put("version", DemoBase.version); // 版本号
+			contentData.put("encoding", DemoBase.encoding); // 字符集编码
+															// 可以使用UTF-8,GBK两种方式
+			contentData.put("signMethod", SDKConfig.getConfig().getSignMethod()); // 签名方法
+			contentData.put("txnType", "05"); // 交易类型 05-交易状态查询（单笔）
+			contentData.put("sndTime", DemoBase.getSendTime()); // 发送时间 格式HHmmss
+
+			contentData.put("txnNo", sdfs.format(new Date())); // 交易流水号
+			contentData.put("acqInsCode", ACQINSCODE); // 机构代码
+			contentData.put("txnDate", txnDate); // 交易日期
+			contentData.put("origTxnType", "02"); // 原交易类型01：备款 02：商户资金结算
+															// 04：回款
+			contentData.put("origTxnNo", redemptionBatch); // 原交易流水号
+			contentData.put("origTxnDate", redempTionAuditDate); // 原交易日期
+
+			/** 对请求参数进行签名并发送http post请求，接收同步应答报文 **/
+			Map<String, String> reqData = FsasService.sign(contentData,
+					DemoBase.encoding); // 报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
+			String requestBackUrl = SDKConfig.getConfig().getBackRequestUrl(); // 交易请求url从配置文件读取对应属性文件fsas_sdk.properties中的
+																				// fsassdk.backTransUrl
+			Map<String, String> rspData = FsasService.doPost(reqData,
+					requestBackUrl, DemoBase.encoding); // 发送请求报文并接受同步应答（默认连接超时时间30秒，读取返回结果超时时间30秒）;这里调用signData之后，调用submitUrl之前不能对submitFromData中的键值对做任何修改，如果修改会导致验签不通过
+			
+			
+			/** 对应答码的处理，请根据您的业务逻辑来编写程序,以下应答码处理逻辑仅供参考-------------> **/
+			// 应答码规范参考open.unionpay.com帮助中心 下载 产品接口规范 《平台接入接口规范-第5部分-附录》
+			StringBuffer parseStr = new StringBuffer("");
+			if (!rspData.isEmpty()) {
+				if (FsasService.validate(rspData, DemoBase.encoding)) {
+					LogUtil.writeLog("验证签名成功");
+					String respCode = rspData.get("respCode");
+					String origRespCode = rspData.get("origRespCode");
+					if (("00").equals(respCode)) {
+						// 交易已受理(不代表交易已成功），等待接收后台通知更新订单状态,也可以主动发起 查询交易确定交易状态。
+						// TODO
+						if (("00").equals(origRespCode)) {
+							// 代表原交易成功 如不成功根据原交易应答码做相应处理
+							// TODO
+							try {
+								tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
+								tblSettleRedempTionInfTmp.setRedempTionAccountStatus("0");
+								tblSettleRedempTionInfTmp.setRedempTionPayStatus("完成");
+								
+								rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
+							} catch (Exception e) {
+								// TODO: handle exception
+								log.error("回填后台处理失败："+e);
+								return returnService("回填处理失败！请联系管理员！");
+							}	
+						} else if (("03").equals(origRespCode)
+								|| ("05").equals(origRespCode)) {
+							// 订单处理中或交易状态未明，需稍后发起交易状态查询交易
+							// TODO
+							return returnService("订单处理中或交易状态未明，需稍后发起交易状态查询交易");
+						} else {
+							 //其它根据需要作处理 
+							// TODO
+							try {
+								tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
+								tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
+								tblSettleRedempTionInfTmp.setRedempTionPayStatus("失败");
+								
+								rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
+							} catch (Exception e) {
+								// TODO: handle exception
+								log.error("回填后台处理失败："+e);
+								return returnService("回填处理失败！请联系管理员！");
+							}
+						}
+					} else if (("03").equals(respCode)
+							|| ("05").equals(respCode)) {
+						// 订单处理中或交易状态未明，需稍后发起交易状态查询交易
+						// TODO
+						return returnService("订单处理中或交易状态未明，需稍后发起交易状态查询交易");
+					} else {
+						// 其他应答码为失败请排查原因
+						// TODO
+						try {
+							tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
+							tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
+							tblSettleRedempTionInfTmp.setRedempTionPayStatus("失败");
+							
+							rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
+						} catch (Exception e) {
+							// TODO: handle exception
+							log.error("回填后台处理失败："+e);
+							return returnService("回填处理失败！请联系管理员！");
+						}
+					}
+				} else {
+//					LogUtil.writeErrorLog("验证签名失败");
+					// TODO 检查验证签名失败的原因
+					return returnService("验证签名失败");
 				}
-			}else if(processResult.toUpperCase().equals("NTE")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("终审完毕");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else if(processResult.toUpperCase().equals("WCF")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("订单待确认");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else if(processResult.toUpperCase().equals("BNK")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("银行处理中");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else if(processResult.toUpperCase().equals("ACK")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("等待确认");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else if(processResult.toUpperCase().equals("APD")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("待银行确认");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else if(processResult.toUpperCase().equals("OPR")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("2");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("数据接收中");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else if(processResult.equals("F")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("银行支付失败");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else if(processResult.equals("B")){
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus(processResult);
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
-			}else{
-				try {
-					tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
-					tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
-					tblSettleRedempTionInfTmp.setRedempTionPayStatus("银行支付被退票");
-					
-					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
-				} catch (Exception e) {
-					// TODO: handle exception
-					log.error("回填后台处理失败："+e);
-					return returnService("回填处理失败！请联系管理员！");
-				}
+			} else {
+				// 未返回正确的http状态
+//				LogUtil.writeErrorLog("未获取到返回报文或返回http状态码非200");
+				return returnService("未获取到返回报文或返回http状态码非200");
 			}
 		}
-		
 		log("客户回填成功，操作员编号："+getOperator().getOprId());
 		return returnService(rspCode);
 	}

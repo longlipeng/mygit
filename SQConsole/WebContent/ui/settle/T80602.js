@@ -35,7 +35,9 @@ Ext.onReady(function() {
 			{name: 'redempTionAddName',mapping: 'redempTionAddName'},
 			{name: 'redempTionAuditDate',mapping: 'redempTionAuditDate'},
 			{name: 'redempTionAuditName',mapping: 'redempTionAuditName'},
-			{name: 'redempTionEnTry',mapping: 'redempTionEnTry'}
+			{name: 'redempTionEnTry',mapping: 'redempTionEnTry'},
+			//交易流水号
+			{name: 'redemptionBatch',mapping: 'redemptionBatch'},
 		])
 	});
 	
@@ -57,7 +59,8 @@ Ext.onReady(function() {
 		{header: '发起人',dataIndex: 'redempTionAddName',align: 'center',hidden:true},
 		{header: '审核日期',dataIndex: 'redempTionAuditDate',renderer: formatDt,align: 'center'},
 		{header: '审核人',dataIndex: 'redempTionAuditName',width:300,align: 'center',hidden:true},
-		{header: '录入方式',dataIndex: 'redempTionEnTry',renderer: accountEnTryStatus,width:300,align: 'center'}
+		{header: '录入方式',dataIndex: 'redempTionEnTry',renderer: accountEnTryStatus,width:300,align: 'center'},
+		{header: '交易流水号',dataIndex: 'redemptionBatch',width:300,align: 'center',hidden:true},
 	]);
 	
 	//录入方式
@@ -153,7 +156,7 @@ Ext.onReady(function() {
 	};
 		
 		var BackFillMenu = {
-			text: '客户回填',
+			text: '客户赎回状态查询',
 			width: 85,
 			iconCls: 'edit',
 			handler: function() {
@@ -187,6 +190,7 @@ Ext.onReady(function() {
 										redempTionAuditDate: record.get('redempTionAuditDate'),//审核时间
 										redempTionAuditName: record.get('redempTionAuditName'),//审核人员
 										redempTionEnTry: record.get('redempTionEnTry'),//录入方式
+										redemptionBatch: record.get('redemptionBatch'),//交易流水号
 								};
 								array.push(data);
 							}

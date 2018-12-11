@@ -23,8 +23,16 @@ public class TblSettleRedempTionInf implements Serializable {
 	private String redempTionAuditName;  //审核人员
 	private String redempTionEnTry;  //录入方式
 	
+	private String redemptionBatch;  //交易流水号
 	
 	
+	
+	public String getRedemptionBatch() {
+		return redemptionBatch;
+	}
+	public void setRedemptionBatch(String redemptionBatch) {
+		this.redemptionBatch = redemptionBatch;
+	}
 	public String getRedempTionBankCard() {
 		return redempTionBankCard;
 	}

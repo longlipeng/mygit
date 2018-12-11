@@ -24,18 +24,17 @@ Ext.onReady(function(){
 			{name: 'reserveLaunchName',mapping: 'reserveLaunchName'},
 			{name: 'reserveAuditTime',mapping: 'reserveAuditTime'},
 			{name: 'reserveAuditName',mapping: 'reserveAuditName'},
-			{name: 'redemptionAccount',mapping: 'redemptionAccount'},
-			{name: 'redemptionAccountName',mapping: 'redemptionAccountName'}
+			{name: 'redemptionBatch',mapping: 'redemptionBatch'},
 		]),
 		autoLoad: true  //二次加载  用于第一次加载为空 第二次加载数据的情况
 	});
 	
 	//数据加载
-	redempGridStore.load({
-		params: {
-			start: 0
-		}
-	});
+//	redempGridStore.load({
+//		params: {
+//			start: 0
+//		}
+//	});
 	
 	var redempColModel = new Ext.grid.ColumnModel([
 		sm,
@@ -51,13 +50,12 @@ Ext.onReady(function(){
 			})},
 		{header: '审核状态',dataIndex: 'reserveStatus',renderer: reserveStatus,width: 100,align: 'center'},
 		{header: '备款状态',dataIndex: 'reserveSettleStatus',renderer: reserveStatuss,width: 100,align: 'center'},
-		/*{header: '支付状态',dataIndex: 'reservePayStatus',width: 100,align: 'center'},*/
+		{header: '支付状态',dataIndex: 'reservePayStatus',width: 100,align: 'center'},
 		{header: '发起日期',dataIndex: 'reserveLaunchTime',width: 100,align: 'center'},
 		{header: '发起人',dataIndex: 'reserveLaunchName',width: 100,align: 'center'},
 		{header: '审核日期',dataIndex: 'reserveAuditTime',width: 100,align: 'center'},
 		{header: '审核人',dataIndex: 'reserveAuditName',width: 100,align: 'center'},
-		{header: '备款账户',dataIndex: 'redemptionAccount',width: 100,align: 'center',hidden:true},
-   		{header: '备款账户名称',dataIndex: 'redemptionAccountName',width: 100,align: 'center',hidden:true},
+   		
 	]);
 	
 	//审核状态

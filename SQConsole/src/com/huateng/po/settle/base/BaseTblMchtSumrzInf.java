@@ -91,9 +91,19 @@ public abstract class BaseTblMchtSumrzInf  implements Serializable {
 	private java.lang.String auditDate;
 	private java.lang.String recId;
 	private java.lang.String recDate;
+	
+	private java.lang.String sumrzBatch;
 
 
 	
+	public java.lang.String getSumrzBatch() {
+		return sumrzBatch;
+	}
+
+	public void setSumrzBatch(java.lang.String sumrzBatch) {
+		this.sumrzBatch = sumrzBatch;
+	}
+
 	public int getHashCode() {
 		return hashCode;
 	}

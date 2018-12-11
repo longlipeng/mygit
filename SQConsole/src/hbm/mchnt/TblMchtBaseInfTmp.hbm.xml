@@ -1063,5 +1063,13 @@
 			not-null="false"
 			length="20"
 		/>
+		<property
+			name="etpsScale"
+			column="ETPS_SCALE"
+			type="string"
+			not-null="false"
+		/>
+		
+		
 	</class>	
 </hibernate-mapping>

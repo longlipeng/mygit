@@ -50,13 +50,13 @@ public class PrintImage1 extends HttpServlet {
 	      fileInputStream = new FileInputStream(file);
 	    }
 
-	    BufferedImage bufferedImage = ImageIO.read(fileInputStream);
+	    BufferedImage bufferedImage = ImageIO.read(file);
 	    BufferedOutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
 	    JPEGImageEncoder imageEncoder = JPEGCodec.createJPEGEncoder(outputStream);
 	    JPEGEncodeParam encodeParam = JPEGCodec.getDefaultJPEGEncodeParam(bufferedImage);
 	    encodeParam.setQuality(1.0F, true);
 	    imageEncoder.encode(bufferedImage, encodeParam);
-
+	    
 	    byte[] data = new byte[8192];
 
 	    int len = -1;

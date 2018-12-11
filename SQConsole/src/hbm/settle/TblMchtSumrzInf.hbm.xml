@@ -143,6 +143,11 @@
 			not-null="false"
 			length="14"
 		/>
+		<property
+			name="sumrzBatch"
+			column="SUMRZ_BATCH"
+			type="string"
+		/>
 
 
 	</class>	

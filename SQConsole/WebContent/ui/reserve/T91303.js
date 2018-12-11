@@ -24,8 +24,7 @@ Ext.onReady(function(){
 			{name: 'reserveLaunchName',mapping: 'reserveLaunchName'},
 			{name: 'reserveAuditTime',mapping: 'reserveAuditTime'},
 			{name: 'reserveAuditName',mapping: 'reserveAuditName'},
-			{name: 'redemptionAccount',mapping: 'redemptionAccount'},
-			{name: 'redemptionAccountName',mapping: 'redemptionAccountName'}
+			{name: 'reserveBatch',mapping: 'reserveBatch'},
 		]),
 	//	autoLoad: true  
 	});
@@ -46,13 +45,12 @@ Ext.onReady(function(){
 		{header: '备款金额',dataIndex: 'reserveMoney',width: 100,align: 'center'},
 		{header: '审核状态',dataIndex: 'reserveStatus',renderer: reserveStatus,width: 100,align: 'center'},
 		{header: '备款状态',dataIndex: 'reserveSettleStatus',renderer: reserveStatuss,width: 100,align: 'center'},
-		/*{header: '支付状态',dataIndex: 'reservePayStatus',width: 100,align: 'center'},*/
+		{header: '支付状态',dataIndex: 'reservePayStatus',width: 100,align: 'center'},
 		{header: '发起日期',dataIndex: 'reserveLaunchTime',width: 100,align: 'center'},
 		{header: '发起人',dataIndex: 'reserveLaunchName',width: 100,align: 'center'},
 		{header: '审核日期',dataIndex: 'reserveAuditTime',width: 100,align: 'center'},
 		{header: '审核人',dataIndex: 'reserveAuditName',width: 150,align: 'center'},
-		{header: '备款账户',dataIndex: 'redemptionAccount',width: 100,align: 'center',hidden:true},
-   		{header: '备款账户名称',dataIndex: 'redemptionAccountName',width: 100,align: 'center',hidden:true},
+//		{header: '交易流水号',dataIndex: 'reserveBatch',width: 150,align: 'center',hidden:true},
 	]);
 	
 	//审核状态
@@ -73,7 +71,7 @@ Ext.onReady(function(){
 		}else if(val=='1'){
 			return '<font color="red">失败</font>';
 		}else if(val=='2'){
-   			return '<font color="gray">备款中</font>';
+   			return '<font color="gray">备款受理中</font>';
    		}
 	}
 	
@@ -164,13 +162,13 @@ Ext.onReady(function(){
 								reserveLaunchName: record.get('reserveLaunchName'),//发起人员
 								reserveAuditTime: record.get('reserveAuditTime'),//审核时间
 								reserveAuditName: record.get('reserveAuditName'),//审核人员
-								redemptionAccount: record.get('redemptionAccount'),//备款账户
-								redemptionAccountName: record.get('redemptionAccountName')//备款账户名称
+								reserveBatch: record.get('reserveBatch'),//交易流水号
 							};
 							array.push(data);
 						}
 						Ext.Ajax.request({
 						url: 'T91301Action_redempAccept.asp',
+//						url: 'backRcvResponse.asp',
 						params: {
 							infList: Ext.encode(array),
 							txnId: '80601',
@@ -229,8 +227,7 @@ Ext.onReady(function(){
 								reserveLaunchName: record.get('reserveLaunchName'),//发起人员
 								reserveAuditTime: record.get('reserveAuditTime'),//审核时间
 								reserveAuditName: record.get('reserveAuditName'),//审核人员
-								redemptionAccount: record.get('redemptionAccount'),//备款账户
-								redemptionAccountName: record.get('redemptionAccountName')//备款账户名称
+								reserveBatch: record.get('reserveBatch'),//交易流水号
 							};
 							array.push(data);
 						}

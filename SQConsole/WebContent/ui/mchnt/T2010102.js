@@ -3314,6 +3314,9 @@ Ext.onReady(function() {
 			{name:'busiRangeId',mapping:'busiRangeId'},
 			{name:'mchtNo',mapping:'mchtNo'},
 			{name:'busiRanges',mapping:'busiRanges'},
+			
+			//企业规模
+			{name:'etpsScale',mapping:'etpsScale'},
 		]),
 		autoLoad: false
 	});
@@ -4761,8 +4764,24 @@ Ext.onReady(function() {
     	                })
 		        	
 		        	}]	
-				}
-				]
+				},{
+					columnWidth: .33,
+		        	xtype: 'panel',
+		        	layout: 'form',
+	       			items: [{
+	       				xtype: 'combo',
+						labelStyle: 'padding-left: 5px',
+						allowBlank:false,
+						fieldLabel: '企业规模*',
+						hiddenName: 'etpsScale',
+    					increment: 10,
+    					width:150,
+    					store: new Ext.data.ArrayStore({
+    	                    fields: ['valueField','displayField'],
+    	                    data: [['1','500人以上'],['2','200-500人'],['3','10-200人'],['4','10人以下']]
+    	                })
+	       			}]
+				}]
         	},{
                     title:'申请信息',
                     layout:'column',
@@ -5648,7 +5667,7 @@ Ext.onReady(function() {
 			        	xtype: 'basecomboselect',
 			        	baseParams: 'CERTIFICATES',
 						labelStyle: 'padding-left: 5px',
-						fieldLabel: '控股股东或实际控制人身份证件种类*',
+						fieldLabel: '控股股东或实际控制人证件种类*',
 						width:130,
 						allowBlank: false,
 						id:'idshareholderTp',
@@ -5661,7 +5680,7 @@ Ext.onReady(function() {
 	       			items: [{
 			        	xtype: 'textfield',
 						labelStyle: 'padding-left: 5px',
-						fieldLabel: '控股股东或实际控制人身份证件号码*',
+						fieldLabel: '控股股东或实际控制人证件号码*',
 						allowBlank: false,
 						maxLength: 25,
 						vtype: 'is5Alphanum',
@@ -5675,7 +5694,7 @@ Ext.onReady(function() {
 	       			items: [{
 						xtype: 'textfield',
 						labelStyle: 'padding-left: 5px',
-						fieldLabel: '控股股东或实际控制人身份证件有效期*',
+						fieldLabel: '控股股东或实际控制人证件有效期*',
 						allowBlank: false,
 						maxLength: 8,
 						minLength:8,  

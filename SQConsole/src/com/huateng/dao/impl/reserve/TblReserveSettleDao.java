@@ -68,5 +68,15 @@ public class TblReserveSettleDao extends _RootDAO<TblMchtSettleReserve> implemen
 		super.save(tblBalanceReserveQuery);
 	}
 
+	public TblFocusReserve getFocus(String focusId) {
+		// TODO Auto-generated method stub
+		return (TblFocusReserve) super.get(TblFocusReserve.class, focusId);
+	}
+
+	public TblPaymentReserve getPayment(String paymentId) {
+		// TODO Auto-generated method stub
+		return (TblPaymentReserve) super.get(TblPaymentReserve.class , paymentId);
+	}
+
 	
 }

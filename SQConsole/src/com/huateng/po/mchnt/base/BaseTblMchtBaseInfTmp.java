@@ -425,7 +425,18 @@ public abstract class BaseTblMchtBaseInfTmp  implements Serializable {
 	//经营地址
 	private String operateAddr;
 	
+	//企业规模
+	private String etpsScale;
 	
+	
+	public String getEtpsScale() {
+		return etpsScale;
+	}
+
+	public void setEtpsScale(String etpsScale) {
+		this.etpsScale = etpsScale;
+	}
+
 	public String getForeignName() {
 		return foreignName;
 	}

@@ -89,5 +89,12 @@
 			type="string"
 		/>
 		
+		<property
+			name="redemptionBatch"
+			column="REDEMPTION_BATCH"
+			type="string"
+		/>
+		
+		
     </class>
 </hibernate-mapping>
