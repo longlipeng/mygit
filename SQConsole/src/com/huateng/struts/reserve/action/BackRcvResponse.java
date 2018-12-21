@@ -23,11 +23,14 @@ import com.huateng.bo.settle.T80224BO;
 import com.huateng.bo.settle.T80601BO;
 import com.huateng.common.SysParamConstants;
 import com.huateng.po.reserve.TblFocusReserve;
+import com.huateng.po.reserve.TblFocusReserveTmp;
 import com.huateng.po.reserve.TblMchtSettleReserveTmp;
 import com.huateng.po.reserve.TblPaymentReserve;
+import com.huateng.po.reserve.TblPaymentReserveTmp;
 import com.huateng.po.settle.TblMchtSumrzInf;
 import com.huateng.po.settle.TblSettleRedempTionInfTmp;
 import com.huateng.struts.system.action.BaseAction;
+import com.huateng.system.util.CommonFunction;
 import com.huateng.system.util.ContextUtil;
 import com.huateng.system.util.SysParamUtil;
 import com.opensymphony.xwork2.ActionContext;
@@ -101,7 +104,7 @@ public class BackRcvResponse extends BaseAction {
 				rspCode = "00";
 			}else if(txnType.equals("32")){    //32：退汇
 				log("退汇通知报文:" + jsonData);
-				
+				 
 				
 				
 				LogUtil.writeLog("接收退汇通知结束");
@@ -156,12 +159,43 @@ public class BackRcvResponse extends BaseAction {
 					}else if(reqReserved.equals("2")){  //2人行集中缴存备款
 						log("人行集中缴存备款通知报文:" + jsonData);
 						try {
-							TblFocusReserve tblFocusReserve = null;
-							tblFocusReserve = t9130101BO.getFocus(txnNo);
-							//0备款成功
-							tblFocusReserve.setFocusStatus("0");
+							String sql2 = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE, FOCUS_PAY_STATUS, FOCUS_LAUNCH_TIME, FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH from TBL_FOCUS_RESERVE_TMP where FOCUS_BATCH = '" + txnNo + "'";
+							List<Object[]> tmsrt = commQueryDAO.findBySQLQuery(sql2);
+							TblFocusReserveTmp tblFocusReserveTmp = new TblFocusReserveTmp();
+							for (Object[] objects2 : tmsrt) {
+								tblFocusReserveTmp.setFocusId(String.valueOf(objects2[0]));
+								tblFocusReserveTmp.setFocusAccount(String.valueOf(objects2[1]));
+								tblFocusReserveTmp.setFocusAccountName(String.valueOf(objects2[2]));
+								tblFocusReserveTmp.setFocusMoney(String.valueOf(objects2[3]));
+								//0备款成功
+								tblFocusReserveTmp.setFocusStatus("0");//备款状态
+								tblFocusReserveTmp.setFocusDate(String.valueOf(objects2[5]));
+								//支付状态
+								tblFocusReserveTmp.setFocusPayStatus("备款成功");
+								tblFocusReserveTmp.setFocusLaunchTime(String.valueOf(objects2[7]));
+								tblFocusReserveTmp.setFocusLaunchName(String.valueOf(objects2[8]));
+								tblFocusReserveTmp.setFocusAuditTime(String.valueOf(objects2[9]));
+								tblFocusReserveTmp.setFocusAuditName(String.valueOf(objects2[10]));
+								tblFocusReserveTmp.setFocusAuditStatus(String.valueOf(objects2[11]));
+								tblFocusReserveTmp.setFocusBatch(String.valueOf(objects2[12]));
+							}
 							
-							t9130101BO.upFocus(tblFocusReserve);
+							String sql = "delete from TBL_FOCUS_RESERVE where FOCUS_ID = '" + tblFocusReserveTmp.getFocusId() + "'";
+							CommonFunction.getCommQueryDAO().excute(sql);
+							
+							String sql1 = "insert into TBL_FOCUS_RESERVE(FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, "
+									+ "FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE, FOCUS_PAY_STATUS, FOCUS_LAUNCH_TIME, "
+									+ "FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH) "
+									+ "VALUES('" + tblFocusReserveTmp.getFocusId() + "','" + tblFocusReserveTmp.getFocusAccount() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusAccountName() + "','" + tblFocusReserveTmp.getFocusMoney() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusStatus() + "','" + tblFocusReserveTmp.getFocusDate() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusPayStatus() + "','" + tblFocusReserveTmp.getFocusLaunchTime() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusLaunchName() + "','" + tblFocusReserveTmp.getFocusAuditTime() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusAuditName() + "','" + tblFocusReserveTmp.getFocusAuditStatus() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusBatch() + "')";
+							CommonFunction.getCommQueryDAO().excute(sql1);
+							
+							t9130101BO.upFocusTmp(tblFocusReserveTmp);
 							
 							//人行集中缴存备款成功后，自动发起银联虚拟记账余额查询交易
 							Map<String, String> rspData = T91301Action.focusQuery();
@@ -175,12 +209,43 @@ public class BackRcvResponse extends BaseAction {
 				}else if(txnType.equals("04")){  //04: 回款（模式二）06：回款（模式一） 
 					log("回款通知报文:" + jsonData);
 					try {
-						TblPaymentReserve tblPaymentReserve = null;
-						tblPaymentReserve = t9130101BO.getPayment(txnNo);
-						//0出款成功
-						tblPaymentReserve.setPaymentStatus("0");//回款状态
+						String sql2 = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH from TBL_PAYMENT_RESERVE_TMP where PAYMENT_BATCH = '" + txnNo + "'";
+						List<Object[]> tmsrt = commQueryDAO.findBySQLQuery(sql2);
+						TblPaymentReserveTmp tblPaymentReserveTmp = new TblPaymentReserveTmp();
+						for (Object[] objects2 : tmsrt) {
+							tblPaymentReserveTmp.setPaymentId(String.valueOf(objects2[0]));
+							tblPaymentReserveTmp.setPaymentAccount(String.valueOf(objects2[1]));
+							tblPaymentReserveTmp.setPaymentAccountName(String.valueOf(objects2[2]));
+							tblPaymentReserveTmp.setPaymentMoney(String.valueOf(objects2[3]));
+							//0出款成功
+							tblPaymentReserveTmp.setPaymentStatus("0");//回款状态
+							tblPaymentReserveTmp.setPaymentDate(String.valueOf(objects2[5]));
+							//支付状态
+							tblPaymentReserveTmp.setPaymentPayStatus("回款成功");
+							tblPaymentReserveTmp.setPaymentLaunchTime(String.valueOf(objects2[7]));
+							tblPaymentReserveTmp.setPaymentLaunchName(String.valueOf(objects2[8]));
+							tblPaymentReserveTmp.setPaymentAuditTime(String.valueOf(objects2[9]));
+							tblPaymentReserveTmp.setPaymentAuditName(String.valueOf(objects2[10]));
+							tblPaymentReserveTmp.setPaymentAuditStatus(String.valueOf(objects2[11]));
+							tblPaymentReserveTmp.setPaymentBatch(String.valueOf(objects2[12]));
+						}
 						
-						rspCode = t9130101BO.upPayment(tblPaymentReserve);
+						String sql = "delete from TBL_PAYMENT_RESERVE where PAYMENT_ID = '" + tblPaymentReserveTmp.getPaymentId() + "'";
+						CommonFunction.getCommQueryDAO().excute(sql);
+						
+						String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
+								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+						CommonFunction.getCommQueryDAO().excute(sql1);
+						
+						rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
 					} catch (Exception e) {
 						// TODO: handle exception
 						LogUtil.writeErrorLog("回款后台处理失败："+e);
@@ -261,7 +326,7 @@ public class BackRcvResponse extends BaseAction {
 								tblMchtSettleReserveTmp.setReserveMoney(String.valueOf(objects[4]));
 								tblMchtSettleReserveTmp.setReserveStatus(String.valueOf(objects[5]));
 								tblMchtSettleReserveTmp.setReserveSettleStatus("1");//1备款失败
-								tblMchtSettleReserveTmp.setReservePayStatus(String.valueOf(objects[7]));
+								tblMchtSettleReserveTmp.setReservePayStatus(map.get("respMsg"));
 								tblMchtSettleReserveTmp.setReserveLaunchTime(String.valueOf(objects[8]));
 								tblMchtSettleReserveTmp.setReserveLaunchName(String.valueOf(objects[9]));
 								tblMchtSettleReserveTmp.setReserveAuditTime(String.valueOf(objects[10]));
@@ -290,12 +355,43 @@ public class BackRcvResponse extends BaseAction {
 					}else if(reqReserved.equals("2")){  //2人行集中缴存备款
 						log("人行集中缴存备款通知报文:" + jsonData);
 						try {
-							TblFocusReserve tblFocusReserve = null;
-							tblFocusReserve = t9130101BO.getFocus(txnNo);
-							//1备款失败
-							tblFocusReserve.setFocusStatus("1");
+							String sql2 = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE, FOCUS_PAY_STATUS, FOCUS_LAUNCH_TIME, FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH from TBL_FOCUS_RESERVE_TMP where FOCUS_BATCH = '" + txnNo + "'";
+							List<Object[]> tmsrt = commQueryDAO.findBySQLQuery(sql2);
+							TblFocusReserveTmp tblFocusReserveTmp = new TblFocusReserveTmp();
+							for (Object[] objects2 : tmsrt) {
+								tblFocusReserveTmp.setFocusId(String.valueOf(objects2[0]));
+								tblFocusReserveTmp.setFocusAccount(String.valueOf(objects2[1]));
+								tblFocusReserveTmp.setFocusAccountName(String.valueOf(objects2[2]));
+								tblFocusReserveTmp.setFocusMoney(String.valueOf(objects2[3]));
+								//1备款失败
+								tblFocusReserveTmp.setFocusStatus("1");//备款状态
+								tblFocusReserveTmp.setFocusDate(String.valueOf(objects2[5]));
+								//支付状态
+								tblFocusReserveTmp.setFocusPayStatus(map.get("respMsg"));
+								tblFocusReserveTmp.setFocusLaunchTime(String.valueOf(objects2[7]));
+								tblFocusReserveTmp.setFocusLaunchName(String.valueOf(objects2[8]));
+								tblFocusReserveTmp.setFocusAuditTime(String.valueOf(objects2[9]));
+								tblFocusReserveTmp.setFocusAuditName(String.valueOf(objects2[10]));
+								tblFocusReserveTmp.setFocusAuditStatus(String.valueOf(objects2[11]));
+								tblFocusReserveTmp.setFocusBatch(String.valueOf(objects2[12]));
+							}
 							
-							rspCode = t9130101BO.upFocus(tblFocusReserve);
+							String sql = "delete from TBL_FOCUS_RESERVE where FOCUS_ID = '" + tblFocusReserveTmp.getFocusId() + "'";
+							CommonFunction.getCommQueryDAO().excute(sql);
+							
+							String sql1 = "insert into TBL_FOCUS_RESERVE(FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, "
+									+ "FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE, FOCUS_PAY_STATUS, FOCUS_LAUNCH_TIME, "
+									+ "FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH) "
+									+ "VALUES('" + tblFocusReserveTmp.getFocusId() + "','" + tblFocusReserveTmp.getFocusAccount() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusAccountName() + "','" + tblFocusReserveTmp.getFocusMoney() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusStatus() + "','" + tblFocusReserveTmp.getFocusDate() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusPayStatus() + "','" + tblFocusReserveTmp.getFocusLaunchTime() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusLaunchName() + "','" + tblFocusReserveTmp.getFocusAuditTime() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusAuditName() + "','" + tblFocusReserveTmp.getFocusAuditStatus() + "',"
+									+ "'" + tblFocusReserveTmp.getFocusBatch() + "')";
+							CommonFunction.getCommQueryDAO().excute(sql1);
+							
+							rspCode = t9130101BO.upFocusTmp(tblFocusReserveTmp);
 						} catch (Exception e) {
 							// TODO: handle exception
 							log("备款后台处理失败："+e);
@@ -304,12 +400,43 @@ public class BackRcvResponse extends BaseAction {
 				}else if(txnType.equals("04")){  //04: 回款（模式二）06：回款（模式一） 
 					log("回款通知报文:" + jsonData);
 					try {
-						TblPaymentReserve tblPaymentReserve = null;
-						tblPaymentReserve = t9130101BO.getPayment(txnNo);
-						//1出款失败
-						tblPaymentReserve.setPaymentStatus("1");//回款状态
+						String sql2 = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH from TBL_PAYMENT_RESERVE_TMP where PAYMENT_BATCH = '" + txnNo + "'";
+						List<Object[]> tmsrt = commQueryDAO.findBySQLQuery(sql2);
+						TblPaymentReserveTmp tblPaymentReserveTmp = new TblPaymentReserveTmp();
+						for (Object[] objects2 : tmsrt) {
+							tblPaymentReserveTmp.setPaymentId(String.valueOf(objects2[0]));
+							tblPaymentReserveTmp.setPaymentAccount(String.valueOf(objects2[1]));
+							tblPaymentReserveTmp.setPaymentAccountName(String.valueOf(objects2[2]));
+							tblPaymentReserveTmp.setPaymentMoney(String.valueOf(objects2[3]));
+							//1出款失败
+							tblPaymentReserveTmp.setPaymentStatus("1");//回款状态
+							tblPaymentReserveTmp.setPaymentDate(String.valueOf(objects2[5]));
+							//支付状态
+							tblPaymentReserveTmp.setPaymentPayStatus(map.get("respMsg"));
+							tblPaymentReserveTmp.setPaymentLaunchTime(String.valueOf(objects2[7]));
+							tblPaymentReserveTmp.setPaymentLaunchName(String.valueOf(objects2[8]));
+							tblPaymentReserveTmp.setPaymentAuditTime(String.valueOf(objects2[9]));
+							tblPaymentReserveTmp.setPaymentAuditName(String.valueOf(objects2[10]));
+							tblPaymentReserveTmp.setPaymentAuditStatus(String.valueOf(objects2[11]));
+							tblPaymentReserveTmp.setPaymentBatch(String.valueOf(objects2[12]));
+						}
 						
-						rspCode = t9130101BO.upPayment(tblPaymentReserve);
+						String sql = "delete from TBL_PAYMENT_RESERVE where PAYMENT_ID = '" + tblPaymentReserveTmp.getPaymentId() + "'";
+						CommonFunction.getCommQueryDAO().excute(sql);
+						
+						String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
+								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+						CommonFunction.getCommQueryDAO().excute(sql1);
+						
+						rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
 					} catch (Exception e) {
 						// TODO: handle exception
 						LogUtil.writeErrorLog("回款后台处理失败："+e);
@@ -322,7 +449,7 @@ public class BackRcvResponse extends BaseAction {
 							//TODO
 							tblMchtSumrzInf = t80224BO.get(new Integer(txnNo));
 							tblMchtSumrzInf.setSaStatus("0");
-							tblMchtSumrzInf.setCauseStat("划款失败");
+							tblMchtSumrzInf.setCauseStat(map.get("respMsg"));
 							
 							rspCode = t80224BO.update(tblMchtSumrzInf);
 						} catch (Exception e) {
@@ -342,7 +469,7 @@ public class BackRcvResponse extends BaseAction {
 								tblSettleRedempTionInfTmp.setRedempTionBankCard(String.valueOf(objects[4]));
 								tblSettleRedempTionInfTmp.setRedempTionStatus(String.valueOf(objects[5]));
 								tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");//赎回失败
-								tblSettleRedempTionInfTmp.setRedempTionPayStatus("失败");
+								tblSettleRedempTionInfTmp.setRedempTionPayStatus(map.get("respMsg"));
 								tblSettleRedempTionInfTmp.setRedempTionAddTime(String.valueOf(objects[8]));
 								tblSettleRedempTionInfTmp.setRedempTionAddName(String.valueOf(objects[9]));
 								tblSettleRedempTionInfTmp.setRedempTionAuditDate(String.valueOf(objects[10]));
@@ -387,8 +514,8 @@ public class BackRcvResponse extends BaseAction {
 	 */
 	public void huikuan(String acctNo,String acctName,String acctBal){
 		String ACQINSCODE = SysParamUtil.getParam(SysParamConstants.ACQINSCODE);//机构代码
-//		String PAYERACCTNO = SysParamUtil.getParam(SysParamConstants.PAYERACCTNO);//付款方账号
-//		String PAYERACCTNAME = SysParamUtil.getParam(SysParamConstants.PAYERACCTNAME);//付款方账户名称
+		String PAYERACCTNO = SysParamUtil.getParam(SysParamConstants.PAYERACCTNO);//付款方账号
+		String PAYERACCTNAME = SysParamUtil.getParam(SysParamConstants.PAYERACCTNAME);//付款方账户名称
 		
 		Map<String, String> contentData = new HashMap<String, String>();
 		
@@ -411,11 +538,11 @@ public class BackRcvResponse extends BaseAction {
 	    contentData.put("txnDate",txnDate);                               //交易日期
 	    contentData.put("sndTime", DemoBase.getSendTime());      //发送时间 格式HHmmss
 	    contentData.put("insSeq", "01");   //头寸序号   以机构代码 +头寸序号在银联系统内对应的银行账户为准
-	    contentData.put("payerAcctNo", acctNo);                //收款方账号
-	    contentData.put("payerAcctName", acctName);        //收款方账户名称
+	    contentData.put("payerAcctNo", PAYERACCTNO);                //付款方账号
+	    contentData.put("payerAcctName", PAYERACCTNAME);        //付款方账户名称
 	    contentData.put("currencyCode", "156");                          //币种
 	    contentData.put("txnAmt",acctBal);                                 //金额
-
+	    
 		/**对请求参数进行签名并发送http post请求，接收同步应答报文**/
 		Map<String, String> reqData = FsasService.sign(contentData,DemoBase.encoding);			//报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
 		String requestBackUrl = SDKConfig.getConfig().getBackRequestUrl();   			//交易请求url从配置文件读取对应属性文件fsas_sdk.properties中的 fsassdk.backTransUrl
@@ -433,16 +560,21 @@ public class BackRcvResponse extends BaseAction {
 					//成功 
 					//TODO
 					try {
-						TblPaymentReserve tblPaymentReserve = new TblPaymentReserve();
-						tblPaymentReserve.setPaymentId(txnNo);//交易流水号
-						tblPaymentReserve.setPaymentAccount(acctNo);//回款账户
-						tblPaymentReserve.setPaymentAccountName(acctName);//回款账户名称
-						tblPaymentReserve.setPaymentMoney(acctBal);//回款金额
-						tblPaymentReserve.setPaymentDate(txnDate);//回款日期
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+						TblPaymentReserveTmp tblPaymentReserveTmp = new TblPaymentReserveTmp();
+						tblPaymentReserveTmp.setPaymentId(sdf.format(new Date()));//交易流水号
+						tblPaymentReserveTmp.setPaymentAccount(PAYERACCTNO);//回款账户
+						tblPaymentReserveTmp.setPaymentAccountName(PAYERACCTNAME);//回款账户名称
+						tblPaymentReserveTmp.setPaymentMoney(acctBal);//回款金额
+						tblPaymentReserveTmp.setPaymentDate(txnDate);//回款日期
 						//2出款受理中
-						tblPaymentReserve.setPaymentStatus("2");//回款状态
+						tblPaymentReserveTmp.setPaymentStatus("2");//回款状态
 						
-						rspCode = t9130101BO.savePayment(tblPaymentReserve);
+						tblPaymentReserveTmp.setPaymentAuditStatus("y");						
+						tblPaymentReserveTmp.setPaymentPayStatus("回款处理中");
+						tblPaymentReserveTmp.setPaymentBatch(txnNo);//交易流水号
+						
+						rspCode = t9130101BO.savePaymentTmp(tblPaymentReserveTmp);
 					} catch (Exception e) {
 						// TODO: handle exception
 						LogUtil.writeErrorLog("回款后台处理失败："+e);
@@ -451,16 +583,21 @@ public class BackRcvResponse extends BaseAction {
 					//其他应答码为失败请排查原因
 					//TODO
 					try {
-						TblPaymentReserve tblPaymentReserve = new TblPaymentReserve();
-						tblPaymentReserve.setPaymentId(txnNo);//交易流水号
-						tblPaymentReserve.setPaymentAccount(acctNo);//回款账户
-						tblPaymentReserve.setPaymentAccountName(acctName);//回款账户名称
-						tblPaymentReserve.setPaymentMoney(acctBal);//回款金额
-						tblPaymentReserve.setPaymentDate(txnDate);//回款日期
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+						TblPaymentReserveTmp tblPaymentReserveTmp = new TblPaymentReserveTmp();
+						tblPaymentReserveTmp.setPaymentId(sdf.format(new Date()));//交易流水号
+						tblPaymentReserveTmp.setPaymentAccount(PAYERACCTNO);//回款账户
+						tblPaymentReserveTmp.setPaymentAccountName(PAYERACCTNAME);//回款账户名称
+						tblPaymentReserveTmp.setPaymentMoney(acctBal);//回款金额
+						tblPaymentReserveTmp.setPaymentDate(txnDate);//回款日期
 						//1出款失败
-						tblPaymentReserve.setPaymentStatus("1");//回款状态失败
+						tblPaymentReserveTmp.setPaymentStatus("1");//回款状态失败
 						
-						rspCode = t9130101BO.savePayment(tblPaymentReserve);
+						tblPaymentReserveTmp.setPaymentAuditStatus("y");
+						tblPaymentReserveTmp.setPaymentPayStatus("回款处理中");
+						tblPaymentReserveTmp.setPaymentBatch(txnNo);//交易流水号
+						
+						rspCode = t9130101BO.savePaymentTmp(tblPaymentReserveTmp);
 					} catch (Exception e) {
 						// TODO: handle exception
 						LogUtil.writeErrorLog("回款后台处理失败："+e);

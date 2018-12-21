@@ -388,7 +388,7 @@ public class T80701Action extends BaseSupport {
 ////	        contentData.put("payeeAccType", "01");              //选填字段 收款方账号类型01：银联卡99：其他
 //		    contentData.put("payeeAcctName", "中国石油天然气股份有限公司上海销售分公司");        //收款方账户名称 settleAccName
 
-		    contentData.put("txnAmt", "1");                                  //金额txnAmt
+		    contentData.put("txnAmt", sumAmt);                                  //金额txnAmt
 		    contentData.put("reqReserved", "00");                           //请求方保留域
 
 //		    contentData.put("payerAcctNo", payerAcctNo);   //付款方账号    可选字段 
@@ -586,7 +586,7 @@ public class T80701Action extends BaseSupport {
 		    contentData.put("payeeAcctNo", settleAccNum);                //收款方账号 settleAccNum
 //	        contentData.put("payeeAccType", "01");              //选填字段 收款方账号类型01：银联卡99：其他
 		    contentData.put("payeeAcctName", settleAccName);        //收款方账户名称 settleAccName
-		    contentData.put("txnAmt",txnAmt);                                  //金额
+		    contentData.put("txnAmt", sumAmt);                                  //金额
 //		    contentData.put("reqReserved", seqNo);                           //请求方保留域
 
 //		    contentData.put("payerAcctNo", payerAcctNo);   //付款方账号    可选字段 

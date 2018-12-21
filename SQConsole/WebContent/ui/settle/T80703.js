@@ -542,11 +542,12 @@ Ext.onReady(function() {
 			labelStyle: 'padding-left: 5px',
 			id: 'idAccFlag',
 			fieldLabel: '账户类型',
+			hiddenName: 'settleRpt',
 			width: 150,
 			store: new Ext.data.ArrayStore({
 				fields: ['valueField','displayField'],
 				data: [['1','对私账户'],['2','对公账户']],
-				reader: new Ext.data.ArrayReader()
+//				reader: new Ext.data.ArrayReader()
 			})
 		}]
 	});
@@ -602,7 +603,8 @@ Ext.onReady(function() {
 			start: 0,
 			instDate: typeof(queryForm.findById('instDateId').getValue()) == 'string' ? '' : queryForm.findById('instDateId').getValue().dateFormat('Ymd'),
 			accFlag: queryForm.getForm().findField('idAccFlag').getValue(),
-			mchtNo: queryForm.getForm().findField('mchtNo').getValue()
+			mchtNo: queryForm.getForm().findField('mchtNo').getValue(),
+			settleRpt: queryForm.getForm().findField('settleRpt').getValue()
 		});
 	});
 	

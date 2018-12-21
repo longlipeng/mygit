@@ -88,6 +88,8 @@ Ext.onReady(function() {
 			return '<font color="green">赎回审核通过</font>';
 		}else if(val=='6'){
 			return '<font color="red">删除待审核</font>';
+		}else if(val=='7'){
+			return '<font color="green">删除审核拒绝</font>';
 		}
 	}
 	
@@ -378,7 +380,7 @@ Ext.onReady(function() {
 		bbar: new Ext.PagingToolbar({
 			store: redempGridStore,
 		//	pageSize: System[QUERY_RECORD_COUNT],
-			pageSize: 20,
+			pageSize: 15,
 			displayInfo: true,
 			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
 			emptyMsg: '没有找到符合条件的记录'

@@ -176,8 +176,8 @@ Ext.onReady(function(){
 						url: 'T91301Action_redemp.asp',
 						params: {
 							infList: Ext.encode(array),
-							txnId: '80601',
-							subTxnId: '03'
+							txnId: '9130101',
+							subTxnId: '01'
 						},
 						success: function(rsp,opt) {
 							hideMask();
@@ -219,8 +219,8 @@ Ext.onReady(function(){
 				params: {
 					reserveId: record.get('reserveId'),
 					reserveMoney : record.get('reserveMoney'),
-					txnId: '10801',
-					subTxnId: '03'
+					txnId: '9130101',
+					subTxnId: '02'
 				},
 				success: function(rsp,opt) {
 					hideMask();
@@ -290,20 +290,20 @@ Ext.onReady(function(){
 	});
 	
 	//选中数据显示按钮
-	redempGrid.getSelectionModel().on({
-		'rowselect':function(){
-			//获取选中数据
-			var rec = redempGrid.getSelectionModel().getSelected();
-			if(rec.get('reserveStatus')=='1'){
-				Ext.getCmp('redemp').disable();
-			}else if(rec.get('reserveStatus')=='0'){
-				Ext.getCmp('redemp').enable();
-			}else{
-				Ext.getCmp('redemp').disable();
-			}
-			
-		}
-	});
+//	redempGrid.getSelectionModel().on({
+//		'rowselect':function(){
+//			获取选中数据
+//			var rec = redempGrid.getSelectionModel().getSelected();
+//			if(rec.get('reserveStatus')=='1'){
+//				Ext.getCmp('redemp').disable();
+//			}else if(rec.get('reserveStatus')=='0'){
+//				Ext.getCmp('redemp').enable();
+//			}else{
+//				Ext.getCmp('redemp').disable();
+//			}
+//			
+//		}
+//	});
 	
 	var mainView = new Ext.Viewport({
 		layout: 'border',

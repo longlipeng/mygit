@@ -46,6 +46,49 @@
 			column="FOCUS_DATE"
 			type="string"
 		/>
+		
+		<property
+			name="focusAuditStatus"
+			column="FOCUS_AUDIT_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="focusPayStatus"
+			column="FOCUS_PAY_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="focusLaunchTime"
+			column="FOCUS_LAUNCH_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="focusLaunchName"
+			column="FOCUS_LAUNCH_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="focusAuditTime"
+			column="FOCUS_AUDIT_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="focusAuditName"
+			column="FOCUS_AUDIT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="focusBatch"
+			column="FOCUS_BATCH"
+			type="string"
+		/>
+		
         
     </class>
 </hibernate-mapping>

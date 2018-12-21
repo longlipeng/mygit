@@ -1597,7 +1597,6 @@ Ext.onReady(function() {
 						xtype: 'textfield',
 						labelStyle: 'padding-left: 5px',
 						fieldLabel: '经营范围*',
-						maxLength: 60,
 						allowBlank: false,
 						id: 'busiRanges',
 						name: 'busiRanges'

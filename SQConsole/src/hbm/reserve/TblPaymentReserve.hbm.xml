@@ -46,6 +46,49 @@
 			column="PAYMENT_DATE"
 			type="string"
 		/>
+		
+		<property
+			name="paymentPayStatus"
+			column="PAYMENT_PAY_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="paymentLaunchTime"
+			column="PAYMENT_LAUNCH_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentLaunchName"
+			column="PAYMENT_LAUNCH_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentAuditTime"
+			column="PAYMENT_AUDIT_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentAuditName"
+			column="PAYMENT_AUDIT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentAuditStatus"
+			column="PAYMENT_AUDIT_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="paymentBatch"
+			column="PAYMENT_BATCH"
+			type="string"
+		/>
+		
         
     </class>
 </hibernate-mapping>

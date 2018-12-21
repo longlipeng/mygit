@@ -20,7 +20,7 @@ Ext.onReady(function(){
 			fieldLabel: '备款日期',
 			allowBlank: false,
 			blankText: '请选择备款日期'
-		},{
+		}/*,{
 			xtype: 'textfield',
 			fieldLabel: '备款金额*',
 			allowBlank: false,
@@ -28,7 +28,7 @@ Ext.onReady(function(){
 			emptyText: '请输入备款金额',
 			id: 'focusMoney',
 			name: 'focusMoney',
-		},{
+		}*/,{
 			xtype: 'panel',
 			html: '</br></br>'
 		}],
@@ -36,20 +36,19 @@ Ext.onReady(function(){
 		buttons: [{
 			text: '确定',
 			handler: function() {
-		//		var crtDate = Ext.getCmp('date').getValue();
+				var crtDate = Ext.getCmp('focusDate').getValue();
 				//获取前一日日期
-		//		var preDate = new Date(crtDate.getTime()-24*60*60*1000);
+				var preDate = new Date(crtDate.getTime()-24*60*60*1000);
 		//		alert(crtDate.format('Ymd')+'********'+preDate.format('Ymd'));
 				if(!queryForm.getForm().isValid()) {
 					return;
 				}
 				queryForm.getForm().submit({
 //					url: 'T91301Action_paymentBackFails.asp',
-					url: 'T91301Action_focusReserve.asp',
+					url: 'T91301Action_init.asp',
 					waitMsg: '正在请求备款任务，请稍后......',
 					success: function(form,action) {
-						showSuccessMsg(action.result.msg,queryForm);
-						
+						window.location.href = Ext.contextPath + '/page/reserve/T9130401.jsp?date='+Ext.getCmp('focusDate').getValue().format('Ymd')+'&predate='+preDate.format('Ymd');
 					},
 					failure: function(form,action) {
 						showAlertMsgH(action.result.msg,queryForm);

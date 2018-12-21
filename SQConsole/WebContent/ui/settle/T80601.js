@@ -459,7 +459,7 @@ Ext.onReady(function() {
 		bbar: new Ext.PagingToolbar({
 			store: redempGridStore,
 		//	pageSize: System[QUERY_RECORD_COUNT],
-			pageSize: 20,
+			pageSize: 15,
 			displayInfo: true,
 			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
 			emptyMsg: '没有找到符合条件的记录'

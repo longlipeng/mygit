@@ -18,6 +18,14 @@ Ext.onReady(function(){
 			{name: 'focusMoney',mapping: 'focusMoney'},
 			{name: 'focusDate',mapping: 'focusDate'},
 			{name: 'focusStatus',mapping: 'focusStatus'},
+			
+			{name: 'focusPayStatus',mapping: 'focusPayStatus'},
+			{name: 'focusLaunchTime',mapping: 'focusLaunchTime'},
+			{name: 'focusLaunchName',mapping: 'focusLaunchName'},
+			{name: 'focusAuditTime',mapping: 'focusAuditTime'},
+			{name: 'focusAuditName',mapping: 'focusAuditName'},
+			{name: 'focusAuditStatus',mapping: 'focusAuditStatus'},
+			{name: 'focusBatch',mapping: 'focusBatch'},
 		]),
 	//	autoLoad: true
 	});
@@ -31,12 +39,21 @@ Ext.onReady(function(){
 	
 	var redempColModel = new Ext.grid.ColumnModel([
    		sm,
-   		{header: '交易流水号',dataIndex: 'focusId',width: 100,align: 'center'},
+   		{header: '主键',dataIndex: 'focusId',width: 100,align: 'center',hidden: true},
+   		{header: '日期',dataIndex: 'focusDate',width: 100,align: 'center'},
    		{header: '备款账户',dataIndex: 'focusAccount',width: 100,align: 'center'},
    		{header: '备款账户名称',dataIndex: 'focusAccountName',width: 100,align: 'center'},
    		{header: '备款金额',dataIndex: 'focusMoney',width: 100,align: 'center'},
-   		{header: '备款时间',dataIndex: 'focusDate',width: 100,align: 'center'},
+   		{header: '备款时间',dataIndex: 'focusAuditTime',width: 100,align: 'center'},
    		{header: '备款状态',dataIndex: 'focusStatus',renderer: reserveStatus,width: 100,align: 'center'},
+   		
+   		{header: '审核状态',dataIndex: 'focusAuditStatus',renderer: reserveStatuss,width: 100,align: 'center',hidden: true},
+   		{header: '支付状态',dataIndex: 'focusPayStatus',width: 100,align: 'center'},
+  		{header: '发起日期',dataIndex: 'focusLaunchTime',width: 100,align: 'center',hidden: true},
+  		{header: '发起人员',dataIndex: 'focusLaunchName',width: 100,align: 'center',hidden: true},
+  		
+  		{header: '审核人员',dataIndex: 'focusAuditName',width: 100,align: 'center',hidden: true},
+  		{header: '交易流水号',dataIndex: 'focusBatch',width: 100,align: 'center'},
    	]);
    	
 	//备款状态
@@ -49,6 +66,33 @@ Ext.onReady(function(){
    			return '<font color="gray">备款已受理</font>';
    		}
 	}
+	
+	//审核状态
+   	function reserveStatuss(val){
+   		/*if(val=='0'){
+			return '<font color="green">正常</font>';
+		}else */if(val=='1'){
+			return '<font color="gray">新增待审核</font>';
+		}else if(val=='2'){
+			return '<font color="green">新增审核通过</font>';
+		}else if(val=='3'){
+			return '<font color="gray">备款待审核</font>';
+		}else if(val=='4'){
+			return '<font color="green">备款审核拒绝</font>';
+		}else if(val=='5'){
+			return '<font color="green">备款审核通过</font>';
+		}else if(val=='6'){
+			return '<font color="gray">删除待审核</font>';
+		}else if(val=='7'){
+			return '<font color="green">删除审核拒绝</font>';
+		}else if(val=='8'){
+			return '<font color="gray">修改待审核</font>';
+		}else if(val=='9'){
+			return '<font color="green">修改审核通过</font>';
+		}else if(val=='0'){
+			return '<font color="green">修改审核拒绝</font>';
+		}
+   	}
 
    	/**
 	 ** 加法函数，用来得到精确的加法结果
@@ -104,7 +148,7 @@ Ext.onReady(function(){
 	};*/
 	
 	var BackFillMenu = {
-		text: '客户回填',
+		text: '回填状态查询',
 		width: 85,
 		iconCls: 'edit',
 		handler: function() {
@@ -131,6 +175,14 @@ Ext.onReady(function(){
 								focusMoney: record.get('focusMoney'),//备款金额
 								focusStatus: record.get('focusStatus'),//备款状态
 								focusDate: record.get('focusDate'),//备款日期
+								
+								focusAuditStatus: record.get('focusAuditStatus'),//审核状态
+								focusPayStatus: record.get('focusPayStatus'),//支付状态
+								focusLaunchTime: record.get('focusLaunchTime'),//发起日期
+								focusLaunchName: record.get('focusLaunchName'),//发起人员
+								focusAuditTime: record.get('focusAuditTime'),//审核日期
+								focusAuditName: record.get('focusAuditName'),//审核人员
+								focusBatch: record.get('focusBatch'),//交易流水号
 							};
 							array.push(data);
 						}
@@ -138,8 +190,8 @@ Ext.onReady(function(){
 						url: 'T91301Action_focusBackFill.asp',
 						params: {
 							infList: Ext.encode(array),
-							txnId: '80601',
-							subTxnId: '06'
+							txnId: '91305',
+							subTxnId: '01'
 						},
 						success: function(rsp,opt) {
 							hideMask();
@@ -304,7 +356,7 @@ Ext.onReady(function(){
 		bbar: new Ext.PagingToolbar({
 			store: redempGridStore,
 		//	pageSize: System[QUERY_RECORD_COUNT],
-			pageSize: 20,
+			pageSize: 15,
 			displayInfo: true,
 			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
 			emptyMsg: '没有找到符合条件的记录'

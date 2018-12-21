@@ -1,10 +1,14 @@
 package com.huateng.bo.reserve;
 
 import com.huateng.po.reserve.TblBalanceReserveQuery;
+import com.huateng.po.reserve.TblFictitiousQuery;
 import com.huateng.po.reserve.TblFocusReserve;
+import com.huateng.po.reserve.TblFocusReserveTmp;
+import com.huateng.po.reserve.TblHistoryQuery;
 import com.huateng.po.reserve.TblMchtSettleReserve;
 import com.huateng.po.reserve.TblMchtSettleReserveTmp;
 import com.huateng.po.reserve.TblPaymentReserve;
+import com.huateng.po.reserve.TblPaymentReserveTmp;
 
 public interface T9130101BO {
 
@@ -70,21 +74,21 @@ public interface T9130101BO {
 	public TblFocusReserve getFocus(String focusId);
 	
 	/**
-	 * 出款交易表   新增
+	 * 回款交易表   新增
 	 * @param tblPaymentReserve
 	 * @return
 	 */
 	public String savePayment(TblPaymentReserve tblPaymentReserve);
 	
 	/**
-	 * 出款交易表   修改
+	 * 回款交易表   修改
 	 * @param tblPaymentReserve
 	 * @return
 	 */
 	public String upPayment(TblPaymentReserve tblPaymentReserve);
 	
 	/**
-	 * 出款交易表   查询
+	 * 回款交易表   查询
 	 * @param paymentId
 	 * @return
 	 */
@@ -96,5 +100,75 @@ public interface T9130101BO {
 	 * @return
 	 */
 	public String addBalance(TblBalanceReserveQuery tblBalanceReserveQuery);
+	
+	/**
+	 * 回款交易表   新增
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public String savePaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp);
+	
+	/**
+	 * 回款交易表   修改
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public String upPaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp);
+	
+	/**
+	 * 回款交易表   查询
+	 * @param paymentId
+	 * @return
+	 */
+	public TblPaymentReserveTmp getPaymentTmp(String paymentId);
+	
+	/**
+	 * 回款交易表   删除
+	 * @param paymentId
+	 * @return
+	 */
+	public String delPaymentTmp(String paymentId);
+	
+	/**
+	 * 备款交易表   新增
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public String saveFocusTmp(TblFocusReserveTmp tblFocusReserveTmp);
+	
+	/**
+	 * 备款交易表   修改
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public String upFocusTmp(TblFocusReserveTmp tblFocusReserveTmp);
+	
+	/**
+	 * 备款交易表   查询
+	 * @param paymentId
+	 * @return
+	 */
+	public TblFocusReserveTmp getFocusTmp(String focusId);
+	
+	/**
+	 * 备款交易表   删除
+	 * @param paymentId
+	 * @return
+	 */
+	public String delFocusTmp(String focusId);
+	
+	/**
+	 * 虚拟记账余额查询
+	 * @param tblFictitiousQuery
+	 * @return
+	 */
+	public String saveFictitious(TblFictitiousQuery tblFictitiousQuery);
+	
+	/**
+	 * 历史余额查询
+	 * @param tblHistoryQuery
+	 * @return
+	 */
+	public String saveHistory(TblHistoryQuery tblHistoryQuery);
 	
 }

@@ -2149,24 +2149,67 @@
 			<Method value="getrosterGridStoreTmpSH" />
 		</SyncMode>
 	</Grid>
-	<!--人行集中缴存备款-->
+	
+	<!--人行集中缴存备款回填-->
 	<Grid id="focusStore" type="sync">
 		<Columns>
-			<![CDATA[focusId,focusAccount,focusAccountName,focusMoney,focusStatus,focusDate]]>
+			<![CDATA[focusId,focusAccount,focusAccountName,focusMoney,focusStatus,focusDate,focusPayStatus,focusLaunchTime,focusLaunchName,focusAuditTime,focusAuditName,focusAuditStatus,focusBatch]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getfocusStore" />
 		</SyncMode>
 	</Grid>
-	<!--人行集中缴存出款-->
+	
+	<!--人行集中缴存备款查询-->
+	<Grid id="focusStore1" type="sync">
+		<Columns>
+			<![CDATA[focusId,focusAccount,focusAccountName,focusMoney,focusStatus,focusDate,focusPayStatus,focusLaunchTime,focusLaunchName,focusAuditTime,focusAuditName,focusAuditStatus,focusBatch]]>
+		</Columns>
+		<SyncMode>
+			<Method value="getfocusStore1" />
+		</SyncMode>
+	</Grid>
+	
+	<!--人行集中缴存备款审核-->
+	<Grid id="focusStore2" type="sync">
+		<Columns>
+			<![CDATA[focusId,focusAccount,focusAccountName,focusMoney,focusStatus,focusDate,focusPayStatus,focusLaunchTime,focusLaunchName,focusAuditTime,focusAuditName,focusAuditStatus,focusBatch]]>
+		</Columns>
+		<SyncMode>
+			<Method value="getfocusStore2" />
+		</SyncMode>
+	</Grid>
+	
+	
+	<!--人行集中缴存回款回填-->
 	<Grid id="payMentStore" type="sync">
 		<Columns>
-			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate]]>
+			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getpayMentStore" />
 		</SyncMode>
 	</Grid>
+	<!--人行集中缴存回款查询-->
+	<Grid id="payMentStore1" type="sync">
+		<Columns>
+			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch]]>
+		</Columns>
+		<SyncMode>
+			<Method value="getpayMentStore1" />
+		</SyncMode>
+	</Grid>
+	<!--人行集中缴存回款审核-->
+	<Grid id="payMentStore2" type="sync">
+		<Columns>
+			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch]]>
+		</Columns>
+		<SyncMode>
+			<Method value="getpayMentStore2" />
+		</SyncMode>
+	</Grid>
+	
+	
 	<!--人行备付金余额查询-->
 	<Grid id="balanceReserveQuery" type="sync">
 		<Columns>
@@ -2174,6 +2217,26 @@
 		</Columns>
 		<SyncMode>
 			<Method value="getbalanceReserveQuery" />
+		</SyncMode>
+	</Grid>
+	
+	<!--虚拟记账余额查询-->
+	<Grid id="tblFictitiousQuery" type="sync">
+		<Columns>
+			<![CDATA[fictitiousNo,fictitiousDate,fictitiousAcctNo,fictitiousAcctName,fictitiousAcctBal,fictitiousAvlbBal]]>
+		</Columns>
+		<SyncMode>
+			<Method value="gettblFictitiousQuery" />
+		</SyncMode>
+	</Grid>
+	
+	<!--历史余额查询-->
+	<Grid id="tblHistoryQuery" type="sync">
+		<Columns>
+			<![CDATA[historyNo,historyDate,historyAcctNo,historyAcctName,historyOpenBal,historyEncBal,historyTotalDbtrQty,historyTotalCdtrQty,historyTotalDbtrAmt,historyTotalCdtrAmt]]>
+		</Columns>
+		<SyncMode>
+			<Method value="gettblHistoryQuery" />
 		</SyncMode>
 	</Grid>
 	

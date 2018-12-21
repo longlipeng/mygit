@@ -22,8 +22,10 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.Proxy;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -33,7 +35,9 @@ import java.util.Map.Entry;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.huateng.common.SysParamConstants;
 import com.huateng.sdk.BaseHttpSSLSocketFactory.TrustAnyHostnameVerifier;
+import com.huateng.system.util.SysParamUtil;
 
 import  net.sf.json.JSONObject;
 /**
@@ -291,9 +295,18 @@ public class HttpClient {
 	 * @throws ProtocolException
 	 */
 	private HttpURLConnection createConnectionPost(String encoding) throws ProtocolException {
+		String HDIP = SysParamUtil.getParam(SysParamConstants.HDIP);//代理ip
+		String HDPORT = SysParamUtil.getParam(SysParamConstants.HDPORT);//代理端口
+		
 		HttpURLConnection httpURLConnection = null;
 		try {
 			httpURLConnection = (HttpURLConnection) url.openConnection();
+			
+			//代理配置
+//			Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(HDIP,Integer.parseInt(HDPORT)));
+//			LogUtil.writeLog("ip:" + HDIP + "port:" + HDPORT);
+//			httpURLConnection = (HttpURLConnection) url.openConnection(proxy);
+			
 		} catch (IOException e) {
 			LogUtil.writeErrorLog(e.getMessage(), e);
 			return null;

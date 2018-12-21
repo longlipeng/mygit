@@ -2,10 +2,14 @@ package com.huateng.dao.impl.reserve;
 
 import com.huateng.dao._RootDAO;
 import com.huateng.po.reserve.TblBalanceReserveQuery;
+import com.huateng.po.reserve.TblFictitiousQuery;
 import com.huateng.po.reserve.TblFocusReserve;
+import com.huateng.po.reserve.TblFocusReserveTmp;
+import com.huateng.po.reserve.TblHistoryQuery;
 import com.huateng.po.reserve.TblMchtSettleReserve;
 import com.huateng.po.reserve.TblMchtSettleReserveTmp;
 import com.huateng.po.reserve.TblPaymentReserve;
+import com.huateng.po.reserve.TblPaymentReserveTmp;
 
 public class TblReserveSettleDao extends _RootDAO<TblMchtSettleReserve> implements com.huateng.dao.iface.reserve.TblReserveSettleDao {
 
@@ -78,5 +82,57 @@ public class TblReserveSettleDao extends _RootDAO<TblMchtSettleReserve> implemen
 		return (TblPaymentReserve) super.get(TblPaymentReserve.class , paymentId);
 	}
 
+	
+	public void savePaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp) {
+		// TODO Auto-generated method stub
+		super.save(tblPaymentReserveTmp);
+	}
+
+	public void upPaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp) {
+		// TODO Auto-generated method stub
+		super.update(tblPaymentReserveTmp);
+	}
+
+	public TblPaymentReserveTmp getPaymentTmp(String paymentId) {
+		// TODO Auto-generated method stub
+		return (TblPaymentReserveTmp) super.get(TblPaymentReserveTmp.class, paymentId);
+	}
+
+	public void delPaymentTmp(String paymentId) {
+		// TODO Auto-generated method stub
+		super.delete(getPaymentTmp(paymentId));
+	}
+
+	public void saveFocusTmp(TblFocusReserveTmp tblFocusReserveTmp) {
+		// TODO Auto-generated method stub
+		super.save(tblFocusReserveTmp);
+	}
+
+	public void upFocusTmp(TblFocusReserveTmp tblFocusReserveTmp) {
+		// TODO Auto-generated method stub
+		super.update(tblFocusReserveTmp);
+	}
+
+	public TblFocusReserveTmp getFocusTmp(String focusId) {
+		// TODO Auto-generated method stub
+		return (TblFocusReserveTmp) super.get(TblFocusReserveTmp.class, focusId);
+	}
+
+	public void delFocusTmp(String focusId) {
+		// TODO Auto-generated method stub
+		super.delete(getFocusTmp(focusId));
+	}
+
+	public void saveFictitious(TblFictitiousQuery tblFictitiousQuery) {
+		// TODO Auto-generated method stub
+		super.save(tblFictitiousQuery);
+	}
+
+	public void saveHistory(TblHistoryQuery tblHistoryQuery) {
+		// TODO Auto-generated method stub
+		super.save(tblHistoryQuery);
+	}
+
+	
 	
 }

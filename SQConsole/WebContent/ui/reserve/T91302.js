@@ -170,8 +170,8 @@ Ext.onReady(function(){
 						url: 'T91301Action_redempBackFill.asp',
 						params: {
 							infList: Ext.encode(array),
-							txnId: '80601',
-							subTxnId: '06'
+							txnId: '91302',
+							subTxnId: '01'
 						},
 						success: function(rsp,opt) {
 							hideMask();
@@ -234,8 +234,8 @@ Ext.onReady(function(){
 						url: 'T91301Action_redempBackFillSDFail.asp',
 						params: {
 							infList: Ext.encode(array),
-							txnId: '80601',
-							subTxnId: '07'
+							txnId: '91302',
+							subTxnId: '02'
 						},
 						success: function(rsp,opt) {
 							hideMask();
@@ -298,8 +298,8 @@ Ext.onReady(function(){
 						url: 'T91301Action_redempBackFillSDSuccess.asp',
 						params: {
 							infList: Ext.encode(array),
-							txnId: '80601',
-							subTxnId: '08'
+							txnId: '91302',
+							subTxnId: '03'
 						},
 						success: function(rsp,opt) {
 							hideMask();
@@ -349,7 +349,7 @@ Ext.onReady(function(){
 		bbar: new Ext.PagingToolbar({
 			store: redempGridStore,
 		//	pageSize: System[QUERY_RECORD_COUNT],
-			pageSize: 20,
+			pageSize: 15,
 			displayInfo: true,
 			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
 			emptyMsg: '没有找到符合条件的记录'

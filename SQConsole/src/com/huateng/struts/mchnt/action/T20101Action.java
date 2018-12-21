@@ -482,6 +482,10 @@ public class T20101Action extends BaseSupport{
 			/*TblMchtSettleInfTmp settleTmp = service.getSettleInfTmp(mchtNo);*/
 			//商户补充信息
 			TblMchtSupp1Tmp supp1Tmp=service.getMchtSupp1Tmp(mchtNo);
+			//经营范围
+			TblMchtBaseBusiRange tblMchtBaseBusiRange = service.getBaseBusiRange(tmp.getBusiRange());
+			tblMchtBaseBusiRange.setBusiRanges(busiRanges);
+			service.upBaseBusiRange(tblMchtBaseBusiRange);
 			
 			/*String sql1 = "select BUSI_RANGE_ID,MCHT_NO,BUSI_RANGE from TBL_MCHT_BASE_BUSI_RANGE where MCHT_NO = '" + mchtNo + "'";
 			List<Object[]> lists = CommonFunction.getCommQueryDAO().findBySQLQuery(sql1);
@@ -3507,6 +3511,9 @@ public class T20101Action extends BaseSupport{
 	//经营范围
 	private String busiRange;
 	
+	//经营范围
+	private String busiRanges;
+	
 	//邮政编号
 	private String postalCode;
 	
@@ -3641,6 +3648,14 @@ public class T20101Action extends BaseSupport{
 	private String legalProfession;
 	
 
+	public String getBusiRanges() {
+		return busiRanges;
+	}
+
+	public void setBusiRanges(String busiRanges) {
+		this.busiRanges = busiRanges;
+	}
+	
 	public String getLegalGender() {
 		return legalGender;
 	}

@@ -201,6 +201,12 @@ public class SysParamConstants {
 	public static final String ACCTNAME = "ACCTNAME";
 	//ACS备付金存管账号
 	public static final String BANKNO = "BANKNO";
+	
+	
+	//人行监管入账代理ip
+	public static final String HDIP = "HDIP";
+	//人行监管入账代理端口
+	public static final String HDPORT = "HDPORT";
 		
 	
 }

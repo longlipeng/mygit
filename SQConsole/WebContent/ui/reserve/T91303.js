@@ -171,8 +171,8 @@ Ext.onReady(function(){
 //						url: 'backRcvResponse.asp',
 						params: {
 							infList: Ext.encode(array),
-							txnId: '80601',
-							subTxnId: '04'
+							txnId: '91303',
+							subTxnId: '01'
 						},
 						success: function(rsp,opt) {
 							hideMask();
@@ -235,8 +235,8 @@ Ext.onReady(function(){
 						url: 'T91301Action_redempRefuse.asp',
 						params: {
 							infList: Ext.encode(array),
-							txnId: '80601',
-							subTxnId: '05'
+							txnId: '91303',
+							subTxnId: '02'
 						},
 						success: function(rsp,opt) {
 							hideMask();
@@ -285,7 +285,7 @@ Ext.onReady(function(){
 		bbar: new Ext.PagingToolbar({
 			store: redempGridStore,
 		//	pageSize: System[QUERY_RECORD_COUNT],
-			pageSize: 20,
+			pageSize: 15,
 			displayInfo: true,
 			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
 			emptyMsg: '没有找到符合条件的记录'

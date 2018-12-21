@@ -198,13 +198,21 @@
 				<!--商户备款信息-->
 				<value>hbm/reserve/TblMchtSettleReserve.hbm.xml</value>
 				<value>hbm/reserve/TblMchtSettleReserveTmp.hbm.xml</value>
-				<value>hbm/reserve/TblFocusReserve.hbm.xml</value>
-				<value>hbm/reserve/TblPaymentReserve.hbm.xml</value>
 				<!--白名单信息-->
 				<value>hbm/reserve/TblSettleRosterInfTmp.hbm.xml</value>
 				<value>hbm/reserve/TblSettleRosterInf.hbm.xml</value>
 				<!--人行备付金余额查询-->
 				<value>hbm/reserve/TblBalanceReserveQuery.hbm.xml</value>
+				<!--虚拟记账余额查询-->
+				<value>hbm/reserve/TblFictitiousQuery.hbm.xml</value>
+				<!--历史余额查询-->
+				<value>hbm/reserve/TblHistoryQuery.hbm.xml</value>
+				<!--人行集中缴存备款-->
+				<value>hbm/reserve/TblFocusReserve.hbm.xml</value>
+				<value>hbm/reserve/TblFocusReserveTmp.hbm.xml</value>
+				<!--人行集中缴存回款-->
+				<value>hbm/reserve/TblPaymentReserve.hbm.xml</value>
+				<value>hbm/reserve/TblPaymentReserveTmp.hbm.xml</value>
 				<!-- 商户服务-->
 				<value>hbm/mchtSrv/TblProfessionalOrgan.hbm.xml</value>
 				<value>hbm/mchtSrv/TblPaperDefInf.hbm.xml</value>

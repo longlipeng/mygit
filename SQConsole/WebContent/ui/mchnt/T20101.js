@@ -479,9 +479,11 @@ Ext.onReady(function() {
 			}
 		});
 	});
+	
 	termStore.on('beforeload', function() {
 		termStore.removeAll();
 		//20120821修复bug：点击右边终端信息列表刷新按钮记录被清除
+		//属性拷贝
 		Ext.apply(this.baseParams, {
             start: 0,
             mchntNo: mchntGrid.getSelectionModel().getSelected().data.mchtNo

@@ -3,10 +3,14 @@ package com.huateng.bo.impl.reserve;
 import com.huateng.bo.reserve.T9130101BO;
 import com.huateng.dao.iface.reserve.TblReserveSettleDao;
 import com.huateng.po.reserve.TblBalanceReserveQuery;
+import com.huateng.po.reserve.TblFictitiousQuery;
 import com.huateng.po.reserve.TblFocusReserve;
+import com.huateng.po.reserve.TblFocusReserveTmp;
+import com.huateng.po.reserve.TblHistoryQuery;
 import com.huateng.po.reserve.TblMchtSettleReserve;
 import com.huateng.po.reserve.TblMchtSettleReserveTmp;
 import com.huateng.po.reserve.TblPaymentReserve;
+import com.huateng.po.reserve.TblPaymentReserveTmp;
 
 public class T9130101BOTarget implements T9130101BO {
 
@@ -89,6 +93,65 @@ public class T9130101BOTarget implements T9130101BO {
 		return tblReserveSettleDao.getPayment(paymentId);
 	}
 
+	public String savePaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.savePaymentTmp(tblPaymentReserveTmp);
+		return "00";
+	}
+
+	public String upPaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.upPaymentTmp(tblPaymentReserveTmp);
+		return "00";
+	}
+
+	public TblPaymentReserveTmp getPaymentTmp(String paymentId) {
+		// TODO Auto-generated method stub
+		return tblReserveSettleDao.getPaymentTmp(paymentId);
+	}
+
+	public String delPaymentTmp(String paymentId) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.delPaymentTmp(paymentId);
+		return "00";
+	}
+
+	public String saveFocusTmp(TblFocusReserveTmp tblFocusReserveTmp) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.saveFocusTmp(tblFocusReserveTmp);
+		return "00";
+	}
+
+	public String upFocusTmp(TblFocusReserveTmp tblFocusReserveTmp) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.upFocusTmp(tblFocusReserveTmp);
+		return "00";
+	}
+
+	public TblFocusReserveTmp getFocusTmp(String focusId) {
+		// TODO Auto-generated method stub
+		return tblReserveSettleDao.getFocusTmp(focusId);
+	}
+
+	public String delFocusTmp(String focusId) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.delFocusTmp(focusId);
+		return "00";
+	}
+
+	public String saveFictitious(TblFictitiousQuery tblFictitiousQuery) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.saveFictitious(tblFictitiousQuery);
+		return "00";
+	}
+
+	public String saveHistory(TblHistoryQuery tblHistoryQuery) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.saveHistory(tblHistoryQuery);
+		return "00";
+	}
+
+	
 
 	
 }

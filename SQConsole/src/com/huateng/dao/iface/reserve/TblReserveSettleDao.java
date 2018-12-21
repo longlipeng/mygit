@@ -1,10 +1,14 @@
 package com.huateng.dao.iface.reserve;
 
 import com.huateng.po.reserve.TblBalanceReserveQuery;
+import com.huateng.po.reserve.TblFictitiousQuery;
 import com.huateng.po.reserve.TblFocusReserve;
+import com.huateng.po.reserve.TblFocusReserveTmp;
+import com.huateng.po.reserve.TblHistoryQuery;
 import com.huateng.po.reserve.TblMchtSettleReserve;
 import com.huateng.po.reserve.TblMchtSettleReserveTmp;
 import com.huateng.po.reserve.TblPaymentReserve;
+import com.huateng.po.reserve.TblPaymentReserveTmp;
 
 public interface TblReserveSettleDao {
 
@@ -96,5 +100,75 @@ public interface TblReserveSettleDao {
 	 * @return
 	 */
 	public void addBalance(TblBalanceReserveQuery tblBalanceReserveQuery);
+	
+	/**
+	 * 回款交易表   新增
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public void savePaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp);
+	
+	/**
+	 * 回款交易表   修改
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public void upPaymentTmp(TblPaymentReserveTmp tblPaymentReserveTmp);
+	
+	/**
+	 * 回款交易表   查询
+	 * @param paymentId
+	 * @return
+	 */
+	public TblPaymentReserveTmp getPaymentTmp(String paymentId);
+	
+	/**
+	 * 回款交易表   删除
+	 * @param paymentId
+	 * @return
+	 */
+	public void delPaymentTmp(String paymentId);
+	
+	/**
+	 * 备款交易表   新增
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public void saveFocusTmp(TblFocusReserveTmp tblFocusReserveTmp);
+	
+	/**
+	 * 备款交易表   修改
+	 * @param tblPaymentReserveTmp
+	 * @return
+	 */
+	public void upFocusTmp(TblFocusReserveTmp tblFocusReserveTmp);
+	
+	/**
+	 * 备款交易表   查询
+	 * @param paymentId
+	 * @return
+	 */
+	public TblFocusReserveTmp getFocusTmp(String focusId);
+	
+	/**
+	 * 备款交易表   删除
+	 * @param paymentId
+	 * @return
+	 */
+	public void delFocusTmp(String focusId);
+	
+	/**
+	 * 虚拟记账余额查询
+	 * @param tblFictitiousQuery
+	 * @return
+	 */
+	public void saveFictitious(TblFictitiousQuery tblFictitiousQuery);
+	
+	/**
+	 * 历史余额查询
+	 * @param tblHistoryQuery
+	 * @return
+	 */
+	public void saveHistory(TblHistoryQuery tblHistoryQuery);
 	
 }

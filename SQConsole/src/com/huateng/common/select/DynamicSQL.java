@@ -256,6 +256,30 @@ public static DynamicSqlBean getbrhId(String inputValue, Operator operator, Http
 	}
 	
 	/**
+	 * 根据回款账户条件查询
+	 * @return
+	 */
+	public static DynamicSqlBean getPayAccountAll(String inputValue, Operator operator, HttpServletRequest request){
+		String sql = "select PAYMENT_ACCOUNT, trim(PAYMENT_ACCOUNT) ||' - '|| trim(PAYMENT_ACCOUNT_NAME) from TBL_PAYMENT_RESERVE_TMP ";
+		
+		sql += provideSql(sql, "PAYMENT_ACCOUNT ||' - '|| PAYMENT_ACCOUNT_NAME", inputValue);
+		sql += " order by PAYMENT_ACCOUNT";
+		return new DynamicSqlBean(sql, commQueryDAO);
+	}
+	
+	/**
+	 * 根据回款账户条件查询
+	 * @return
+	 */
+	public static DynamicSqlBean getFocusAccountAll(String inputValue, Operator operator, HttpServletRequest request){
+		String sql = "select FOCUS_ACCOUNT, trim(FOCUS_ACCOUNT) ||' - '|| trim(FOCUS_ACCOUNT_NAME) from TBL_FOCUS_RESERVE_TMP ";
+		
+		sql += provideSql(sql, "FOCUS_ACCOUNT ||' - '|| FOCUS_ACCOUNT_NAME", inputValue);
+		sql += " order by FOCUS_ACCOUNT";
+		return new DynamicSqlBean(sql, commQueryDAO);
+	}
+	
+	/**
 	 * 根据白名单账户条件查询
 	 * @return
 	 */

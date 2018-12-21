@@ -2,6 +2,7 @@ package com.huateng.common.grid;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10531,7 +10532,7 @@ public class GridConfigMethod {
 		String sql = "SELECT MCHT_NO,TERM_ID,SETTLE_RPT,CURR_ACCOUNT,SETTLE_BANK_NM,SETTLE_BANK_NO,COMP_ACCOUNT_BANK_CODE,"
 				+ "COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT,BANK_ACCOUNT_CODE,CORP_BANK_NAME,LEGAL_NAM,"
 				+ "FEE_ACCT,DIR_BANK_CODE,DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT,DIR_FLAG,AUTO_FLAG,HOLIDAY_SET_FLAG,CRE_FLAG,RETURN_FEE_FLAG,SETTLE_TYPE,SETTLE_CHN,DIR_OPEN_BANK , DIR_BANK_PROVINCE , DIR_BANK_CITY , COMP_OPEN_BANK , COMP_BANK_PROVINCE , COMP_BANK_CITY , CORP_OPEN_BANK , CORP_BANK_PROVINCE , CORP_BANK_CITY "
-				+ " from TBL_MCHT_SETTLE_INF_TMP where MCHT_NO='"
+				+ " from TBL_MCHT_SETTLE_INF where MCHT_NO='"
 				+ request.getParameter("mchtNo") + "'";
 		if (!StringUtil.isEmpty(request.getParameter("termId"))) {
 			sql += " and TERM_ID='"
@@ -11356,43 +11357,36 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQaudit(int begin,
-			HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQaudit(int begin,HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
 		// add lhf
 		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
 		if (isNotEmpty(request.getParameter("instDate"))) {
-			whereSql.append(" and a.INST_DATE = '"
-					+ request.getParameter("instDate") + "' ");
+			whereSql.append(" and a.INST_DATE = '" + request.getParameter("instDate") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("accFlag"))) {
-			whereSql.append(" and a.ACC_FLAG = '"
-					+ request.getParameter("accFlag") + "' ");
+			whereSql.append(" and a.ACC_FLAG = '" + request.getParameter("accFlag") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" and a.MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
+			whereSql.append(" and a.MCHT_NO = '" + request.getParameter("mchtNo") + "' ");
+		}
+		if (isNotEmpty(request.getParameter("settleRpt"))) {
+			whereSql.append(" and c.SETTLE_RPT = '" + request.getParameter("settleRpt") + "' ");
 		}
 		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
 				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
 				+ whereSql.toString();
-		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
-				+ " order by a.INST_DATE DESC ) ";
+		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString() + " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
 		List<Object[]> datasList = null;
 
 		for (Object[] objects : dataList) {
 			Object mchtNo = objects[2];// 商户号
 			Object settleRpt = objects[31];// 结算账户类型
 			if (settleRpt.equals("1")) {// 对私
-				datasList = CommonFunction
-						.getCommQueryDAO()
-						.findBySQLQuery(
-								"select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "
-										+ mchtNo + "");
+				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = " + mchtNo + "");
 				Object[] objects2 = datasList.get(0);
 				Object corpBankName = objects2[0];// 开户行名称
 				Object feeAcctNm = objects2[1];// 账户名称
@@ -11404,24 +11398,16 @@ public class GridConfigMethod {
 				// select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from
 				// TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
 			} else if (settleRpt.equals("2")) {// 对公
-				datasList = CommonFunction
-						.getCommQueryDAO()
-						.findBySQLQuery(
-								"select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
-										+ mchtNo + "'");
+				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '" + mchtNo + "'");
 				Object[] objects3 = datasList.get(0);
-				Object compAccountBankName = objects3[0];
-				Object settleAcctNm = objects3[1];
-				Object settleAcct = objects3[2];
+				Object compAccountBankName = objects3[0];// 开户行名称
+				Object settleAcctNm = objects3[1];// 账户名称
+				Object settleAcct = objects3[2];// 账户账号
 				objects[10] = settleAcctNm;
 				objects[11] = settleAcct;
 				objects[12] = compAccountBankName;
 			} else if (settleRpt.equals("3")) {// 定向
-				datasList = CommonFunction
-						.getCommQueryDAO()
-						.findBySQLQuery(
-								"select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
-										+ mchtNo + "'");
+				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '" + mchtNo + "'");
 				Object[] objects4 = datasList.get(0);
 				Object dirBankNname = objects4[0];
 				Object dirAaccountNname = objects4[1];
@@ -11432,8 +11418,7 @@ public class GridConfigMethod {
 			}
 
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
-				countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -11859,12 +11844,10 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		String imagesId = request.getParameter("imagesId");
 		String beneficiaryId = request.getParameter("beneficiaryId");
-		String beneficiaryExpiration = request
-				.getParameter("beneficiaryExpiration");
+		String beneficiaryExpiration = request.getParameter("beneficiaryExpiration");
 
 		List<Object[]> dataList = new ArrayList<Object[]>();
-		String basePath = SysParamUtil
-				.getParam(SysParamConstants.FILE_UPLOAD_DISK);
+		String basePath = SysParamUtil.getParam(SysParamConstants.FILE_UPLOAD_DISK);
 
 		// 追加文件夹
 		basePath += beneficiaryId + "_" + beneficiaryExpiration + "/";
@@ -11996,7 +11979,7 @@ public class GridConfigMethod {
 		}
 
 		String sql = "select REDEMPTION_ID,REDEMPTION_ACCOUNT_NAME,REDEMPTION_ACCOUNT,REDEMPTION_MONEY,REDEMPTION_BANK_CARD,REDEMPTION_STATUS,REDEMPTION_ACCOUNT_STATUS,REDEMPTION_PAY_STATUS,REDEMPTION_ADD_TIME,REDEMPTION_ADD_NAME,REDEMPTION_AUDIT_DATE,REDEMPTION_AUDIT_NAME,REDEMPTION_ENTRY from TBL_SETTLE_REDEMPTION_INF_TMP "
-				+ "where 1=1 and REDEMPTION_ACCOUNT_STATUS <> '0'"
+				+ "where 1=1 and (REDEMPTION_ACCOUNT_STATUS <> '0' or REDEMPTION_ACCOUNT_STATUS is null)"
 				+ sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by REDEMPTION_ID";
@@ -12082,8 +12065,7 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getredempGridStoreTmpBK(int begin,
-			HttpServletRequest request) {
+	public static Object[] getredempGridStoreTmpBK(int begin,HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
 		// 前一日日期
@@ -12092,13 +12074,12 @@ public class GridConfigMethod {
 		String reserveMoney = request.getParameter("reserveMoney");
 
 		if (isNotEmpty(request.getParameter("date"))) {
-			sb.append(" and RESERVE_TIME = '" + request.getParameter("date")
-					+ "'");
+			sb.append(" and RESERVE_TIME = '" + request.getParameter("date") + "'");
 		}
-
+		
 		String sql = "select RESERVE_ID,RESERVE_TIME,REDEMPTION_MONEY,RESERVE_SETTLE_MONEY,RESERVE_MONEY,RESERVE_STATUS,RESERVE_SETTLE_STATUS,RESERVE_PAY_STATUS,RESERVE_LAUNCH_TIME,RESERVE_LAUNCH_NAME,RESERVE_AUDIT_TIME,RESERVE_AUDIT_NAME,RESERVE_BATCH "
 				+ "from TBL_MCHT_SETTLE_RESERVE_TMP "
-				+ "where RESERVE_SETTLE_STATUS <> '0'" + sb.toString();
+				+ "where (RESERVE_SETTLE_STATUS <> '0' or RESERVE_SETTLE_STATUS is null)" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by RESERVE_ID";
 
@@ -12119,21 +12100,22 @@ public class GridConfigMethod {
 					+ Double.parseDouble(accountSettleMoney);
 		}*/
 
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 
-		/*for (Object[] objects : dataList) {
-			// 备款金额
-			objects[4] = String.valueOf(sum);
-			// String sql3 =
-			// "update TBL_MCHT_SETTLE_RESERVE_TMP set RESERVE_MONEY = '" +
-			// String.valueOf(sum) + "' where RESERVE_ID = '" + objects[0] +
-			// "'";
-			// CommonFunction.getCommQueryDAO().excute(sql3);
-		}*/
+		//赎回金额+结算金额=备款金额
+//		for (Object[] objects : dataList) {
+//			Object str1 = objects[2];
+//			Object str2 = objects[3];
+//			Float money1 = Float.parseFloat(String.valueOf(str1));
+//			Float money2 = Float.parseFloat(String.valueOf(str2));
+//			
+//			Float money = money1 + money2;
+//			
+//			String sql3 = "update TBL_MCHT_SETTLE_RESERVE_TMP set RESERVE_MONEY = '" + String.valueOf(money) + "' where RESERVE_ID = '" + objects[0] + "'";
+//			CommonFunction.getCommQueryDAO().excute(sql3);
+//		}
 
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
-				countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -12272,7 +12254,7 @@ public class GridConfigMethod {
 	}
 
 	/**
-	 * 人行集中缴存备款
+	 * 人行集中缴存备款回填
 	 * 
 	 * @param begin
 	 * @param request
@@ -12288,8 +12270,76 @@ public class GridConfigMethod {
 					+ request.getParameter("rosterAccount") + "'");
 		}
 
-		String sql = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE "
-				+ "from TBL_FOCUS_RESERVE " + "where 1=1" + sb.toString();
+		String sql = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE, FOCUS_PAY_STATUS, FOCUS_LAUNCH_TIME, FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH "
+					+ "from TBL_FOCUS_RESERVE_TMP where 1=1" + sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by FOCUS_ID";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+	
+	/**
+	 * 人行集中缴存备款查询
+	 * 
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] getfocusStore1(int begin, HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("focusAccount"))) {
+			sb.append(" and FOCUS_ACCOUNT = '"
+					+ request.getParameter("focusAccount") + "'");
+		}
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and FOCUS_DATE = '" + request.getParameter("date") + "'");
+		}
+
+		String sql = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE, FOCUS_PAY_STATUS, FOCUS_LAUNCH_TIME, FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH "
+					+ "from TBL_FOCUS_RESERVE_TMP where (FOCUS_STATUS in ('1', '2') or FOCUS_STATUS is null)" + sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by FOCUS_ID";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+	
+	/**
+	 * 人行集中缴存备款审核
+	 * 
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] getfocusStore2(int begin, HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("focusAccount"))) {
+			sb.append(" and FOCUS_ACCOUNT = '"
+					+ request.getParameter("focusAccount") + "'");
+		}
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and FOCUS_DATE = '" + request.getParameter("date") + "'");
+		}
+
+		String sql = "select FOCUS_ID, FOCUS_ACCOUNT, FOCUS_ACCOUNT_NAME, FOCUS_MONEY, FOCUS_STATUS, FOCUS_DATE, FOCUS_PAY_STATUS, FOCUS_LAUNCH_TIME, FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH "
+					+ "from TBL_FOCUS_RESERVE_TMP where FOCUS_AUDIT_STATUS in ('1','3','6','8')" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by FOCUS_ID";
 
@@ -12303,7 +12353,7 @@ public class GridConfigMethod {
 	}
 
 	/**
-	 * 人行集中缴存出款
+	 * 人行集中缴存回款回填
 	 * 
 	 * @param begin
 	 * @param request
@@ -12314,13 +12364,75 @@ public class GridConfigMethod {
 		Object[] ret = new Object[2];
 		StringBuffer sb = new StringBuffer();
 
-		if (isNotEmpty(request.getParameter("rosterAccount"))) {
-			sb.append(" and ROSTER_ACCOUNT = '"
-					+ request.getParameter("rosterAccount") + "'");
+		if (isNotEmpty(request.getParameter("paymentAccount"))) {
+			sb.append(" and PAYMENT_ACCOUNT = '"
+					+ request.getParameter("paymentAccount") + "'");
 		}
 
-		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE "
-				+ "from TBL_PAYMENT_RESERVE " + "where 1=1" + sb.toString();
+		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH "
+				+ "from TBL_PAYMENT_RESERVE_TMP " + "where 1=1" + sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by PAYMENT_ID";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+	
+	/**
+	 * 人行集中缴存回款查询
+	 * 
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] getpayMentStore1(int begin, HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("paymentAccount"))) {
+			sb.append(" and PAYMENT_ACCOUNT = '"
+					+ request.getParameter("paymentAccount") + "'");
+		}
+
+		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH "
+				+ "from TBL_PAYMENT_RESERVE_TMP where (PAYMENT_STATUS <> '0' or PAYMENT_STATUS is null)" + sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by PAYMENT_ID";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
+				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
+				countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+	
+	/**
+	 * 人行集中缴存回款审核
+	 * 
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] getpayMentStore2(int begin, HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("paymentAccount"))) {
+			sb.append(" and PAYMENT_ACCOUNT = '"
+					+ request.getParameter("paymentAccount") + "'");
+		}
+		//1368
+		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH "
+				+ "from TBL_PAYMENT_RESERVE_TMP where PAYMENT_AUDIT_STATUS in ('1','3','6','8') " + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by PAYMENT_ID";
 
@@ -12366,5 +12478,67 @@ public class GridConfigMethod {
 		ret[1] = count;
 		return ret;
 	}
+	
+	/**
+	 * 虚拟记账余额查询
+	 * 
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] gettblFictitiousQuery(int begin,HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and FICTITIOUS_DATE = '" + request.getParameter("date") + "'");
+		}
+
+		String sql = "select FICTITIOUS_NO, FICTITIOUS_DATE, FICTITIOUS_ACCTNO, FICTITIOUS_ACCTNAME, FICTITIOUS_ACCTBAL, FICTITIOUS_AVLBBAL "
+				+ "from TBL_FICTITIOUS_QUERY "
+				+ "where 1=1"
+				+ sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by FICTITIOUS_NO";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+	
+	/**
+	 * 历史余额查询
+	 * 
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] gettblHistoryQuery(int begin,HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and HISTORY_DATE = '" + request.getParameter("date") + "'");
+		}
+
+		String sql = "select HISTORY_NO, HISTORY_DATE, HISTORY_ACCTNO, HISTORY_ACCTNAME, HISTORY_OPENBAL, HISTORY_ENCBAL, HISTORY_TOTALDBTRQTY, HISTORY_TOTALCDTRQTY, HISTORY_TOTALDBTRAMT, HISTORY_TOTALCDTRAMT "
+				+ "from TBL_HISTORY_QUERY "
+				+ "where 1=1"
+				+ sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by HISTORY_NO";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+	
+	
 
 }

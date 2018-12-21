@@ -67,18 +67,18 @@ Ext.onReady(function(){
 					} else {
 						showErrorMsg(rspObj.msg,redempGrid);
 					}
-					redempGridStore.getStore().reload();
+					redempGridStore.load();
 				},
 				params: {
-					txnId: '80101',
+					txnId: '9140101',
 					subTxnId: '01'
 				}
 			});
 		}
 	};
 	
-	menuArr.add('-');    //[0]
-	menuArr.add(queryCondition);  //[1]
+//	menuArr.add('-');    //[0]
+//	menuArr.add(queryCondition);  //[1]
 	menuArr.add('-');    //[2]
 	menuArr.add(addBalance);    //[3]
 	
@@ -103,7 +103,7 @@ Ext.onReady(function(){
 		bbar: new Ext.PagingToolbar({
 			store: redempGridStore,
 		//	pageSize: System[QUERY_RECORD_COUNT],
-			pageSize: 20,
+			pageSize: 15,
 			displayInfo: true,
 			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
 			emptyMsg: '没有找到符合条件的记录'
@@ -163,8 +163,8 @@ Ext.onReady(function(){
 		buttons: [{
 			text: '查询',
 			handler: function() {
-//				redempGridStore.load();
-				queryForm.getForm().submit({
+				redempGridStore.load();
+				/*queryForm.getForm().submit({
 					url: 'T91401Action_inits.asp',
 					success: function(rsp,opt){
 						hideMask();
@@ -180,7 +180,7 @@ Ext.onReady(function(){
 						txnId: '80101',
 						subTxnId: '01'
 					}
-				});
+				});*/
 			}
 		},{
 			text: '清除查询条件',
@@ -190,11 +190,11 @@ Ext.onReady(function(){
 		}]
 	});
 	
-	redempGridStore.on('beforeload', function(){
-		Ext.apply(this.baseParams, {
-			date: queryForm.getForm().findField('date').getValue().format('Ymd')
-		});
-	});
+//	redempGridStore.on('beforeload', function(){
+//		Ext.apply(this.baseParams, {
+//			date: queryForm.getForm().findField('date').getValue().format('Ymd')
+//		});
+//	});
 	
 	var mainView = new Ext.Viewport({
 		layout: 'border',

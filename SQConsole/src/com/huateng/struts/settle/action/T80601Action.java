@@ -89,7 +89,7 @@ public class T80601Action extends BaseSupport {
 			//0为正常，1为新增审核状态
 			tblSettleRedempTionInfTmp.setRedempTionStatus("1");
 			//0为已入账，1未入账，2为赎回中
-			tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
+//			tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			Date date = new Date();
 			tblSettleRedempTionInfTmp.setRedempTionEnTry("1");
@@ -185,7 +185,7 @@ public class T80601Action extends BaseSupport {
 				//审核状态
 				tblSettleRedempTionInfTmp.setRedempTionStatus("3");
 				//入账状态
-				tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
+//				tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 				Date date = new Date();
 				//入账日期
@@ -287,10 +287,9 @@ public class T80601Action extends BaseSupport {
 						+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
 						+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
 						+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
-						+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','2','1',null,'" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
+						+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','2',null,null,'" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
 						+ ",'" + sdf.format(date) + "','" + getOperator().getOprId() + "','1')";
 				commQueryDAO.excute(redempDel);
-				
 				
 				//更新临时表审核时间
 				tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(date));
@@ -298,8 +297,6 @@ public class T80601Action extends BaseSupport {
 				tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
 				//0 正常
 				tblSettleRedempTionInfTmp.setRedempTionStatus("2");
-				//1失败
-				tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");
 				try {
 					//更新到数据库
 					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
@@ -552,6 +549,18 @@ public class T80601Action extends BaseSupport {
 					//更新临时表审核人
 					tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
 					
+					String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
+					commQueryDAO.excute(redempDelInf);
+					
+					String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
+							+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
+							+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
+							+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
+							+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
+							+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','4',null,null,'" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
+							+ ",'" + sdf.format(date) + "','" + getOperator().getOprId() + "','1')";
+					commQueryDAO.excute(redempDel);
+					
 					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
 				} catch (Exception e) {
 					// TODO: handle exception
@@ -569,6 +578,28 @@ public class T80601Action extends BaseSupport {
 					tblSettleRedempTionInfTmp.setRedempTionAuditDate(sdf.format(date));
 					//更新临时表审核人
 					tblSettleRedempTionInfTmp.setRedempTionAuditName(getOperator().getOprId());
+					
+					String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
+					commQueryDAO.excute(redempDelInf);
+					String redempDel = "";
+					if(tblSettleRedempTionInfTmp.getRedempTionAccountStatus()!=null){
+						redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
+								+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
+								+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
+								+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
+								+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
+								+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','7','" + tblSettleRedempTionInfTmp.getRedempTionAccountStatus() + "',null,'" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
+								+ ",'" + sdf.format(date) + "','" + getOperator().getOprId() + "','1')";
+					}else{
+						redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
+								+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
+								+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY) "
+								+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
+								+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
+								+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','7',null,null,'" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
+								+ ",'" + sdf.format(date) + "','" + getOperator().getOprId() + "','1')";
+					}
+					commQueryDAO.excute(redempDel);
 					
 					rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
 				} catch (Exception e) {

@@ -18,6 +18,14 @@ Ext.onReady(function(){
 			{name: 'paymentMoney',mapping: 'paymentMoney'},
 			{name: 'paymentDate',mapping: 'paymentDate'},
 			{name: 'paymentStatus',mapping: 'paymentStatus'},
+			
+			{name: 'paymentPayStatus',mapping: 'paymentPayStatus'},
+			{name: 'paymentLaunchTime',mapping: 'paymentLaunchTime'},
+			{name: 'paymentLaunchName',mapping: 'paymentLaunchName'},
+			{name: 'paymentAuditTime',mapping: 'paymentAuditTime'},
+			{name: 'paymentAuditName',mapping: 'paymentAuditName'},
+			{name: 'paymentAuditStatus',mapping: 'paymentAuditStatus'},
+			{name: 'paymentBatch',mapping: 'paymentBatch'},
 		]),
 	//	autoLoad: true
 	});
@@ -31,12 +39,20 @@ Ext.onReady(function(){
 	
 	var redempColModel = new Ext.grid.ColumnModel([
   		sm,
-  		{header: '交易流水号',dataIndex: 'paymentId',width: 100,align: 'center'},
+  		{header: '交易流水号',dataIndex: 'paymentId',width: 100,align: 'center',hidden: true},
   		{header: '回款账户',dataIndex: 'paymentAccount',width: 100,align: 'center'},
   		{header: '回款账户名称',dataIndex: 'paymentAccountName',width: 100,align: 'center'},
    		{header: '回款金额',dataIndex: 'paymentMoney',width: 100,align: 'center'},
    		{header: '回款时间',dataIndex: 'paymentDate',width: 100,align: 'center'},
    		{header: '回款状态',dataIndex: 'paymentStatus',renderer: reserveStatus,width: 100,align: 'center'},
+   		
+   		{header: '支付状态',dataIndex: 'paymentPayStatus',width: 100,align: 'center'},
+   		{header: '审核状态',dataIndex: 'paymentAuditStatus',renderer: reserveStatuss,width: 100,align: 'center',hidden: true},
+   		{header: '发起日期',dataIndex: 'paymentLaunchTime',width: 100,align: 'center',hidden: true},
+  		{header: '发起人员',dataIndex: 'paymentLaunchName',width: 100,align: 'center',hidden: true},
+  		{header: '审核日期',dataIndex: 'paymentAuditTime',width: 100,align: 'center',hidden: true},
+  		{header: '审核人员',dataIndex: 'paymentAuditName',width: 100,align: 'center',hidden: true},
+  		{header: '交易流水号',dataIndex: 'paymentBatch',width: 100,align: 'center'},
   	]);
 	
    	//回款状态
@@ -48,6 +64,33 @@ Ext.onReady(function(){
    		}else if(val=='2'){
    			return '<font color="gray">回款已受理</font>';
    		}
+   	}
+   	
+  //审核状态
+   	function reserveStatuss(val){
+   		/*if(val=='0'){
+			return '<font color="green">正常</font>';
+		}else */if(val=='1'){
+			return '<font color="gray">新增待审核</font>';
+		}else if(val=='2'){
+			return '<font color="green">新增审核通过</font>';
+		}else if(val=='3'){
+			return '<font color="gray">备款待审核</font>';
+		}else if(val=='4'){
+			return '<font color="green">备款审核拒绝</font>';
+		}else if(val=='5'){
+			return '<font color="green">备款审核通过</font>';
+		}else if(val=='6'){
+			return '<font color="gray">删除待审核</font>';
+		}else if(val=='7'){
+			return '<font color="green">删除审核拒绝</font>';
+		}else if(val=='8'){
+			return '<font color="gray">修改待审核</font>';
+		}else if(val=='9'){
+			return '<font color="green">修改审核通过</font>';
+		}else if(val=='0'){
+			return '<font color="green">修改审核拒绝</font>';
+		}
    	}
    	
    	/**
@@ -95,7 +138,7 @@ Ext.onReady(function(){
 	var menuArr = new Array();
 	
 	var BackFillMenu = {
-		text: '客户回填',
+		text: '回款状态查询',
 		width: 85,
 		iconCls: 'edit',
 		handler: function() {
@@ -122,6 +165,14 @@ Ext.onReady(function(){
 								paymentMoney: record.get('paymentMoney'),//回款金额
 								paymentStatus: record.get('paymentStatus'),//回款状态
 								paymentDate: record.get('paymentDate'),//回款日期
+								
+								paymentAuditStatus: record.get('paymentAuditStatus'),//审核状态
+								paymentPayStatus: record.get('paymentPayStatus'),//支付状态
+								paymentLaunchTime: record.get('paymentLaunchTime'),//发起日期
+								paymentLaunchName: record.get('paymentLaunchName'),//发起人员
+								paymentAuditTime: record.get('paymentAuditTime'),//审核日期
+								paymentAuditName: record.get('paymentAuditName'),//审核人员
+								paymentBatch: record.get('paymentBatch'),//交易流水号
 							};
 							array.push(data);
 						}
@@ -295,7 +346,7 @@ Ext.onReady(function(){
 		bbar: new Ext.PagingToolbar({
 			store: redempGridStore,
 		//	pageSize: System[QUERY_RECORD_COUNT],
-			pageSize: 20,
+			pageSize: 15,
 			displayInfo: true,
 			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
 			emptyMsg: '没有找到符合条件的记录'
