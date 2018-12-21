@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-12-13 13:24:20 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblFocusReserveTmp" 
+    	table="TBL_FOCUS_RESERVE_TMP"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="focusId"
+        	type="string"
+        	column="FOCUS_ID"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+         <property
+			name="focusAccount"
+			column="FOCUS_ACCOUNT"
+			type="string"
+		/>
+		
+		 <property
+			name="focusAccountName"
+			column="FOCUS_ACCOUNT_NAME"
+			type="string"
+		/>
+        
+        <property
+			name="focusMoney"
+			column="FOCUS_MONEY"
+			type="string"
+		/>
+		
+		<property
+			name="focusStatus"
+			column="FOCUS_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="focusDate"
+			column="FOCUS_DATE"
+			type="string"
+		/>
+		
+		<property
+			name="focusAuditStatus"
+			column="FOCUS_AUDIT_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="focusPayStatus"
+			column="FOCUS_PAY_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="focusLaunchTime"
+			column="FOCUS_LAUNCH_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="focusLaunchName"
+			column="FOCUS_LAUNCH_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="focusAuditTime"
+			column="FOCUS_AUDIT_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="focusAuditName"
+			column="FOCUS_AUDIT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="focusBatch"
+			column="FOCUS_BATCH"
+			type="string"
+		/>
+		
+		
+        
+    </class>
+</hibernate-mapping>

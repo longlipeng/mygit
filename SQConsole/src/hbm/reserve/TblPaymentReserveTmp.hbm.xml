@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-10-23 9:25:37 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblPaymentReserveTmp" 
+    	table="TBL_PAYMENT_RESERVE_TMP"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="paymentId"
+        	type="string"
+        	column="PAYMENT_ID"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+        <property
+			name="paymentAccount"
+			column="PAYMENT_ACCOUNT"
+			type="string"
+		/>
+		
+		<property
+			name="paymentAccountName"
+			column="PAYMENT_ACCOUNT_NAME"
+			type="string"
+		/>
+        
+        <property
+			name="paymentMoney"
+			column="PAYMENT_MONEY"
+			type="string"
+		/>
+		
+		<property
+			name="paymentStatus"
+			column="PAYMENT_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="paymentDate"
+			column="PAYMENT_DATE"
+			type="string"
+		/>
+		
+		<property
+			name="paymentPayStatus"
+			column="PAYMENT_PAY_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="paymentLaunchTime"
+			column="PAYMENT_LAUNCH_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentLaunchName"
+			column="PAYMENT_LAUNCH_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentAuditTime"
+			column="PAYMENT_AUDIT_TIME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentAuditName"
+			column="PAYMENT_AUDIT_NAME"
+			type="string"
+		/>
+		
+		<property
+			name="paymentAuditStatus"
+			column="PAYMENT_AUDIT_STATUS"
+			type="string"
+		/>
+		
+		<property
+			name="paymentBatch"
+			column="PAYMENT_BATCH"
+			type="string"
+		/>
+		
+        
+    </class>
+</hibernate-mapping>

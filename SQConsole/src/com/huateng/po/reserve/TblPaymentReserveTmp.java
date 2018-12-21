@@ -1,0 +1,114 @@
+package com.huateng.po.reserve;
+
+import java.io.Serializable;
+
+public class TblPaymentReserveTmp implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String paymentId;//交易流水号
+	private String paymentAccount;//回款账户
+	private String paymentAccountName;//回款账户名称
+	private String paymentMoney;//回款金额
+	private String paymentStatus;//回款状态
+	private String paymentDate;//回款时间
+	
+	private String paymentAuditStatus;//审核状态
+	private String paymentPayStatus;//支付状态
+	private String paymentLaunchTime;//发起日期
+	private String paymentLaunchName;//发起人员
+	private String paymentAuditTime;//审核日期
+	private String paymentAuditName;//审核人员
+	
+	private String paymentBatch;//交易流水号
+	
+	
+	
+	public String getPaymentBatch() {
+		return paymentBatch;
+	}
+	public void setPaymentBatch(String paymentBatch) {
+		this.paymentBatch = paymentBatch;
+	}
+	
+	
+	public String getPaymentAuditStatus() {
+		return paymentAuditStatus;
+	}
+	public void setPaymentAuditStatus(String paymentAuditStatus) {
+		this.paymentAuditStatus = paymentAuditStatus;
+	}
+	public String getPaymentId() {
+		return paymentId;
+	}
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+	public String getPaymentAccount() {
+		return paymentAccount;
+	}
+	public void setPaymentAccount(String paymentAccount) {
+		this.paymentAccount = paymentAccount;
+	}
+	public String getPaymentAccountName() {
+		return paymentAccountName;
+	}
+	public void setPaymentAccountName(String paymentAccountName) {
+		this.paymentAccountName = paymentAccountName;
+	}
+	public String getPaymentMoney() {
+		return paymentMoney;
+	}
+	public void setPaymentMoney(String paymentMoney) {
+		this.paymentMoney = paymentMoney;
+	}
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+	public String getPaymentDate() {
+		return paymentDate;
+	}
+	public void setPaymentDate(String paymentDate) {
+		this.paymentDate = paymentDate;
+	}
+	public String getPaymentPayStatus() {
+		return paymentPayStatus;
+	}
+	public void setPaymentPayStatus(String paymentPayStatus) {
+		this.paymentPayStatus = paymentPayStatus;
+	}
+	public String getPaymentLaunchTime() {
+		return paymentLaunchTime;
+	}
+	public void setPaymentLaunchTime(String paymentLaunchTime) {
+		this.paymentLaunchTime = paymentLaunchTime;
+	}
+	public String getPaymentLaunchName() {
+		return paymentLaunchName;
+	}
+	public void setPaymentLaunchName(String paymentLaunchName) {
+		this.paymentLaunchName = paymentLaunchName;
+	}
+	public String getPaymentAuditTime() {
+		return paymentAuditTime;
+	}
+	public void setPaymentAuditTime(String paymentAuditTime) {
+		this.paymentAuditTime = paymentAuditTime;
+	}
+	public String getPaymentAuditName() {
+		return paymentAuditName;
+	}
+	public void setPaymentAuditName(String paymentAuditName) {
+		this.paymentAuditName = paymentAuditName;
+	}
+	
+	
+	
+	
+}

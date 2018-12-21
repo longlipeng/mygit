@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-12-17 15:28:07 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblHistoryQuery" 
+    	table="TBL_HISTORY_QUERY"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="historyNo"
+        	type="string"
+        	column="HISTORY_NO"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+         <property
+			name="historyDate"
+			column="HISTORY_DATE"
+			type="string"
+		/>
+		
+		 <property
+			name="historyAcctNo"
+			column="HISTORY_ACCTNO"
+			type="string"
+		/>
+        
+        <property
+			name="historyAcctName"
+			column="HISTORY_ACCTNAME"
+			type="string"
+		/>
+		
+		<property
+			name="historyOpenBal"
+			column="HISTORY_OPENBAL"
+			type="string"
+		/>
+		
+		<property
+			name="historyEncBal"
+			column="HISTORY_ENCBAL"
+			type="string"
+		/>
+		
+		<property
+			name="historyTotalDbtrQty"
+			column="HISTORY_TOTALDBTRQTY"
+			type="string"
+		/>
+		
+		<property
+			name="historyTotalCdtrQty"
+			column="HISTORY_TOTALCDTRQTY"
+			type="string"
+		/>
+		
+		<property
+			name="historyTotalDbtrAmt"
+			column="HISTORY_TOTALDBTRAMT"
+			type="string"
+		/>
+		
+		<property
+			name="historyTotalCdtrAmt"
+			column="HISTORY_TOTALCDTRAMT"
+			type="string"
+		/>
+		
+		
+        
+    </class>
+</hibernate-mapping>
