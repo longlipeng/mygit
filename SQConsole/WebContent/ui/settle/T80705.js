@@ -47,6 +47,10 @@ Ext.onReady(function() {
 			{name: 'feeAcct',mapping: 'feeAcct'},//对私账号
 			{name: 'dirAccountName',mapping: 'dirAccountName'},//定向委托账号名称
 			{name: 'dirAccount',mapping: 'dirAccount'},//定向委托账号
+			
+			{name: 'compAccountBankCode',mapping: 'compAccountBankCode'},//对公账户开户行行号
+			{name: 'bankAccountCode',mapping: 'bankAccountCode'},//对私账户开户行行号
+			
 			{name: 'causeStat',mapping: 'causeStat'},//银行返回值
 			
 			{name: 'acctBankCode',mapping: 'acctBankCode'},//银行行号代码
@@ -364,7 +368,7 @@ Ext.onReady(function() {
 		
 	// 信息列表
 	var sumGrid = new Ext.grid.EditorGridPanel({
-		title: '银企直连商户二次划款审核',
+		title: '商户结算二次划款审核',
 		iconCls: 'T104',
 		region:'center',
 		autoExpandColumn:'sumrzNoteId',

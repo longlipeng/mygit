@@ -60,6 +60,10 @@ Ext.onReady(function() {
 			{name: 'feeAcct',mapping: 'feeAcct'},//对私账号
 			{name: 'dirAccountName',mapping: 'dirAccountName'},//定向委托账号名称
 			{name: 'dirAccount',mapping: 'dirAccount'},//定向委托账号
+			
+			{name: 'compAccountBankCode',mapping: 'compAccountBankCode'},//对公账户开户行行号
+			{name: 'bankAccountCode',mapping: 'bankAccountCode'},//对私账户开户行行号
+			
 			{name: 'causeStat',mapping: 'causeStat'},//银行返回值
 			
 			{name: 'acctBankCode',mapping: 'acctBankCode'},//银行行号代码
@@ -106,7 +110,10 @@ Ext.onReady(function() {
 		{header: '对私账号名称',dataIndex: 'legalNam',width:200,align: 'center',hidden:true},
 		{header: '对私账号',dataIndex: 'feeAcct',width:200,align: 'center',hidden:true},
 		{header: '定向委托账号名称',dataIndex: 'dirAccountName',width:200,align: 'center',hidden:true},
-		{header: '定向委托账号',dataIndex: 'dirAccount',width:200,align: 'center',hidden:true}
+		{header: '定向委托账号',dataIndex: 'dirAccount',width:200,align: 'center',hidden:true},
+		
+		{header: '对公账户开户行行号',dataIndex: 'compAccountBankCode',width:200,align: 'center',hidden:true},
+		{header: '对私账户开户行行号',dataIndex: 'bankAccountCode',width:200,align: 'center',hidden:true},
 	]);
 	
 	function settleRptVal(val){
@@ -214,7 +221,7 @@ Ext.onReady(function() {
 	});
 	
 	var sucAddWin = new Ext.Window({
-		title : '银企直连划款',
+		title : '商户结算划款',
 		animateTarget : 'modifyBt',
 		layout : 'fit',
 		width : 300,
@@ -499,6 +506,9 @@ Ext.onReady(function() {
 										auditDate: record.get('auditDate'),//发起划款日期
 										
 										acctBankCode: record.get('acctBankCode'),//银行开户行代码
+										
+										compAccountBankCode: record.get('compAccountBankCode'),//对公账户开户行行号
+										bankAccountCode: record.get('bankAccountCode'),//对私账户开户行行号
 								};
 								array.push(data);
 							}
@@ -536,7 +546,7 @@ Ext.onReady(function() {
 		
 	// 信息列表
 	var sumGrid = new Ext.grid.EditorGridPanel({
-		title: '银企直连商户划款审核',
+		title: '商户结算划款审核',
 		iconCls: 'T104',
 		region:'center',
 		autoExpandColumn:'sumrzNoteId',
