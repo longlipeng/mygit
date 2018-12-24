@@ -10529,6 +10529,8 @@ public class GridConfigMethod {
 		// "FEE_ACCT,DIR_BANK_CODE,DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT,DIR_FLAG,AUTO_FLAG,HOLIDAY_SET_FLAG,CRE_FLAG,RETURN_FEE_FLAG,SETTLE_TYPE,SETTLE_CHN"
 		// + " from TBL_MCHT_SETTLE_INF_TMP where MCHT_NO='"
 		// + request.getParameter("mchtNo") + "'";
+		//COMP_ACCOUNT_BANK_CODE  对公开户行行号
+		//BANK_ACCOUNT_CODE       对私开户行行号
 		String sql = "SELECT MCHT_NO,TERM_ID,SETTLE_RPT,CURR_ACCOUNT,SETTLE_BANK_NM,SETTLE_BANK_NO,COMP_ACCOUNT_BANK_CODE,"
 				+ "COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT,BANK_ACCOUNT_CODE,CORP_BANK_NAME,LEGAL_NAM,"
 				+ "FEE_ACCT,DIR_BANK_CODE,DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT,DIR_FLAG,AUTO_FLAG,HOLIDAY_SET_FLAG,CRE_FLAG,RETURN_FEE_FLAG,SETTLE_TYPE,SETTLE_CHN,DIR_OPEN_BANK , DIR_BANK_PROVINCE , DIR_BANK_CITY , COMP_OPEN_BANK , COMP_BANK_PROVINCE , COMP_BANK_CITY , CORP_OPEN_BANK , CORP_BANK_PROVINCE , CORP_BANK_CITY "
@@ -11374,7 +11376,7 @@ public class GridConfigMethod {
 		if (isNotEmpty(request.getParameter("settleRpt"))) {
 			whereSql.append(" and c.SETTLE_RPT = '" + request.getParameter("settleRpt") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, c.COMP_ACCOUNT_BANK_CODE, c.BANK_ACCOUNT_CODE, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
 				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
 				+ whereSql.toString();
 		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString() + " order by a.INST_DATE DESC ) ";
@@ -11451,7 +11453,7 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, c.COMP_ACCOUNT_BANK_CODE, c.BANK_ACCOUNT_CODE, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
 				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.DEST_ID = '1708' "
 				+ whereSql.toString();
 		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
@@ -11543,7 +11545,7 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, c.COMP_ACCOUNT_BANK_CODE, c.BANK_ACCOUNT_CODE, a.CAUSE_STAT, a.ACCT_BANK_CODE FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
 				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 "
 				+ whereSql.toString();
 		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
@@ -11668,7 +11670,7 @@ public class GridConfigMethod {
 			whereSql.append(" and a.MCHT_NO = '"
 					+ request.getParameter("mchtNo") + "' ");
 		}
-		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
+		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, c.COMP_ACCOUNT_BANK_CODE, c.BANK_ACCOUNT_CODE, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
 				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.SA_STATUS = '0' "
 				+ whereSql.toString();
 		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
