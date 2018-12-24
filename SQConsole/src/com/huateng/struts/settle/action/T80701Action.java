@@ -332,6 +332,9 @@ public class T80701Action extends BaseSupport {
 			
 			String acctBankCode = jsonBean.getJSONDataAt(i).getString("acctBankCode");//银行开户行代码
 			
+			String compAccountBankCode = jsonBean.getJSONDataAt(i).getString("compAccountBankCode");//对公账户开户行行号
+			String bankAccountCode = jsonBean.getJSONDataAt(i).getString("bankAccountCode");//对私账户开户行行号
+			
 			System.out.println("发起划款人:"+auditId +"		发起划款时间:"+auditDate);
 			log.info("发起划款人:"+auditId +"		发起划款时间:"+auditDate);
 			try{
@@ -349,7 +352,7 @@ public class T80701Action extends BaseSupport {
 			
 			String mchtNo = mchtNm.substring(0, 15);//商户号
 			String mchnName = mchtNm.substring(mchtNo.length()+1); //商户名称
-			
+
 			SDKConfig.getConfig().loadPropertiesFromSrc();// 从classpath加载fsas_sdk.properties文件
 			
 			Map<String, String> contentData = new HashMap<String, String>();
@@ -376,7 +379,13 @@ public class T80701Action extends BaseSupport {
 		    
 		    contentData.put("merId", mchtNo);                                    //商户号
 		    contentData.put("merName", mchnName);                           //商户名称
-		    contentData.put("payeeBankNo", acctBankCode);                //收款方开户行行号  acctBankCode  当payeeAccType=01时，可以为空；其他情况必填
+		    
+		    if(settleRpt.equals("1")){ //对私
+		    	contentData.put("payeeBankNo", bankAccountCode);                //收款方开户行行号    当payeeAccType=01时，可以为空；其他情况必填
+		    }else if(settleRpt.equals("2")){  //对公
+		    	contentData.put("payeeBankNo", compAccountBankCode);                //收款方开户行行号    当payeeAccType=01时，可以为空；其他情况必填
+		    }
+		    
 		    contentData.put("payeeAcctNo", settleAccNum);                //收款方账号 settleAccNum
 //	        contentData.put("payeeAccType", "01");              //选填字段 收款方账号类型01：银联卡99：其他
 		    contentData.put("payeeAcctName", settleAccName);        //收款方账户名称 settleAccName
@@ -538,6 +547,9 @@ public class T80701Action extends BaseSupport {
 			
 			String acctBankCode = jsonBean.getJSONDataAt(i).getString("acctBankCode");//银行开户行代码
 			
+			String compAccountBankCode = jsonBean.getJSONDataAt(i).getString("compAccountBankCode");//对公账户开户行行号
+			String bankAccountCode = jsonBean.getJSONDataAt(i).getString("bankAccountCode");//对私账户开户行行号
+			
 			System.out.println("发起划款人:"+auditId +"		发起划款时间:"+auditDate);
 			log.info("发起划款人:"+auditId +"		发起划款时间:"+auditDate);
 			try{
@@ -582,7 +594,13 @@ public class T80701Action extends BaseSupport {
 		    contentData.put("sndTime", DemoBase.getSendTime());      //发送时间 格式HHmmss
 		    contentData.put("merId", mchtNo);                                    //商户号
 		    contentData.put("merName", mchnName);                           //商户名称
-		    contentData.put("payeeBankNo", acctBankCode);                //收款方开户行行号  acctBankCode  当payeeAccType=01时，可以为空；其他情况必填
+		    
+		    if(settleRpt.equals("1")){ //对私
+		    	contentData.put("payeeBankNo", bankAccountCode);                //收款方开户行行号    当payeeAccType=01时，可以为空；其他情况必填
+		    }else if(settleRpt.equals("2")){  //对公
+		    	contentData.put("payeeBankNo", compAccountBankCode);                //收款方开户行行号    当payeeAccType=01时，可以为空；其他情况必填
+		    }
+		    
 		    contentData.put("payeeAcctNo", settleAccNum);                //收款方账号 settleAccNum
 //	        contentData.put("payeeAccType", "01");              //选填字段 收款方账号类型01：银联卡99：其他
 		    contentData.put("payeeAcctName", settleAccName);        //收款方账户名称 settleAccName
