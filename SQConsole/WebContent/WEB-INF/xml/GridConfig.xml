@@ -2017,7 +2017,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 (审核查询)-->
 	<Grid id="sumrzInfUpYQaudit" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,compAccountBankCode,bankAccountCode,causeStat,acctBankCode]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQaudit" />
@@ -2026,7 +2026,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 (审核通过)-->
 	<Grid id="sumrzInfUpYQauditS" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat,acctBankCode]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,compAccountBankCode,bankAccountCode,causeStat,acctBankCode]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQauditS" />
@@ -2035,7 +2035,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 (二次审核通过)-->
 	<Grid id="sumrzInfUpYQauditSE" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat,acctBankCode]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,compAccountBankCode,bankAccountCode,causeStat,acctBankCode]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQauditSE" />
@@ -2053,7 +2053,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 二次-->
 	<Grid id="sumrzInfUpYQFe" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,causeStat]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,compAccountBankCode,bankAccountCode,causeStat,acctBankCode]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQFe" />
