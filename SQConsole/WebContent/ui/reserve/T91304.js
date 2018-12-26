@@ -45,7 +45,7 @@ Ext.onReady(function(){
 				}
 				queryForm.getForm().submit({
 //					url: 'T91301Action_paymentBackFails.asp',
-					url: 'T91301Action_init.asp',
+					url: 'T91301Action_init1.asp',
 					waitMsg: '正在请求备款任务，请稍后......',
 					success: function(form,action) {
 						window.location.href = Ext.contextPath + '/page/reserve/T9130401.jsp?date='+Ext.getCmp('focusDate').getValue().format('Ymd')+'&predate='+preDate.format('Ymd');
