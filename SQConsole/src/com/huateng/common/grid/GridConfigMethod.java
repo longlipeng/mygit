@@ -11652,23 +11652,19 @@ public class GridConfigMethod {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public static Object[] getSumrzInfUpYQFe(int begin,
-			HttpServletRequest request) {
+	public static Object[] getSumrzInfUpYQFe(int begin,HttpServletRequest request) {
 		Object[] ret = new Object[2];
 		StringBuffer whereSql = new StringBuffer();
 		// add lhf
 		whereSql.append(" and (a.SA_STATUS<>'1' or a.SA_STATUS IS NULL )");
 		if (isNotEmpty(request.getParameter("instDate"))) {
-			whereSql.append(" and a.INST_DATE = '"
-					+ request.getParameter("instDate") + "' ");
+			whereSql.append(" and a.INST_DATE = '" + request.getParameter("instDate") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("accFlag"))) {
-			whereSql.append(" and a.ACC_FLAG = '"
-					+ request.getParameter("accFlag") + "' ");
+			whereSql.append(" and a.ACC_FLAG = '" + request.getParameter("accFlag") + "' ");
 		}
 		if (isNotEmpty(request.getParameter("mchtNo"))) {
-			whereSql.append(" and a.MCHT_NO = '"
-					+ request.getParameter("mchtNo") + "' ");
+			whereSql.append(" and a.MCHT_NO = '" + request.getParameter("mchtNo") + "' ");
 		}
 		String sql = "SELECT distinct a.INST_DATE, a.SEQ_NUM,a.MCHT_NO,a.MCHT_NO||'-'||b.MCHT_NM,a.ACC_FLAG,a.AUDIT_STATUS,a.AUDIT_ID,a.AUDIT_DATE,a.REC_ID,a.REC_DATE,a.SETTLE_ACC_NAME, a.SETTLE_ACC_NUM,a.BANK_NAME,a.TXN_AMT,a.HAND_AMT,a.SUM_AMT,a.SA_STATUS,a.SUMRZ_DATE,a.SUMRZ_NOTE,a.REC_UPD_OPR,a.REC_CRT_TS,a.REC_UPD_TS,  c.dir_open_bank, c.dir_bank_province, c.dir_bank_city, c.comp_open_bank, c.comp_bank_province, c.comp_bank_city, c.corp_open_bank, c.corp_bank_province, c.corp_bank_city, c.SETTLE_RPT, c.COMPANY_NAM, c.SETTLE_ACCT, c.LEGAL_NAM, c.FEE_ACCT, c.DIR_ACCOUNT_NAME, c.DIR_ACCOUNT, c.COMP_ACCOUNT_BANK_CODE, c.BANK_ACCOUNT_CODE, a.CAUSE_STAT FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
 				+ " left join TBL_MCHT_BASE_INF b on a.MCHT_NO = b.MCHT_NO where 1=1 AND c.MCHT_NO = a.MCHT_NO and a.SUM_AMT<>0 AND a.SA_STATUS = '0' "
@@ -11676,19 +11672,14 @@ public class GridConfigMethod {
 		String countSql = "SELECT COUNT(*) FROM (" + sql + whereSql.toString()
 				+ " order by a.INST_DATE DESC ) ";
 		sql += " order by a.INST_DATE DESC";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT2);
 		List<Object[]> datasList = null;
 
 		for (Object[] objects : dataList) {
 			Object mchtNo = objects[2];// 商户号
 			Object settleRpt = objects[31];// 结算账户类型
 			if (settleRpt.equals("1")) {// 对私
-				datasList = CommonFunction
-						.getCommQueryDAO()
-						.findBySQLQuery(
-								"select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = "
-										+ mchtNo + "");
+				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select CORP_BANK_NAME,LEGAL_NAM,FEE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = " + mchtNo + "");
 				Object[] objects2 = datasList.get(0);
 				Object corpBankName = objects2[0];
 				Object feeAcctNm = objects2[1];
@@ -11700,11 +11691,7 @@ public class GridConfigMethod {
 				// select CORP_BANK_NAME,FEE_ACCT_NM,FEE_ACCT from
 				// TBL_MCHT_SETTLE_INF where MCHT_NO = mchtNo
 			} else if (settleRpt.equals("2")) {// 对公
-				datasList = CommonFunction
-						.getCommQueryDAO()
-						.findBySQLQuery(
-								"select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
-										+ mchtNo + "'");
+				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select COMP_ACCOUNT_BANK_NAME,COMPANY_NAM,SETTLE_ACCT from TBL_MCHT_SETTLE_INF where MCHT_NO = '" + mchtNo + "'");
 				Object[] objects3 = datasList.get(0);
 				Object compAccountBankName = objects3[0];
 				Object settleAcctNm = objects3[1];
@@ -11713,11 +11700,7 @@ public class GridConfigMethod {
 				objects[11] = settleAcct;
 				objects[12] = compAccountBankName;
 			} else if (settleRpt.equals("3")) {// 定向
-				datasList = CommonFunction
-						.getCommQueryDAO()
-						.findBySQLQuery(
-								"select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '"
-										+ mchtNo + "'");
+				datasList = CommonFunction.getCommQueryDAO().findBySQLQuery("select DIR_BANK_NAME,DIR_ACCOUNT_NAME,DIR_ACCOUNT from TBL_MCHT_SETTLE_INF where MCHT_NO = '" + mchtNo + "'");
 				Object[] objects4 = datasList.get(0);
 				Object dirBankNname = objects4[0];
 				Object dirAaccountNname = objects4[1];
@@ -11728,8 +11711,7 @@ public class GridConfigMethod {
 			}
 
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
-				countSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
@@ -11859,7 +11841,7 @@ public class GridConfigMethod {
 		FileFilter filter = new FileFilter(imagesId);
 		// 启用过滤
 		File[] files = fl.listFiles(filter);
-
+		
 		// File[] files = fl.listFiles();
 
 		if (null == files) {
@@ -12081,7 +12063,7 @@ public class GridConfigMethod {
 		
 		String sql = "select RESERVE_ID,RESERVE_TIME,REDEMPTION_MONEY,RESERVE_SETTLE_MONEY,RESERVE_MONEY,RESERVE_STATUS,RESERVE_SETTLE_STATUS,RESERVE_PAY_STATUS,RESERVE_LAUNCH_TIME,RESERVE_LAUNCH_NAME,RESERVE_AUDIT_TIME,RESERVE_AUDIT_NAME,RESERVE_BATCH "
 				+ "from TBL_MCHT_SETTLE_RESERVE_TMP "
-				+ "where (RESERVE_SETTLE_STATUS <> '0' or RESERVE_SETTLE_STATUS is null)" + sb.toString();
+				+ "where 1=1" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by RESERVE_ID";
 
