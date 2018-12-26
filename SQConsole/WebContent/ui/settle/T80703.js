@@ -64,7 +64,8 @@ Ext.onReady(function() {
 			{name: 'compAccountBankCode',mapping: 'compAccountBankCode'},//对公账户开户行行号
 			{name: 'bankAccountCode',mapping: 'bankAccountCode'},//对私账户开户行行号
 			
-			{name: 'causeStat',mapping: 'causeStat'}//银行返回值
+			{name: 'causeStat',mapping: 'causeStat'},//银行返回值
+			{name: 'sumrzBatch',mapping: 'sumrzBatch'},//交易流水号
 		])
 	});
 	
