@@ -2053,7 +2053,7 @@
 	<!-- 查询商户划账表汇总(可维护的)银企直连 二次-->
 	<Grid id="sumrzInfUpYQFe" type="sync">
 		<Columns>
-			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,compAccountBankCode,bankAccountCode,causeStat,acctBankCode]]>
+			<![CDATA[instDate,seqNo,mchtNo,mchtNm,accFlag,auditStatus,auditId,auditDate,recId,recDate,settleAccName,settleAccNum,bankName,txnAmt,handAmt,sumAmt,saStatus,sumrzDate,sumrzNote,recUpdOpr,recCrtTs,recUpdTs,dirOpenBank,dirBankProvince,dirBankCity,compOpenBank,compBankProvince,compBankCity,corpOpenBank,corpBankProvince,corpBankCity,settleRpt,companyNam,settleAcct,legalNam,feeAcct,dirAccountName,dirAccount,compAccountBankCode,bankAccountCode,causeStat]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getSumrzInfUpYQFe" />
