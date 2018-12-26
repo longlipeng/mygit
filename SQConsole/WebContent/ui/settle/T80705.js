@@ -331,6 +331,9 @@ Ext.onReady(function() {
 										auditDate: record.get('auditDate'),//发起划款日期
 										
 										acctBankCode: record.get('acctBankCode'),//银行开户行代码
+										
+										compAccountBankCode: record.get('compAccountBankCode'),//对公账户开户行行号
+										bankAccountCode: record.get('bankAccountCode'),//对私账户开户行行号
 								};
 								array.push(data);
 							}
