@@ -22,7 +22,10 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  */     
 public class ExcelReader {      
     private POIFSFileSystem fs;      
-    private HSSFWorkbook wb;      
+    private HSSFWorkbook wb;
+    
+//    private XSSFWorkbook swb;
+    
     private HSSFSheet sheet;      
     private HSSFRow row;      
     /**    
