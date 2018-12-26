@@ -133,6 +133,16 @@ public class TblReserveSettleDao extends _RootDAO<TblMchtSettleReserve> implemen
 		super.save(tblHistoryQuery);
 	}
 
+	public void upBalance(TblBalanceReserveQuery tblBalanceReserveQuery) {
+		// TODO Auto-generated method stub
+		super.update(tblBalanceReserveQuery);
+	}
+
+	public void upHistory(TblHistoryQuery tblHistoryQuery) {
+		// TODO Auto-generated method stub
+		super.update(tblHistoryQuery);
+	}
+
 	
 	
 }

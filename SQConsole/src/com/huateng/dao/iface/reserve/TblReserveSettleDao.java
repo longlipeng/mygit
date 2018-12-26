@@ -102,6 +102,13 @@ public interface TblReserveSettleDao {
 	public void addBalance(TblBalanceReserveQuery tblBalanceReserveQuery);
 	
 	/**
+	 * 人行备付金余额查询记录 修改
+	 * @param tblBalanceReserveQuery
+	 * @return
+	 */
+	public void upBalance(TblBalanceReserveQuery tblBalanceReserveQuery);
+	
+	/**
 	 * 回款交易表   新增
 	 * @param tblPaymentReserveTmp
 	 * @return
@@ -170,5 +177,12 @@ public interface TblReserveSettleDao {
 	 * @return
 	 */
 	public void saveHistory(TblHistoryQuery tblHistoryQuery);
+	
+	/**
+	 * 历史余额查询   修改
+	 * @param tblHistoryQuery
+	 * @return
+	 */
+	public void upHistory(TblHistoryQuery tblHistoryQuery);
 	
 }
