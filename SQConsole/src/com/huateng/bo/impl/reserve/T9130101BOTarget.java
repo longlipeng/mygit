@@ -151,6 +151,18 @@ public class T9130101BOTarget implements T9130101BO {
 		return "00";
 	}
 
+	public String upBalance(TblBalanceReserveQuery tblBalanceReserveQuery) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.upBalance(tblBalanceReserveQuery);
+		return "00";
+	}
+
+	public String upHistory(TblHistoryQuery tblHistoryQuery) {
+		// TODO Auto-generated method stub
+		tblReserveSettleDao.upHistory(tblHistoryQuery);
+		return "00";
+	}
+
 	
 
 	

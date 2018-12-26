@@ -102,6 +102,13 @@ public interface T9130101BO {
 	public String addBalance(TblBalanceReserveQuery tblBalanceReserveQuery);
 	
 	/**
+	 * 人行备付金余额查询记录 修改
+	 * @param tblBalanceReserveQuery
+	 * @return
+	 */
+	public String upBalance(TblBalanceReserveQuery tblBalanceReserveQuery);
+	
+	/**
 	 * 回款交易表   新增
 	 * @param tblPaymentReserveTmp
 	 * @return
@@ -165,10 +172,17 @@ public interface T9130101BO {
 	public String saveFictitious(TblFictitiousQuery tblFictitiousQuery);
 	
 	/**
-	 * 历史余额查询
+	 * 历史余额查询  新增
 	 * @param tblHistoryQuery
 	 * @return
 	 */
 	public String saveHistory(TblHistoryQuery tblHistoryQuery);
+	
+	/**
+	 * 历史余额查询   修改
+	 * @param tblHistoryQuery
+	 * @return
+	 */
+	public String upHistory(TblHistoryQuery tblHistoryQuery);
 	
 }
