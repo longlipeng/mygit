@@ -454,8 +454,8 @@ Ext.onReady(function() {
 		};
 		
 	menuArr.push(queryCondition);
-	menuArr.push('-');
-	menuArr.push(BackFillMenu); //[3]
+//	menuArr.push('-');
+//	menuArr.push(BackFillMenu); //[3]
 	menuArr.push('-');
 	menuArr.push(BackFillMenuAdd);  //[5]
 	menuArr.push('-');
