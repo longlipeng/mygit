@@ -75,6 +75,10 @@ public class T91301Action extends BaseSupport {
 
 		String sum = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql);
 		
+		if(sum==null || sum.equals("")){
+			return returnService("结算金额为空");
+		}
+		
 		String sql3 = "select RESERVE_ID,RESERVE_TIME,REDEMPTION_MONEY,RESERVE_SETTLE_MONEY,RESERVE_MONEY,RESERVE_STATUS,RESERVE_SETTLE_STATUS,RESERVE_PAY_STATUS,RESERVE_LAUNCH_TIME,RESERVE_LAUNCH_NAME,RESERVE_AUDIT_TIME,RESERVE_AUDIT_NAME,RESERVE_BATCH "
 				+ "from TBL_MCHT_SETTLE_RESERVE_TMP "
 				+ "where (RESERVE_SETTLE_STATUS <> '0' or RESERVE_SETTLE_STATUS is null) and RESERVE_TIME = '" + startdate + "' order by RESERVE_ID";
@@ -124,6 +128,13 @@ public class T91301Action extends BaseSupport {
 //					}
 //				}
 		}
+		
+		rspCode = Constants.SUCCESS_CODE;
+		return returnService(rspCode);
+	}
+	
+	public String init1(){
+		
 		
 		rspCode = Constants.SUCCESS_CODE;
 		return returnService(rspCode);
@@ -238,7 +249,11 @@ public class T91301Action extends BaseSupport {
 			    contentData.put("payeeAcctNo", PAYEEACCTNO);                //收款方账号
 			    contentData.put("payeeAcctName", PAYEEACCTNAME);        //收款方账户名称
 			    contentData.put("currencyCode", "156");                          //币种
-			    contentData.put("txnAmt",reserveMoney);                                 //金额    不能带小数点    
+			    
+			    //元转分
+			    String Amt = yuanToFen(reserveMoney);
+			    
+			    contentData.put("txnAmt", Amt);                                 //金额    单位分
 			    contentData.put("backUrl", DemoBase.backUrl);
 			    contentData.put("remark", "备款");                    //附言
 			    contentData.put("reqReserved", "1");     //请求方保留域         1表示商户结算备款
@@ -1200,7 +1215,11 @@ public class T91301Action extends BaseSupport {
 	    contentData.put("payeeAcctNo", PAYEEACCTNO);                //收款方账号
 	    contentData.put("payeeAcctName", PAYEEACCTNAME);        //收款方账户名称
 	    contentData.put("currencyCode", "156");                          //币种
-	    contentData.put("txnAmt", focusMoney);                                 //金额
+	    
+	    //元转分
+	    String Amt = yuanToFen(focusMoney);
+	    
+	    contentData.put("txnAmt", Amt);                                 //金额
 	    contentData.put("backUrl", DemoBase.backUrl);      //通知地址
 	    contentData.put("remark", "备款");
 	    contentData.put("reqReserved", "2");      //请求方保留域         2表示人行集中缴存备款
@@ -1505,8 +1524,8 @@ public class T91301Action extends BaseSupport {
 				tblPaymentReserveTmp.setPaymentAccount(PAYERACCTNO);
 				tblPaymentReserveTmp.setPaymentAccountName(PAYERACCTNAME);
 				tblPaymentReserveTmp.setPaymentMoney(paymentMoney);
-				//新增状态1
-				tblPaymentReserveTmp.setPaymentAuditStatus("1");
+				//回款待审核3
+				tblPaymentReserveTmp.setPaymentAuditStatus("3");
 				//回款状态1失败
 //				tblPaymentReserveTmp.setPaymentStatus("1");
 				//发起时间
@@ -1741,7 +1760,11 @@ public class T91301Action extends BaseSupport {
 			    contentData.put("payerAcctNo", PAYERACCTNO);                //付款方账号PAYERACCTNO
 			    contentData.put("payerAcctName", PAYERACCTNAME);        //付款方账户名称PAYERACCTNAME
 			    contentData.put("currencyCode", "156");                          //币种
-			    contentData.put("txnAmt", paymentMoney);                                 //金额reqReserved
+			    
+			    //元转分
+			    String Amt = yuanToFen(paymentMoney);
+			    
+			    contentData.put("txnAmt", Amt);                                 //金额reqReserved
 			    
 				/**对请求参数进行签名并发送http post请求，接收同步应答报文**/
 				Map<String, String> reqData = FsasService.sign(contentData,DemoBase.encoding);			//报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
@@ -2339,7 +2362,11 @@ public class T91301Action extends BaseSupport {
 			    contentData.put("payeeAcctNo", PAYEEACCTNO);                //收款方账号
 			    contentData.put("payeeAcctName", PAYEEACCTNAME);        //收款方账户名称
 			    contentData.put("currencyCode", "156");                          //币种
-			    contentData.put("txnAmt", focusMoney);                                 //金额
+			    
+		    	//元转分
+			    String Amt = yuanToFen(focusMoney);
+			    
+			    contentData.put("txnAmt", Amt);                                 //金额
 			    contentData.put("backUrl", DemoBase.backUrl);      //通知地址
 			    contentData.put("remark", "备款");
 			    contentData.put("reqReserved", "2");      //请求方保留域         2表示人行集中缴存备款
@@ -2695,6 +2722,94 @@ public class T91301Action extends BaseSupport {
 		return returnService(rspCode);
 	}
 	
+	
+	/**
+	 * 
+	 * 功能描述：金额字符串转换：单位分转成单元
+	  
+	 * @param str 传入需要转换的金额字符串
+	 * @return 转换后的金额字符串
+	 */
+	public static String yuanToFen(Object o) {
+		if(o == null)
+			return "0";
+		String s = o.toString();
+		int posIndex = -1;
+		String str = "";
+		StringBuilder sb = new StringBuilder();
+		if (s != null && s.trim().length()>0 && !s.equalsIgnoreCase("null")){
+			posIndex = s.indexOf(".");
+			if(posIndex>0){
+				int len = s.length();
+			    if(len == posIndex+1){
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+				    sb.append(str).append("00");
+				}else if(len == posIndex+2){
+				    str = s.substring(0,posIndex);
+				    if(str == "0"){
+				    	str = "";
+				    }
+				    sb.append(str).append(s.substring(posIndex+1,posIndex+2)).append("0");
+				}else if(len == posIndex+3){
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+					sb.append(str).append(s.substring(posIndex+1,posIndex+3));
+				}else{
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+					sb.append(str).append(s.substring(posIndex+1,posIndex+3));
+				}
+			}else{
+				sb.append(s).append("00");
+			}
+		}else{
+			sb.append("0");
+		}
+		str = removeZero(sb.toString());
+		if(str != null && str.trim().length()>0 && !str.trim().equalsIgnoreCase("null")){
+			return str;
+		}else{
+			return "0";
+		}
+	}
+	
+	
+	
+	/**
+	 * 
+	 * 功能描述：去除字符串首部为"0"字符
+	  
+	 * @param str 传入需要转换的字符串
+	 * @return 转换后的字符串
+	 */
+	public static String removeZero(String str){   
+	   	char  ch;  
+	   	String result = "";
+	   	if(str != null && str.trim().length()>0 && !str.trim().equalsIgnoreCase("null")){				
+	   		try{			
+				for(int i=0;i<str.length();i++){
+					ch = str.charAt(i);
+					if(ch != '0'){						
+						result = str.substring(i);
+						break;
+					}
+				}
+			}catch(Exception e){
+				result = "";
+			}	
+		}else{
+			result = "";
+		}
+	   	return result;
+			
+	}
 	
 	
 	/**
