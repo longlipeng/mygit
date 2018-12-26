@@ -83,13 +83,19 @@ public class T91401Action extends BaseSupport {
 						List<Object[]> balanceList = CommonFunction.getCommQueryDAO().findBySQLQuery(str1);
 						
 						if(balanceList!=null && !balanceList.isEmpty()){
+							//金额分转元
+							String Amt1 = fenToYuan(rspData.get("proAcctBal"));
+							String Amt2 = fenToYuan(rspData.get("proAvlbBal"));
+							String Amt3 = fenToYuan(rspData.get("acsAcctBal"));
+							String Amt4 = fenToYuan(rspData.get("avlbQuotaAmt"));
+							
 							for (Object[] objects : balanceList) {
 								String str2 = "delete from TBL_BALANCE_RESERVE_QUERY where BALANCE_NO = '" + String.valueOf(objects[0]) + "'";
 								CommonFunction.getCommQueryDAO().excute(str2);
 								
 								String str3 = "insert into TBL_BALANCE_RESERVE_QUERY(BALANCE_NO,BALANCE_DATE,BALANCE_ACS_BANK_NO,BALANCE_ACCT_BAL,BALANCE_AVLB_BAL,BALANCE_ACS_ACCT_BAL,BALANCE_AVLB_QUOTA_AMT) "
-										+ "VALUES('" + rspData.get("txnNo") + "','" + rspData.get("txnDate") + "','" + rspData.get("bankNo") + "','" + rspData.get("proAcctBal") + "',"
-										+ "'" + rspData.get("proAvlbBal") + "','" + rspData.get("acsAcctBal") + "','" + rspData.get("avlbQuotaAmt") + "')";
+										+ "VALUES('" + rspData.get("txnNo") + "','" + rspData.get("txnDate") + "','" + rspData.get("bankNo") + "','" + Amt1 + "',"
+										+ "'" + Amt2 + "','" + Amt3 + "','" + Amt4 + "')";
 								CommonFunction.getCommQueryDAO().excute(str3);
 								
 								return returnService("00");
@@ -184,14 +190,20 @@ public class T91401Action extends BaseSupport {
 						List<Object[]> balanceList = CommonFunction.getCommQueryDAO().findBySQLQuery(str);
 						
 						if(balanceList!=null && !balanceList.isEmpty()){
+							//金额分转元
+							String Amt1 = fenToYuan(rspData.get("openBal"));
+							String Amt2 = fenToYuan(rspData.get("encBal"));
+							String Amt3 = fenToYuan(rspData.get("totalDbtrAmt"));
+							String Amt4 = fenToYuan(rspData.get("totalCdtrAmt"));
+							
 							for (Object[] objects : balanceList) {
 								String str2 = "delete from TBL_HISTORY_QUERY where HISTORY_NO = '" + String.valueOf(objects[0]) + "'";
 								CommonFunction.getCommQueryDAO().excute(str2);
 								
 								String str3 = "insert into TBL_HISTORY_QUERY(HISTORY_NO, HISTORY_DATE, HISTORY_ACCTNO, HISTORY_ACCTNAME, HISTORY_OPENBAL, HISTORY_ENCBAL, HISTORY_TOTALDBTRQTY, HISTORY_TOTALCDTRQTY, HISTORY_TOTALDBTRAMT, HISTORY_TOTALCDTRAMT) "
 										+ "VALUES('" + rspData.get("txnNo") + "','" + rspData.get("txnDate") + "','" + rspData.get("acctNo") + "','" + rspData.get("acctName") + "',"
-										+ "'" + rspData.get("openBal") + "','" + rspData.get("encBal") + "','" + rspData.get("totalDbtrQty") + "','" + rspData.get("totalCdtrQty") + "',"
-										+ "'" + rspData.get("totalDbtrAmt") + "','" + rspData.get("totalCdtrAmt") + "')";
+										+ "'" + Amt1 + "','" + Amt2 + "','" + rspData.get("totalDbtrQty") + "','" + rspData.get("totalCdtrQty") + "',"
+										+ "'" + Amt3 + "','" + Amt4 + "')";
 								CommonFunction.getCommQueryDAO().excute(str3);
 								
 								return returnService("00");
@@ -290,18 +302,23 @@ public class T91401Action extends BaseSupport {
 						List<Object[]> fictitiousList = CommonFunction.getCommQueryDAO().findBySQLQuery(str);
 						
 						if(fictitiousList!=null && !fictitiousList.isEmpty()){
+							//金额分转元
+							String Amt1 = fenToYuan(rspData.get("acctBal"));
+							String Amt2 = fenToYuan(rspData.get("avlbBal"));
+							
 							for (Object[] objects : fictitiousList) {
 								String str1 = "delete from TBL_FICTITIOUS_QUERY where FICTITIOUS_NO = '" + String.valueOf(objects[0]) + "'";
 								CommonFunction.getCommQueryDAO().excute(str1);
 								
 								String str2 = "insert into TBL_FICTITIOUS_QUERY(FICTITIOUS_NO,FICTITIOUS_DATE,FICTITIOUS_ACCTNO,FICTITIOUS_ACCTNAME,FICTITIOUS_ACCTBAL,FICTITIOUS_AVLBBAL) "
 										+ "VALUES('" + rspData.get("txnNo") + "','" + rspData.get("txnDate") + "','" + rspData.get("acctNo") + "','" + rspData.get("acctName") + "',"
-										+ "'" + rspData.get("acctBal") + "','" + rspData.get("avlbBal") + "')";
+										+ "'" + Amt1 + "','" + Amt2 + "')";
 								CommonFunction.getCommQueryDAO().excute(str2);
 								
 								return returnService("00");
 							}
 						}
+						
 						TblFictitiousQuery tblFictitiousQuery = new TblFictitiousQuery();
 						
 						tblFictitiousQuery.setFictitiousNo(rspData.get("txnNo"));
@@ -364,8 +381,79 @@ public class T91401Action extends BaseSupport {
 	
 	
 	
+	/**
+	 * 
+	 * 功能描述：金额字符串转换：单位分转成单元
+	  
+	 * @param str 传入需要转换的金额字符串
+	 * @return 转换后的金额字符串
+	 */	
+	public static String fenToYuan(Object o) {
+		if(o == null)
+			return "0.00";
+		String s = o.toString();
+		int len = -1;	
+		StringBuilder sb = new StringBuilder();
+		if (s != null && s.trim().length()>0 && !s.equalsIgnoreCase("null")){
+			s = removeZero(s);
+			if (s != null && s.trim().length()>0 && !s.equalsIgnoreCase("null")){
+				len = s.length();
+				int tmp = s.indexOf("-");
+				if(tmp>=0){
+					if(len==2){
+						sb.append("-0.0").append(s.substring(1));
+					}else if(len==3){
+						sb.append("-0.").append(s.substring(1));
+					}else{
+						sb.append(s.substring(0, len-2)).append(".").append(s.substring(len-2));				
+					}						
+				}else{
+					if(len==1){
+						sb.append("0.0").append(s);
+					}else if(len==2){
+						sb.append("0.").append(s);
+					}else{
+						sb.append(s.substring(0, len-2)).append(".").append(s.substring(len-2));				
+					}					
+				}
+			}else{
+				sb.append("0.00");
+			}
+		}else{
+			sb.append("0.00");
+		}
+		return sb.toString();		
+	}
 	
 	
+	/**
+	 * 
+	 * 功能描述：去除字符串首部为"0"字符
+	  
+	 * @param str 传入需要转换的字符串
+	 * @return 转换后的字符串
+	 */
+	public static String removeZero(String str){   
+	   	char  ch;  
+	   	String result = "";
+	   	if(str != null && str.trim().length()>0 && !str.trim().equalsIgnoreCase("null")){				
+	   		try{			
+				for(int i=0;i<str.length();i++){
+					ch = str.charAt(i);
+					if(ch != '0'){						
+						result = str.substring(i);
+						break;
+					}
+				}
+			}catch(Exception e){
+				result = "";
+			}	
+		}else{
+			result = "";
+		}
+	   	return result;
+			
+	}
 	
 	
 	
