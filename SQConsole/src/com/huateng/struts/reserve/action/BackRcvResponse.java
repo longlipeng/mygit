@@ -541,7 +541,11 @@ public class BackRcvResponse extends BaseAction {
 	    contentData.put("payerAcctNo", PAYERACCTNO);                //付款方账号
 	    contentData.put("payerAcctName", PAYERACCTNAME);        //付款方账户名称
 	    contentData.put("currencyCode", "156");                          //币种
-	    contentData.put("txnAmt",acctBal);                                 //金额
+	    
+	    //元转分
+	    String Amt = yuanToFen(acctBal);
+	    
+	    contentData.put("txnAmt",Amt);                                 //金额
 	    
 		/**对请求参数进行签名并发送http post请求，接收同步应答报文**/
 		Map<String, String> reqData = FsasService.sign(contentData,DemoBase.encoding);			//报文中certId,signature的值是在signData方法中获取并自动赋值的，只要证书配置正确即可。
@@ -594,7 +598,7 @@ public class BackRcvResponse extends BaseAction {
 						tblPaymentReserveTmp.setPaymentStatus("1");//回款状态失败
 						
 						tblPaymentReserveTmp.setPaymentAuditStatus("y");
-						tblPaymentReserveTmp.setPaymentPayStatus("回款处理中");
+						tblPaymentReserveTmp.setPaymentPayStatus(rspData.get("respMsg"));
 						tblPaymentReserveTmp.setPaymentBatch(txnNo);//交易流水号
 						
 						rspCode = t9130101BO.savePaymentTmp(tblPaymentReserveTmp);
@@ -638,6 +642,94 @@ public class BackRcvResponse extends BaseAction {
 		return strResponse;
 	}
 	
+	
+	/**
+	 * 
+	 * 功能描述：金额字符串转换：单位分转成单元
+	  
+	 * @param str 传入需要转换的金额字符串
+	 * @return 转换后的金额字符串
+	 */
+	public static String yuanToFen(Object o) {
+		if(o == null)
+			return "0";
+		String s = o.toString();
+		int posIndex = -1;
+		String str = "";
+		StringBuilder sb = new StringBuilder();
+		if (s != null && s.trim().length()>0 && !s.equalsIgnoreCase("null")){
+			posIndex = s.indexOf(".");
+			if(posIndex>0){
+				int len = s.length();
+			    if(len == posIndex+1){
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+				    sb.append(str).append("00");
+				}else if(len == posIndex+2){
+				    str = s.substring(0,posIndex);
+				    if(str == "0"){
+				    	str = "";
+				    }
+				    sb.append(str).append(s.substring(posIndex+1,posIndex+2)).append("0");
+				}else if(len == posIndex+3){
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+					sb.append(str).append(s.substring(posIndex+1,posIndex+3));
+				}else{
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+					sb.append(str).append(s.substring(posIndex+1,posIndex+3));
+				}
+			}else{
+				sb.append(s).append("00");
+			}
+		}else{
+			sb.append("0");
+		}
+		str = removeZero(sb.toString());
+		if(str != null && str.trim().length()>0 && !str.trim().equalsIgnoreCase("null")){
+			return str;
+		}else{
+			return "0";
+		}
+	}
+	
+	
+	
+	/**
+	 * 
+	 * 功能描述：去除字符串首部为"0"字符
+	  
+	 * @param str 传入需要转换的字符串
+	 * @return 转换后的字符串
+	 */
+	public static String removeZero(String str){   
+	   	char  ch;  
+	   	String result = "";
+	   	if(str != null && str.trim().length()>0 && !str.trim().equalsIgnoreCase("null")){				
+	   		try{			
+				for(int i=0;i<str.length();i++){
+					ch = str.charAt(i);
+					if(ch != '0'){						
+						result = str.substring(i);
+						break;
+					}
+				}
+			}catch(Exception e){
+				result = "";
+			}	
+		}else{
+			result = "";
+		}
+	   	return result;
+			
+	}
 	
 	
 }
