@@ -380,9 +380,9 @@ public class T80701Action extends BaseSupport {
 		    contentData.put("merId", mchtNo);                                    //商户号
 		    contentData.put("merName", mchnName);                           //商户名称
 		    
-		    if(settleRpt.equals("1")){ //对私
+		    if(settleRpt.equals("1")){ //对私  bankAccountCode
 		    	contentData.put("payeeBankNo", bankAccountCode);                //收款方开户行行号    当payeeAccType=01时，可以为空；其他情况必填
-		    }else if(settleRpt.equals("2")){  //对公
+		    }else if(settleRpt.equals("2")){  //对公  compAccountBankCode
 		    	contentData.put("payeeBankNo", compAccountBankCode);                //收款方开户行行号    当payeeAccType=01时，可以为空；其他情况必填
 		    }
 		    
@@ -396,8 +396,11 @@ public class T80701Action extends BaseSupport {
 //		    contentData.put("payeeAcctNo", "1001182619003103131");                //收款方账号 settleAccNum
 ////	        contentData.put("payeeAccType", "01");              //选填字段 收款方账号类型01：银联卡99：其他
 //		    contentData.put("payeeAcctName", "中国石油天然气股份有限公司上海销售分公司");        //收款方账户名称 settleAccName
-
-		    contentData.put("txnAmt", sumAmt);                                  //金额txnAmt
+		    
+		    //元转分
+		    String Amt = yuanToFen(sumAmt);
+		    
+		    contentData.put("txnAmt", Amt);                                  //金额txnAmt
 		    contentData.put("reqReserved", "00");                           //请求方保留域
 
 //		    contentData.put("payerAcctNo", payerAcctNo);   //付款方账号    可选字段 
@@ -448,7 +451,7 @@ public class T80701Action extends BaseSupport {
 							//TODO
 							tblMchtSumrzInf = t80224BO.get(new Integer(seqNo));
 							tblMchtSumrzInf.setSaStatus("0");
-							tblMchtSumrzInf.setCauseStat("划款失败");
+							tblMchtSumrzInf.setCauseStat(rspData.get("respMsg"));
 							SimpleDateFormat dateFormater = new SimpleDateFormat("yyyyMMdd");
 							Date date1=new Date();
 							tblMchtSumrzInf.setSumrzDate(txnDate);
@@ -459,7 +462,7 @@ public class T80701Action extends BaseSupport {
 							tblMchtSumrzInf.setRecId(getOperator().getOprId());
 							tblMchtSumrzInf.setRecDate(dateFormater.format(date1));
 							//交易流水号
-							tblMchtSumrzInf.setSumrzBatch(txnNo);
+//							tblMchtSumrzInf.setSumrzBatch(txnNo);
 							
 							tblMchtSumrzInfList.add(tblMchtSumrzInf);
 						} catch (Exception e) {
@@ -604,7 +607,11 @@ public class T80701Action extends BaseSupport {
 		    contentData.put("payeeAcctNo", settleAccNum);                //收款方账号 settleAccNum
 //	        contentData.put("payeeAccType", "01");              //选填字段 收款方账号类型01：银联卡99：其他
 		    contentData.put("payeeAcctName", settleAccName);        //收款方账户名称 settleAccName
-		    contentData.put("txnAmt", sumAmt);                                  //金额
+		    
+		  //元转分
+		    String Amt = yuanToFen(sumAmt);
+		    
+		    contentData.put("txnAmt", Amt);                                  //金额
 //		    contentData.put("reqReserved", seqNo);                           //请求方保留域
 
 //		    contentData.put("payerAcctNo", payerAcctNo);   //付款方账号    可选字段 
@@ -653,7 +660,7 @@ public class T80701Action extends BaseSupport {
 							//TODO
 							tblMchtSumrzInf = t80224BO.get(new Integer(seqNo));
 							tblMchtSumrzInf.setSaStatus("0");
-							tblMchtSumrzInf.setCauseStat("划款失败");
+							tblMchtSumrzInf.setCauseStat(rspData.get("respMsg"));
 							SimpleDateFormat dateFormater = new SimpleDateFormat("yyyyMMdd");
 							Date date1=new Date();
 							tblMchtSumrzInf.setSumrzDate(txnDate);
@@ -1041,6 +1048,99 @@ public class T80701Action extends BaseSupport {
 		log("商户回填成功，操作员编号："+getOperator().getOprId());
 		return returnService(rspCode);
 	}
+	
+	
+	/**
+	 * 
+	 * 功能描述：金额字符串转换：单位分转成单元
+	  
+	 * @param str 传入需要转换的金额字符串
+	 * @return 转换后的金额字符串
+	 */
+	public static String yuanToFen(Object o) {
+		if(o == null)
+			return "0";
+		String s = o.toString();
+		int posIndex = -1;
+		String str = "";
+		StringBuilder sb = new StringBuilder();
+		if (s != null && s.trim().length()>0 && !s.equalsIgnoreCase("null")){
+			posIndex = s.indexOf(".");
+			if(posIndex>0){
+				int len = s.length();
+			    if(len == posIndex+1){
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+				    sb.append(str).append("00");
+				}else if(len == posIndex+2){
+				    str = s.substring(0,posIndex);
+				    if(str == "0"){
+				    	str = "";
+				    }
+				    sb.append(str).append(s.substring(posIndex+1,posIndex+2)).append("0");
+				}else if(len == posIndex+3){
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+					sb.append(str).append(s.substring(posIndex+1,posIndex+3));
+				}else{
+					str = s.substring(0,posIndex);
+					if(str == "0"){
+				    	str = "";
+				    }
+					sb.append(str).append(s.substring(posIndex+1,posIndex+3));
+				}
+			}else{
+				sb.append(s).append("00");
+			}
+		}else{
+			sb.append("0");
+		}
+		str = removeZero(sb.toString());
+		if(str != null && str.trim().length()>0 && !str.trim().equalsIgnoreCase("null")){
+			return str;
+		}else{
+			return "0";
+		}
+	}
+	
+	
+	
+	/**
+	 * 
+	 * 功能描述：去除字符串首部为"0"字符
+	  
+	 * @param str 传入需要转换的字符串
+	 * @return 转换后的字符串
+	 */
+	public static String removeZero(String str){   
+	   	char  ch;  
+	   	String result = "";
+	   	if(str != null && str.trim().length()>0 && !str.trim().equalsIgnoreCase("null")){				
+	   		try{			
+				for(int i=0;i<str.length();i++){
+					ch = str.charAt(i);
+					if(ch != '0'){						
+						result = str.substring(i);
+						break;
+					}
+				}
+			}catch(Exception e){
+				result = "";
+			}	
+		}else{
+			result = "";
+		}
+	   	return result;
+			
+	}
+	
+	
+	
+	
 	
 	
 	private static String processResultTS(String result) {
