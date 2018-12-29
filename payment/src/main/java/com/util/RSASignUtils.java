@@ -14,6 +14,7 @@ import java.security.spec.RSAPublicKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.CountDownLatch;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -349,17 +350,18 @@ public class RSASignUtils {
         Map<String, String> sPara = new HashMap<String, String>();
         sPara.put("charset", "utf-8");
         sPara.put("timestamp", "2018-11-07 11:40:08");
-        sPara.put("out_trade_no", "pre_201808020000109123");
+        sPara.put("out_trade_no", "pre_201808020000109135");
         sPara.put("sign_type", "RSA");
-        sPara.put("refund_amount","1");
-        sPara.put("out_refund_no","pre_201808020000109124");
-        //sPara.put("total_amount", "1");
-        //sPara.put("card_pwd","1234567890ABCDEF");
+        //sPara.put("refund_amount","1");
+        //sPara.put("out_refund_no","pre_201808020000109132");
+        sPara.put("total_amount", "1");
+        sPara.put("card_pwd","1234567890ABCDEF");
         sPara.put("card_no", "9088889502102102180");
         sPara.put("ip_address", "18800206659@864883034691307");
         sPara.put("channel", "01");
         sPara.put("app_id", "897310055110001");
         sPara.put("format", "JSON");
+        //sPara.put("notify_url","https://pmfpre.chexiang.com/saf");
         //MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAOxbswCvIAJSQ1GAnzzZvzPMx51XfS9/wgTQBV6RfwsBcod5Tgvv9sht+D2uowhMaXA7usvv9uCaVF39Lk2rgrNcmedhmeHtPmrXArsWS4BQ1FZ/Z3P6tlLJA7TQCwxMJZPUaaQfJGli4oPXVi1fwMJwZkbWAt3zR6fENUIYxd8rAgMBAAECgYEAwMfycqZkR0Bto/Zy6yD3cPqf/de0RZ/A0kgReRbXNlTR42mvnND2ynfXuAfO9h/NCDvPmjN5e6ylD5xHvhYcHTordLEEoQaJQQbNnrEB+S/KJt9u4es+ts6cUFprrqkvKbCOPQCxBdDuCPS/YYONV+Gz1rvm3xchaV+IaGQU1bECQQD4KyZItzGm4Z8+0K0aXEUWilHTpS6kbRY5AqlfVIDho/0F1KEQ73jHZnYPC7eXVmmUyPy+NFiM3LIAj7LrekI9AkEA89EjhZfcyhKfcCoiwaqVIYq57HO7TZrmsi8LdysvLqIG1iFRQhLFg8KAxDfsvcKdNqEIT24SeD2dIaZEuOTFhwJAWQOJKN3kxln5N5u760+bTFlyvjpqf3nNVceZnuL9k3GxqOy6lQuAQ+2BfSYTxQmutzpcRZEbDfN/OWpRn9rrdQJBAKGcDp+OeZq3nVcLlt4n45HIElTYoV5fPmr9I+xpg2y1mTJ2AxZ4utMLKa7mItXlGbAMLSX5H+TzciPLweGMQiECQERSQKZCJX4PECaXtDe8cu/ccwMczeKmJ+HJH3EgEBGCPpFnyLJu/Pdnf9iXPNlEsu4br7sUNdc2Vl0NjcQ/iJQ=
         String privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAOxbswCvIAJSQ1GAnzzZvzPMx51XfS9/wgTQBV6RfwsBcod5Tgvv9sht+D2uowhMaXA7usvv9uCaVF39Lk2rgrNcmedhmeHtPmrXArsWS4BQ1FZ/Z3P6tlLJA7TQCwxMJZPUaaQfJGli4oPXVi1fwMJwZkbWAt3zR6fENUIYxd8rAgMBAAECgYEAwMfycqZkR0Bto/Zy6yD3cPqf/de0RZ/A0kgReRbXNlTR42mvnND2ynfXuAfO9h/NCDvPmjN5e6ylD5xHvhYcHTordLEEoQaJQQbNnrEB+S/KJt9u4es+ts6cUFprrqkvKbCOPQCxBdDuCPS/YYONV+Gz1rvm3xchaV+IaGQU1bECQQD4KyZItzGm4Z8+0K0aXEUWilHTpS6kbRY5AqlfVIDho/0F1KEQ73jHZnYPC7eXVmmUyPy+NFiM3LIAj7LrekI9AkEA89EjhZfcyhKfcCoiwaqVIYq57HO7TZrmsi8LdysvLqIG1iFRQhLFg8KAxDfsvcKdNqEIT24SeD2dIaZEuOTFhwJAWQOJKN3kxln5N5u760+bTFlyvjpqf3nNVceZnuL9k3GxqOy6lQuAQ+2BfSYTxQmutzpcRZEbDfN/OWpRn9rrdQJBAKGcDp+OeZq3nVcLlt4n45HIElTYoV5fPmr9I+xpg2y1mTJ2AxZ4utMLKa7mItXlGbAMLSX5H+TzciPLweGMQiECQERSQKZCJX4PECaXtDe8cu/ccwMczeKmJ+HJH3EgEBGCPpFnyLJu/Pdnf9iXPNlEsu4br7sUNdc2Vl0NjcQ/iJQ=";
         sPara = RSASignUtils.buildRequestPara(sPara, privateKey);
@@ -370,6 +372,18 @@ public class RSASignUtils {
         boolean result = RSASignUtils.verifySign(sPara, publicKey, sPara.get("sign"));
 
         System.out.println("签名校验结果：" + result);
+
+        /*CountDownLatch latch = new CountDownLatch(10);
+        Random random = new Random();
+        for(int i=0; i< 10; i++){
+            Thread thread = new Thread(new AsyncTest(latch,random.nextInt()));
+            thread.start();
+        }
+        try {
+             latch.await();
+        } catch (InterruptedException e) {
+             e.printStackTrace();
+        }*/
 
     }
 
