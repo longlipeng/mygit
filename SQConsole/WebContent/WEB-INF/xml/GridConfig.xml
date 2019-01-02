@@ -2184,7 +2184,7 @@
 	<!--人行集中缴存回款回填-->
 	<Grid id="payMentStore" type="sync">
 		<Columns>
-			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch]]>
+			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch,paymentInsSeq]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getpayMentStore" />
@@ -2193,7 +2193,7 @@
 	<!--人行集中缴存回款查询-->
 	<Grid id="payMentStore1" type="sync">
 		<Columns>
-			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch]]>
+			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch,paymentInsSeq]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getpayMentStore1" />
@@ -2202,7 +2202,7 @@
 	<!--人行集中缴存回款审核-->
 	<Grid id="payMentStore2" type="sync">
 		<Columns>
-			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch]]>
+			<![CDATA[paymentId,paymentAccount,paymentAccountName,paymentMoney,paymentStatus,paymentDate,paymentPayStatus,paymentLaunchTime,paymentLaunchName,paymentAuditTime,paymentAuditName,paymentAuditStatus,paymentBatch,paymentInsSeq]]>
 		</Columns>
 		<SyncMode>
 			<Method value="getpayMentStore2" />
@@ -2237,6 +2237,26 @@
 		</Columns>
 		<SyncMode>
 			<Method value="gettblHistoryQuery" />
+		</SyncMode>
+	</Grid>
+	
+	<!--来账通知-->
+	<Grid id="tblAccountNotify" type="sync">
+		<Columns>
+			<![CDATA[tanNo,tanDate,tanPayerBankNo,tanPayerAcctNo,tanPayerAcctName,tanPayeeAcctNo,tanPayeeAcctName,tanTxnAmt,tanPayeeAcctBal,tanAcctDate]]>
+		</Columns>
+		<SyncMode>
+			<Method value="gettblAccountNotify" />
+		</SyncMode>
+	</Grid>
+	
+	<!--退汇通知-->
+	<Grid id="tblRejectedNotify" type="sync">
+		<Columns>
+			<![CDATA[trnNo,trnDate,trnPayerBankNo,trnPayerAcctNo,trnPayerAcctName,trnPayeeAcctNo,trnPayeeAcctName,trnTxnAmt,trnPayeeAcctBal,trnAcctDate,trnOrigTxnNo,trnOrigTxnDate,trnMerId,trnMerName]]>
+		</Columns>
+		<SyncMode>
+			<Method value="gettblRejectedNotify" />
 		</SyncMode>
 	</Grid>
 	

@@ -305,6 +305,24 @@ Ext.onReady(function() {
 			emptyText: '请输入回款金额',
 			//text文本输入框宽度
 			width:150
+		},{
+			//下拉框类型dynamicCombo   combo
+			xtype: 'combo',
+			//label文本值
+			fieldLabel: '回款账户*',
+			hiddenName: 'paymentInsSeq',
+			//非空验证:allowBlank: false不为空,true可为空
+			allowBlank: false,
+			//非空提示信息
+			blankText: '回款账户不能为空',
+			//可观输入信息
+			emptyText: '请输入回款金额',
+			//text文本输入框宽度
+			width:150,
+			store: new Ext.data.ArrayStore({
+				fields: ['valueField','displayField'],
+				data: [['01','01-人行备付金ACS账户'],['73','73-招行客户备付金账户'],['74','74-招行自有资金账户']]
+			})
 		}]
 	});
 	

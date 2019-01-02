@@ -136,6 +136,10 @@
 				<!--人行集中缴存回款-->
 				<value>hbm/reserve/TblPaymentReserve.hbm.xml</value>
 				<value>hbm/reserve/TblPaymentReserveTmp.hbm.xml</value>
+				<!--来账通知-->
+				<value>hbm/reserve/TblAccountNotify.hbm.xml</value>
+				<!--退汇通知-->
+				<value>hbm/reserve/TblRejectedNotify.hbm.xml</value>
 				<!-- 商户级别 -->
 				<value>hbm/mchtSrv/TblProfessionalOrgan.hbm.xml</value>
 				<value>hbm/mchtSrv/TblPaperDefInf.hbm.xml</value>

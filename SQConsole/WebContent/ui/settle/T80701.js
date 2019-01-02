@@ -84,6 +84,12 @@ Ext.onReady(function() {
 		{header: '交易金额',dataIndex: 'txnAmt',align: 'center'},
 		{header: '手续费',dataIndex: 'handAmt',align: 'center'},
 		{header: '结算金额',dataIndex: 'sumAmt',align: 'center'},
+		{header: '备注',dataIndex: 'sumrzNote',align: 'center',width:100,id:'sumrzNoteId',
+			editor: new Ext.form.TextField({
+//				allowBlank: false,
+				maxLength: 50,
+				vtype: 'isOverMax'
+			})},
 		{header: '支付状态',dataIndex: 'causeStat',width:300,align: 'center'},//auditStatus,auditId,auditDate,recId,recDate
 		{header: '划款状态',dataIndex: 'saStatus',renderer: saStateVal,align: 'center'},
 		{header: '审核状态',dataIndex: 'auditStatus',renderer: saStateValAudit,align: 'center'},
@@ -92,7 +98,6 @@ Ext.onReady(function() {
 		{header: '审核划款人',dataIndex: 'recId',align: 'center'},
 		{header: '审核划款日期',dataIndex: 'recDate',width: 100,renderer: formatDt,align: 'center'},
 		{header: '划款日期',dataIndex: 'sumrzDate',width: 100,renderer: formatDt,align: 'center'},
-		{header: '备注',dataIndex: 'sumrzNote',align: 'center',width:100,id:'sumrzNoteId',hidden:true},
 		{header: '定向委托账号开户总行名称',dataIndex: 'dirOpenBank',width:200,align: 'center'},
 		{header: '定向委托账号开户行所在省',dataIndex: 'dirBankProvince',width:200,align: 'center'},
 		{header: '定向委托账号开户行所在市',dataIndex: 'dirBankCity',width:200,align: 'center'},

@@ -38,6 +38,9 @@ Ext.onReady(function() {
 			{name: 'paymentAuditName',mapping: 'paymentAuditName'},
 			{name: 'paymentAuditStatus',mapping: 'paymentAuditStatus'},
 			{name: 'paymentBatch',mapping: 'paymentBatch'},
+			
+			//头寸序号
+			{name: 'paymentInsSeq',mapping: 'paymentInsSeq'},
 		]),
 	//	autoLoad: true
 	});
@@ -194,6 +197,8 @@ Ext.onReady(function() {
 								paymentAuditTime: record.get('paymentAuditTime'),//审核日期
 								paymentAuditName: record.get('paymentAuditName'),//审核人员
 								paymentBatch: record.get('paymentBatch'),//交易流水号
+								
+								paymentInsSeq: record.get('paymentInsSeq'),//头寸序号
 							};
 							array.push(data);
 						}
@@ -259,6 +264,8 @@ Ext.onReady(function() {
 									paymentAuditTime: record.get('paymentAuditTime'),//审核日期
 									paymentAuditName: record.get('paymentAuditName'),//审核人员
 									paymentBatch: record.get('paymentBatch'),//交易流水号
+									
+									paymentInsSeq: record.get('paymentInsSeq'),//头寸序号
 								};
 								array.push(data);
 							}

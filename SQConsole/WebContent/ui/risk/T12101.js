@@ -9,8 +9,11 @@ Ext.onReady(function() {
 		waitMsgTarget: true,
 		renderTo: 'reportPanel',
 		buttonAlign: 'center',
-		buttons: [
-			{
+		items: [{
+			xtype: 'label',
+			text: "用户名"
+		}],
+		buttons: [{
 			text: '反洗钱黑名单批量导入',
 			iconCls: 'upload',
 			handler: function(bt) {

@@ -47,7 +47,7 @@ Ext.onReady(function(){
 	var menuArr = new Array();
 	
 	var queryCondition = {
-		text: '录入查询条件',
+		text: '日期录入',
 		width: 85,
 		id: 'query',
 		iconCls: 'query',
@@ -65,10 +65,10 @@ Ext.onReady(function(){
 		}
 	};
 	
-//	menuArr.add('-');    //[0]
-//	menuArr.add(queryCondition);  //[1]
-	menuArr.add('-');    //[2]
-	menuArr.add(addBalance);    //[3]
+	menuArr.add('-');    //[0]
+	menuArr.add(queryCondition);  //[1]
+//	menuArr.add('-');    //[2]
+//	menuArr.add(addBalance);    //[3]
 	
 	var redempGrid = new Ext.grid.EditorGridPanel({
 		title: '历史余额查询',
@@ -168,7 +168,7 @@ Ext.onReady(function(){
 					},
 					params: {
 						txnId: '91403',
-						subTxnId: '01'
+						subTxnId: '01',
 					}
 				});
 			}
