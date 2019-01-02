@@ -568,6 +568,7 @@ public class T40202Action extends BaseAction {
 			return msg;
 		}
 		//根据excel有多少列判断观察地区=13还是观察个人=14
+		//根据excel的序列号判断观察地区=1还是观察个人=2
 		int flag = 0;
 		for(Integer key : readExcelContent2.keySet()){
 			String cMessageString = readExcelContent2.get(key);
@@ -575,19 +576,31 @@ public class T40202Action extends BaseAction {
 			String time = CommonFunction.getCurrentDateTime().trim();
 			String insrtSql = null;
 			//地区
-			if (cMessage.length == 13) {
+			if(cMessage[0].equals("1.0")){
 				flag = 13;
 				insrtSql ="insert into TBL_BLACKLIST_REGION(BLACK_REGION_ID,BLACK_REGION_TYPE,BLACK_REGION_NO,BLACK_REGION_NAME,BLACK_REGION_HOME,UPDATETIME) "
-						+ "values('"+ 1 +"','"+cMessage[3]+"','"+ cMessage[4] +"','"+ cMessage[5] +"','"+ cMessage[1] +"','"+ time +"') ";
+						+ "values('"+ 1 +"','"+cMessage[3]+"','"+ cMessage[4] +"','"+ cMessage[6] +"','"+ cMessage[1] +"','"+ time +"') ";
 			}
+//			if (cMessage.length == 13) {
+//				flag = 13;
+//				insrtSql ="insert into TBL_BLACKLIST_REGION(BLACK_REGION_ID,BLACK_REGION_TYPE,BLACK_REGION_NO,BLACK_REGION_NAME,BLACK_REGION_HOME,UPDATETIME) "
+//						+ "values('"+ 1 +"','"+cMessage[3]+"','"+ cMessage[4] +"','"+ cMessage[5] +"','"+ cMessage[1] +"','"+ time +"') ";
+//			}
 			//观察
-			if (cMessage.length == 14) {
+			if(cMessage[0].equals("2.0")){
 				flag = 14;
-				String da = cMessage[3].replace('\'','*');//将单引号转换为*，在sql中将*转换为单引号
+				String da = cMessage[5].replace('\'','*');//将单引号转换为*，在sql中将*转换为单引号
 				insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
-						+ "values('"+ 1 +"',REPLACE('"+da+"','*',''''),'"+ " " +"','"+ " " +"','"+ " " +"','"
-						+ " " +"','"+cMessage[4]+"','"+ cMessage[5] +"','"+ cMessage[2] +"','"+ " " +"','"+ cMessage[6] +"','"+ time +"') ";
+						+ "values('"+ 2 +"',REPLACE('"+da+"','*',''''),'"+ " " +"','"+ " " +"','"+ " " +"','"
+						+ " " +"','"+cMessage[4]+"','"+ cMessage[3] +"','"+ " " +"','"+ " " +"','"+ cMessage[2] +"','"+ time +"') ";
 			}
+//			if (cMessage.length == 14) {
+//				flag = 14;
+//				String da = cMessage[3].replace('\'','*');//将单引号转换为*，在sql中将*转换为单引号
+//				insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
+//						+ "values('"+ 1 +"',REPLACE('"+da+"','*',''''),'"+ " " +"','"+ " " +"','"+ " " +"','"
+//						+ " " +"','"+cMessage[4]+"','"+ cMessage[5] +"','"+ cMessage[2] +"','"+ " " +"','"+ cMessage[6] +"','"+ time +"') ";
+//			}
 			try {
 				CommonFunction.getCommQueryDAO().excute(insrtSql);
 			} catch (Exception e) {
