@@ -25,16 +25,23 @@ public class TblPaymentReserveTmp implements Serializable {
 	
 	private String paymentBatch;//交易流水号
 	
+	private String paymentInsSeq;//头寸序号
 	
 	
+	
+	
+	public String getPaymentInsSeq() {
+		return paymentInsSeq;
+	}
+	public void setPaymentInsSeq(String paymentInsSeq) {
+		this.paymentInsSeq = paymentInsSeq;
+	}
 	public String getPaymentBatch() {
 		return paymentBatch;
 	}
 	public void setPaymentBatch(String paymentBatch) {
 		this.paymentBatch = paymentBatch;
 	}
-	
-	
 	public String getPaymentAuditStatus() {
 		return paymentAuditStatus;
 	}
