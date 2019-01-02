@@ -1,5 +1,7 @@
 package com.huateng.dao.impl.settle;
 
+import java.util.List;
+
 import com.huateng.dao._RootDAO;
 import com.huateng.po.settle.TblMchtSumrzInf;
 
@@ -31,6 +33,13 @@ public class TblMchtSumrzInfDAO extends _RootDAO<com.huateng.po.settle.TblMchtSu
 	public void update(TblMchtSumrzInf tblMchtSumrzInf) {
 		// TODO Auto-generated method stub
 		super.update(tblMchtSumrzInf);
+	}
+
+
+
+	public List<TblMchtSumrzInf> getSumrInf(String sumrzBatch) {
+		// TODO Auto-generated method stub
+		return super.getHibernateTemplate().find("from TblMchtSumrzInf a where a.sumrzBatch = '" + sumrzBatch + "'");
 	}
 
 	
