@@ -201,7 +201,7 @@ public class T91401Action extends BaseSupport {
 								CommonFunction.getCommQueryDAO().excute(str2);
 								
 								String str3 = "insert into TBL_HISTORY_QUERY(HISTORY_NO, HISTORY_DATE, HISTORY_ACCTNO, HISTORY_ACCTNAME, HISTORY_OPENBAL, HISTORY_ENCBAL, HISTORY_TOTALDBTRQTY, HISTORY_TOTALCDTRQTY, HISTORY_TOTALDBTRAMT, HISTORY_TOTALCDTRAMT) "
-										+ "VALUES('" + rspData.get("txnNo") + "','" + rspData.get("txnDate") + "','" + rspData.get("acctNo") + "','" + rspData.get("acctName") + "',"
+										+ "VALUES('" + rspData.get("txnNo") + "','" + date + "','" + rspData.get("acctNo") + "','" + rspData.get("acctName") + "',"
 										+ "'" + Amt1 + "','" + Amt2 + "','" + rspData.get("totalDbtrQty") + "','" + rspData.get("totalCdtrQty") + "',"
 										+ "'" + Amt3 + "','" + Amt4 + "')";
 								CommonFunction.getCommQueryDAO().excute(str3);

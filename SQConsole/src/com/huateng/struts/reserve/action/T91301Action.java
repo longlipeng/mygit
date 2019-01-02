@@ -64,10 +64,11 @@ public class T91301Action extends BaseSupport {
 	private String paymentAccount;  //回款账户
 	private String paymentAccountName;   //回款账户名称
 	private String paymentMoney;   //回款金额
+	private String paymentInsSeq;    //头寸序号
 	
 //	public static int count = 0; //定义全局变量标识
 	
-//	@SuppressWarnings("unchecked")
+	//	@SuppressWarnings("unchecked")
 	public String init(){
 		
 		String sql = "SELECT SUM(a.SUM_AMT) FROM TBL_MCHT_SETTLE_INF c, TBL_MCHT_SUMRZ_INF a"
@@ -81,7 +82,7 @@ public class T91301Action extends BaseSupport {
 		
 		String sql3 = "select RESERVE_ID,RESERVE_TIME,REDEMPTION_MONEY,RESERVE_SETTLE_MONEY,RESERVE_MONEY,RESERVE_STATUS,RESERVE_SETTLE_STATUS,RESERVE_PAY_STATUS,RESERVE_LAUNCH_TIME,RESERVE_LAUNCH_NAME,RESERVE_AUDIT_TIME,RESERVE_AUDIT_NAME,RESERVE_BATCH "
 				+ "from TBL_MCHT_SETTLE_RESERVE_TMP "
-				+ "where (RESERVE_SETTLE_STATUS <> '0' or RESERVE_SETTLE_STATUS is null) and RESERVE_TIME = '" + startdate + "' order by RESERVE_ID";
+				+ "where RESERVE_TIME = '" + startdate + "' order by RESERVE_ID";
 		
 		List<Object[]> dataList1 = CommonFunction.getCommQueryDAO().findBySQLQuery(sql3);
 		
@@ -268,7 +269,8 @@ public class T91301Action extends BaseSupport {
 				if(!rspData.isEmpty()){
 					if(FsasService.validate(rspData, DemoBase.encoding)){
 						LogUtil.writeLog("验证签名成功");
-						String respCode = rspData.get("respCode") ;
+						String respCode = rspData.get("respCode");
+						String respMsg = rspData.get("respMsg");
 						if(("00").equals(respCode)){
 							//成功 
 							//TODO
@@ -322,27 +324,7 @@ public class T91301Action extends BaseSupport {
 								//0成功   审核状态
 								tblMchtSettleReserveTmp.setReserveStatus("0");
 								//支付状态
-								if(("39").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("交易不在受理时间范围内");
-								}else if(("10").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("报文格式错误");
-								}else if(("38").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("银联风险受限");
-								}else if(("90").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("虚拟记账余额不足");
-								}else if(("91").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("划付失败");
-								}else if(("12").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("重复交易");
-								}else if(("11").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("验证签名失败");
-								}else if(("02").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("系统未开放或暂时关闭，请稍后再试");
-								}else if(("05").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("交易已受理，请稍后查询交易结果");
-								}else if(("13").equals(respCode)){
-									tblMchtSettleReserveTmp.setReservePayStatus("报文交易要素缺失");
-								}
+								tblMchtSettleReserveTmp.setReservePayStatus(respMsg);
 								//交易流水号
 								tblMchtSettleReserveTmp.setReserveBatch(txnNo);
 								
@@ -1234,7 +1216,8 @@ public class T91301Action extends BaseSupport {
 		if(!rspData.isEmpty()){
 			if(FsasService.validate(rspData, DemoBase.encoding)){
 				LogUtil.writeLog("验证签名成功");
-				String respCode = rspData.get("respCode") ;
+				String respCode = rspData.get("respCode");
+				String respMsg = rspData.get("respMsg");
 				if(("00").equals(respCode)){
 					//成功 
 					//TODO
@@ -1270,6 +1253,8 @@ public class T91301Action extends BaseSupport {
 						//1备款失败
 						tblFocusReserve.setFocusStatus("1");
 						tblFocusReserve.setFocusDate(focusDate);
+						//支付状态
+						tblFocusReserve.setFocusPayStatus(respMsg);
 						
 						rspCode = t9130101BO.saveFocus(tblFocusReserve);
 					} catch (Exception e) {
@@ -1532,6 +1517,8 @@ public class T91301Action extends BaseSupport {
 				tblPaymentReserveTmp.setPaymentLaunchTime(sdf1.format(new Date()));
 				//发起人
 				tblPaymentReserveTmp.setPaymentLaunchName(getOperator().getOprId());
+				//头寸序号
+				tblPaymentReserveTmp.setPaymentInsSeq(paymentInsSeq);
 				
 				rspCode = t9130101BO.savePaymentTmp(tblPaymentReserveTmp);
 			} catch (Exception e) {
@@ -1689,6 +1676,8 @@ public class T91301Action extends BaseSupport {
 			String paymentAuditTime = jsonBean.getJSONDataAt(i).getString("paymentAuditTime");//审核日期
 			String paymentAuditName = jsonBean.getJSONDataAt(i).getString("paymentAuditName");//审核人员
 			
+			String paymentInsSeq = jsonBean.getJSONDataAt(i).getString("paymentInsSeq");//头寸序号
+			
 			
 			System.out.println("发起人:"+paymentLaunchName +"		发起时间:"+paymentLaunchTime);
 			log.info("发起人:"+paymentLaunchName +"		发起时间:"+paymentLaunchTime);
@@ -1756,7 +1745,7 @@ public class T91301Action extends BaseSupport {
 			    contentData.put("acqInsCode", ACQINSCODE);                        //机构代码
 			    contentData.put("txnDate",txnDate);                               //交易日期
 			    contentData.put("sndTime", DemoBase.getSendTime());      //发送时间 格式HHmmss
-			    contentData.put("insSeq", "01");   //头寸序号   以机构代码 +头寸序号在银联系统内对应的银行账户为准
+			    contentData.put("insSeq", paymentInsSeq);   //头寸序号   以机构代码 +头寸序号在银联系统内对应的银行账户为准
 			    contentData.put("payerAcctNo", PAYERACCTNO);                //付款方账号PAYERACCTNO
 			    contentData.put("payerAcctName", PAYERACCTNAME);        //付款方账户名称PAYERACCTNAME
 			    contentData.put("currencyCode", "156");                          //币种
@@ -1820,27 +1809,7 @@ public class T91301Action extends BaseSupport {
 								tblPaymentReserveTmp.setPaymentDate(txnDate);
 								
 								//支付状态
-								if(("39").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("交易不在受理时间范围内");
-								}else if(("10").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("报文格式错误");
-								}else if(("38").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("银联风险受限");
-								}else if(("90").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("虚拟记账余额不足");
-								}else if(("91").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("划付失败");
-								}else if(("12").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("重复交易");
-								}else if(("11").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("验证签名失败");
-								}else if(("02").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("系统未开放或暂时关闭，请稍后再试");
-								}else if(("05").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("交易已受理，请稍后查询交易结果");
-								}else if(("13").equals(respCode)){
-									tblPaymentReserveTmp.setPaymentPayStatus("报文交易要素缺失");
-								}
+								tblPaymentReserveTmp.setPaymentPayStatus(respMsg);
 								
 								tblPaymentReserveTmp.setPaymentBatch(txnNo);
 								
@@ -1891,25 +1860,25 @@ public class T91301Action extends BaseSupport {
 					if(tblPaymentReserveTmp.getPaymentStatus()!=null){
 						sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
 								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
 								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
 					}else{
 						sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
 								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
 								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
 								+ "null,'" + tblPaymentReserveTmp.getPaymentDate() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
 					}
 					CommonFunction.getCommQueryDAO().excute(sql1);
 					
@@ -1953,6 +1922,7 @@ public class T91301Action extends BaseSupport {
 			String paymentAuditTime = jsonBean.getJSONDataAt(i).getString("paymentAuditTime");//审核日期
 			String paymentAuditName = jsonBean.getJSONDataAt(i).getString("paymentAuditName");//审核人员
 			
+			String paymentInsSeq = jsonBean.getJSONDataAt(i).getString("paymentInsSeq");//头寸序号
 			
 			System.out.println("发起人:"+paymentLaunchName +"		发起时间:"+paymentLaunchTime);
 			log.info("发起人:"+paymentLaunchName +"		发起时间:"+paymentLaunchTime);
@@ -1994,14 +1964,14 @@ public class T91301Action extends BaseSupport {
 					
 					String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
 							+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-							+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+							+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
 							+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
+							+ "null,'" + tblPaymentReserveTmp.getPaymentDate() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+							+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
 					CommonFunction.getCommQueryDAO().excute(sql1);
 					
 					rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
@@ -2027,14 +1997,14 @@ public class T91301Action extends BaseSupport {
 					
 					String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
 							+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-							+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+							+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
 							+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+							+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
 					CommonFunction.getCommQueryDAO().excute(sql1);
 					
 					rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
@@ -2065,14 +2035,14 @@ public class T91301Action extends BaseSupport {
 					
 					String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
 							+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-							+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+							+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
 							+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
 							+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+							+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
 					CommonFunction.getCommQueryDAO().excute(sql1);
 					
 					rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
@@ -2426,27 +2396,7 @@ public class T91301Action extends BaseSupport {
 								tblFocusReserveTmp.setFocusDate(txnDate);
 								
 								//支付状态
-								if(("39").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("交易不在受理时间范围内");
-								}else if(("10").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("报文格式错误");
-								}else if(("38").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("银联风险受限");
-								}else if(("90").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("虚拟记账余额不足");
-								}else if(("91").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("划付失败");
-								}else if(("12").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("重复交易");
-								}else if(("11").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("验证签名失败");
-								}else if(("02").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("系统未开放或暂时关闭，请稍后再试");
-								}else if(("05").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("交易已受理，请稍后查询交易结果");
-								}else if(("13").equals(respCode)){
-									tblFocusReserveTmp.setFocusPayStatus("报文交易要素缺失");
-								}
+								tblFocusReserveTmp.setFocusPayStatus(respMsg);
 								
 								tblFocusReserveTmp.setFocusBatch(txnNo);
 								
@@ -2931,6 +2881,18 @@ public class T91301Action extends BaseSupport {
 		return null;
 	}
 	
+	
+	
+	
+	
+	
+	public String getPaymentInsSeq() {
+		return paymentInsSeq;
+	}
+
+	public void setPaymentInsSeq(String paymentInsSeq) {
+		this.paymentInsSeq = paymentInsSeq;
+	}
 	
 	public String getFocusId() {
 		return focusId;
