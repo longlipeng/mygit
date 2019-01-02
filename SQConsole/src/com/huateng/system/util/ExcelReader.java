@@ -172,8 +172,10 @@ public class ExcelReader {
         }      
         sheet = wb.getSheetAt(0);      
         //得到总行数      
-        int rowNum = sheet.getLastRowNum();      
-        row = sheet.getRow(0);      
+        int rowNum = sheet.getLastRowNum(); 
+        //获取第几行
+        row = sheet.getRow(0);   
+        //获取不为空的列个数
         int colNum = row.getPhysicalNumberOfCells();      
         //正文内容应该从第二行开始,第一行为表头的标题      
         for (int i = 1; i <= rowNum; i++) {      
