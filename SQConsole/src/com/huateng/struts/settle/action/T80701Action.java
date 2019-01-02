@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import com.huateng.bo.settle.T80224BO;
 import com.huateng.common.SysParamConstants;
+import com.huateng.po.reserve.TblMchtSettleReserveTmp;
 import com.huateng.po.settle.TblMchtSumrzInf;
 import com.huateng.struts.system.action.BaseSupport;
 import com.huateng.system.util.CommonFunction;
@@ -66,6 +67,11 @@ public class T80701Action extends BaseSupport {
 		log("商户划款成功回填成功，操作员编号："+getOperator().getOprId());
 		return returnService(rspCode);
 	}
+	
+	/**
+	 * 商户结算划款通过
+	 * @return
+	 */
 	public String applyYqZl() {
 		jsonBean.parseJSONArrayData(getInfList());
 		int len = jsonBean.getArray().size();
@@ -109,8 +115,12 @@ public class T80701Action extends BaseSupport {
 				SimpleDateFormat dateFormater = new SimpleDateFormat("yyyyMMdd");
 				Date date1=new Date();
 				tblMchtSumrzInf.setAuditDate(dateFormater.format(date1));
+				//备注
+				tblMchtSumrzInf.setSumrzNote(sumrzNote);
+				
 				tblMchtSumrzInfList.add(tblMchtSumrzInf);
 			} catch (Exception e) {
+				e.printStackTrace();
 				log.error("新增失败："+e);
 			}
 		}
@@ -172,6 +182,9 @@ public class T80701Action extends BaseSupport {
 				SimpleDateFormat dateFormater = new SimpleDateFormat("yyyyMMdd");
 				Date date1=new Date();
 				tblMchtSumrzInf.setAuditDate(dateFormater.format(date1));
+				//备注
+				tblMchtSumrzInf.setSumrzNote(sumrzNote);
+				
 				tblMchtSumrzInfList.add(tblMchtSumrzInf);
 			} catch (Exception e) {
 				log.error("二次新增失败："+e);
@@ -402,6 +415,8 @@ public class T80701Action extends BaseSupport {
 		    
 		    contentData.put("txnAmt", Amt);                                  //金额txnAmt
 		    contentData.put("reqReserved", "00");                           //请求方保留域
+		    
+		    contentData.put("reserved", sumrzNote);                               //保留域      备注
 
 //		    contentData.put("payerAcctNo", payerAcctNo);   //付款方账号    可选字段 
 //		    contentData.put("payerAcctName", payerAcctName);//付款方账号名称  可选字段 
@@ -612,7 +627,9 @@ public class T80701Action extends BaseSupport {
 		    String Amt = yuanToFen(sumAmt);
 		    
 		    contentData.put("txnAmt", Amt);                                  //金额
-//		    contentData.put("reqReserved", seqNo);                           //请求方保留域
+		    contentData.put("reqReserved", "00");                           //请求方保留域
+		    
+		    contentData.put("reserved", sumrzNote);                               //保留域      备注
 
 //		    contentData.put("payerAcctNo", payerAcctNo);   //付款方账号    可选字段 
 //		    contentData.put("payerAcctName", payerAcctName);//付款方账号名称  可选字段 
@@ -647,6 +664,8 @@ public class T80701Action extends BaseSupport {
 							tblMchtSumrzInf.setAuditStatus("4");
 							tblMchtSumrzInf.setRecId(getOperator().getOprId());
 							tblMchtSumrzInf.setRecDate(dateFormater.format(date1));
+							//交易流水号
+							tblMchtSumrzInf.setSumrzBatch(txnNo);
 							
 							tblMchtSumrzInfList.add(tblMchtSumrzInf);
 						} catch (Exception e) {
@@ -1007,7 +1026,7 @@ public class T80701Action extends BaseSupport {
 							try {
 								tblMchtSumrzInf = t80224BO.get(new Integer(seqNo));
 								tblMchtSumrzInf.setSaStatus("0");
-								tblMchtSumrzInf.setCauseStat("失败");
+								tblMchtSumrzInf.setCauseStat(rspData.get("respMsg"));
 								tblMchtSumrzInfList.add(tblMchtSumrzInf);
 							} catch (Exception e) {
 								log.error("查询后台处理失败："+e);
@@ -1020,7 +1039,7 @@ public class T80701Action extends BaseSupport {
 						try {
 							tblMchtSumrzInf = t80224BO.get(new Integer(seqNo));
 							tblMchtSumrzInf.setSaStatus("0");
-							tblMchtSumrzInf.setCauseStat("失败");
+							tblMchtSumrzInf.setCauseStat(rspData.get("respMsg"));
 							tblMchtSumrzInfList.add(tblMchtSumrzInf);
 						} catch (Exception e) {
 							log.error("查询后台处理失败："+e);

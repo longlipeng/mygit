@@ -304,7 +304,7 @@ public class T80601Action extends BaseSupport {
 					// TODO: handle exception
 					return returnService(rspCode,e);
 				}
-			}else if(redempTionStatus.equals("3")){
+			}else if(redempTionStatus.equals("3")){   //3为赎回审核
 				
 				SDKConfig.getConfig().loadPropertiesFromSrc();// 从classpath加载fsas_sdk.properties文件
 				
@@ -357,7 +357,8 @@ public class T80601Action extends BaseSupport {
 				if(!rspData.isEmpty()){
 					if(FsasService.validate(rspData, DemoBase.encoding)){
 						LogUtil.writeLog("验证签名成功");
-						String respCode = rspData.get("respCode") ;
+						String respCode = rspData.get("respCode");
+						String respMsg = rspData.get("respMsg");
 						if(("00").equals(respCode)){
 							//成功 
 							//TODO
@@ -402,27 +403,7 @@ public class T80601Action extends BaseSupport {
 								tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
 								tblSettleRedempTionInfTmp.setRedempTionStatus("5");
 								tblSettleRedempTionInfTmp.setRedempTionAccountStatus("1");//赎回失败
-								if(("39").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("交易不在受理时间范围内");
-								}else if(("10").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("报文格式错误");
-								}else if(("38").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("银联风险受限");
-								}else if(("90").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("虚拟记账余额不足");
-								}else if(("91").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("划付失败");
-								}else if(("12").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("重复交易");
-								}else if(("11").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("验证签名失败");
-								}else if(("02").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("系统未开放或暂时关闭，请稍后再试");
-								}else if(("05").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("交易已受理，请稍后查询交易结果");
-								}else if(("13").equals(respCode)){
-									tblSettleRedempTionInfTmp.setRedempTionPayStatus("报文交易要素缺失");
-								}
+								tblSettleRedempTionInfTmp.setRedempTionPayStatus(respMsg);
 								//更新临时表审核时间
 								tblSettleRedempTionInfTmp.setRedempTionAuditDate(txnDate);
 								//更新临时表审核人
@@ -687,6 +668,18 @@ public class T80601Action extends BaseSupport {
 								tblSettleRedempTionInfTmp = t80601BO.getRedemp(redempTionId);
 								tblSettleRedempTionInfTmp.setRedempTionAccountStatus("0");
 								tblSettleRedempTionInfTmp.setRedempTionPayStatus("完成");
+								
+								String redempDelInf = "delete from TBL_SETTLE_REDEMPTION_INF where REDEMPTION_ID = '" + tblSettleRedempTionInfTmp.getRedempTionId() + "'";
+								commQueryDAO.excute(redempDelInf);
+								
+								String redempDel = "insert into TBL_SETTLE_REDEMPTION_INF(REDEMPTION_ID, REDEMPTION_ACCOUNT_NAME, REDEMPTION_ACCOUNT, "
+										+ "REDEMPTION_MONEY, REDEMPTION_BANK_CARD, REDEMPTION_STATUS, REDEMPTION_ACCOUNT_STATUS, REDEMPTION_PAY_STATUS, REDEMPTION_ADD_TIME, "
+										+ "REDEMPTION_ADD_NAME, REDEMPTION_AUDIT_DATE, REDEMPTION_AUDIT_NAME, REDEMPTION_ENTRY, REDEMPTION_BATCH) "
+										+ "VALUES ('" + tblSettleRedempTionInfTmp.getRedempTionId() + "','" + tblSettleRedempTionInfTmp.getRedempTionAccountName() + "'"
+										+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAccount() + "','" + tblSettleRedempTionInfTmp.getRedempTionMoney() + "'"
+										+ ",'" + tblSettleRedempTionInfTmp.getRedempTionBankCard() + "','5','0','" + tblSettleRedempTionInfTmp.getRedempTionPayStatus() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddTime() + "','" + tblSettleRedempTionInfTmp.getRedempTionAddName() + "'"
+										+ ",'" + tblSettleRedempTionInfTmp.getRedempTionAuditDate() + "','" + tblSettleRedempTionInfTmp.getRedempTionAuditName() + "','1','" + tblSettleRedempTionInfTmp.getRedemptionBatch() + "')";
+								commQueryDAO.excute(redempDel);
 								
 								rspCode = t80601BO.redempUp(tblSettleRedempTionInfTmp);
 							} catch (Exception e) {
