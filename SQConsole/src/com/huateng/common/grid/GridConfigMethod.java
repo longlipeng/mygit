@@ -12353,7 +12353,7 @@ public class GridConfigMethod {
 					+ request.getParameter("paymentAccount") + "'");
 		}
 
-		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH "
+		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ "
 				+ "from TBL_PAYMENT_RESERVE_TMP " + "where 1=1" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by PAYMENT_ID";
@@ -12384,7 +12384,7 @@ public class GridConfigMethod {
 					+ request.getParameter("paymentAccount") + "'");
 		}
 
-		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH "
+		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ "
 				+ "from TBL_PAYMENT_RESERVE_TMP where (PAYMENT_STATUS <> '0' or PAYMENT_STATUS is null)" + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by PAYMENT_ID";
@@ -12415,7 +12415,7 @@ public class GridConfigMethod {
 					+ request.getParameter("paymentAccount") + "'");
 		}
 		//1368
-		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH "
+		String sql = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ "
 				+ "from TBL_PAYMENT_RESERVE_TMP where PAYMENT_AUDIT_STATUS in ('1','3','6','8') " + sb.toString();
 		String countSql = "select count(*) from (" + sql + ")";
 		sql += " order by PAYMENT_ID";
@@ -12523,6 +12523,63 @@ public class GridConfigMethod {
 		return ret;
 	}
 	
+	/**
+	 * 来账通知
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] gettblAccountNotify(int begin,HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and TAN_DATE = '" + request.getParameter("date") + "'");
+		}
+
+		String sql = "select TAN_NO, TAN_DATE, TAN_PAYERBANKNO, TAN_PAYERACCTNO, TAN_PAYERACCTNAME, TAN_PAYEEACCTNO, TAN_PAYEEACCTNAME, TAN_TXNAMT, TAN_PAYEEACCTBAL, TAN_ACCTDATE "
+				+ "from TBL_ACCOUNT_NOTIFY "
+				+ "where 1=1"
+				+ sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by TAN_NO";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
+	
+	/**
+	 * 退汇通知
+	 * @param begin
+	 * @param request
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public static Object[] gettblRejectedNotify(int begin,HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+
+		if (isNotEmpty(request.getParameter("date"))) {
+			sb.append(" and TRN_DATE = '" + request.getParameter("date") + "'");
+		}
+
+		String sql = "select TRN_NO, TRN_DATE, TRN_PAYERBANKNO, TRN_PAYERACCTNO, TRN_PAYERACCTNAME, TRN_PAYEEACCTNO, TRN_PAYEEACCTNAME, TRN_TXNAMT, TRN_PAYEEACCTBAL, TRN_ACCTDATE, TRN_ORIG_TXNNO, TRN_ORIG_TXNDATE, TRN_MER_ID, TRN_MER_NAME "
+				+ "from TBL_REJECTED_NOTIFY "
+				+ "where 1=1"
+				+ sb.toString();
+		String countSql = "select count(*) from (" + sql + ")";
+		sql += " order by TRN_NO";
+
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql);
+		ret[0] = dataList;
+		ret[1] = count;
+		return ret;
+	}
 	
 
 }
