@@ -96,16 +96,29 @@ public class BackRcvResponse extends BaseAction {
 			if(txnType.equals("31")){    //31：来账
 				log("来账通知报文:" + jsonData);
 				
-				
+				String sql = "insert into TBL_ACCOUNT_NOTIFY(TAN_NO, TAN_DATE, TAN_PAYERBANKNO, TAN_PAYERACCTNO, TAN_PAYERACCTNAME, "
+						+ "TAN_PAYEEACCTNO, TAN_PAYEEACCTNAME, TAN_TXNAMT, TAN_PAYEEACCTBAL, TAN_ACCTDATE) values ('" + map.get("txnNo") + "','"
+						+ "" + map.get("txnDate") + "','" + map.get("payerBankNo") + "','"
+				   		+ "" + map.get("payerAcctNo") + "','" + map.get("payerAcctName") + "','" + map.get("payeeAcctNo") + "','"
+		   				+ "" + map.get("payeeAcctName") + "','" + map.get("txnAmt") + "','" + map.get("payeeAcctBal") + "','"
+   						+ "" + map.get("acctDate") + "')";
+				commQueryDAO.excute(sql);
 				
 				LogUtil.writeLog("接收来账通知结束");
 				//返回给银联服务器http 200状态码
 				response.getWriter().print("ok");
 				rspCode = "00";
-			}else if(txnType.equals("32")){    //32：退汇
+			}else if(txnType.equals("32")){    //32：退汇  
 				log("退汇通知报文:" + jsonData);
 				 
-				
+				String sql = "insert into TBL_REJECTED_NOTIFY(TRN_NO, TRN_DATE, TRN_PAYERBANKNO, TRN_PAYERACCTNO, TRN_PAYERACCTNAME, "
+						+ "TRN_PAYEEACCTNO, TRN_PAYEEACCTNAME, TRN_TXNAMT, TRN_PAYEEACCTBAL, TRN_ACCTDATE, TRN_ORIG_TXNNO, "
+						+ "TRN_ORIG_TXNDATE, TRN_MER_ID, TRN_MER_NAME) values ('" + map.get("txnNo") + "','" + map.get("txnDate") + "','"
+						+ "" + map.get("payerBankNo") + "','" + map.get("payerAcctNo") + "','" + map.get("payerAcctName") + "','"
+						+ "" + map.get("payeeAcctNo") + "','" + map.get("payeeAcctName") + "','" + map.get("txnAmt") + "','"
+						+ "" + map.get("payeeAcctBal") + "','" + map.get("acctDate") + "','" + map.get("origTxnNo") + "','"
+						+ "" + map.get("origTxnDate") + "','" + map.get("merId") + "','" + map.get("merName") + "')";
+				commQueryDAO.excute(sql);
 				
 				LogUtil.writeLog("接收退汇通知结束");
 				//返回给银联服务器http 200状态码
@@ -209,7 +222,7 @@ public class BackRcvResponse extends BaseAction {
 				}else if(txnType.equals("04")){  //04: 回款（模式二）06：回款（模式一） 
 					log("回款通知报文:" + jsonData);
 					try {
-						String sql2 = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH from TBL_PAYMENT_RESERVE_TMP where PAYMENT_BATCH = '" + txnNo + "'";
+						String sql2 = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ from TBL_PAYMENT_RESERVE_TMP where PAYMENT_BATCH = '" + txnNo + "'";
 						List<Object[]> tmsrt = commQueryDAO.findBySQLQuery(sql2);
 						TblPaymentReserveTmp tblPaymentReserveTmp = new TblPaymentReserveTmp();
 						for (Object[] objects2 : tmsrt) {
@@ -228,6 +241,8 @@ public class BackRcvResponse extends BaseAction {
 							tblPaymentReserveTmp.setPaymentAuditName(String.valueOf(objects2[10]));
 							tblPaymentReserveTmp.setPaymentAuditStatus(String.valueOf(objects2[11]));
 							tblPaymentReserveTmp.setPaymentBatch(String.valueOf(objects2[12]));
+							//头寸序号
+							tblPaymentReserveTmp.setPaymentInsSeq(String.valueOf(objects2[13]));
 						}
 						
 						String sql = "delete from TBL_PAYMENT_RESERVE where PAYMENT_ID = '" + tblPaymentReserveTmp.getPaymentId() + "'";
@@ -235,14 +250,14 @@ public class BackRcvResponse extends BaseAction {
 						
 						String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
 								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
 								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
 						CommonFunction.getCommQueryDAO().excute(sql1);
 						
 						rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
@@ -253,14 +268,16 @@ public class BackRcvResponse extends BaseAction {
 				}else if(txnType.equals("02")){   //02: 客户资金结算（单笔）
 					log("客户资金结算（单笔）通知报文:" + jsonData);
 					if(reqReserved.equals("00")){  //00: T+0
-						TblMchtSumrzInf tblMchtSumrzInf = new TblMchtSumrzInf();
 						try{
 							//TODO
-							tblMchtSumrzInf = t80224BO.get(new Integer(txnNo));
-							tblMchtSumrzInf.setSaStatus("1");
-							tblMchtSumrzInf.setCauseStat("划款成功");
+							List<TblMchtSumrzInf> list = t80224BO.getSumrInf(txnNo);
 							
-							rspCode = t80224BO.update(tblMchtSumrzInf);
+							for (TblMchtSumrzInf tblMchtSumrzInf2 : list) {
+								tblMchtSumrzInf2.setSaStatus("1");
+								tblMchtSumrzInf2.setCauseStat("划款成功");
+								
+								rspCode = t80224BO.update(tblMchtSumrzInf2);
+							}
 						} catch (Exception e) {
 							log("划款后台处理失败："+e);
 						}
@@ -400,7 +417,7 @@ public class BackRcvResponse extends BaseAction {
 				}else if(txnType.equals("04")){  //04: 回款（模式二）06：回款（模式一） 
 					log("回款通知报文:" + jsonData);
 					try {
-						String sql2 = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH from TBL_PAYMENT_RESERVE_TMP where PAYMENT_BATCH = '" + txnNo + "'";
+						String sql2 = "select PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ from TBL_PAYMENT_RESERVE_TMP where PAYMENT_BATCH = '" + txnNo + "'";
 						List<Object[]> tmsrt = commQueryDAO.findBySQLQuery(sql2);
 						TblPaymentReserveTmp tblPaymentReserveTmp = new TblPaymentReserveTmp();
 						for (Object[] objects2 : tmsrt) {
@@ -419,6 +436,8 @@ public class BackRcvResponse extends BaseAction {
 							tblPaymentReserveTmp.setPaymentAuditName(String.valueOf(objects2[10]));
 							tblPaymentReserveTmp.setPaymentAuditStatus(String.valueOf(objects2[11]));
 							tblPaymentReserveTmp.setPaymentBatch(String.valueOf(objects2[12]));
+							//头寸序号
+							tblPaymentReserveTmp.setPaymentInsSeq(String.valueOf(objects2[13]));
 						}
 						
 						String sql = "delete from TBL_PAYMENT_RESERVE where PAYMENT_ID = '" + tblPaymentReserveTmp.getPaymentId() + "'";
@@ -426,14 +445,14 @@ public class BackRcvResponse extends BaseAction {
 						
 						String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
 								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH) "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
 								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
 								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "')";
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
 						CommonFunction.getCommQueryDAO().excute(sql1);
 						
 						rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
@@ -444,14 +463,16 @@ public class BackRcvResponse extends BaseAction {
 				}else if(txnType.equals("02")){   //02: 客户资金结算（单笔）
 					if(reqReserved.equals("00")){  //00: T+0
 						log("客户资金结算（单笔）通知报文:" + jsonData);
-						TblMchtSumrzInf tblMchtSumrzInf = new TblMchtSumrzInf();
 						try{
 							//TODO
-							tblMchtSumrzInf = t80224BO.get(new Integer(txnNo));
-							tblMchtSumrzInf.setSaStatus("0");
-							tblMchtSumrzInf.setCauseStat(map.get("respMsg"));
+							List<TblMchtSumrzInf> list = t80224BO.getSumrInf(txnNo);
 							
-							rspCode = t80224BO.update(tblMchtSumrzInf);
+							for (TblMchtSumrzInf tblMchtSumrzInf2 : list) {
+								tblMchtSumrzInf2.setSaStatus("0");
+								tblMchtSumrzInf2.setCauseStat(map.get("respMsg"));
+								
+								rspCode = t80224BO.update(tblMchtSumrzInf2);
+							}
 						} catch (Exception e) {
 							log("划款后台处理失败："+e);
 						}
