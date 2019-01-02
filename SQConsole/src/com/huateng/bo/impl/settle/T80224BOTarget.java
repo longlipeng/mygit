@@ -37,5 +37,10 @@ public class T80224BOTarget implements T80224BO {
 		return Constants.SUCCESS_CODE;
 	}
 
+	public List<TblMchtSumrzInf> getSumrInf(String sumrzBatch) {
+		// TODO Auto-generated method stub
+		return tblMchtSumrzInfDAO.getSumrInf(sumrzBatch);
+	}
+
 	
 }
