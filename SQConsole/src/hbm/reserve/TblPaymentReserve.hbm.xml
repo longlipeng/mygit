@@ -89,6 +89,12 @@
 			type="string"
 		/>
 		
+		<property
+			name="paymentInsSeq"
+			column="PAYMENT_INS_SEQ"
+			type="string"
+		/>
+		
         
     </class>
 </hibernate-mapping>
