@@ -6,6 +6,11 @@ import com.huateng.po.settle.TblMchtSumrzInf;
 
 public interface T80224BO {
 
+	/**
+	 * 根据主键查询
+	 * @param seqNo
+	 * @return
+	 */
 	public TblMchtSumrzInf get(Integer seqNo);
 	
 	
@@ -13,4 +18,12 @@ public interface T80224BO {
 
 
 	public String update(TblMchtSumrzInf tblMchtSumrzInf) throws Exception;
+	
+	/**
+	 * 自定义列名查询
+	 * @return
+	 */
+	public List<TblMchtSumrzInf> getSumrInf(String sumrzBatch);
+	
+	
 }
