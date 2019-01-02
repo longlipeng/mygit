@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-12-29 10:42:12 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblRejectedNotify" 
+    	table="TBL_REJECTED_NOTIFY"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="trnNo"
+        	type="string"
+        	column="TRN_NO"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+        <property
+			name="trnDate"
+			column="TRN_DATE"
+			type="string"
+		/>
+		
+		<property
+			name="trnPayerBankNo"
+			column="TRN_PAYERBANKNO"
+			type="string"
+		/>
+        
+        <property
+			name="trnPayerAcctNo"
+			column="TRN_PAYERACCTNO"
+			type="string"
+		/>
+		
+		<property
+			name="trnPayerAcctName"
+			column="TRN_PAYERACCTNAME"
+			type="string"
+		/>
+		
+		<property
+			name="trnPayeeAcctNo"
+			column="TRN_PAYEEACCTNO"
+			type="string"
+		/>
+		
+		<property
+			name="trnPayeeAcctName"
+			column="TRN_PAYEEACCTNAME"
+			type="string"
+		/>
+		
+		<property
+			name="trnTxnAmt"
+			column="TRN_TXNAMT"
+			type="string"
+		/>
+		
+		<property
+			name="trnPayeeAcctBal"
+			column="TRN_PAYEEACCTBAL"
+			type="string"
+		/>
+		
+		<property
+			name="trnAcctDate"
+			column="TRN_ACCTDATE"
+			type="string"
+		/>
+		
+		<property
+			name="trnOrigTxnNo"
+			column="TRN_ORIG_TXNNO"
+			type="string"
+		/>
+		
+		<property
+			name="trnOrigTxnDate"
+			column="TRN_ORIG_TXNDATE"
+			type="string"
+		/>
+		
+		<property
+			name="trnMerId"
+			column="TRN_MER_ID"
+			type="string"
+		/>
+		
+		<property
+			name="trnMerName"
+			column="TRN_MER_NAME"
+			type="string"
+		/>
+		
+        
+    </class>
+</hibernate-mapping>

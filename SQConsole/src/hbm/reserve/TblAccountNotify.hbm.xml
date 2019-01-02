@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2018-12-29 10:41:26 by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping package="com.huateng.po.reserve">
+    <class 
+    	name="TblAccountNotify" 
+    	table="TBL_ACCOUNT_NOTIFY"
+    >
+        <meta attribute="sync-DAO">true</meta>
+        
+        <id
+        	name="tanNo"
+        	type="string"
+        	column="TAN_NO"
+        >
+        	<generator class="assigned" />
+        </id>
+        
+        <property
+			name="tanDate"
+			column="TAN_DATE"
+			type="string"
+		/>
+		
+		<property
+			name="tanPayerBankNo"
+			column="TAN_PAYERBANKNO"
+			type="string"
+		/>
+        
+        <property
+			name="tanPayerAcctNo"
+			column="TAN_PAYERACCTNO"
+			type="string"
+		/>
+		
+		<property
+			name="tanPayerAcctName"
+			column="TAN_PAYERACCTNAME"
+			type="string"
+		/>
+		
+		<property
+			name="tanPayeeAcctNo"
+			column="TAN_PAYEEACCTNO"
+			type="string"
+		/>
+		
+		<property
+			name="tanPayeeAcctName"
+			column="TAN_PAYEEACCTNAME"
+			type="string"
+		/>
+		
+		<property
+			name="tanTxnAmt"
+			column="TAN_TXNAMT"
+			type="string"
+		/>
+		
+		<property
+			name="tanPayeeAcctBal"
+			column="TAN_PAYEEACCTBAL"
+			type="string"
+		/>
+		
+		<property
+			name="tanAcctDate"
+			column="TAN_ACCTDATE"
+			type="string"
+		/>
+		
+				
+        
+    </class>
+</hibernate-mapping>
