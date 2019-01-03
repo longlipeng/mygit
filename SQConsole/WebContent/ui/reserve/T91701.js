@@ -99,6 +99,8 @@ Ext.onReady(function(){
 		autoHeight: true,
 		items: [{
 			xtype: 'datefield',
+//			format: 'Y-m-d',
+//			altFormats: 'Y-m-d',
 			name: 'date',
 			id: 'date',
 			fieldLabel: '交易日期',
@@ -153,9 +155,14 @@ Ext.onReady(function(){
 	});
 	
 	oprGridStore.on('beforeload',function(){
+//		alert(queryForm.findById('date').getValue()); //Thu Jan 03 2019 00:00:00 GMT+0800 (中国标准时间)
+//		alert("1" + typeof(queryForm.getForm().findField('date').getValue())); //object
+//		alert(queryForm.findById('date').getValue().dateFormat('Ymd')); //20190103
+//		alert("2" + typeof(queryForm.getForm().findField('date').getValue().format('Ymd'))); //string 不能为空
 		Ext.apply(this.baseParams, {
 			start: 0,
-			date: queryForm.getForm().findField('date').getValue().format('Ymd')
+			date: typeof(queryForm.findById('date').getValue()) == 'string' ? '' : queryForm.findById('date').getValue().dateFormat('Ymd'),
+//			date: queryForm.getForm().findField('date').getValue().format('Ymd')
 		});
 	});
 	
