@@ -161,8 +161,8 @@ Ext.onReady(function(){
 //		alert("2" + typeof(queryForm.getForm().findField('date').getValue().format('Ymd'))); //string 不能为空
 		Ext.apply(this.baseParams, {
 			start: 0,
-			date: typeof(queryForm.findById('date').getValue()) == 'string' ? '' : queryForm.findById('date').getValue().dateFormat('Ymd'),
-//			date: queryForm.getForm().findField('date').getValue().format('Ymd')
+//			date: typeof(queryForm.findById('date').getValue()) == 'string' ? '' : queryForm.findById('date').getValue().dateFormat('Ymd'),
+			date: typeof(queryForm.getForm().findField('date').getValue()) == 'string' ? '' : queryForm.getForm().findField('date').getValue().format('Ymd'),
 		});
 	});
 	
