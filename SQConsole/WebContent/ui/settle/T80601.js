@@ -1,17 +1,19 @@
 Ext.onReady(function() {
-	var sm = new Ext.grid.CheckboxSelectionModel({
-				singleSelect : false,
-				dataIndex : "id",
-				listeners : {
-					'beforerowselect' : function(redempColModel, rowIndex, keepExisting, record) {
-						if ((record.data.redempTionStatus)=='1' || (record.data.redempTionStatus)=='3'/* || (record.data.redempTionAccountStatus)=='0'*/) {
-							return false; // 不能进行选择
-						} else {
-							return true;
-						}
-					}
-				}
-	});
+//	var sm = new Ext.grid.CheckboxSelectionModel({
+//				singleSelect : false,
+//				dataIndex : "id",
+//				listeners : {
+//					'beforerowselect' : function(redempColModel, rowIndex, keepExisting, record) {
+//						if ((record.data.redempTionStatus)=='1' || (record.data.redempTionStatus)=='3'/* || (record.data.redempTionAccountStatus)=='0'*/) {
+//							return false; // 不能进行选择
+//						} else {
+//							return true;
+//						}
+//					}
+//				}
+//	});
+	
+	var sm = new Ext.grid.CheckboxSelectionModel();
 	
 	var redempGridStore = new Ext.data.Store({
 		proxy: new Ext.data.HttpProxy({
@@ -471,16 +473,27 @@ Ext.onReady(function() {
 		'rowselect':function(){
 			//获取选中的记录
 			var rec = redempGrid.getSelectionModel().getSelected();
-			//客户赎回按钮显示
-			if(rec.get('redempTionStatus')=='1'){
+			//审核状态为待审核时,按钮隐藏
+			if(rec.get('redempTionStatus')=='1'){  //新增待审核
 				Ext.getCmp("redemp").disable();
-			}
-			if(rec.get('redempTionAccountStatus')=='0'){
+				Ext.getCmp("redempDelete").enable();
+			}else if(rec.get('redempTionStatus')=='6'){  //删除待审核
+				Ext.getCmp("redemp").disable();
 				Ext.getCmp("redempDelete").disable();
+			}else if(rec.get('redempTionStatus')=='3'){  //赎回待审核
 				Ext.getCmp("redemp").disable();
-			}else if(rec.get('redempTionAccountStatus')=='1'){
+				Ext.getCmp("redempDelete").enable();
+			}else{
+				Ext.getCmp("redemp").enable();
 				Ext.getCmp("redempDelete").enable();
 			}
+			
+//			if(rec.get('redempTionAccountStatus')=='0'){
+//				Ext.getCmp("redempDelete").disable();
+//				Ext.getCmp("redemp").disable();
+//			}else if(rec.get('redempTionAccountStatus')=='1'){
+//				Ext.getCmp("redempDelete").enable();
+//			}
 			
 		}
 	});
