@@ -163,7 +163,7 @@ Ext.onReady(function(){
 	oprGridStore.on('beforeload',function(){
 		Ext.apply(this.baseParams, {
 			start: 0,
-			date: queryForm.getForm().findField('date').getValue().format('Ymd')
+			date: typeof(queryForm.getForm().findField('date').getValue()) == 'string' ? '' : queryForm.getForm().findField('date').getValue().format('Ymd'),
 		});
 	});
 	
