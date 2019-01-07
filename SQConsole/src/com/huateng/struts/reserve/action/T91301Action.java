@@ -2207,8 +2207,8 @@ public class T91301Action extends BaseSupport {
 				tblFocusReserveTmp.setFocusAccount(PAYEEACCTNO);
 				tblFocusReserveTmp.setFocusAccountName(PAYEEACCTNAME);
 				tblFocusReserveTmp.setFocusMoney(focusMoney);
-				//新增状态1
-				tblFocusReserveTmp.setFocusAuditStatus("1");
+				//备款待审核3
+				tblFocusReserveTmp.setFocusAuditStatus("3");
 				//备款状态1失败
 //				tblFocusReserveTmp.setFocusStatus("1");
 				tblFocusReserveTmp.setFocusDate(date);
