@@ -24,8 +24,12 @@ public class TestDES {
 	 */
 	public static void getKey(String strKey) {
 		try {
+			//1.构造密钥生成器，指定为DES算法,不区分大小写
 			KeyGenerator _generator = KeyGenerator.getInstance("DES");
+			//2.根据ecnodeRules规则初始化密钥生成器
+            //生成一个随机源,根据传入的字节数组
 			_generator.init(new SecureRandom(strKey.getBytes()));
+			//3.产生原始对称密钥
 			key = _generator.generateKey();
 			_generator = null;
 		} catch (Exception e) {
@@ -42,8 +46,10 @@ public class TestDES {
 	 *            加密后存放的文件名 如c:/加密后文件.txt
 	 */
 	public static void encrypt(String file, String destFile) throws Exception {
+		//1.根据指定算法AES自成密码器
 		Cipher cipher = Cipher.getInstance("DES");
 		// cipher.init(Cipher.ENCRYPT_MODE, getKey());
+		//2.初始化密码器，第一个参数为加密(Encrypt_mode)或者解密解密(Decrypt_mode)操作，第二个参数为使用的KEY
 		cipher.init(Cipher.ENCRYPT_MODE, key);
 		InputStream is = new FileInputStream(file);
 		OutputStream out = new FileOutputStream(destFile);
@@ -88,5 +94,21 @@ public class TestDES {
 //		 td.encrypt("C:\\Users\\Li\\Desktop\\123456.xls", "C:\\Users\\Li\\Desktop\\123456_加密.xls"); //加密
 //		td.decrypt("C:\\Users\\Li\\Desktop\\123456_加密.xls", "C:\\Users\\Li\\Desktop\\123456_解密.xls"); // 解密
 
+		td.encrypt("E:\\加解密文件\\待加密文件.txt", "E:\\加解密文件\\已加密文件.txt");
+		System.out.println("文件加密成功!");
+		
+		td.decrypt("E:\\加解密文件\\已加密文件.txt", "E:\\加解密文件\\已解密文件.txt");
+		System.out.println("文件解密成功!");
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
