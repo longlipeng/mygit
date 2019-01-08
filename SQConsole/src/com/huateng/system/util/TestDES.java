@@ -62,8 +62,9 @@ public class TestDES {
 	 * 文件采用DES算法解密文件
 	 * 
 	 * @param file
-	 *            已加密的文件 如c:/加密后文件.txt * @param destFile 解密后存放的文件名 如c:/
-	 *            test/解密后文件.txt
+	 *            已加密的文件 如c:/加密后文件.txt 
+	 * @param destFile 
+     *            解密后存放的文件名 如c:/test/解密后文件.txt
 	 */
 	public static void decrypt(String file, String dest) throws Exception {
 		Cipher cipher = Cipher.getInstance("DES");
