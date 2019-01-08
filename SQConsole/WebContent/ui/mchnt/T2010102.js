@@ -1257,6 +1257,7 @@ Ext.onReady(function() {
 	
 	//受益人信息 表单
 	var cityCodeForm1 = new Ext.form.FormPanel({
+		//设置为true时可以为panel添加背景色、圆角边框等
 		frame: true,
 		autoHeight: true,
 		width: 300,
