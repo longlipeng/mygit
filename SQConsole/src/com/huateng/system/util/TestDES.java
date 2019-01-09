@@ -89,6 +89,7 @@ public class TestDES {
 		is.close();
 	}
 
+	@SuppressWarnings("static-access")
 	public static void main(String[] args) throws Exception {
 		TestDES td = new TestDES("yq123b");
 //		 td.encrypt("C:\\Users\\Li\\Desktop\\123456.xls", "C:\\Users\\Li\\Desktop\\123456_加密.xls"); //加密
