@@ -58,7 +58,7 @@
                $("#orgId").val("");
                $("#password").val("");
             });
-       })
+       });
        function   checkpsd() { 
            if(event.keyCode=='13') {     
               loginForm.submit();
