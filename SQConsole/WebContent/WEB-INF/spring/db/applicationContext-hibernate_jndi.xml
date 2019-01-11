@@ -202,6 +202,7 @@
 	</bean>
 
 	<!--Transaction -->
+	<!-- 事务管理器 -->
 	<bean id="transactionManager"
 		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
 		<property name="sessionFactory">
@@ -209,6 +210,8 @@
 		</property>
 	</bean>
 
+	<!-- 事务代理工厂 -->
+	<!-- 生成事务代理对象 -->
 	<bean id="transactionInterceptor"
 		class="org.springframework.transaction.interceptor.TransactionInterceptor">
 		<property name="transactionManager">
@@ -216,7 +219,13 @@
 		</property>
 		<property name="transactionAttributes">
 			<props>
+			<!-- 主要 key 是方法   
+					ISOLATION_DEFAULT  事务的隔离级别
+					PROPAGATION_REQUIRED  传播行为
+				-->
 				<prop key="*">PROPAGATION_REQUIRED</prop>
+				<!-- -Exception 表示发生指定异常回滚，+Exception 表示发生指定异常提交 -->
+		<!--    <prop key="buyStock">ISOLATION_DEFAULT,PROPAGATION_REQUIRED,-BuyStockException</prop>    -->
 			</props>
 		</property>
 	</bean>
