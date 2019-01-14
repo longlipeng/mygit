@@ -207,6 +207,9 @@ public class SysParamConstants {
 	public static final String HDIP = "HDIP";
 	//人行监管入账代理端口
 	public static final String HDPORT = "HDPORT";
+	
+	//为true时操作员密码过期期限为90天,否则为20991231
+	public static final String OPR_PWD_OUT_DAYS = "OPR_PWD_OUT_DAYS";
 		
 	
 }

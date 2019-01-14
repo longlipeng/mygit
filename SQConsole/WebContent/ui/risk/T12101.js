@@ -9,10 +9,7 @@ Ext.onReady(function() {
 		waitMsgTarget: true,
 		renderTo: 'reportPanel',
 		buttonAlign: 'center',
-		items: [{
-			xtype: 'label',
-			text: "用户名"
-		}],
+		html: '<font color="red">注意</font>:请确认反洗钱黑名单文件已全部导入!否则出现数据重复不一致问题!',
 		buttons: [{
 			text: '反洗钱黑名单批量导入',
 			iconCls: 'upload',

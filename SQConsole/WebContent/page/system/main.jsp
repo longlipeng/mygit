@@ -16,6 +16,7 @@ toolBarStr = Ext.decode('${tool_bar_str}');
 operator[OPR_ID] = '${operator.oprId}';
 operator[OPR_NAME] = '${operator.oprName}';
 operator[OPR_BRH_NAME] = '${operator.oprBrhName}';
+resv2 = '${resv2}';
 var server='${pageContext.request.contextPath}';
 </script>
 

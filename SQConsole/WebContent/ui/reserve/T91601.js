@@ -241,6 +241,7 @@ Ext.onReady(function() {
 	//新增赎回信息按钮
 	var BackFillMenuAdd = {
 		text: '添加',
+		id: 'menuAdd',
 		iconCls: 'add',
 		handler: function(){
 			redempCodeForm.getForm().reset();
@@ -582,6 +583,28 @@ Ext.onReady(function() {
 			start: 0,
 			paymentAccount: queryForm.getForm().findField('paymentAccount').getValue()
 		});
+	});
+	
+	//选中数据显示按钮
+	redempGrid.getSelectionModel().on({
+		'rowselect':function(){
+			//获取选中的记录
+			var rec = redempGrid.getSelectionModel().getSelected();
+			//审核状态为待审核时,按钮隐藏或显示
+			if(rec.get('paymentAuditStatus')=='3'){  //回款待审核
+				Ext.getCmp("menuAdd").enable();
+				Ext.getCmp("redempDelete").enable();
+			}else if(rec.get('paymentAuditStatus')=='6'){  //删除待审核
+				Ext.getCmp("menuAdd").enable();
+				Ext.getCmp("redempDelete").disable();
+			}else if(rec.get('paymentAuditStatus')=='8'){  //修改待审核
+				Ext.getCmp("menuAdd").enable();
+				Ext.getCmp("redempDelete").enable();
+			}else{
+				Ext.getCmp("menuAdd").enable();
+				Ext.getCmp("redempDelete").enable();
+			}
+		}
 	});
 	
 	redempGrid.on({

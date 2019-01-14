@@ -473,7 +473,7 @@ Ext.onReady(function() {
 		'rowselect':function(){
 			//获取选中的记录
 			var rec = redempGrid.getSelectionModel().getSelected();
-			//审核状态为待审核时,按钮隐藏
+			//审核状态为待审核时,按钮隐藏或显示
 			if(rec.get('redempTionStatus')=='1'){  //新增待审核
 				Ext.getCmp("redemp").disable();
 				Ext.getCmp("redempDelete").enable();

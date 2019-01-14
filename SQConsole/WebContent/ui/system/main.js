@@ -22,11 +22,21 @@ Ext.onReady(function() {
 		listeners: {
 			click: function(node) {
 				if(node.leaf) {
-					initMask.msg = '系统界面加载中，请稍后......';
-					initMask.show();
-					Ext.get("mainUI").dom.src = node.attributes.url;
-					txnCode = node.attributes.id
-					hideToolInitMask.defer(500);
+					if(resv2=="1"){
+						resetPwdWin1.show();
+						resetPwdForm1.getForm().reset();
+						resetPwdForm1.get('resetOprId').setValue(operator[OPR_ID]);
+					}else if(resv2=="2"){
+						resetPwdWin2.show();
+						resetPwdForm2.getForm().reset();
+						resetPwdForm2.get('resetOprId').setValue(operator[OPR_ID]);
+					}else{
+						initMask.msg = '系统界面加载中，请稍后......';
+						initMask.show();
+						Ext.get("mainUI").dom.src = node.attributes.url;
+						txnCode = node.attributes.id
+						hideToolInitMask.defer(500);
+					}
 				}
 			}
 		}
@@ -185,6 +195,100 @@ Ext.onReady(function() {
 	});
 	
 	/**
+	 * 重置授权码表单
+	 */
+	var resetPwdForm1 = new Ext.form.FormPanel({
+		frame: true,
+		width: 300,
+		autoHeight: true,
+		waitMsgTarget: true,
+		items: [{
+			xtype: 'textfield',
+			fieldLabel: '操作员编号',
+			id: 'resetOprId',
+			name: 'resetOprId',
+			readOnly: true
+		},{
+			xtype: 'textfield',
+			fieldLabel: '原授权码',
+			inputType: 'password',
+			regex: /^[0-9a-zA-Z]{8}$/,
+			regexText: '授权码必须是8位数字或字母',
+			id: 'resetPassword',
+			name: 'resetPassword',
+			allowBlank: false,
+			blankText: '原授权码不能为空'
+		},{
+			xtype: 'textfield',
+			fieldLabel: '新授权码',
+			inputType: 'password',
+			regex: /^[0-9a-zA-Z]{8}$/,
+			regexText: '授权码必须是8位数字或字母',
+			id: 'resetPassword1',
+			name: 'resetPassword1',
+			allowBlank: false,
+			blankText: '新授权码不能为空'
+		},{
+			xtype: 'textfield',
+			fieldLabel: '重复授权码',
+			inputType: 'password',
+			regex: /^[0-9a-zA-Z]{8}$/,
+			regexText: '授权码必须是8位数字或字母',
+			id: 'resetPassword2',
+			name: 'resetPassword2',
+			allowBlank: false,
+			blankText: '重复授权码不能为空'
+		}]
+	});
+	
+	/**
+	 * 重置授权码表单
+	 */
+	var resetPwdForm2 = new Ext.form.FormPanel({
+		frame: true,
+		width: 300,
+		autoHeight: true,
+		waitMsgTarget: true,
+		items: [{
+			xtype: 'textfield',
+			fieldLabel: '操作员编号',
+			id: 'resetOprId',
+			name: 'resetOprId',
+			readOnly: true
+		},{
+			xtype: 'textfield',
+			fieldLabel: '原授权码',
+			inputType: 'password',
+			regex: /^[0-9a-zA-Z]{8}$/,
+			regexText: '授权码必须是8位数字或字母',
+			id: 'resetPassword',
+			name: 'resetPassword',
+			allowBlank: false,
+			blankText: '原授权码不能为空'
+		},{
+			xtype: 'textfield',
+			fieldLabel: '新授权码',
+			inputType: 'password',
+			regex: /^[0-9a-zA-Z]{8}$/,
+			regexText: '授权码必须是8位数字或字母',
+			id: 'resetPassword1',
+			name: 'resetPassword1',
+			allowBlank: false,
+			blankText: '新授权码不能为空'
+		},{
+			xtype: 'textfield',
+			fieldLabel: '重复授权码',
+			inputType: 'password',
+			regex: /^[0-9a-zA-Z]{8}$/,
+			regexText: '授权码必须是8位数字或字母',
+			id: 'resetPassword2',
+			name: 'resetPassword2',
+			allowBlank: false,
+			blankText: '重复授权码不能为空'
+		}]
+	});
+	
+	/**
 	 * 修改授权码窗口
 	 */
 	var resetPwdWin = new Ext.Window({
@@ -228,6 +332,7 @@ Ext.onReady(function() {
 					success: function(form, action) {
 						showMsg(action.result.msg,resetPwdWin,function() {
 							resetPwdWin.hide();
+							window.location.href = server;
 						});
 					},
 					failure: function(form, action) {
@@ -240,6 +345,128 @@ Ext.onReady(function() {
 			handler: function() {
 				resetPwdForm.getForm().reset();
 				resetPwdForm.get('resetOprId').setValue(operator[OPR_ID]);
+			}
+		}]
+	});
+	
+	/**
+	 * 修改授权码窗口
+	 */
+	var resetPwdWin1 = new Ext.Window({
+		title: '首次登陆授权码强制修改',
+		frame: true,
+		width: 300,
+		layout: 'fit',
+		iconCls: 'key',
+		items: [resetPwdForm1],
+		resizable: false,
+		closable: true,
+		closeAction: 'hide',
+		buttonAlign: 'center',
+		initHiddenL: true,
+		modal: true,
+		draggable: false,
+		animateTarget: 'key',
+		buttons: [{
+			text: '提交',
+			handler: function() {
+				if(!resetPwdForm1.getForm().isValid()) {
+					return;
+				}
+				if(resetPwdForm1.get('resetPassword').getValue() == resetPwdForm1.get('resetPassword1').getValue()) {
+					showAlertMsg('新授权码不能和原始授权码一致，请重新输入',resetPwdForm1,function() {
+						resetPwdForm1.get('resetPassword1').setValue('');
+						resetPwdForm1.get('resetPassword2').setValue('');
+					});
+					return;
+				}
+				if(resetPwdForm1.get('resetPassword1').getValue() != resetPwdForm1.get('resetPassword2').getValue()) {
+					showAlertMsg('两次输入的新授权码不一致，请重新输入',resetPwdForm1,function() {
+						resetPwdForm1.get('resetPassword1').setValue('');
+						resetPwdForm1.get('resetPassword2').setValue('');
+					});
+					return;
+				}
+				resetPwdForm1.getForm().submit({
+					url: 'resetPwd.asp',
+					waitMsg: '正在提交，请稍后......',
+					success: function(form, action) {
+						showMsg(action.result.msg,resetPwdWin1,function() {
+							resetPwdWin1.hide();
+							window.location.href = server;
+						});
+					},
+					failure: function(form, action) {
+						showErrorMsg(action.result.msg,resetPwdWin1);
+					}
+				});
+			}
+		},{
+			text: '清空',
+			handler: function() {
+				resetPwdForm1.getForm().reset();
+				resetPwdForm1.get('resetOprId').setValue(operator[OPR_ID]);
+			}
+		}]
+	});
+	
+	/**
+	 * 修改授权码窗口
+	 */
+	var resetPwdWin2 = new Ext.Window({
+		title: '授权码已到期强制修改',
+		frame: true,
+		width: 300,
+		layout: 'fit',
+		iconCls: 'key',
+		items: [resetPwdForm2],
+		resizable: false,
+		closable: true,
+		closeAction: 'hide',
+		buttonAlign: 'center',
+		initHiddenL: true,
+		modal: true,
+		draggable: false,
+		animateTarget: 'key',
+		buttons: [{
+			text: '提交',
+			handler: function() {
+				if(!resetPwdForm2.getForm().isValid()) {
+					return;
+				}
+				if(resetPwdForm2.get('resetPassword').getValue() == resetPwdForm2.get('resetPassword1').getValue()) {
+					showAlertMsg('新授权码不能和原始授权码一致，请重新输入',resetPwdForm2,function() {
+						resetPwdForm2.get('resetPassword1').setValue('');
+						resetPwdForm2.get('resetPassword2').setValue('');
+					});
+					return;
+				}
+				if(resetPwdForm2.get('resetPassword1').getValue() != resetPwdForm2.get('resetPassword2').getValue()) {
+					showAlertMsg('两次输入的新授权码不一致，请重新输入',resetPwdForm2,function() {
+						resetPwdForm2.get('resetPassword1').setValue('');
+						resetPwdForm2.get('resetPassword2').setValue('');
+					});
+					return;
+				}
+				resetPwdForm2.getForm().submit({
+					url: 'resetPwd.asp',
+					waitMsg: '正在提交，请稍后......',
+					success: function(form, action) {
+						showMsg(action.result.msg,resetPwdWin2,function() {
+							resetPwdWin2.hide();
+							window.location.href = server;
+						});
+					},
+					failure: function(form, action) {
+						showErrorMsg(action.result.msg,resetPwdWin2);
+					}
+				});
+			}
+		},{
+			text: '清空',
+			handler: function() {
+				resetPwdForm2.getForm().reset();
+				resetPwdForm2.get('resetOprId').setValue(operator[OPR_ID]);
 			}
 		}]
 	});
