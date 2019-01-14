@@ -96,6 +96,10 @@ public class T10401Action extends BaseAction {
 		return Constants.SUCCESS_CODE;
 	}
 
+	/**
+	 * 操作员审核
+	 * @return
+	 */
 	private String accept() {
 		String sql1 = "select LAST_UPD_OPR_ID from TBL_OPR_INFO_TMP where OPR_ID = '"+oprId+"'";
 		String findCountBySQLQuery = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
@@ -110,7 +114,7 @@ public class T10401Action extends BaseAction {
 			} catch (Exception e) {
 				log("正式表中没有该数据");
 			}
-			String sql2 = "insert into TBL_OPR_INFO (OPR_ID,BRH_ID,OPR_DEGREE,OPR_DEGREE_RSC,OPR_STA,OPR_LOG_STA,OPR_NAME,OPR_GENDER,REGISTER_DT,END_DT,OPR_PWD,OPR_TEL,OPR_MOBILE,OPR_EMAIL,PWD_CYCLE,PWD_WR_TM,PWD_WR_TM_TOTAL,PWD_WR_LAST_DT,PWD_OUT_DATE,SET_OPR_ID,RESV1,LAST_UPD_OPR_ID,LAST_UPD_TXN_ID,LAST_UPD_TS) select OPR_ID,BRH_ID,OPR_DEGREE,OPR_DEGREE_RSC,OPR_STA,OPR_LOG_STA,OPR_NAME,OPR_GENDER,REGISTER_DT,END_DT,OPR_PWD,OPR_TEL,OPR_MOBILE,OPR_EMAIL,PWD_CYCLE,PWD_WR_TM,PWD_WR_TM_TOTAL,PWD_WR_LAST_DT,PWD_OUT_DATE,SET_OPR_ID,RESV1,LAST_UPD_OPR_ID,LAST_UPD_TXN_ID,LAST_UPD_TS from TBL_OPR_INFO_TMP where OPR_ID = '"+oprId+"'";
+			String sql2 = "insert into TBL_OPR_INFO (OPR_ID,BRH_ID,OPR_DEGREE,OPR_DEGREE_RSC,OPR_STA,OPR_LOG_STA,OPR_NAME,OPR_GENDER,REGISTER_DT,END_DT,OPR_PWD,OPR_TEL,OPR_MOBILE,OPR_EMAIL,PWD_CYCLE,PWD_WR_TM,PWD_WR_TM_TOTAL,PWD_WR_LAST_DT,PWD_OUT_DATE,SET_OPR_ID,RESV1,LAST_UPD_OPR_ID,LAST_UPD_TXN_ID,LAST_UPD_TS,RESV2) select OPR_ID,BRH_ID,OPR_DEGREE,OPR_DEGREE_RSC,OPR_STA,OPR_LOG_STA,OPR_NAME,OPR_GENDER,REGISTER_DT,END_DT,OPR_PWD,OPR_TEL,OPR_MOBILE,OPR_EMAIL,PWD_CYCLE,PWD_WR_TM,PWD_WR_TM_TOTAL,PWD_WR_LAST_DT,PWD_OUT_DATE,SET_OPR_ID,RESV1,LAST_UPD_OPR_ID,LAST_UPD_TXN_ID,LAST_UPD_TS,RESV2 from TBL_OPR_INFO_TMP where OPR_ID = '"+oprId+"'";
 			log("新增到正式表的SQL="+sql2);
 			CommonFunction.getCommQueryDAO().excute(sql2);
 		} catch (Exception e) {
@@ -136,12 +140,27 @@ public class T10401Action extends BaseAction {
 		try{
 		String sql1 = "select OPR_ID from TBL_OPR_INFO_TMP WHERE OPR_ID ='"+oprId+"'";
 		String oprIdTmp = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
-		if (oprIdTmp == oprId) {
+		if (oprIdTmp == oprId || oprIdTmp.equals(oprId)) {
 			return "操作员编号已经被使用";
 		}
+		
+		if(oprPwd.indexOf(oprId)!=-1){
+			return "授权码不可包含操作员编号";
+		}
+		
+		//为true时操作员密码过期期限为90天,否则为20991231
+		String d = SysParamUtil.getParam(SysParamConstants.OPR_PWD_OUT_DAYS);
+		String asd = "";
+		if(d.equals("true")){
+			asd = CommonFunction.getOffSizeDate(CommonFunction.getCurrentDate(), SysParamUtil.getParam(SysParamConstants.OPR_PWD_OUT_DAY));
+		}else{
+			asd = "20991231";
+		}
+		
+		//RESV2字段: 用来判断新建用户首次登陆时需强制修改密码   首次登陆为1 否则为0 
 		String sql2 = "INSERT INTO TBL_OPR_INFO_TMP "
-				+ "(OPR_ID, BRH_ID, OPR_DEGREE, OPR_DEGREE_RSC, OPR_STA, OPR_LOG_STA, OPR_NAME, OPR_GENDER, REGISTER_DT, END_DT, OPR_PWD, OPR_TEL, OPR_MOBILE, OPR_EMAIL, PWD_CYCLE, PWD_WR_TM, PWD_WR_TM_TOTAL, PWD_WR_LAST_DT, PWD_OUT_DATE, SET_OPR_ID, RESV1, LAST_UPD_OPR_ID, LAST_UPD_TXN_ID, LAST_UPD_TS,AUDIT_STAT,ADD_OPR_ID ) VALUES "
-				+ "('"+oprId+"', '"+brhId+"', '"+oprDegree+"', ' ', '0', '0', '"+oprName+"', '"+oprGender+"', '"+CommonFunction.getCurrentDate()+"', null, '"+Encryption.encrypt(oprPwd)+"', '"+oprTel+"', '"+oprMobile+"', '"+oprEmail+"', null, '0', '0', '"+CommonFunction.getCurrentDate()+"', '"+CommonFunction.getOffSizeDate(CommonFunction.getCurrentDate(), SysParamUtil.getParam(SysParamConstants.OPR_PWD_OUT_DAY))+"', '"+operator.getOprId()+"', null, '"+operator.getOprId()+"', '"+getTxnId() + getSubTxnId()+"', '"+CommonFunction.getCurrentDate()+"','2',"+"'"+operator.getOprId()+"')";
+				+ "(OPR_ID, BRH_ID, OPR_DEGREE, OPR_DEGREE_RSC, OPR_STA, OPR_LOG_STA, OPR_NAME, OPR_GENDER, REGISTER_DT, END_DT, OPR_PWD, OPR_TEL, OPR_MOBILE, OPR_EMAIL, PWD_CYCLE, PWD_WR_TM, PWD_WR_TM_TOTAL, PWD_WR_LAST_DT, PWD_OUT_DATE, SET_OPR_ID, RESV1, LAST_UPD_OPR_ID, LAST_UPD_TXN_ID, LAST_UPD_TS,AUDIT_STAT,ADD_OPR_ID,RESV2) VALUES "
+				+ "('"+oprId+"', '"+brhId+"', '"+oprDegree+"', ' ', '0', '0', '"+oprName+"', '"+oprGender+"', '"+CommonFunction.getCurrentDate()+"', null, '"+Encryption.encrypt(oprPwd)+"', '"+oprTel+"', '"+oprMobile+"', '"+oprEmail+"', null, '0', '0', '"+CommonFunction.getCurrentDate()+"', '"+asd+"', '"+operator.getOprId()+"', null, '"+operator.getOprId()+"', '"+getTxnId() + getSubTxnId()+"', '"+CommonFunction.getCurrentDate()+"','2',"+"'"+operator.getOprId()+"','1')";
 		System.out.println("添加到临时表的SQL "+sql2);
 		log("添加操作员信息成功。操作员编号：" + operator.getOprId()+ "，被添加操作员号：" + oprId);
 		CommonFunction.getCommQueryDAO().excute(sql2);

@@ -110,8 +110,13 @@ public class LoginAction extends BaseAction {
 		// 判断授权码是否过期
 		if(Integer.parseInt(tblOprInfo.getPwdOutDate().trim()) <= Integer.parseInt(CommonFunction.getCurrentDate())) {
 			log("登录失败，操作员授权码过期。编号[ " + oprid + " ]");
-			writeAlertMsg("您的授权码已经过期，请进行修改。", SysParamUtil.getParam(SysParamConstants.RESET_PWD));
-			return SUCCESS;
+//			writeAlertMsg("您的授权码已经过期，请进行修改。", SysParamUtil.getParam(SysParamConstants.RESET_PWD));
+//			return SUCCESS;
+			String opr1 = "update TBL_OPR_INFO_TMP set RESV2 = '2' where OPR_ID = '" + oprid + "'";
+			String opr2 = "update TBL_OPR_INFO set RESV2 = '2' where OPR_ID = '" + oprid + "'";
+			
+			commQueryDAO.excute(opr1);
+			commQueryDAO.excute(opr2);
 		}
 		
 		//判断授权码输入是否正确

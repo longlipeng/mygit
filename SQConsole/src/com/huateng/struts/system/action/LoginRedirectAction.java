@@ -110,6 +110,9 @@ public class LoginRedirectAction extends ActionSupport {
 		setSessionAttribute(Constants.TOOL_BAR_STR, toolBarStr);
 		//设置交易权限
 		setSessionAttribute(Constants.USER_AUTH_SET, MenuInfoUtil.getAuthSet(operator.getOprDegree()));
+		
+		//判断是否时首次登陆  为1时首次登陆
+		setSessionAttribute("resv2", tblOprInfo.getResv2());
 		return SUCCESS;
 	}
 	

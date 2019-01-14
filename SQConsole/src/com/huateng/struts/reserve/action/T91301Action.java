@@ -1995,17 +1995,31 @@ public class T91301Action extends BaseSupport {
 					String sql = "delete from TBL_PAYMENT_RESERVE where PAYMENT_ID = '" + paymentId + "'";
 					CommonFunction.getCommQueryDAO().excute(sql);
 					
-					String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
-							+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
-							+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
-							+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
-							+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
-					CommonFunction.getCommQueryDAO().excute(sql1);
+					if(tblPaymentReserveTmp.getPaymentStatus()!=null){
+						String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
+								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
+								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentStatus() + "','" + tblPaymentReserveTmp.getPaymentDate() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
+						CommonFunction.getCommQueryDAO().excute(sql1);
+					}else{
+						String sql1 = "insert into TBL_PAYMENT_RESERVE(PAYMENT_ID, PAYMENT_ACCOUNT, PAYMENT_ACCOUNT_NAME, "
+								+ "PAYMENT_MONEY, PAYMENT_STATUS, PAYMENT_DATE, PAYMENT_PAY_STATUS, PAYMENT_LAUNCH_TIME, "
+								+ "PAYMENT_LAUNCH_NAME, PAYMENT_AUDIT_TIME, PAYMENT_AUDIT_NAME, PAYMENT_AUDIT_STATUS, PAYMENT_BATCH, PAYMENT_INS_SEQ) "
+								+ "VALUES('" + tblPaymentReserveTmp.getPaymentId() + "','" + tblPaymentReserveTmp.getPaymentAccount() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAccountName() + "','" + tblPaymentReserveTmp.getPaymentMoney() + "',"
+								+ "null,'" + tblPaymentReserveTmp.getPaymentDate() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentPayStatus() + "','" + tblPaymentReserveTmp.getPaymentLaunchTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentLaunchName() + "','" + tblPaymentReserveTmp.getPaymentAuditTime() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentAuditName() + "','" + tblPaymentReserveTmp.getPaymentAuditStatus() + "',"
+								+ "'" + tblPaymentReserveTmp.getPaymentBatch() + "','" + tblPaymentReserveTmp.getPaymentInsSeq() + "')";
+						CommonFunction.getCommQueryDAO().excute(sql1);
+					}
 					
 					rspCode = t9130101BO.upPaymentTmp(tblPaymentReserveTmp);
 				} catch (Exception e) {
@@ -2553,8 +2567,8 @@ public class T91301Action extends BaseSupport {
 							+ "FOCUS_LAUNCH_NAME, FOCUS_AUDIT_TIME, FOCUS_AUDIT_NAME, FOCUS_AUDIT_STATUS, FOCUS_BATCH) "
 							+ "VALUES('" + tblFocusReserveTmp.getFocusId() + "','" + tblFocusReserveTmp.getFocusAccount() + "',"
 							+ "'" + tblFocusReserveTmp.getFocusAccountName() + "','" + tblFocusReserveTmp.getFocusMoney() + "',"
-							+ "'" + tblFocusReserveTmp.getFocusStatus() + "','" + tblFocusReserveTmp.getFocusDate() + "',"
-							+ "'" + tblFocusReserveTmp.getFocusPayStatus() + "','" + tblFocusReserveTmp.getFocusLaunchTime() + "',"
+							+ "null,'" + tblFocusReserveTmp.getFocusDate() + "',"
+							+ "null,'" + tblFocusReserveTmp.getFocusLaunchTime() + "',"
 							+ "'" + tblFocusReserveTmp.getFocusLaunchName() + "','" + tblFocusReserveTmp.getFocusAuditTime() + "',"
 							+ "'" + tblFocusReserveTmp.getFocusAuditName() + "','" + tblFocusReserveTmp.getFocusAuditStatus() + "',"
 							+ "'" + tblFocusReserveTmp.getFocusBatch() + "')";

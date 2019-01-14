@@ -25,6 +25,8 @@
  */
 package com.huateng.struts.system.action;
 
+import org.springframework.beans.BeanUtils;
+
 import com.huateng.common.SysParamConstants;
 import com.huateng.dao.iface.base.TblOprInfoDAO;
 import com.huateng.po.TblOprInfo;
@@ -68,12 +70,47 @@ public class ResetPwdAction extends BaseAction {
 			return SUCCESS;
 		}
 		
+		//
+		if(Encryption.encrypt(resetOprId).trim().equals(Encryption.encrypt(resetPassword1).trim())){
+			log("新授权码不可包含操作员编号");
+			writeErrorMsg("新授权码不可包含操作员编号");
+			return SUCCESS;
+		}
+		
 		tblOprInfo.setOprPwd(Encryption.encrypt(resetPassword1).trim());
-		tblOprInfo.setPwdOutDate(CommonFunction.getOffSizeDate(
-						CommonFunction.getCurrentDate(), SysParamUtil.getParam(SysParamConstants.OPR_PWD_OUT_DAY)));
+		tblOprInfo.setPwdOutDate(CommonFunction.getOffSizeDate(CommonFunction.getCurrentDate(), SysParamUtil.getParam(SysParamConstants.OPR_PWD_OUT_DAY)));
 		tblOprInfo.setPwdWrLastDt("-");
 		tblOprInfo.setPwdWrTm("0");
 		tblOprInfo.setPwdWrTmTotal("0");
+
+		tblOprInfo.setResv2("0");
+		
+//		BeanUtils.copyProperties(tblOprInfo, tblOprInfoTmp);
+		
+		String sql = "delete from TBL_OPR_INFO_TMP where OPR_ID = '" + tblOprInfo.getId() + "'";
+		commQueryDAO.excute(sql);
+		
+		if(tblOprInfo.getOprTel() == null || tblOprInfo.getOprTel().isEmpty() && 
+		   tblOprInfo.getOprMobile() == null || tblOprInfo.getOprMobile().isEmpty()){
+			String sql1 = "insert into TBL_OPR_INFO_TMP(OPR_ID, BRH_ID, OPR_DEGREE, OPR_DEGREE_RSC, OPR_STA, OPR_LOG_STA, OPR_NAME, OPR_GENDER, REGISTER_DT, OPR_PWD, OPR_TEL, OPR_MOBILE, "
+					   + "OPR_EMAIL, PWD_WR_TM, PWD_WR_TM_TOTAL, PWD_WR_LAST_DT, PWD_OUT_DATE, SET_OPR_ID, LAST_UPD_OPR_ID, LAST_UPD_TXN_ID, LAST_UPD_TS, RESV2, AUDIT_STAT, ADD_OPR_ID) "
+					   + "values ('" + tblOprInfo.getId() + "','" + tblOprInfo.getBrhId() + "','" + tblOprInfo.getOprDegree() + "','" + tblOprInfo.getOprDegreeRsc() + "','" + tblOprInfo.getOprSta() + "','"
+					   + "" + tblOprInfo.getOprLogSta() + "','" + tblOprInfo.getOprName() + "','" + tblOprInfo.getOprGender() + "','" + tblOprInfo.getRegisterDt() + "','" + tblOprInfo.getOprPwd() + "'"
+					   + ",null,null,'" + tblOprInfo.getOprEmail() + "','" + tblOprInfo.getPwdWrTm() + "','" + tblOprInfo.getPwdWrTmTotal() + "','"
+					   + "" + tblOprInfo.getPwdWrLastDt() + "','" + tblOprInfo.getPwdOutDate() + "','" + tblOprInfo.getSetOprId() + "','" + tblOprInfo.getLastUpdOprId() + "','"
+					   + "" + tblOprInfo.getLastUpdTxnId() + "','" + tblOprInfo.getLastUpdTs() + "','" + tblOprInfo.getResv2() + "','0','" + operator.getOprId() + "')";
+			commQueryDAO.excute(sql1);
+		}else{
+			String sql1 = "insert into TBL_OPR_INFO_TMP(OPR_ID, BRH_ID, OPR_DEGREE, OPR_DEGREE_RSC, OPR_STA, OPR_LOG_STA, OPR_NAME, OPR_GENDER, REGISTER_DT, OPR_PWD, OPR_TEL, OPR_MOBILE, "
+					   + "OPR_EMAIL, PWD_WR_TM, PWD_WR_TM_TOTAL, PWD_WR_LAST_DT, PWD_OUT_DATE, SET_OPR_ID, LAST_UPD_OPR_ID, LAST_UPD_TXN_ID, LAST_UPD_TS, RESV2, AUDIT_STAT, ADD_OPR_ID) "
+					   + "values ('" + tblOprInfo.getId() + "','" + tblOprInfo.getBrhId() + "','" + tblOprInfo.getOprDegree() + "','" + tblOprInfo.getOprDegreeRsc() + "','" + tblOprInfo.getOprSta() + "','"
+					   + "" + tblOprInfo.getOprLogSta() + "','" + tblOprInfo.getOprName() + "','" + tblOprInfo.getOprGender() + "','" + tblOprInfo.getRegisterDt() + "','" + tblOprInfo.getOprPwd() + "','"
+					   + "" + tblOprInfo.getOprTel() + "','" + tblOprInfo.getOprMobile() + "','" + tblOprInfo.getOprEmail() + "','" + tblOprInfo.getPwdWrTm() + "','" + tblOprInfo.getPwdWrTmTotal() + "','"
+					   + "" + tblOprInfo.getPwdWrLastDt() + "','" + tblOprInfo.getPwdOutDate() + "','" + tblOprInfo.getSetOprId() + "','" + tblOprInfo.getLastUpdOprId() + "','"
+					   + "" + tblOprInfo.getLastUpdTxnId() + "','" + tblOprInfo.getLastUpdTs() + "','" + tblOprInfo.getResv2() + "','0','" + operator.getOprId() + "')";
+			commQueryDAO.excute(sql1);
+		}
+		
 		tblOprInfoDAO.update(tblOprInfo);
 		log("修改授权码成功");
 		writeSuccessMsg("您的授权码已经修改成功，请牢记新授权码并使用新授权码登录");
