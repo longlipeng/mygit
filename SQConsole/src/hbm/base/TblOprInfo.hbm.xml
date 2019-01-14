@@ -157,5 +157,13 @@
 			not-null="true"
 			length="40"
 		/>
+		<property
+			name="Resv2"
+			column="RESV2"
+			type="string"
+		/>
+		
+		
+		
 	</class>	
 </hibernate-mapping>
