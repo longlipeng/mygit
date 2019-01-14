@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CARD_BALANCE_DATAIL">
+	<select id="GET_ACC_CARD_DATAIL_HIS" parameterClass="com.allinfinance.univer.report.dto.CardBalanceDatailDTO"
+		resultClass="com.allinfinance.univer.report.dto.CardBalanceDatailDTO">
+		SELECT * FROM (
+		SELECT to_date(T1.DATE_TXN || T1.TIME_TXN,'yyyyMMddhh24miss') as
+		txnDate,
+		T1.CARD_NO as cardNo,
+		nvl(T1.ACC_TYPE,' ') as account,
+		nvl(T1.TXN_TYPE,' ') as txnType,
+		nvl(T1.TXN_AMT/100,0) as txnAmt,
+		nvl(T1.ACC_BAL/100,0) as cardTotalBal
+		FROM TB_ACC_TXN_HIS T1
+		WHERE T1.RESP_CODE ='00'
+		AND T1.ISSUER_ID= #issuerId:varchar#
+		AND T1.TXN_AMT>0
+		AND T1.TXN_TYPE in('2095','2105','4015','4095','4105','1095','1105','5005','1205','1075','1306','1305','3095','3105','0002','0004','0005','0006')
+		<isNotEmpty prepend="AND" property="startDate">
+			to_date(T1.DATE_SETTLE,
+			'yyyy-MM-dd')&gt;=to_date(#startDate:varchar#,'yyyy-MM-dd')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="endDate">
+			to_date(T1.DATE_SETTLE,
+			'yyyy-MM-dd')&lt;=to_date(#endDate:varchar#,'yyyy-MM-dd')	
+		</isNotEmpty>
+		UNION
+		SELECT to_date(T1.DATE_TXN || T1.TIME_TXN,'yyyyMMddhh24miss') as txnDate,
+		T1.CARD_NO as cardNo,
+		nvl(T1.ACC_TYPE,' ') as account,
+		nvl(T1.TXN_TYPE,' ') as txnType,
+		nvl(T1.TXN_AMT/100,0) as txnAmt,
+		nvl(T1.ACC__BAL/100,0) as
+		cardTotalBal
+		FROM TB_ACC_TXN T1
+		WHERE T1.RESP_CODE = '00'
+		AND T1.ISSUER_ID= #issuerId:varchar#
+		AND
+		T1.TXN_AMT>0
+		AND T1.TXN_TYPE in('2095','2105','4015','4095','4105','1095','1105','5005','1205','1075','1306','1305','3095','3105','0002','0004','0005','0006')
+		<isNotEmpty prepend="AND" property="startDate">
+			to_date(T1.DATE_SETTLE,
+			'yyyy-MM-dd')&gt;=to_date(#startDate:varchar#,'yyyy-MM-dd')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="endDate">
+			to_date(T1.DATE_SETTLE,
+			'yyyy-MM-dd')&lt;=to_date(#endDate:varchar#,'yyyy-MM-dd')	
+		</isNotEmpty>
+		)
+		ORDER BY txnDate
+	</select>
+</sqlMap>

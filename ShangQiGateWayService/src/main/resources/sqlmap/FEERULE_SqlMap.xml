@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="FEERULE">
+  <select id="selectFeeRulesByFeeRuleNo" resultClass="com.huateng.accor.feeRuleManage.dto.FeeRuleDTO"  parameterClass="java.lang.String" remapResults="true">
+	select 
+        trim(T1.RULE_NO) as "ruleNo", 
+        trim(T1.RULE_STEP) as "ruleStep", 
+        trim(T1.RULE_NAME) as "ruleName", 
+        trim(T1.RULE_DESC) as "ruleDesc", 
+        trim(T1.RULE_TYPE) as "ruleType", 
+        trim(T1.STATE) as "state",
+		trim(decode(T1.AMOUNT_START,0,'0.00',to_char(to_number(T1.AMOUNT_START)/100,'999999999999.99'))) as "amountStart",
+        trim(decode(T1.AMOUNT_END,0,'0.00',to_char(to_number(T1.AMOUNT_END)/100,'999999999999.99'))) as "amountEnd",
+        trim(T1.RATE_TYPE) as "rateType", 
+        trim(T1.RATE_VALUE) as "rateValue", 
+        trim(decode(T1.FEE_MIN,0,'0.00',to_char(to_number(T1.FEE_MIN)/100,'999999999999.99'))) as "feeMin",
+        trim(decode(T1.FEE_MAX,0,'0.00',to_char(to_number(T1.FEE_MAX)/100,'999999999999.99'))) as "feeMax",
+        trim(T1.CALC_TYPE) as "calcType", 
+        T1.MODIFY_TIME as "modifyTime", 
+        T1.CREATE_TIME as "createTime", 
+        trim(T2.ISSUER_GROUP_NAME) as "issuerGroupName",
+        trim(T3.ISSUER_NAME) as "issuerName",
+        trim(T4.USER_NAME) AS "createUserName",
+        trim(T5.USER_NAME) AS "modifyUserName",
+        trim(T1.RULE_CALC_TYPE) as "ruleCalcType", 
+        trim(decode(T1.CALC_VALUE,0,'0.00',to_char(to_number(T1.CALC_VALUE)/100,'999999999999.99'))) as "calcValue",
+        trim(T1.CALC_START_RATE) as "calcStartRate",
+        trim(T1.CALC_END_RATE) as "calcEndRate"
+    from 
+      TB_ENT_FEE_RULE T1,
+      TB_ENT_ISSUER_GROUP T2,
+        TB_ENT_ISSUER T3,
+        TB_ENT_USER T4,
+        TB_ENT_USER T5
+    where
+      T1.ISSUER_GROUP_ID = T2.ISSUER_GROUP_ID
+        and T1.ISSUER_ID = T3.ISSUER_ID(+)
+        and T1.CREATE_USER = T4.USER_ID(+)
+        and T1.MODIFY_USER = T5.USER_ID(+)
+    	and T1.RULE_NO = #ruleNo:CHAR#
+  </select>
+
+  <select id="selectFeeRulesByDTO" parameterClass="com.huateng.accor.feeRuleManage.dto.FeeRuleQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        distinct(T1.RULE_NO) as "ruleNo",
+        T1.RULE_NAME as "ruleName",
+        decode(T1.CALC_TYPE,'0','把本金按照分段规则拆分计算后汇总','按照本金落在的分段统一计算') as "calcType",
+        decode(T1.RULE_CALC_TYPE,'0','金额段规则','补收规则') as "ruleCalcType",
+        decode(T1.STATE,'0','删除','1','新建','启用')  as "state"
+    from
+        TB_ENT_FEE_RULE T1,
+        TB_ENT_ISSUER_GROUP T2,
+        TB_ENT_ISSUER T3
+    where
+        T1.ISSUER_GROUP_ID = T2.ISSUER_GROUP_ID
+        and T1.ISSUER_ID = T3.ISSUER_ID(+)
+    <dynamic>
+      <isNotEmpty prepend="and" property="ruleNo">
+        T1.RULE_NO = #ruleNo:CHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleName">
+        T1.RULE_NAME like '%'||#ruleName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="state">
+        T1.STATE = #state:CHAR#
+      </isNotEmpty>
+      <isNotNull prepend="and" property="issuerGroupId">
+        T1.ISSUER_GROUP_ID = #issuerGroupId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="issuerId">
+        T1.ISSUER_ID = #issuerId:DECIMAL#
+      </isNotNull>
+      <isNull prepend="and" property="issuerId">
+        <isNotEqual property="defaultIssuerId" compareValue="0">
+          T1.ISSUER_ID = #defaultIssuerId:DECIMAL#
+        </isNotEqual>
+      </isNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <select id="selectDistinctFeeRulesByDTO" resultClass="com.huateng.accor.feeRuleManage.dto.FeeRuleDTO"  parameterClass="com.huateng.accor.feeRuleManage.dto.FeeRuleDTO" remapResults="true">
+
+	select 
+	    distinct
+        trim(T1.RULE_NO) as "ruleNo", 
+        trim(T1.RULE_NAME) as "ruleName", 
+        trim(T1.RULE_DESC) as "ruleDesc"
+        
+    from 
+      TB_ENT_FEE_RULE T1
+    where
+    1=1 
+        <dynamic>
+      <isNotEmpty prepend="and" property="ruleNo">
+        T1.RULE_NO = #ruleNo:CHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleName">
+        T1.RULE_NAME like '%'||#ruleName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="state">
+        T1.STATE = #state:CHAR#
+      </isNotEmpty>
+      <isNotNull prepend="and" property="issuerGroupId">
+        T1.ISSUER_GROUP_ID = #issuerGroupId:DECIMAL#
+      </isNotNull>
+      <isNotEqual prepend="and" property="issuerGroupId" compareValue="0">
+        T1.ISSUER_GROUP_ID = #issuerGroupId:DECIMAL#
+        <isNotEqual prepend="and" property="issuerId" compareValue="0">
+       (T1.ISSUER_ID = #issuerId:DECIMAL# or T1.ISSUER_ID=0)       
+       </isNotEqual>
+      </isNotEqual>
+    </dynamic>
+    	
+  </select>
+</sqlMap>

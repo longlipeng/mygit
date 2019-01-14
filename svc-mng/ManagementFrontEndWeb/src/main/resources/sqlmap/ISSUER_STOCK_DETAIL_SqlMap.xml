@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ISSUERSTOCKDETAIL">
+  <select id="selectIssuerStockDetailByDTO" parameterClass="com.huateng.accor.issuerStockDetail.dto.IssuerStockDetailQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+    	T1.DETAIL_ID as "detailId",
+        T1.STOCK_COUNT_ID as "stockCountId",
+        T1.CARD_NO as "cardNo",
+        decode(T1.STOCK_COUNT_FLAG,0,'未盘点到',1,'盘点正常',2,'新增','丢失')      as   "state",
+        T2.USER_NAME      as   "operationUser",
+        T1.NOTES          as    "notes", 
+        to_char(T1.face_value/100,'99,999,999,999,990.00')     as "faceValue",
+        to_char(T1.card_valid_date,'yyyy-MM-dd')  as "cardValidDate",
+        T1.CREATE_TIME    as  "createTime"
+    from
+     	TB_ENT_ISSUER_STOCK_DETAIL T1,
+     	TB_ENT_USER               T2 
+     where
+     			T1.DATA_STATE='1'
+     AND       	T1.OPERATION_ID=T2.USER_ID(+)
+    <dynamic>
+     		<isNotNull prepend="and" property="detailId">
+       			 T1.DETAIL_ID = #detailId:DECIMAL#
+      		</isNotNull>
+      		<isNotNull prepend="and" property="stockCountId">
+       			 T1.STOCK_COUNT_ID = #stockCountId:DECIMAL#
+      		</isNotNull>    		
+      		<isNotEmpty prepend="and" property="cardNo">
+       			 T1.CARD_NO like '%'||#cardNo:VARCHAR#||'%'
+      		</isNotEmpty>
+      		<isNotNull prepend="and" property="stockCountFlag">
+       			 T1.STOCK_COUNT_FLAG = #stockCountFlag:DECIMAL#
+      		</isNotNull> 
+      		<isNotEmpty prepend="and" property="createTime">
+       			 T1.CREATE_TIME like '%'||#createTime:DATE#||'%'
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="operationUser">
+       			 UPPER(T2.USER_NAME) like UPPER('%'||#operationUser:VARCHAR#||'%')
+      		</isNotEmpty>
+      		
+      		<isEqual prepend="and" property="cardStockOperation" compareValue="1">
+				T1.stock_count_flag !=1
+			</isEqual>
+      		
+    	</dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="size" parameterClass="java.lang.Long" resultClass="java.lang.String" remapResults="true">
+    select
+    	count(*) 
+    from
+     	TB_ENT_ISSUER_STOCK_DETAIL T1
+     where
+     			T1.DATA_STATE='1'
+    and        T1.stock_count_flag in (1,2)
+    and t1.stock_count_id=#stockCountId#
+  </select>
+  
+  
+  <select id="remainingSize" parameterClass="java.lang.Long" resultClass="java.lang.String" remapResults="true">
+    select
+    	count(*) 
+    from
+     	TB_ENT_ISSUER_STOCK_DETAIL T1
+     where
+     			T1.DATA_STATE='1'
+    and        T1.stock_count_flag=0
+    and t1.stock_count_id=#stockCountId#
+  </select>
+  
+  
+  <select id="differentNum" parameterClass="java.lang.Long" resultClass="java.lang.Integer" remapResults="true">
+  	select count(*) as stockCountNum 
+  	from tb_ent_issuer_stock_detail t where 
+	t.stock_count_id=#stockCountId#
+	and t.stock_count_flag in (0,2) 
+	and t.data_state='1'
+  </select>
+  
+  <!-- 查询已盘点的-->
+  <select id="selectFinishStockCountCard" parameterClass="com.huateng.accor.issuerStockDetail.dto.IssuerStockDetailQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+        T1.CARD_NO as "cardNo",
+        decode(T1.STOCK_COUNT_FLAG,0,'未盘点到',1,'盘点正常',2,'新增','丢失')      as   "state",
+        T2.USER_NAME      as   "operationUser",
+        T1.NOTES          as    "notes", 
+        to_char(T1.face_value/100,'99,999,999,999,990.00')     as "faceValue",
+        to_char(T1.card_valid_date,'yyyy-MM-dd')  as "cardValidDate",
+        T1.PACKAGE_BARCODE  as "packageBarcode",
+        T1.MODIFY_TIME    as  "modifyTime"
+    from
+     	TB_ENT_ISSUER_STOCK_DETAIL T1,
+     	TB_ENT_USER               T2 
+     where
+     			T1.DATA_STATE='1'
+     AND       	T1.OPERATION_ID=T2.USER_ID(+)
+     AND        T1.STOCK_COUNT_FLAG IN (1,2)
+     AND        T1.STOCK_COUNT_ID=#stockCountId:DECIMAL#
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

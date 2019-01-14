@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ISSUER">
+
+  <select id="selectIssuer" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+      SELECT I.ENTITY_ID as "entityId",
+             I.ISSUER_NAME as "issuerName",
+             I.ISSUER_CODE as "issuerCode",
+             I.ISSUER_ENGLISH_NAME as "issuerEnglishName",
+             DECODE(I.DATA_STATE,'1','有效','无效')  as "dataState",
+             I.user_id as "userId"
+        FROM TB_ISSUER I 
+       WHERE 
+        <isNull prepend=" " property="dataState">
+          I.DATA_STATE='1' 
+       </isNull>
+       <isNotNull prepend=" " property="dataState">
+        I.DATA_STATE in ('0','1') 
+       </isNotNull>
+       
+        AND I.FATHER_ENTITY_ID = #defaultEntityId:VARCHAR#
+      
+    <dynamic>
+     <isNotNull prepend="and" property="defaultEntityId">
+        I.ENTITY_ID != #defaultEntityId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="entityId">
+        I.ENTITY_ID = #entityId:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="and" property="issuerName">
+        UPPER(I.ISSUER_NAME) like UPPER('%'||#issuerName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="issuerEnglishName">
+        UPPER(I.ISSUER_ENGLISH_NAME) like UPPER('%'||#issuerEnglishName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotNull prepend="and" property="dataState">
+        I.DATA_STATE = #dataState:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+   <select id="issuerList" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+      SELECT I.ENTITY_ID as "entityId",
+             I.ISSUER_NAME as "issuerName",
+             I.ISSUER_CODE as "issuerCode",
+             I.ISSUER_ENGLISH_NAME as "issuerEnglishName",
+             DECODE(I.DATA_STATE,'1','有效','无效')  as "dataState",
+             I.user_id as "userId"
+        FROM TB_ISSUER I 
+       WHERE 
+        I.DATA_STATE in ('0','1') 
+       
+         AND I.FATHER_ENTITY_ID = #defaultEntityId:VARCHAR#
+      
+    <dynamic>
+     <isNotNull prepend="and" property="defaultEntityId">
+        I.ENTITY_ID != #defaultEntityId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="entityId">
+        I.ENTITY_ID = #entityId:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="and" property="issuerName">
+        UPPER(I.ISSUER_NAME) like UPPER('%'||#issuerName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="issuerEnglishName">
+        UPPER(I.ISSUER_ENGLISH_NAME) like UPPER('%'||#issuerEnglishName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotNull prepend="and" property="dataState">
+        I.DATA_STATE = #dataState:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  <select id="selectDepartment"
+		parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO"
+		resultClass="com.allinfinance.univer.entity.dto.DepartmentDTO">
+		SELECT D.DEPARTMENT_ID as "departmentId",
+		       D.DEPARTMENT_NAME as "departmentName",
+		       D.DEFAULT_FLAG as "defaultFlag"
+		  FROM TB_ENTITY_DEPARTMENT D 
+		 WHERE D.DATA_STATE='1' 
+		<dynamic>
+			<isNotNull prepend="and" property="entityId">
+				 D.ENTITY_ID = #entityId:VARCHAR#
+			</isNotNull>
+		</dynamic>
+	</select>
+  <select id="selectBank"
+		parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO"
+		resultClass="com.allinfinance.univer.entity.dto.BankDTO">
+		SELECT BANK_ID as "bankId",
+		       BANK_NAME as "bankName",
+		       ACCOUNT_FLAG as "accountFlag",
+		       bank_Account_Name as "bankAccountName",
+		       bank_Account as "bankAccount"
+		  FROM TB_BANK
+		 WHERE DATA_STATE='1' 
+		<dynamic>
+			<isNotNull prepend="and" property="entityId">
+				 ENTITY_ID = #entityId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+  <select id="selectAddress"
+		parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO"
+		resultClass="com.allinfinance.univer.entity.dto.InvoiceAddressDTO">
+	     SELECT AD.INVOICE_ADDRESS_ID as "invoiceAddressId",
+	            AD.INVOICE_ADDRESS as "invoiceAddress",
+	            AD.ADDRESS_POSTCODE as "addressPostcode",
+				AD.INVOICE_RECIPIENT as "invoiceRecipient",
+				AD.DELIVERY_OPTION as "deliveryOption",
+				AD.DEFAULT_FLAG as "defaultFlag"
+		   FROM TB_ENTITY_INVOICE_ADDRESS AD
+	  	  WHERE AD.DATA_STATE = '1'
+		<dynamic>
+			<isNotNull prepend="and" property="entityId">
+				 AD.ENTITY_ID = #entityId:VARCHAR#
+			</isNotNull>
+		</dynamic>
+	</select>
+  
+  <select id="selectCompany"
+		parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO"
+		resultClass="com.allinfinance.univer.entity.dto.InvoiceCompanyDTO">
+	       SELECT C.INVOICE_COMPANY_ID as "invoiceCompanyId",
+	       		  C.INVOICE_COMPANY_NAME as "invoiceCompanyName",
+	       		  C.DEFAULT_FLAG as "defaultFlag"
+	        FROM TB_INVOICE_COMPANY C 
+	        WHERE C.DATA_STATE='1'  
+		<dynamic>
+			<isNotNull prepend="and" property="entityId">
+				 C.ENTITY_ID = #entityId:VARCHAR#
+			</isNotNull>
+		</dynamic>
+	</select>
+  
+  
+  <select id="selectContract"
+		parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO"
+		resultClass="com.allinfinance.univer.entity.dto.ContactDTO">
+	      SELECT CON.CONTACT_ID as "contactId",
+	             CON.CONTACT_NAME as "contactName",
+	             CON.CONTACT_MOBILE_PHONE as "contactMobilePhone",
+	             CON.CONTACT_FUNCTION as "contactFunction",
+	             CON.VALIDITY_FLAG as "validityFlag",
+	             CON.DEFAULT_FLAG  as "defaultFlag"
+	       FROM TB_ENTITY_CONTACT CON 
+	      WHERE CON.DATA_STATE='1'
+		<dynamic>
+			<isNotNull prepend="and" property="entityId">
+				 CON.ENTITY_ID = #entityId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+  <!-- 查询包含自身的发行机构 -->
+   <select id="issuerSelect" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+     select iss.entity_id as "entityId",iss.issuer_name as "issuerName",iss.issuer_code as "issuerCode",iss.issuer_english_name as "issuerEnglishName" 
+     from 
+(select  con.contract_buyer buyer from tb_loyalty_contract con,tb_issuer issuer 
+where (con.contract_seller=issuer.entity_id or con.contract_buyer=issuer.entity_id) 
+
+ <isNotNull prepend="and" property="entityId">
+        issuer.entity_id = #entityId:VARCHAR#
+      </isNotNull>
+and con.data_state='1'and con.contract_state='1' 
+and con.expiry_date> to_char(sysdate,'yyyyMMdd') ) contract,tb_issuer iss 
+where contract.buyer=iss.entity_id
+      
+    
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  <select id="selectDeliveryPoint"
+		parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO"
+		resultClass="com.allinfinance.univer.entity.dto.DeliveryPointDTO">
+	     SELECT DE.DELIVERY_ID as "deliveryPointId",
+	            DE.DELIVERY_NAME as "deliveryName",
+	            DE.DELIVERY_ADDRESS as "deliveryAddress",
+	            DE.DEFAULT_FLAG as "defaultFlag"
+	       FROM TB_ENTITY_DELIVERY DE 
+	      WHERE DE.DATA_STATE='1'
+		<dynamic> 
+			<isNotNull prepend="and" property="entityId">
+				 DE.ENTITY_ID = #entityId:VARCHAR#
+			</isNotNull>
+		</dynamic>
+	</select>
+  
+  <select id="selectDeliveryRescept"
+		parameterClass="com.allinfinance.univer.entity.dto.DeliveryRecipientDTO"
+		resultClass="com.allinfinance.univer.entity.dto.DeliveryRecipientDTO">
+	     SELECT C.DELIVERY_CONTACT_ID as "deliveryContactId",
+	            C.DELIVERY_POINT_ID as "deliveryPointId",
+	            C.DELIVERY_CONTACT as "deliveryContact",
+	            C.CONTACT_PHONE as "contactPhone"
+	      FROM TB_DELIVERY_CONTACT C
+	     WHERE C.DATA_STATE='1'   
+		<dynamic> 
+			<isNotNull prepend="and" property="deliveryPointId">
+				C.DELIVERY_POINT_ID=#deliveryPointId:DECIMAL#
+			</isNotNull>
+		</dynamic>
+	</select>
+  <select id="selectEntityId" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/>
+	   select entityNo as "queryId",Max(entityName) as "queryName"       
+     from (select t1.entity_id as entityNo,
+                    t1.seller_name as entityName
+             from tb_seller t1
+             where t1.father_entity_id=#entityId:VARCHAR#
+              and t1.data_state='1'
+              and t1.entity_id not in( select t3.entity_id
+                                     from tb_issuer t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t1.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t1.seller_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                          
+              union 
+                 select t2.entity_id as entityNo,
+                       t2.consumer_name as entityName
+                 from tb_consumer t2
+                 where t2.father_entity_id=#entityId:VARCHAR#
+                 and t2.data_state='1'
+                  and t2.entity_id not in( select t3.entity_id
+                                     from tb_issuer t3
+                                     where t3.data_state='1')
+               <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t2.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t2.consumer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                                 
+                                     ) 
+                            
+             group by entityNo   
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectEntityIdFromSeller" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/>
+             select t1.entity_id as "queryId",
+                    t1.seller_name as "queryName"
+             from tb_seller t1
+             where t1.father_entity_id=#entityId:VARCHAR#
+              and t1.data_state='1'
+              and t1.entity_id not in( select t3.entity_id
+                                     from tb_issuer t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t1.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t1.seller_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                        
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectEntityIdFromConsumer" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuer.IssuerQueryDTO" remapResults="true">
+	  <include refid="Commons.prefixSql"/> 
+                 select t2.entity_id as "queryId",
+                       t2.consumer_name as "queryName"
+                 from tb_consumer t2
+                 where t2.father_entity_id=#entityId:VARCHAR#
+                 and t2.data_state='1'
+                  and t2.entity_id not in( select t3.entity_id
+                                     from tb_issuer t3
+                                     where t3.data_state='1')
+        <dynamic> 
+			<isNotEmpty prepend="and" property="queryEntityId">
+				t2.entity_id=#queryEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="queryName">
+				 UPPER(t2.consumer_name) like UPPER('%'||#queryName:VARCHAR#||'%')
+			</isNotEmpty>
+		</dynamic>                          
+       <include refid="Commons.suffixSql"/>         
+  </select>
+  <select id="selectCardBinDTOForIssuer" resultClass="com.allinfinance.univer.issuer.dto.cardserialnumber.CardSerialNumberDTO" 
+			parameterClass="java.lang.String" remapResults="true">
+	   		SELECT 
+	   			T.CARD_BIN AS "cardBin",
+       			T.SERIAL_NUMBER AS "serialNumber"
+			FROM
+				TB_CARD_SERIAL_NUMBER T 
+			WHERE 
+				T.ISSUER_ID=#defaultEntityId:VARCHAR#
+			AND T.DATA_STATE = '1'
+	</select>
+	
+	<select id="checkRepeatCardBin" resultClass="java.lang.Integer" 
+			parameterClass="com.allinfinance.univer.issuer.dto.cardserialnumber.CardSerialNumberDTO" remapResults="true">
+	   		SELECT 
+	   			COUNT(*)
+		  	FROM TB_CARD_SERIAL_NUMBER
+		 	WHERE
+		 		DATA_STATE = '1'
+		 	AND CARD_BIN LIKE '%'|| #cardBin:VARCHAR# || '%'
+	</select>
+	
+</sqlMap>

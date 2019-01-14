@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="STOCK_ORDER_LIST">
+	
+	<!-- 查询订单明细 -->
+	<select id="selectOrderList" resultClass="java.util.HashMap" 
+			parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderListQueryDTO" remapResults="true">
+		<include refid="Commons.prefixSql" />
+	    select
+	       	T1.ORDER_LIST_ID as "orderListId",
+			T1.ORDER_ID as "orderId",
+			T1.CARD_ISSUE_FEE as "cardIssueFee",
+			T1.PACKAGE_ID as "packageId",
+			T1.PACKAGE_FEE/100 as "packageFee",
+			T1.CARD_LAYOUT_ID as "cardLayoutId",
+			T1.CARD_AMOUNT as "cardAmount",
+			T1.REAL_AMOUNT as "realAmount",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			T1.TOTAL_PRICE/100 as "totalPrice",
+			T1.DATA_STATE as "dataState",
+			T1.FACE_VALUE/100 as "faceValue",
+			T1.FACE_VALUE_TYPE as "faceValueType",
+			T2.CARD_LAYOUT_NAME as "cardLayoutName"
+	    from 
+	        TB_SELL_ORDER_LIST T1 left join 
+	        TB_CARD_LAYOUT T2 on T1.CARD_LAYOUT_ID = T2.CARD_LAYOUT_ID
+	    where
+	    	T1.DATA_STATE = '1'
+	    AND
+	    	T2.DATA_STATE = '1'
+	    and
+	     	ORDER_ID = #orderId:VARCHAR#
+	     ORDER BY T1.ORDER_LIST_ID DESC
+	   <include refid="Commons.suffixSql" />
+	 </select>
+	 
+	<!-- 查找匿名采购订单中要准备的明细 -->
+	<select id="selectOrderListForReady" resultClass="com.huateng.framework.ibatis.model.SellOrderList"
+			parameterClass="com.allinfinance.univer.entity.stock.dto.EntityStockDTO"
+			remapResults="true"> 
+	    select
+	       	T.ORDER_LIST_ID as "orderListId",
+			T.ORDER_ID as "orderId",
+			T.CARD_ISSUE_FEE as "cardIssueFee",
+			T.PACKAGE_ID as "packageId",
+			T.PACKAGE_FEE as "packageFee",
+			T.CARD_LAYOUT_ID as "cardLayoutId",
+			T.CARD_AMOUNT as "cardAmount",
+			T.REAL_AMOUNT as "realAmount",
+			T.VALIDITY_PERIOD as "validityPeriod",
+			T.TOTAL_PRICE as "totalPrice",
+			T.DATA_STATE as "dataState",
+			T.FACE_VALUE as "faceValue",
+			T.FACE_VALUE_TYPE as "faceValueType"
+	    FROM 
+	        TB_SELL_ORDER_LIST T
+	    WHERE
+	    	ORDER_ID = #orderId:VARCHAR#
+	    AND
+	    	DATA_STATE = '1'
+	    AND 
+	   	<![CDATA[ 
+	   		TO_NUMBER(NVL(T.REAL_AMOUNT,0)) <= TO_NUMBER(T.CARD_AMOUNT)
+	   	]]>
+	   	
+	   	ORDER BY T.ORDER_LIST_ID DESC
+  	</select>
+<!-- 根据订单信息查找该订单的详细订单 -->
+	<select id="selectOrderListByOrderId" resultClass="com.huateng.framework.ibatis.model.SellOrderList"
+			parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO"
+			remapResults="true"> 
+	    select
+	       	T.ORDER_LIST_ID as "orderListId"
+	    FROM 
+	        TB_SELL_ORDER_LIST T
+	    WHERE
+	    	ORDER_ID = #orderId:VARCHAR#
+	    AND
+	    	DATA_STATE = '1'
+  	</select>
+<!-- 根据订单信息查找该订单的详细订单 -->
+	<select id="selectOrderListByOrderIdByAcceptOrderDTO" resultClass="com.huateng.framework.ibatis.model.SellOrderList"
+			parameterClass="com.allinfinance.univer.seller.order.dto.AcceptOrderDTO"
+			remapResults="true"> 
+	    select
+	       	T.ORDER_LIST_ID as "orderListId"
+	    FROM 
+	        TB_SELL_ORDER_LIST T
+	    WHERE
+	    	ORDER_ID = #orderId:VARCHAR#
+	    AND
+	    	DATA_STATE = '1'
+  	</select>
+</sqlMap>

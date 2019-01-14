@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CUSTOMER">
+	<select id="selectCustomersByDTO" parameterClass="com.allinfinance.univer.seller.customer.CustomerQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select nvl(VT.sell_contract_id, 0 ) "sellContractId" ,
+			T1.ENTITY_ID as "entityId" ,
+			T1.FATHER_ENTITY_ID as "fatherEntityId" ,
+			T1.CUSTOMER_NAME as "customerName",
+			T1.CUSTOMER_CODE as "customerCode",
+			T1.CUSTOMER_ENGLISH_NAME as "customerEnglishName",
+			T1.PRINT_NAME as "printName",
+			T1.SALES_REGION_ID      as "salesRegionId" ,
+			T1.EXTERNAL_ID          as "externalId" ,
+			T1.CUS_STATE as "cusState",
+			T1.MODIFY_USER as "modifyUser",
+			to_char(to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "createTime" ,
+			to_char(to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "modifyTime" ,
+			T1.DATA_STATE as "dataState",
+			T1.payment_Term as "paymentTerm",
+			T1.activity_Sector as "activitySector",
+			'' as "awareness",
+			T1.CUSTOMER_TYPE as "customerType",
+			T1.channel as "channel",
+			attach.RISK_GRADE as "riskGrade",
+			attach.ISBLACKLIST as "isblacklist"
+		from
+			TB_CUSTOMER T1 left join
+			TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID left join
+       (SELECT *
+          FROM TB_SELL_CONTRACT T3
+         WHERE T3.CONTRACT_STATE = '1'
+           AND T3.DATA_STATE = '1'
+           AND T3.EXPIRY_DATE >= TO_CHAR(SYSDATE, 'yyyyMMdd')) VT on  VT.CONTRACT_BUYER = T1.ENTITY_ID left join
+           TB_COMPANY_INFO attach on T1.ENTITY_ID=attach.RELATION_NO
+		where 
+		    T1.customer_type='0'
+		<dynamic>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="telephoneNumber">
+				T1.CUSTOMER_TELEPHONE = #telephoneNumber:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="defaultEntityId">
+				T1.FATHER_ENTITY_ID = #defaultEntityId:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="customerCode">
+				T1.CUSTOMER_CODE = #customerCode:VARCHAR#
+	    	</isNotEmpty>
+			<isNotEmpty prepend="and" property="customerName">
+				T1.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+	    	</isNotEmpty>
+			<isNotEmpty prepend="and" property="externalId">
+				T1.EXTERNAL_ID like '%'||#externalId:VARCHAR#||'%'
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="cusState">
+				T1.CUS_STATE = #cusState:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="customerType">
+				T1.customer_Type = #customerType:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="corpCredId">
+				T1.CORP_CRED_ID = #corpCredId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="corpCredType">
+				T1.CORP_CRED_TYPE = #corpCredType:VARCHAR#
+      		</isNotEmpty>
+      		<isEmpty property="cusState">
+      			<isNotEmpty property="flag" prepend="and">
+      				T1.CUS_STATE in (1,3,4)
+      			</isNotEmpty>
+      		</isEmpty>
+			<isNotNull prepend="and" property="startTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &gt;=#startTime:DATE#
+<!--				<isNull property="stopTime">-->
+<!--		       	 <![CDATA[-->
+<!--		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') >=#startTime:DATE#-->
+<!--		        ]]>-->
+<!--				</isNull>-->
+			</isNotNull>
+			<isNotNull prepend="and" property="stopTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &lt;=#stopTime:DATE#
+<!--				<isNull property="startTime">-->
+<!--		       	 <![CDATA[-->
+<!--		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') <= #stopTime:DATE#-->
+<!--		        ]]>-->
+<!--				</isNull>-->
+			</isNotNull>
+<!--			<isNotNull prepend="and" property="stopTime">-->
+<!--				<isNotNull property="startTime">-->
+<!--					to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') between #startTime:DATE# and #stopTime:DATE#-->
+<!--				</isNotNull>-->
+<!--			</isNotNull>-->
+			<isNotEmpty prepend="and" property="paymentTerm">
+				T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="activitySector">
+				T1.ACTIVITY_SECTOR = #activitySector:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="salesRegionId">
+				T1.SALES_REGION_ID = #salesRegionId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="channel">
+				T1.channel = #channel:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="dataState">
+				T1.DATA_STATE = #dataState:VARCHAR#
+      		</isNotEmpty>
+		</dynamic>
+			
+		UNION
+		
+		select nvl(VT.sell_contract_id, 0 ) "sellContractId" ,
+			T1.ENTITY_ID as "entityId" ,
+			T1.FATHER_ENTITY_ID as "fatherEntityId" ,
+			T1.CUSTOMER_NAME as "customerName",
+			T1.CUSTOMER_CODE as "customerCode",
+			T1.CUSTOMER_ENGLISH_NAME as "customerEnglishName",
+			T1.PRINT_NAME as "printName",
+			T1.SALES_REGION_ID      as "salesRegionId" ,
+			T1.EXTERNAL_ID          as "externalId" ,
+			T1.CUS_STATE as "cusState",
+			T1.MODIFY_USER as "modifyUser",
+			to_char(to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "createTime" ,
+			to_char(to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "modifyTime" ,
+			T1.DATA_STATE as "dataState",
+			T1.payment_Term as "paymentTerm",
+			T1.activity_Sector as "activitySector",
+			T1.AWARENESS as "awareness",
+			T1.CUSTOMER_TYPE as "customerType",
+			T1.channel as "channel",
+			attach.RISK_GRADE as "riskGrade",
+			attach.ISBLACKLIST as "isblacklist"
+		from
+			TB_CUSTOMER T1 left join
+			TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID left join
+       (SELECT *
+          FROM TB_SELL_CONTRACT T3
+         WHERE T3.CONTRACT_STATE = '1'
+           AND T3.DATA_STATE = '1'
+           AND T3.EXPIRY_DATE >= TO_CHAR(SYSDATE, 'yyyyMMdd')) VT on  VT.CONTRACT_BUYER = T1.ENTITY_ID left join
+           TB_PEOPLE_ATTACH_INFO attach on T1.ENTITY_ID=attach.PEOPLE_NO
+		where 
+		   T1.customer_type='1'
+		<dynamic>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="telephoneNumber">
+				T1.CUSTOMER_TELEPHONE = #telephoneNumber:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="defaultEntityId">
+				T1.FATHER_ENTITY_ID = #defaultEntityId:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="customerCode">
+				T1.CUSTOMER_CODE = #customerCode:VARCHAR#
+	    	</isNotEmpty>
+			<isNotEmpty prepend="and" property="customerName">
+				T1.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+	    	</isNotEmpty>
+			<isNotEmpty prepend="and" property="externalId">
+				T1.EXTERNAL_ID like '%'||#externalId:VARCHAR#||'%'
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="cusState">
+				T1.CUS_STATE = #cusState:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="customerType">
+				T1.customer_Type = #customerType:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="corpCredId">
+				T1.CORP_CRED_ID = #corpCredId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="corpCredType">
+				T1.CORP_CRED_TYPE = #corpCredType:VARCHAR#
+      		</isNotEmpty>
+      		<isEmpty property="cusState">
+      			<isNotEmpty property="flag" prepend="and">
+      				T1.CUS_STATE in (1,3,4)
+      			</isNotEmpty>
+      		</isEmpty>
+			<isNotNull prepend="and" property="startTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &gt;=#startTime:DATE#
+<!--				<isNull property="stopTime">-->
+<!--		       	 <![CDATA[-->
+<!--		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') >=#startTime:DATE#-->
+<!--		        ]]>-->
+<!--				</isNull>-->
+			</isNotNull>
+			<isNotNull prepend="and" property="stopTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &lt;=#stopTime:DATE#
+<!--				<isNull property="startTime">-->
+<!--		       	 <![CDATA[-->
+<!--		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') <= #stopTime:DATE#-->
+<!--		        ]]>-->
+<!--				</isNull>-->
+			</isNotNull>
+<!--			<isNotNull prepend="and" property="stopTime">-->
+<!--				<isNotNull property="startTime">-->
+<!--					to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') between #startTime:DATE# and #stopTime:DATE#-->
+<!--				</isNotNull>-->
+<!--			</isNotNull>-->
+			<isNotEmpty prepend="and" property="paymentTerm">
+				T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="activitySector">
+				T1.ACTIVITY_SECTOR = #activitySector:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="salesRegionId">
+				T1.SALES_REGION_ID = #salesRegionId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="channel">
+				T1.channel = #channel:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="dataState">
+				T1.DATA_STATE = #dataState:VARCHAR#
+      		</isNotEmpty>
+		</dynamic>
+		
+		
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="selectCustomerPrintNameByCardHolder" 
+			parameterClass="java.lang.String" 
+			resultClass="java.lang.String">
+	  	SELECT
+			 T1.PRINT_NAME
+		FROM TB_CUSTOMER T1 left join
+		     TB_CARDHOLDER T2 on T1.ENTITY_ID = T2.ENTITY_ID
+		WHERE 
+			T2.CARDHOLDER_ID = #cardHolderId:VARCHAR#
+  	</select>
+  	
+  	<update id="updateAccountFlag" parameterClass="com.huateng.framework.ibatis.model.Bank">
+    update TB_BANK
+    set 
+      ACCOUNT_FLAG = #accountFlag:VARCHAR#
+    where
+      ENTITY_ID = #entityId:VARCHAR#
+  </update>
+
+<!--查询企业客户信息 -->
+  <select id="selectCusByDTO" parameterClass="com.allinfinance.univer.seller.customer.CustomerQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select 
+			T1.ENTITY_ID as "entityId" ,
+			T1.FATHER_ENTITY_ID as "fatherEntityId" ,
+			T1.CUSTOMER_NAME as "customerName",
+			T1.CUSTOMER_CODE as "customerCode",
+			T1.CUSTOMER_ENGLISH_NAME as "customerEnglishName",
+			T1.PRINT_NAME as "printName",
+			T1.SALES_REGION_ID      as "salesRegionId" ,
+			T1.EXTERNAL_ID          as "externalId" ,
+			T1.CUS_STATE as "cusState",
+			T1.MODIFY_USER as "modifyUser",
+			to_char(to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "createTime" ,
+			to_char(to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "modifyTime" ,
+			T1.DATA_STATE as "dataState",
+			T1.payment_Term as "paymentTerm",
+			T1.activity_Sector as "activitySector",
+			T1.CUSTOMER_TYPE as "customerType",
+			T1.channel as "channel"
+			
+		from
+			TB_CUSTOMER T1 
+		where 
+		   T1.CUSTOMER_TYPE ='0' and T1.CUS_STATE ='1'
+		<dynamic>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="customerName">
+				T1.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+	    	</isNotEmpty>
+	    	<isNotEmpty prepend="and" property="corpCredId">
+				T1.CORP_CRED_ID = #corpCredId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="paymentTerm">
+				T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="activitySector">
+				T1.ACTIVITY_SECTOR = #activitySector:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="salesRegionId">
+				T1.SALES_REGION_ID = #salesRegionId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="dataState">
+				T1.DATA_STATE = #dataState:VARCHAR#
+      		</isNotEmpty>
+      		<isNotNull prepend="and" property="startTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &gt;=#startTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="and" property="stopTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &lt;=#stopTime:DATE#
+			</isNotNull>      		      		
+		</dynamic>
+
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+  
+  <!--查询个人客户信息 -->
+  <select id="selectPerByDTO" parameterClass="com.allinfinance.univer.seller.customer.CustomerQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select 
+			T1.ENTITY_ID as "entityId" ,
+			T1.FATHER_ENTITY_ID as "fatherEntityId" ,
+			T1.CUSTOMER_NAME as "customerName",
+			T1.CUSTOMER_CODE as "customerCode",
+			T1.CUSTOMER_ENGLISH_NAME as "customerEnglishName",
+			T1.PRINT_NAME as "printName",
+			T1.SALES_REGION_ID      as "salesRegionId" ,
+			T1.EXTERNAL_ID          as "externalId" ,
+			T1.CUS_STATE as "cusState",
+			T1.MODIFY_USER as "modifyUser",
+			to_char(to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "createTime" ,
+			to_char(to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "modifyTime" ,
+			T1.DATA_STATE as "dataState",
+			T1.payment_Term as "paymentTerm",
+			T1.activity_Sector as "activitySector",
+			T1.CUSTOMER_TYPE as "customerType",
+			T1.channel as "channel"
+		from
+			TB_CUSTOMER T1 
+		where 
+		   T1.CUSTOMER_TYPE ='1' and T1.CUS_STATE ='1'
+		<dynamic>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="customerName">
+				T1.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+	    	</isNotEmpty>
+	    	<isNotEmpty prepend="and" property="corpCredId">
+				T1.CORP_CRED_ID = #corpCredId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="paymentTerm">
+				T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="activitySector">
+				T1.ACTIVITY_SECTOR = #activitySector:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="salesRegionId">
+				T1.SALES_REGION_ID = #salesRegionId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="dataState">
+				T1.DATA_STATE = #dataState:VARCHAR#
+      		</isNotEmpty>
+      		<isNotNull prepend="and" property="startTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &gt;=#startTime:DATE#
+			</isNotNull>
+			<isNotNull prepend="and" property="stopTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &lt;=#stopTime:DATE#
+			</isNotNull>      		      		
+		</dynamic>
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	<select id="queryOutdateCertifincate" parameterClass="com.allinfinance.univer.seller.customer.CertifincateValidityQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		  select 
+			c.CUSTOMER_NAME as "cusName",
+			decode(c.CUSTOMER_TYPE,'0','企业客户','个人客户') as "cusType", 
+			info.VALIDITY as "validityDate",
+			c.CORP_CRED_TYPE as "iDtype",
+			c.CORP_CRED_ID as "idNo",
+			decode(info.ISVALIDITY,'1','即将过期','已过期') as "type",
+			c.CUSTOMER_TELEPHONE as "phoneNuber"
+		from 
+			TB_CUSTOMER c,
+			TB_PEOPLE_ATTACH_INFO info
+		where
+			c.ENTITY_ID=info.PEOPLE_NO 
+			and
+			info.ISVALIDITY in ('0','1')
+			<dynamic>
+				<isNotEmpty prepend="and" property="name">
+					c.CUSTOMER_NAME like '%'||#name:VARCHAR#||'%'
+	    		</isNotEmpty>
+	    		<isNotEmpty prepend="and" property="idNo">
+					c.CORP_CRED_ID = #idNo:VARCHAR#
+      			</isNotEmpty>
+      			<isNotEmpty prepend="and" property="validityDate">
+					<![CDATA[ to_date(info.VALIDITY,'YYYYMMDD')<=to_date(#validityDate:VARCHAR#,'YYYYMMDD') ]]>
+      			</isNotEmpty>
+			</dynamic>				
+		 UNION 
+		   select 
+			c.CUSTOMER_NAME as "cusName",
+			decode(c.CUSTOMER_TYPE,'0','企业客户','个人客户') as "cusType", 
+			info.CTID_EDT as "validityDate",
+			c.CORP_CRED_TYPE as "iDtype",
+			c.LICENSE_ID as "idNo",
+			decode(info.ISVALIDITY,'1','即将过期','已过期') as "type",
+			c.CUSTOMER_TELEPHONE as "phoneNuber"
+		from 
+			TB_CUSTOMER c,
+			TB_COMPANY_INFO info
+		where
+			c.ENTITY_ID=info.ENTITY_ID
+			and
+			info.ISVALIDITY  in ('0','1')
+			<dynamic>
+				<isNotEmpty prepend="and" property="name">
+					c.CUSTOMER_NAME like '%'||#name:VARCHAR#||'%'
+	    		</isNotEmpty>
+	    		<isNotEmpty prepend="and" property="idNo">
+					c.LICENSE_ID = #idNo:VARCHAR#
+      			</isNotEmpty>
+      			<isNotEmpty prepend="and" property="validityDate">
+					<![CDATA[ to_date(info.CTID_EDT,'YYYYMMDD')<=to_date(#validityDate:VARCHAR#,'YYYYMMDD') ]]>
+      			</isNotEmpty>
+			</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+
+</sqlMap>

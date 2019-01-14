@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+     
+	 <package name="ireport" extends="struts-global"  namespace="/ireport">
+	 <action name="report" class="ireportAction" method="viewReport">
+	 </action>
+	     
+	 	 <!-- 营销机构action -->
+	   <!-- 营销运营汇总表 -->
+	   <action name="querySellerSellSummary" class="sellerSellSummaryAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/sellerSellSummary.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/sellerSellSummary.jsp</result>
+	 	</action>
+	 	 <!-- 营销运营明细表 -->
+	   <action name="querySellerSellDetail" class="sellerSellDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/sellerSellDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/sellerSellDetail.jsp</result>
+	 	</action>
+	 	
+	 	<!-- 收单运营汇总表 -->
+	 	<action name="queryConsumerSellSummary" class="consumerSellSummaryAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/consumerSellSummary.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/consumerSellSummary.jsp</result>
+	 	</action>
+	 	  <!-- 收单运营明细表 -->
+	 	<action name="queryConsumerSellDetail" class="consumerSellDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/consumerSellDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/consumerSellDetail.jsp</result>
+	 	</action>
+	    <!-- 含自身发行机构的查询 -->
+	 	<action name="queryIssuerChoose" class="issuerStockSumAction" method="issuerChoose">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerStockSum.jsp</result>
+	 		<result name="choose">/WEB-INF/pages/univer/issuer/report/includeSelfissuerChoose.jsp</result>
+	 	</action>
+	 	<!--  查询发行机构 -->
+	 	<action name="queryChooseIssuerAction" class="chooseIssuerAction" method="choiceIssuer">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerChoose.jsp</result>
+	 		<result name="issuerChoice">/WEB-INF/pages/univer/issuer/report/issuerChoose.jsp</result>
+	 	</action>
+	 	
+	 	<!-- 营销机构——发行运营汇总表 -->
+	 	<action name="querySellerIssueSellSum" class="sellerIssueSellSumAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/sellerIssueSellSum.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/sellerIssueSellSum.jsp</result>
+	 	</action>
+	 	<!-- 营销机构——发行运营明细表 -->
+	 	<action name="queryissueSelllDetail" class="sellerIssueSellDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issueSelllDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issueSelllDetail.jsp</result>
+	 	</action>
+		<!--	营销机构收支平衡表	-->
+	 	<action name="queryissueBalanceOfPayments" class="issueBalanceOfPaymentsAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/sellerSellBalanceOfPayments.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/sellerSellBalanceOfPayments.jsp</result>	 	
+	 	</action>
+		<!--	财务报表 	-->
+		<!--	预付卡充值充退报表 	TODO-->	
+	 	<action name="queryRechargeAndChargeback" class="cardRechargeAndChargeback" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/cardRechargeAndChargeback.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/cardRechargeAndChargeback.jsp</result>
+	 	</action>
+		<!--	卡余额变动明细表 	-->
+	 	<action name="queryCardBalanceDetail" class="cardBalanceDetailAction">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/cardBalanceDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/cardBalanceDetail.jsp</result>
+	 	</action>
+		<!--	卡余额报表 	-->
+		<action name="queryCardBalance" class="cardBalanceAction">
+			<result name="input">/WEB-INF/pages/univer/issuer/report/cardBalance.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/cardBalance.jsp</result>
+			<!--	 下载配置		-->
+	 		<result name="success" type="stream">
+	 			<param name="contentType">application/octet-stream;charset=ISO8859-1</param>
+	 			<param name="inputName">inputStream</param>
+	 			<param name="contentDisposition">attachment;filename="${downFileName}"</param>
+	 			<param name="bufferSize">10240000</param>
+	 		</result>
+		</action>
+	 	
+	 	<!-- 发行机构 -->
+	 	<!-- 库存汇总表 -->
+	 	<action name="queryIssuerStockSum" class="issuerStockSumAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerStockSum.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issuerStockSum.jsp</result>
+	 	</action>
+	 	<!-- 库存流水表 -->
+	 	<action name="queryIssuerStockStream" class="issuerStockStreamAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerStockStream.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issuerStockStream.jsp</result>
+	 	</action>
+	 	<!-- 库存明细表 -->
+	 	<action name="queryIssuerStockDetail" class="issuerStockDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerStockDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issuerStockDetail.jsp</result>
+	 	</action>
+	 	<!-- 资金沉淀表 -->
+	 	<!-- 资金沉淀汇总表下载 -->
+	 	<action name="queryFundSubsideSum" class="fundSubsideSumAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/fundSubsideSum.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/fundSubsideSum.jsp</result>
+	 	</action>
+	 	<!-- 资金沉淀明细表 -->
+	 	<action name="queryFundSubsideDetail" class="fundSubsideDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/fundSubsideDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/fundSubsideDetail.jsp</result>
+	 	</action>
+	 	<!-- 沉淀资金报表页面 -->
+	   	<action name="querySedimentationFunds" class="sedimentationFundsAction" method="inQuery">
+	   		<result name="input">/WEB-INF/pages/univer/issuer/report/sedimentationFunds.jsp</result>
+	   		<result name="list">/WEB-INF/pages/univer/issuer/report/sedimentationFunds.jsp</result>
+	   	</action>
+	   	<!-- 卡余额汇总表 -->
+	 	<action name="queryIssuerCardValSum" class="issuerCardValSumAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerCardValSum.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issuerCardValSum.jsp</result>
+	 	</action>
+	 	<!-- 发卡情况汇总表 -->
+	 	<action name="queryIssuerCardSum" class="issuerCardSumAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerCardSum.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issuerCardSum.jsp</result>
+	 	</action>
+	 	<!-- 卡作废报表 -->
+	 	<action name="queryCardInvalid" class="cardInvalidIreportAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/cardInvalidIreport.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/cardInvalidIreport.jsp</result>
+	 	</action>
+	 	
+	<!-- 收单机构 -->
+	  <!-- 发行运营汇总表 -->
+		<action name="queryIssuerSellSummary" class="issuerSellSummaryAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/consumer/report/Consumer_IssuerSellSummary.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/consumer/report/Consumer_IssuerSellSummary.jsp</result>
+	 	</action>
+	 	<!-- 发行运营明细表 -->
+	 	<action name="queryIssuerDetail" class="issuerSellDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/consumer/report/Consumer_IssuerSellDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/consumer/report/Consumer_IssuerSellDetail.jsp</result>
+	 	</action>
+	 	<!-- 与商户的结算单总表 -->
+	 	<action name="queryCalculateWithMerchant" class="calculateWithMerchantAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/consumer/report/CalculateWithMerchant.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/consumer/report/CalculateWithMerchant.jsp</result>
+	 	</action>
+	 	<!-- 与商户的结算单明细表 -->
+	 	<action name="queryCalculateWithMerchantDetail" class="calculateWithMerchantDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/consumer/report/CalculateWithMerchantDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/consumer/report/CalculateWithMerchantDetail.jsp</result>
+	 	</action>
+	 	<!--  POS机明细表 -->
+	 	<action name="queryPOSdetailAction" class="posDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/consumer/report/POSdetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/consumer/report/POSdetail.jsp</result>
+	 	</action>
+	 	<action name="monthSettleAction" class="monthSettleAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/consumer/report/MonthSettle.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/consumer/report/MonthSettle.jsp</result>
+	 	</action>
+	 <!--营销运营报表  -->	
+	     <!-- 交易汇总表 -->
+	 		<action name="queryTradeSummaryAction" class="tradeSummaryAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/tradeSummary.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/tradeSummary.jsp</result>
+	 	</action>
+	 	<!-- 交易明细报表 -->
+	 	<action name="queryTradeDetailAction" class="tradeDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/tradeDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/tradeDetail.jsp</result>
+	 	</action>
+	 	<!--  库存汇总报表 -->
+	 		<action name="queryWarehouseSummaryAction" class="warehouseSummaryAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/WarehouseSummary.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/WarehouseSummary.jsp</result>
+	 	</action>
+	 	<!-- 库存详细报表 -->
+	 	<action name="queryWarehouseDetailAction" class="warehouseDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/WarehouseDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/WarehouseDetail.jsp</result>
+	 	</action>
+	 	<action name="queryProduct" class="warehouseDetailAction" method="choiceProduct">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/productChoice.jsp</result>
+	 		<result name="productChoice">/WEB-INF/pages/univer/seller/report/productChoice.jsp</result>
+	 	</action>
+	 	<!-- 库存流水报表 -->
+	 	<action name="queryWwarehouseFlowAction" class="warehouseFlowAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/WarehouseFlow.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/WarehouseFlow.jsp</result>
+	 	</action>
+	 	<action name="querySeller" class="warehouseSummaryAction" method="choiceSellerOrSelf">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/includeSelfSellerChoose.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/includeSelfSellerChoose.jsp</result>
+	 	</action>
+	 	<!-- 售卡明细报表 -->
+	 	<action name="querySellCardAction" class="sellCardAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/sellCard.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/sellCard.jsp</result>
+	 	</action>
+	 	<!-- 营销运营汇总报表 -->
+	 	<action name="querySellSummaryAction" class="sellSummaryAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/sellerSellSummary.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/sellerSellSummary.jsp</result>
+	 	</action>
+	 	<!--  查询发行机构 -->
+	 	<action name="queryChooseIssuerAction" class="chooseIssuerAction" method="choiceIssuer">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerChoose.jsp</result>
+	 		<result name="issuerChoice">/WEB-INF/pages/univer/seller/report/issuerChoose.jsp</result>
+	 	</action>
+	<!-- 订单号的查询 -->
+	 	<action name="orderChoice" class="sellerIssueSellSumAction" method="list">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/selectOrder.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/selectOrder.jsp</result>
+	 	</action>
+	<!-- 收单机构上级发卡机构 -->
+	<action name="issuerChoose" class="issuerSellSummaryAction" method="issuerChoose">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuerChoose.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issuerChoose.jsp</result>
+	 	</action>
+	 	<!--收单机构下级商户-->
+	 <action name="merchantChoose" class="merchantManagementAction" method="inquiry">
+	 		<result name="input">/WEB-INF/pages/univer/consumer/report/merchantChoose.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/consumer/report/merchantChoose.jsp</result>
+	 	</action>
+	 	
+	 	<action name="orderChoose" class="sellerSellDetailAction" method="list">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/selectOrder.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/selectOrder.jsp</result>
+	 	</action>	 	
+	 	
+	 	<!-- 个人收支平衡报表 -->
+	 	<action name="queryissuePersonalBalanceOfPayments" class="issuePersonalBalanceOfPaymentsAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/issuePersonalBalanceOfPayments.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/issuePersonalBalanceOfPayments.jsp</result>
+	 	</action>
+	 	
+	 	<!-- 卡消费明细报表 -->
+	 	<action name="queryCardConsumptionDetail" class="cardConsumptionDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/cardConsumptionDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/cardConsumptionDetail.jsp</result>
+	 	</action>
+	 	
+	 	<!-- 商户结算明细报表 -->
+	 	<action name="queryMerchantSettlementDetail" class="merchantSettlementDetailAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/seller/report/merchantSettlementDetail.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/seller/report/merchantSettlementDetail.jsp</result>
+	 	</action>
+	 	
+	 	<!-- 卡实时库存查询报表-->
+	 	 <action name="currentTimeStock" class="currentTimeStockAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/currentTimeStock.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/currentTimeStock.jsp</result>
+	 	</action>
+	 	
+	 	<!-- 备付金余额报表 -->
+	 	<action name="queryProvisionsBanlance" class="provisionsBanlanceAction" method="inQuery">
+	 		<result name="input">/WEB-INF/pages/univer/issuer/report/provisionsBanlance.jsp</result>
+	 		<result name="list">/WEB-INF/pages/univer/issuer/report/provisionsBanlance.jsp</result>
+	 	</action>
+	 </package>
+</struts>

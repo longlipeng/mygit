@@ -1,0 +1,321 @@
+<%@page contentType="text/html; charset=UTF-8"%>
+<%@ include file="/commons/taglibs.jsp"%>
+<%@ include file="/commons/ajax.jsp"%>
+<html>
+	<head>
+		
+		<title>持卡机构</title>
+		<%@ include file="/commons/meta.jsp"%>
+		<base href="<%=basePath%>">
+		<link rel="stylesheet" type="text/css" href="${ctx}/css/menu.css" />
+		<style type="text/css">
+.x-tree-node-icon {
+	display: none;
+}
+</style>
+		<script type="text/javascript" charset="UTF-8">
+		var isDisplayTableBody = false;
+		function displayServiceTable() {
+			if (isDisplayTableBody) {
+				display('serviceTable');
+				isDisplayTableBody = false;
+			} else {
+				undisplay('serviceTable');
+				isDisplayTableBody = true;
+			}
+		}
+		
+		Ext.BLANK_IMAGE_URL = 'widgets/ext/resources/images/default/s.gif';
+  		var menuTree;
+  		Ext.onReady(function(){
+			var menuList=${menuList};
+			var nmenuList=${nmenuList};
+			var nodeObject = new Object();
+  			for(var i=0;i<menuList.length;i++){
+  				if(parseInt(menuList[i]['fatherResourceId'])==0){
+  					nodeObject[menuList[i]['resourceId']]=new Ext.tree.TreeNode({
+            	    		id:menuList[i]['resourceId'],
+            	    		text:menuList[i]['resourceName'],
+            	    		checked:false
+            	    		
+            	    });
+  				}else{
+  					switch (parseInt(menuList[i]['resourceType'])) {
+            	   		case 1:
+            	   	 		
+  						case 2:
+							nodeObject[menuList[i]['resourceId']]=new Ext.tree.TreeNode({
+            	   	 			id:menuList[i]['resourceId'],
+            	   	 			text:menuList[i]['resourceName'],
+            	   	 			checked:false,
+            	   	 			listeners:{
+          						"checkchange":function(node){//选中是否切换激发事件
+                				 	//mytoggleChecked(node);//自定义级联选择函数
+                				 	checkedParentNodes(node);
+          						 },
+       						expanded:true
+       						}
+       						});
+       						nodeObject[menuList[i]['fatherResourceId']].appendChild(nodeObject[menuList[i]['resourceId']]);
+  							break;
+  						case 3:
+  							nodeObject[menuList[i]['resourceId']]=new Ext.tree.TreeNode({
+            	   	 			id:menuList[i]['resourceId'],
+            	   	 			text:menuList[i]['resourceName'],
+            	   	 			checked:false,
+            	   	 			leaf:true,
+            	   	 			listeners:{
+          						"checkchange":function(node){//选中是否切换激发事件
+                				 	
+                				 	checkedParentNodes(node);
+          						 },
+       							expanded:true
+       							}
+            	   	 			});
+  								nodeObject[menuList[i]['fatherResourceId']].appendChild(nodeObject[menuList[i]['resourceId']]);
+  					}
+  				}
+  				for(var j=0;j<nmenuList.length;j++){
+  					if(nodeObject[menuList[i]['resourceId']].id==nmenuList[j]['resourceId']){
+  						
+  						nodeObject[menuList[i]['resourceId']].attributes.checked=true;
+  					}
+  				}
+  			}
+  		
+  		
+      //生成树形面板
+      menuTree = new Ext.tree.TreePanel({
+//      				id:'mainTree',
+                         split : true,
+
+                         autoScroll : true,
+                         collapsible : true,
+                         collapseFirst : false,
+                         title: '商业卡管理平台',
+                         width:220,
+                         root : nodeObject[menuList[0]['resourceId']]
+                         
+                        });
+     menuTree.render('tree');
+     menuTree.animate = false;
+     menuTree.expandAll();
+     menuTree.animate = true;
+
+     
+     
+/*   var treeNodes = $(document.getElementById('mainTree')).find('a');
+     treeNodes.each(function(){
+         var id = $(this).parent().attr('ext:tree-node-id');
+         var checkbox=$('<input type="checkbox" name="checkb" value="' + id + '" />');
+         checkbox.bind('click',function(event){
+         	event.stopPropagation();
+         })
+         $(this).before(checkbox);
+     });*/
+/*    new Ext.Button({
+         text:"选中id",
+         handler:function(){
+            var b=menuTree.getChecked();
+            var checkid=new Array;//存放选中id的数组
+            for(var i=0;i<b.length;i++)
+            {  
+                 checkid.push(b[i].id);//添加id到数组
+            }
+            document.getElementById('resourceIds').value=checkid.toString();//checkid.toString()这个结果,我们可以传到服务器,想怎么处理就怎么处理
+         }
+     }).render('button');//.render(document.body,"btn");
+*/    
+    /**
+    new Ext.Button({
+    	text:"全选",
+		handler:function(){
+            mytoggleChecked(nodeObject[1]);
+       	}
+    }).render('allSelect');
+    */
+    
+    
+    function mytoggleChecked(node)
+    {
+        //迭代复选=>父节点影响子节点选择,子节点不影响父节点
+        if(node.hasChildNodes())
+        {
+          
+           var tree=node.getOwnerTree();
+           tree.suspendEvents();
+           //eachChild(fn),遍历函数
+           node.eachChild(function(child){
+                     child.getUI().toggleCheck();   
+                     mytoggleChecked(child);
+           })
+           tree.resumeEvents();
+        }
+        
+    }
+    function checkedParentNodes(node){
+	//取得本节点的所有父节点,父节点中包括其自己
+		var tree=node.getOwnerTree();
+        tree.suspendEvents();
+        var allParentNodes = getAllParentNodes(node);
+        if (allParentNodes.length > 1) {
+            for ( var i = 0; i < allParentNodes.length; i++) {
+                if (allParentNodes[i].id != node.id) {
+                    if (!allParentNodes[i].getUI().isChecked()) {
+                        allParentNodes[i].getUI().toggleCheck();
+                    }
+                }
+            }
+        }
+        tree.resumeEvents();
+	}
+	function getAllParentNodes(node){
+		
+		var parentNodes=[];
+		parentNodes.push(node);
+		if(node.parentNode){
+			parentNodes = parentNodes.concat(getAllParentNodes(node.parentNode));
+		}
+		return parentNodes;
+	}
+  })
+
+/*	function loadissuerGroup(){
+			issuerGroupSelect();
+		}
+	function issuerGroupSelect(){
+			var issuerGroupId=document.getElementById("issuerGroup").value;
+			var issuerSelect=document.getElementById('issuer');
+			if(issuerGroupId!=""){
+				ajaxRemote('${ctx}/issuerGroupselectAjax.action',
+                    'id='+issuerGroupId,
+                    function(issuerDTOs) {
+                        var issuers = issuerDTOs;
+                        issuerSelect.innerHTML='';
+                        var opt = document.createElement('option');
+          				opt.value = '0';
+            			opt.innerHTML = "----";
+            			for(var i=0;i<issuers.length;i++){
+            				var issuer=issuers[i];
+            				opt=document.createElement('option');
+            				opt.value=issuer['issuerId'];
+            				opt.innerHTML=issuer['issuerName'];
+            				
+            				issuerSelect.appendChild(opt);
+            			}
+            			issuerSelect.disabled = false;
+                    },
+                    'json');
+			}else{
+				issuerSelect.innerHTML='';
+				issuerSelect.disabled=true;
+			}
+			
+		}*/
+		function sub(){
+			var b=menuTree.getChecked();
+            var checkid=new Array;//存放选中id的数组
+            for(var i=0;i<b.length;i++)
+            {  
+                 checkid.push(b[i].id);//添加id到数组
+            }
+            document.getElementById('resourceIds').value=checkid.toString();
+            newForm.submit();
+		}
+		function comeBack(){
+		    newForm.action="roleResource/roleList.action";
+		    newForm.submit();
+		}
+ </script>
+	</head>
+	<body>
+	
+	<%@ include file="/commons/messages.jsp"%>
+	<div class="TitleHref">
+		<span>角色信息查看</span>		
+	</div>
+	
+	<div id="ContainBox">
+			<s:form id="newForm" name="newForm"
+								action="roleResource/roleEdit.action" method="post">
+			<table width="98%" border="0" cellpadding="0" cellspacing="1"
+				bgcolor="B5B8BF" align="center">
+				<tr>
+					<td width="100%" height="10" align="left" valign="top"
+						bgcolor="#FFFFFF">
+						<table width="100%" height="20" border="0" cellpadding="0"
+							cellspacing="0">
+							<tr>
+								<td class="TableTitleFront" onclick="displayServiceTable();"
+									style="cursor: pointer;">
+									<span class="TableTop">角色信息</span>
+								</td>
+								<td class="TableTitleEnd">
+									&nbsp;
+								</td>
+							</tr>
+						</table>
+						<div id="serviceTable">
+							
+								<s:hidden id="resourceIds" name="resourceIds"/>
+								<table width="100%" style="table-layout: fixed;">
+									<tr>
+										<td>
+											<table style="text-align: left; width: 100%">
+												<tr>
+													<td style="width: 110px; text-align: right;">
+														<span class="no-empty">*</span>角色编号：
+													</td>
+													<td>
+														<s:label name="roleDTO.roleId"></s:label>
+													</td>
+												</tr>
+											</table>
+										</td>
+										<td>
+											<table style="text-align: left; width: 100%">
+												<tr>
+													<td style="width: 150px; text-align: right;">
+														<span class="no-empty">*</span>角色名称：
+													</td>
+													<td>
+														<s:label name="roleDTO.roleName"></s:label>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+									
+									<tr>
+										<td colspan="2">
+											<table style="text-align: left; width: 100%">
+												<tr>
+													<td style="width: 110px; text-align: left;">
+														角色描述：
+													</td>
+													<td>
+														<s:textarea name="roleDTO.roleComment" cols="70" rows="5" readonly="true"></s:textarea>
+													</td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+						</div>
+					</td>
+					<td valign="top">
+						<div id="tree">
+					</td>
+				</tr>
+			</table>
+			</s:form>
+		</div>
+		<div id="btnDiv" style="text-align: right; width: 100%">
+			<button class='bt' type="button" style="float: right; margin: 5px 10px"
+				onclick="comeBack();">
+				返回
+			</button>
+			<div style="clear: both"></div>
+		</div>	
+	</body>
+</html>

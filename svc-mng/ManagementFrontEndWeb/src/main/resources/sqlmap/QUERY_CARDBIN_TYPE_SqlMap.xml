@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="QUERY_CARD_BIN_TYPE">
+	<select id="getCardBintType"  parameterClass="com.huateng.framework.ibatis.model.ProductCardBin"  resultClass="java.lang.String">
+		select BIN_TYPE as "binType"
+		from TB_CARD_SERIAL_NUMBER
+		 where CARD_BIN =#realCardBin:VARCHAR#
+		 			and
+		 			ISSUER_ID in (
+		 									select ENTITY_ID from
+		 									      TB_PRODUCT
+		 									   where PRODUCT_ID= #productId:VARCHAR#)
+		
+	</select>
+	<select id="getCardBinTypeByCardBin"  parameterClass="com.huateng.framework.ibatis.model.ProductCardBin"  resultClass="com.huateng.framework.ibatis.model.ProductCardBin">
+		select BIN_TYPE as "binType"
+		from TB_CARD_SERIAL_NUMBER
+		where CARD_BIN =#realCardBin:VARCHAR#
+	</select>
+</sqlMap>

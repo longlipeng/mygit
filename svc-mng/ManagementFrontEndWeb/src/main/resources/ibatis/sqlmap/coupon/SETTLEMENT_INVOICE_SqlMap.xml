@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SETTLEMENT_INVOICE">
+	<select id="querySettlement" resultClass="java.lang.Long"
+		remapResults="true"
+		parameterClass="com.allinfinance.univer.seller.invoice.dto.InvoiceReceiveUpdateDTO">
+			select distinct s.ID as "settleNo"
+			from TB_SETTLEMENT s
+            where s.STATUS = '1' 
+        <isNotEmpty prepend="AND" property="idss">
+			s.ID in (
+				select si.BALANCE_ID from TB_SETTLEMENT_INVOICE_REF si 
+				where si.INVOICE_ID in(<iterate property="idss" conjunction="," >
+          		$idss[]$</iterate>)
+			)
+		</isNotEmpty> 
+	</select>
+	<select id="checkInvoiceAll" resultClass="java.lang.Integer"
+		remapResults="true"
+		parameterClass="java.lang.Long">
+			select count(*) as "id"
+			from TB_INVOICE i
+            where i.STATUS = '0' 
+			and i.ID in (
+				select si.INVOICE_ID from TB_SETTLEMENT_INVOICE_REF si 
+				where si.BALANCE_ID = #value#
+			)
+	</select>
+	
+</sqlMap>

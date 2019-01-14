@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<sqlMap namespace="CUSTOMER">
+	<select id="selectCustomersByDTO" parameterClass="com.allinfinance.univer.seller.customer.CustomerQueryDTO"
+		resultClass="java.util.HashMap" remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select nvl(VT.sell_contract_id, 0 ) "sellContractId" ,
+			T1.ENTITY_ID as "entityId" ,
+			T1.FATHER_ENTITY_ID as "fatherEntityId" ,
+			T1.CUSTOMER_NAME as "customerName",
+			T1.CUSTOMER_CODE as "customerCode",
+			T1.CUSTOMER_ENGLISH_NAME as "customerEnglishName",
+			T1.PRINT_NAME as "printName",
+			T1.SALES_REGION_ID      as "salesRegionId" ,
+			T1.EXTERNAL_ID          as "externalId" ,
+			T1.CUS_STATE as "cusState",
+			T1.MODIFY_USER as "modifyUser",
+			to_char(to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "createTime" ,
+			to_char(to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS'),'YYYY-MM-DD') as "modifyTime" ,
+			T1.DATA_STATE as "dataState",
+			T1.payment_Term as "paymentTerm",
+			T1.activity_Sector as "activitySector",
+			T1.CUSTOMER_TYPE as "customerType",
+			T1.channel as "channel"
+		from
+			TB_CUSTOMER T1 left join
+			TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID left join
+       (SELECT *
+          FROM TB_SELL_CONTRACT T3
+         WHERE T3.CONTRACT_STATE = '1'
+           AND T3.DATA_STATE = '1'
+           AND T3.EXPIRY_DATE >= TO_CHAR(SYSDATE, 'yyyyMMdd')) VT on  VT.CONTRACT_BUYER = T1.ENTITY_ID
+		where 
+		   1=1
+		<dynamic>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="defaultEntityId">
+				T1.FATHER_ENTITY_ID = #defaultEntityId:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="customerCode">
+				T1.CUSTOMER_CODE = #customerCode:VARCHAR#
+	    	</isNotEmpty>
+			<isNotEmpty prepend="and" property="customerName">
+				T1.CUSTOMER_NAME like '%'||#customerName:VARCHAR#||'%'
+	    	</isNotEmpty>
+			<isNotEmpty prepend="and" property="externalId">
+				T1.EXTERNAL_ID like '%'||#externalId:VARCHAR#||'%'
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="cusState">
+				T1.CUS_STATE = #cusState:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="customerType">
+				T1.customer_Type = #customerType:VARCHAR#
+      		</isNotEmpty>
+      		<isEmpty property="cusState">
+      			<isNotEmpty property="flag" prepend="and">
+      				T1.CUS_STATE in (1,3,4)
+      			</isNotEmpty>
+      		</isEmpty>
+			<isNotNull prepend="and" property="startTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &gt;=#startTime:DATE#
+<!--				<isNull property="stopTime">-->
+<!--		       	 <![CDATA[-->
+<!--		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') >=#startTime:DATE#-->
+<!--		        ]]>-->
+<!--				</isNull>-->
+			</isNotNull>
+			<isNotNull prepend="and" property="stopTime">
+			to_date(substr(T1.CREATE_TIME,1,8),'YYYYMMDD') &lt;=#stopTime:DATE#
+<!--				<isNull property="startTime">-->
+<!--		       	 <![CDATA[-->
+<!--		        	to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') <= #stopTime:DATE#-->
+<!--		        ]]>-->
+<!--				</isNull>-->
+			</isNotNull>
+<!--			<isNotNull prepend="and" property="stopTime">-->
+<!--				<isNotNull property="startTime">-->
+<!--					to_date(T1.CREATE_TIME,'YYYY-MM-DD HH24MISS') between #startTime:DATE# and #stopTime:DATE#-->
+<!--				</isNotNull>-->
+<!--			</isNotNull>-->
+			<isNotEmpty prepend="and" property="paymentTerm">
+				T1.PAYMENT_TERM = #paymentTerm:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="activitySector">
+				T1.ACTIVITY_SECTOR = #activitySector:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="salesRegionId">
+				T1.SALES_REGION_ID = #salesRegionId:VARCHAR#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="channel">
+				T1.channel = #channel:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="dataState">
+				T1.DATA_STATE = #dataState:VARCHAR#
+      		</isNotEmpty>
+		</dynamic>
+		order by T1.CREATE_TIME desc
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	<select id="selectCustomerPrintNameByCardHolder" 
+			parameterClass="java.lang.String" 
+			resultClass="java.lang.String">
+	  	SELECT
+			 T1.PRINT_NAME
+		FROM TB_CUSTOMER T1 left join
+		     TB_CARDHOLDER T2 on T1.ENTITY_ID = T2.ENTITY_ID
+		WHERE 
+			T2.CARDHOLDER_ID = #cardHolderId:VARCHAR#
+  	</select>
+  	
+  	<update id="updateAccountFlag" parameterClass="com.huateng.framework.ibatis.model.Bank">
+    update TB_BANK
+    set 
+      ACCOUNT_FLAG = #accountFlag:VARCHAR#
+    where
+      ENTITY_ID = #entityId:VARCHAR#
+  </update>
+</sqlMap>

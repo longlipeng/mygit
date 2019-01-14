@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="member" extends="struts-global"  namespace="/member">
+		
+		
+		<action name="memberInfoInquery" class="memberManagementAction" method="memberInfoInquery">
+			<result name="query">/WEB-INF/pages/univer/seller/customer/memberInfoInquery.jsp</result>
+		</action>
+		<action name="memberDetailInfoInquery" class="memberManagementAction" method="memberDetailInfoInquery">
+			<result name="querySucc">/WEB-INF/pages/univer/seller/customer/memberDetailInfoView.jsp</result>
+		</action>
+	</package>
+</struts>

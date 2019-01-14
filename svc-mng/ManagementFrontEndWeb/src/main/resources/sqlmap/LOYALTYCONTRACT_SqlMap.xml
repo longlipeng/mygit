@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="LOYALTYCONTRACT">
+
+  <select id="selectContract" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuerContract.LoyaltyContractQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/> 
+select T1.LOYALTY_CONTRACT_ID as "loyaltyContractId",
+       T1.CONTRACT_BUYER as "contractBuyer",
+       T1.DELIVERY_FEE as "deliveryFee",
+       T1.RULE_NO as "ruleNo",
+       T1.SMS_SVC_STAT as "smsSvcStat",
+       T1.EMAIL_SVC_STAT as "emailSvcStat",
+       T1.MONSTMT_SVC_STAT as "monstmtSvcStat",
+       T1.WEB_PAY_STAT as "webPayStat",
+       T1.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+       T1.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+       T1.CONTRACT_STATE as "contractState",
+       I.ISSUER_NAME as "customerName",
+       TO_CHAR(TO_DATE(T1.EXPIRY_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') as "expiryDate",
+       to_date(T1.CREATE_TIME, 'YYYY-MM-DD HH24MISS') as "createTime",
+       to_date(T1.MODIFY_TIME, 'YYYY-MM-DD HH24MISS') as "modifyTime",
+       T3.RULE_NAME as "ruleName",
+       T3.RULE_TYPE as "ruleType",
+       T1.CLEAR_TP as "clearTp"
+  FROM TB_LOYALTY_CONTRACT T1
+       left join
+       TB_SETTLE_PERIOD_RULE T3 on T1.RULE_NO=T3.RULE_NO, 
+       TB_ISSUER I
+ WHERE T1.CONTRACT_BUYER = I.ENTITY_ID
+   AND T1.DATA_STATE = '1'
+   AND I.DATA_STATE = '1'
+    <dynamic>
+      <isNotNull prepend="and" property="defaultEntityId">
+        T1.CONTRACT_SELLER= #defaultEntityId:DECIMAL#
+      </isNotNull>
+     <isNotNull prepend="and" property="loyaltyContractId">
+        T1.LOYALTY_CONTRACT_ID= #loyaltyContractId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="customerName">
+        UPPER(I.ISSUER_NAME) like UPPER('%'||#customerName:VARCHAR#||'%')
+      </isNotNull>
+      <isNotEmpty prepend="and" property="contractBuyer">
+       T1.CONTRACT_BUYER= #contractBuyer:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="webPayStat">
+        T1.WEB_PAY_STAT= #webPayStat:DECIMAL#
+      </isNotEmpty>
+      <isNotNull prepend="and" property="contractState">
+        T1.CONTRACT_STATE = #contractState:DECIMAL#
+      </isNotNull>
+      <isNotEmpty prepend="and" property="ruleName">
+        T3.RULE_NAME like '%'||#ruleName:VARCHAR#||'%'
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ruleType">
+        T1.clear_tp=#ruleType:VARCHAR#
+      </isNotEmpty>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+  
+  <select id="selectLoyaltyContractInfo" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.issuer.dto.issuerContract.LoyaltyContractDTO">
+  SELECT I.ISSUER_NAME as "contractBuyerName",
+	       R.RULE_NAME as "ruleName"
+	  FROM TB_LOYALTY_CONTRACT C, TB_SETTLE_PERIOD_RULE R, TB_ISSUER I
+	 WHERE C.RULE_NO = R.RULE_NO
+	   AND C.CONTRACT_BUYER = I.ENTITY_ID
+	   AND C.DATA_STATE = '1'
+	   AND I.DATA_STATE = '1'
+	   AND C.LOYALTY_CONTRACT_ID= #loyaltyContractId#
+  </select>
+  
+  <select id="selectSellerContractInfo" parameterClass="java.lang.String" resultClass="com.allinfinance.univer.seller.sellercontract.dto.SellerContractDTO">
+   SELECT I.SELLER_NAME as "contractBuyerName",
+	      R.RULE_NAME as "settlePeriodRuleName"
+	  FROM TB_SELL_CONTRACT C, TB_SETTLE_PERIOD_RULE R, TB_seller I
+	 WHERE C.SETTLE_PERIOD_RULE = R.RULE_NO
+	   AND C.CONTRACT_BUYER = I.ENTITY_ID 
+	   AND C.DATA_STATE = '1'
+	   AND I.DATA_STATE = '1'
+	   AND C.SELL_CONTRACT_ID= #sellContractId#
+  </select>
+  
+  
+    <select id="selProdFromContractAndProduct" parameterClass="java.lang.String" remapResults="true" resultClass="java.util.HashMap">
+	select
+		distinct prodCon.Product_Id as "productId"
+	from
+		tb_loyalty_contract contract,
+		tb_loyalty_prod_contract prodCon
+	where
+		contract.contract_buyer=#entityId:VARCHAR#
+	and
+		contract.loyalty_contract_id=prodCon.Loyalty_Contract_Id
+	union
+	select
+		product.product_id as "productId"
+	from
+		tb_product product
+	where
+		product.product_define_issuer=#entityId:VARCHAR#
+	and
+		product.entity_id=#entityId:VARCHAR#
+  </select>
+  
+   <select id="selectContractAndProduct" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.issuer.dto.issuerContract.LoyaltyContractQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/> 
+select T1.LOYALTY_CONTRACT_ID as "loyaltyContractId",
+       T1.CONTRACT_BUYER as "contractBuyer",
+       T1.DELIVERY_FEE as "deliveryFee",
+       T1.RULE_NO as "ruleNo",
+       prodCon.PRODUCT_ID as "productId",
+       T1.SMS_SVC_STAT as "smsSvcStat",
+       T1.EMAIL_SVC_STAT as "emailSvcStat",
+       T1.MONSTMT_SVC_STAT as "monstmtSvcStat",
+       T1.WEB_PAY_STAT as "webPayStat",
+       T1.WEB_SMS_SVC_STAT as "webSmsSvcStat",
+       T1.WEB_EMAIL_SVC_STAT as "webEmailSvcStat",
+       T1.CONTRACT_STATE as "contractState",
+       I.ISSUER_NAME as "customerName",
+       TO_CHAR(TO_DATE(T1.EXPIRY_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') as "expiryDate",
+       to_date(T1.CREATE_TIME, 'YYYY-MM-DD HH24MISS') as "createTime",
+       to_date(T1.MODIFY_TIME, 'YYYY-MM-DD HH24MISS') as "modifyTime"
+  FROM TB_LOYALTY_CONTRACT T1, TB_ISSUER I,TB_LOYALTY_PROD_CONTRACT prodCon
+ WHERE T1.CONTRACT_BUYER = I.ENTITY_ID
+ and
+ prodCon.LOYALTY_CONTRACT_ID=T1.LOYALTY_CONTRACT_ID
+    <dynamic>
+      <isNotNull prepend="and" property="defaultEntityId">
+        T1.CONTRACT_SELLER= #defaultEntityId:DECIMAL#
+      </isNotNull>
+     <isNotNull prepend="and" property="loyaltyContractId">
+        T1.LOYALTY_CONTRACT_ID= #loyaltyContractId:DECIMAL#
+      </isNotNull>
+      <isNotNull prepend="and" property="customerName">
+        UPPER(I.ISSUER_NAME) like UPPER('%'||#customerName:VARCHAR#||'%')
+      </isNotNull>
+      <isNotEmpty prepend="and" property="contractBuyer">
+       T1.CONTRACT_BUYER= #contractBuyer:DECIMAL#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="webPayStat">
+        T1.WEB_PAY_STAT= #webPayStat:DECIMAL#
+      </isNotEmpty>
+      <isNotNull prepend="and" property="contractState">
+        T1.CONTRACT_STATE = #contractState:DECIMAL#
+      </isNotNull>
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+  
+</sqlMap>

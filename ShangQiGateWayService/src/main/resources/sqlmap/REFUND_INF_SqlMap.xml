@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="REFUND">
+	<select id="refundList"  resultClass="java.util.HashMap" remapResults="true" parameterClass="com.allinfinance.univer.refund.dto.RefundQueryDTO">
+		<include refid="Commons.prefixSql"/>
+			select 
+				t.seq_id as seqId,
+				t.order_id as orderId,
+				to_char(to_date(t.settle_dt,'yyyyMMdd'),'yyyy-MM-dd') as settleDt,
+				t.orig_trans_at as orgiTransAt,
+				t.trans_at as transAt,
+				to_char(to_date(t.req_dt,'yyyyMMdd'),'yyyy-MM-dd') as reqDt,
+				substr(t.req_tm,1,2)||':'||substr(t.req_tm,3,2)||':'||substr(t.req_tm,5,2) as reqTm,
+				decode(t.auth_rlt,'0','未审批','1','已同意','2','已拒绝','未审批') as authRlt	,
+				t.ext_rsp_cd as respCode,
+				t.trans_chnl_flag as flag			
+			from
+				vi_tbl_txn_refund_inf t,
+				TB_MERCHANT t2
+			where
+				1=1 and
+				t.MCHNT_CD = t2.MERCHANT_CODE and
+				t2.FATHER_ENTITY_ID = #consumerId#
+				<dynamic>
+					<isNotEmpty prepend="and" property="orderId">
+						t.order_id=#orderId:VARCHAR#
+					</isNotEmpty>
+					<isNotEmpty prepend="and" property="startDate">
+						<![CDATA[
+							to_date(t.req_Dt,'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+						]]>
+					</isNotEmpty>
+					<isNotEmpty prepend="and" property="endDate">
+						<![CDATA[
+							to_date(t.req_Dt,'yyyyMMdd')<=to_date(#endDate#,'yyyy-MM-dd')
+						]]>
+					</isNotEmpty>
+					<isNotEmpty prepend="and" property="mchntCd">
+						t.mchnt_cd in $mchntCd$
+					</isNotEmpty>
+					<isEqual prepend="and" property="authRlt" compareValue="0">
+						(t.auth_rlt=#authRlt# or t.auth_rlt is null)
+					</isEqual>
+					<isNotEmpty property="authRlt">
+						<isNotEqual prepend="and" property="authRlt" compareValue="0">
+							t.auth_rlt=#authRlt#
+						</isNotEqual>
+					</isNotEmpty>
+			</dynamic>
+		<include refid="Commons.suffixSql"/>
+	</select>
+	<select id="selectBySeqIdFlag" parameterClass="com.allinfinance.univer.refund.dto.RefundDTO" resultClass="com.allinfinance.univer.refund.dto.RefundDTO">
+		 select 
+		  t.SEQ_ID as seqId,
+		  t.ACQ_INS_CD as acqInsCd,
+		  t.MCHNT_CD as mchntCd,
+		  t.REQ_DT as reqDt,
+		  t.req_tm as reqTm,
+		  t.order_id as orderId,
+		  t.trans_dt as transDt,
+		  t.trans_tm as transTm,
+		  t.trans_at as transAt,
+		  t.orig_trans_at as origTransAt,
+		  t.refund_at as refundAt,
+          t.auth_rlt as authRlt,
+          t.auth_desc as authDesc,
+          t.confirm_dt as confirmDt,
+          t.confirm_tm as confirmTm,
+          t.settle_dt as settleDt,
+          t.rec_upd_trans_id as recUpdTransId,
+          t.rec_crt_ts as recCrtTs,
+          t.rec_upd_ts as recUpdTs,
+          t.ext_rsp_cd as extRspCd,
+          t.txn_seq as txnSeq,
+          t.trans_chnl_flag as transChnlFlag
+		  from vi_tbl_txn_refund_inf t
+		  where 
+		  t.seq_id=#seqId#  and t.trans_chnl_flag=#transChnlFlag#
+	</select>
+	<update id="updateHsaRefundState" parameterClass="com.allinfinance.univer.refund.dto.RefundDTO">
+	 update tbl_hsa_refund_inf
+    set ACQ_INS_CD = #acqInsCd:VARCHAR#,
+      MCHNT_CD = #mchntCd:VARCHAR#,
+      REQ_DT = #reqDt:CHAR#,
+      REQ_TM = #reqTm:CHAR#,
+      ORDER_ID = #orderId:VARCHAR#,
+      TRANS_DT = #transDt:CHAR#,
+      TRANS_TM = #transTm:CHAR#,
+      TRANS_AT = #transAt:DECIMAL#,
+      REFUND_RSN = #refundRsn:VARCHAR#,
+      ORIG_TRANS_AT = #origTransAt:DECIMAL#,
+      REFUND_AT = #refundAt:DECIMAL#,
+      AUTH_RLT = #authRlt:CHAR#,
+      AUTH_DESC = #authDesc:VARCHAR#,
+      CONFIRM_DT = #confirmDt:CHAR#,
+      CONFIRM_TM = #confirmTm:CHAR#,
+      SETTLE_DT = #settleDt:CHAR#,
+      FLD_01_RES_DATA = #fld01ResData:VARCHAR#,
+      FLD_02_RES_DATA = #fld02ResData:VARCHAR#,
+      REC_UPD_OPER_ID = #recUpdOperId:CHAR#,
+      REC_UPD_TRANS_ID = #recUpdTransId:CHAR#,
+      REC_CRT_TS = #recCrtTs:DATE#,
+      REC_UPD_TS = #recUpdTs:DATE#,
+      TXN_SEQ = #txnSeq:CHAR#,
+      EXT_RSP_CD = #extRspCd:CHAR#,
+      TRANS_CHNL_FLAG = #transChnlFlag:CHAR#
+    where SEQ_ID = #seqId:CHAR#
+	</update>
+	
+	<update id="updateTxnRefundState" parameterClass="com.allinfinance.univer.refund.dto.RefundDTO">
+	 update tbl_txn_refund_inf
+    set ACQ_INS_CD = #acqInsCd:VARCHAR#,
+      MCHNT_CD = #mchntCd:VARCHAR#,
+      REQ_DT = #reqDt:CHAR#,
+      REQ_TM = #reqTm:CHAR#,
+      ORDER_ID = #orderId:VARCHAR#,
+      TRANS_DT = #transDt:CHAR#,
+      TRANS_TM = #transTm:CHAR#,
+      TRANS_AT = #transAt:DECIMAL#,
+      REFUND_RSN = #refundRsn:VARCHAR#,
+      ORIG_TRANS_AT = #origTransAt:DECIMAL#,
+      REFUND_AT = #refundAt:DECIMAL#,
+      AUTH_RLT = #authRlt:CHAR#,
+      AUTH_DESC = #authDesc:VARCHAR#,
+      CONFIRM_DT = #confirmDt:CHAR#,
+      CONFIRM_TM = #confirmTm:CHAR#,
+      SETTLE_DT = #settleDt:CHAR#,
+      FLD_01_RES_DATA = #fld01ResData:VARCHAR#,
+      FLD_02_RES_DATA = #fld02ResData:VARCHAR#,
+      REC_UPD_OPER_ID = #recUpdOperId:CHAR#,
+      REC_UPD_TRANS_ID = #recUpdTransId:CHAR#,
+      REC_CRT_TS = #recCrtTs:DATE#,
+      REC_UPD_TS = #recUpdTs:DATE#,
+      TXN_SEQ = #txnSeq:CHAR#,
+      EXT_RSP_CD = #extRspCd:CHAR#,
+      TRANS_CHNL_FLAG = #transChnlFlag:CHAR#
+    where SEQ_ID = #seqId:CHAR#
+	</update>
+	
+	<select id="queryTxn" parameterClass="java.lang.String" remapResults="true" resultClass="java.util.HashMap">
+		select 
+			t.trans_id as transId
+		from 
+			tbl_trans_log_his t
+		where
+			t.primary_key=#value#
+	</select>
+</sqlMap>

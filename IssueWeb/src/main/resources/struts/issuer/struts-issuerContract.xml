@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>                                                              
+    <package name="issuerContract" extends="struts-global" >
+        <global-results>
+           <result name="list">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+           <result name="edit">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractEdit.jsp</result>
+           <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+        </global-results>
+                
+        <action name="issuerContractInquery" class="issuerContractAction" method="queryIssuerContract">
+         <result name="list">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+        </action>
+        
+        <action name="issuerConstractAdd" class="issuerContractAction" method="toIssuerConstractAdd">
+         <result name="readd">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+        </action>
+        
+        <action name="constractAdd" class="issuerContractAction" method="issuerContractAdd">
+         <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractAdd.jsp</result>
+        </action>
+
+        <action name="issuerConstractEdit" class="issuerContractAction" method="issuerConstractEdit">
+         <result name="edit">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractEdit.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractEdit.jsp</result>
+        </action>
+        
+        <action name="constractView" class="issuerContractAction" method="constractView">
+         <result name="view">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractView.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+        </action>
+        
+        <action name="addProductService" class="issuerContractAction" method="productAdd">
+         <result name="add">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractProductAdd.jsp</result>
+         <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+        </action>
+      
+      
+        <action name="insertContractProductService" class="issuerContractAction" method="productAndServiceAdd">
+           <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+           <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractProductAdd.jsp</result>
+        </action>
+        
+        <action name="issuerProductView" class="issuerContractAction" method="issuerProductView">
+           <result name="add">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractProductAdd.jsp</result>
+           <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractProductAdd.jsp</result>
+        </action>
+        
+         <action name="issuerConstractView" class="issuerContractAction" method="issuerConstractView">
+           <result name="edit">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractEdit.jsp</result>
+           <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+        </action>
+        
+        <action name="editIssuerProduct" class="issuerContractAction" method="editIssuerProduct">
+           <result name="edit">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractProductEdit.jsp</result>
+        </action>
+        
+         <action name="updateIssuerProduct" class="issuerContractAction" method="updateIssuerProduct">
+           <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+           <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractProductEdit.jsp</result>
+        </action>
+     
+        <action name="editIssuerService" class="issuerContractAction" method="editIssuerService">
+           <result name="edit">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractServiceEdit.jsp</result>
+        </action>
+     
+        <action name="updateIssuerService" class="issuerContractAction" method="updateIssuerService">
+           <result name="success">/WEB-INF/pages/univer/issuer/issuer/success.jsp</result>
+           <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractServiceEdit.jsp</result>
+        </action>
+        
+        <action name="updateIssuerConstract" class="issuerContractAction" method="updateIssuerConstract">
+           <result name="list">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractList.jsp</result>
+           <result name="input">/WEB-INF/pages/univer/issuer/issuercontract/issuerContractEdit.jsp</result>
+        </action>
+     
+      
+    </package>
+</struts>

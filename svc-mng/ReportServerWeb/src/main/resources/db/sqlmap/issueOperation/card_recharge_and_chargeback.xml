@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="cardRechargeAndChargeback">
+	<select id="cardRechargeAndChargeback"
+		resultClass="com.allinfinance.service.issueOperation.cardRechargeAndChargeback.CardRechargeAndChargebackDTO"
+		parameterClass="com.allinfinance.service.issueOperation.cardRechargeAndChargeback.CardRechargeAndChargebackDTO">
+		select
+		max(SELLER_NAME) as issueName,
+		max(USER_NAME) as saleMan,
+		max(ORDER_DATE) as orderDate,
+		max(TOTAL_PRICE)/100 as totalPrice,
+		nvl(max(TOTAL_PRICE)-max(ADDITIONAL_FEE),0)/100 as cardAmount,
+		nvl(max(ADDITIONAL_FEE),0)/100 as additionalFee,
+		ORDER_TYPE as orderType,
+		ORDER_ID as orderId,
+		sum(cash)/100 as cash,	
+		sum(telegraph)/100 as telegraph,
+		sum(cheque)/100 as cheque,
+		sum(accountBalance)/100 as accountBalance,
+		sum(bankCard)/100 as bankCard
+		from
+		(select t4.SELLER_NAME as SELLER_NAME,
+		t3.USER_NAME as USER_NAME,
+		t1.ORDER_DATE as ORDER_DATE,
+		nvl(t1.ADDITIONAL_FEE,0) as ADDITIONAL_FEE,
+		t1.ORDER_ID as ORDER_ID,
+		t5.DICT_NAME as ORDER_TYPE,
+		t2.PAYMENT_TYPE as PAYMENT_TYPE,
+		t2.PAYMENT_AMOUNT as PAYMENT_AMOUNT,
+		t1.TOTAL_PRICE as TOTAL_PRICE,
+		t1.PROCESS_ENTITY_ID as PROCESS_ENTITY_ID,
+		case t2.PAYMENT_TYPE when '1' then t2.PAYMENT_AMOUNT else 0 end as cash,
+		case t2.PAYMENT_TYPE when '2' then t2.PAYMENT_AMOUNT else 0 end as cheque,
+		case t2.PAYMENT_TYPE when '3' then t2.PAYMENT_AMOUNT else 0 end as accountBalance,
+		case t2.PAYMENT_TYPE when '4' then t2.PAYMENT_AMOUNT else 0 end as telegraph,
+		case t2.PAYMENT_TYPE when '9' then t2.PAYMENT_AMOUNT else 0 end as bankCard
+		from TB_SELL_ORDER t1,
+		TB_SELL_ORDER_PAYMENT t2,
+		TB_ENT_USER t3,
+		TB_SELLER t4,
+		TB_DICT_INFO t5
+		where t1.MODIFY_USER = t3.USER_ID
+		<isNotEmpty prepend="and" property="startDate">
+			substr(to_date(t2.CREATE_TIME, 'yyyyMMddhh24miss'),1,10)
+			&gt;=#startDate:varchar#	
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endDate">
+			substr(to_date(t2.CREATE_TIME, 'yyyyMMddhh24miss'),1,10)
+			&lt;=#endDate:varchar#	
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="issuerId">
+			t1.PROCESS_ENTITY_ID = #issuerId:varchar#
+		</isNotEmpty>
+		
+		<isNotEmpty prepend="and" property="saleMan">
+			t1.MODIFY_USER = #saleMan:varchar#	
+		</isNotEmpty>
+		and t1.ORDER_ID = t2.ORDER_ID
+		and t1.PAYMENT_STATE in('1', '2')
+		and t2.DATA_STATE='1'
+		and t1.PROCESS_ENTITY_ID = t4.ENTITY_ID
+		and t5.DICT_CODE = t1.ORDER_TYPE
+		and t1.ORDER_TYPE in('10000012','10000002','10000011',
+			'10000001','10000003','60000001','70000001'))
+		group by order_id,order_type
+		order by ORDER_ID 
+	</select>
+	<select id="GET_CARD_NO"
+		resultClass="com.allinfinance.service.issueOperation.cardRechargeAndChargeback.CardRechargeAndChargebackDTO"
+		parameterClass="com.allinfinance.service.issueOperation.cardRechargeAndChargeback.CardRechargeAndChargebackDTO">
+		select 
+		t1.order_id as orderId,
+		t1.REMARK as cardNo 
+		from 
+		tb_sell_order_payment t1,
+		tb_sell_order t2
+		where
+		PAYMENT_TYPE=9
+		and t1.order_id = t2.order_id
+		and t2.PAYMENT_STATE in('1', '2')
+		and t1.data_state = 1
+		<isNotEmpty prepend="and" property="saleMan">
+		t1.MODIFY_USER = #saleMan:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="issuerId">
+			t2.PROCESS_ENTITY_ID = #issuerId:varchar#
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="startDate">
+			substr(to_date(t1.CREATE_TIME, 'yyyyMMddhh24miss'),1,10)
+			&gt;=#startDate:varchar#	
+		</isNotEmpty>
+		<isNotEmpty prepend="and" property="endDate">
+			substr(to_date(t1.CREATE_TIME, 'yyyyMMddhh24miss'),1,10)
+			&lt;=#endDate:varchar#	
+		</isNotEmpty>
+	</select>
+</sqlMap>

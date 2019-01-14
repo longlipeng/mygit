@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="TB_SELL_ORDER_FLOW">
+  
+  <select id="selectOrderFlow" resultClass="java.util.HashMap"
+		parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderFlowQueryDTO"
+		remapResults="true">
+		<include refid="Commons.prefixSql" />
+		select
+			T1.ORDER_FLOW_ID as "orderflowId",
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_FLOW_NODE as "orderflowNode",
+			T1.OPERATE_TYPE as "operateType",
+			T1.MEMO as "memo",
+			T1.CREATE_USER as "createUser",
+			to_char(to_date(T1.CREATE_TIME,'yyyy-MM-ddhh24:mi:ss'),'yyyy-MM-dd hh24:mi:ss') as "createTime",
+			T2.USER_NAME as "createUserName"
+		from
+			TB_SELL_ORDER_FLOW T1 left join 
+			TB_ENT_USER T2 on T1.CREATE_USER=T2.USER_ID
+		where
+			T1.DATA_STATE = '1'
+			and
+			T2.DATA_STATE = '1'
+			and
+			T1.ORDER_ID = #orderId:VARCHAR#
+		
+		<dynamic>
+			<isNotEmpty prepend="and" property="orderFlowId">
+				T1.ORDER_FLOW_ID = #orderFlowId:VARCHAR#
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="operateType">
+				T1.OPERATE_TYPE = #operateType:VARCHAR#
+      		</isNotEmpty>
+		</dynamic>
+		ORDER BY T1.MODIFY_TIME DESC ,T1.ORDER_FLOW_ID DESC
+		<include refid="Commons.suffixSql" />
+	</select>
+  
+  <!--
+  <update id="updateCardholderCardlistState" parameterClass="com.huateng.accor.ibatis.model.CardholderCardlist">
+    UPDATE TB_ENT_CARDHOLDER_CARDLIST T
+        SET T.CARD_STATE=#cardState:DECIMAL#
+    WHERE T.CARD_NO=#cardNo:VARCHAR#
+  </update>
+  
+   <update id="updateCardholderCardlist" parameterClass="com.huateng.accor.ibatis.model.CardholderCardlist">
+    	UPDATE TB_ENT_CARDHOLDER_CARDLIST T
+    	SET 
+    			T.CARD_NO =#cardNo:VARCHAR#,
+    			T.CARD_STATE=2
+    	WHERE 	
+    			T.CARDHOLDER_ID=#cardholderId:DECIMAL#
+				AND T.PRODUCT_ID=#productId:DECIMAL#
+				AND (T.CARD_STATE=1 OR T.CARD_STATE=2)
+  </update>
+
+  <update id="updateOrderListCardState" parameterClass="com.huateng.accor.ibatis.model.OrderList">
+    UPDATE TB_ENT_ORDER_LIST T
+        SET T.CARD_STATE=#cardState:DECIMAL#
+    WHERE T.CARD_NO=#cardNo:VARCHAR#
+  </update>
+-->
+</sqlMap>

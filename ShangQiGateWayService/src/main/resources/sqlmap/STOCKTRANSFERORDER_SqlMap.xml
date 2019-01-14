@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="STOCKTRANSFERORDER">
+<!--调拨订单录入 -->
+<!-- 查询录入状态的调拨订单 -->
+	<select id="queryStockTransferOrderAtInput"  resultClass="java.util.HashMap"  
+	remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql"/>
+            select
+			t1.ORDER_ID as "orderId",
+			t5.SELLER_NAME as "createEntityName",  
+			t2.SELLER_NAME as "firstEntityName", 
+			t3.SELLER_NAME as "processEntityName", 
+			t1.ORDER_TYPE as "orderType",  
+			decode(t1.CARD_QUANTITY,null,0,'',0,t1.CARD_QUANTITY) as "cardQuantity", 
+			t1.ORDER_DATE as "orderDate", 
+			t4.USER_NAME as "createUser", 
+			t1.ORDER_STATE as "orderState"
+			from
+			TB_SELL_ORDER t1,
+			TB_SELLER t2, 
+			TB_SELLER t3,
+			TB_ENT_USER t4, 
+			TB_SELLER t5
+			where t1.FIRST_ENTITY_ID = t2.ENTITY_ID
+			and t1.PROCESS_ENTITY_ID = t3.ENTITY_ID
+			and t1.CREATE_USER = t4.USER_ID 
+			and t4.ENTITY_ID = t5.ENTITY_ID
+			and t1.ORDER_TYPE = '60000006'
+			and t5.ENTITY_ID = #entityId#
+			and t1.ORDER_STATE = '7'
+			<dynamic>
+		    <isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID=#orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				UPPER(t2.SELLER_NAME) like UPPER('%'||#firstEntityName#||'%')
+			</isNotEmpty>
+				<isNotEmpty prepend="and" property="processEntityName">
+				UPPER(t3.SELLER_NAME) like UPPER('%'||#processEntityName#||'%')
+			</isNotEmpty>
+		    <isNotEmpty prepend="and" property="orderDateStart">
+				T1.ORDER_DATE &gt;= to_char(#orderDateStart#,'YYYYMMDD')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderDateEnd">
+				T1.ORDER_DATE &lt;= to_char(#orderDateEnd#,'YYYYMMDD')
+			</isNotEmpty>
+		  </dynamic> 
+		<include refid="Commons.suffixSql"/>		
+	</select>
+	<!-- 查询出调出机构和调入机构都允许销售的产品 -->
+	<select id="queryFirstProcessProducts"  resultClass="com.allinfinance.univer.issuer.dto.product.ProductQueryDTO"  
+	remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+	    SELECT
+			T1.PRODUCT_ID AS "productId",
+			T1.PRODUCT_NAME AS "productName"
+			FROM
+			TB_PRODUCT T1,
+			(SELECT T1.PRODUCT_ID
+				FROM
+				TB_SELL_CONTRACT T, TB_SELL_PROD_CONTRACT T1
+				WHERE T.SELL_CONTRACT_ID =
+				T1.SELL_CONTRACT_ID
+				AND T.CONTRACT_BUYER = #firstEntityId:varchar#
+				AND
+				T.EXPIRY_DATE >= TO_CHAR(SYSDATE, 'yyyyMMdd')
+				AND T.DATA_STATE = '1'
+			    AND T.CONTRACT_STATE = 1)T2,
+			(SELECT T1.PRODUCT_ID
+				FROM
+				TB_SELL_CONTRACT T, TB_SELL_PROD_CONTRACT T1
+				WHERE T.SELL_CONTRACT_ID =
+				T1.SELL_CONTRACT_ID
+				AND T.CONTRACT_BUYER = #processEntityId:varchar#
+				AND
+				T.EXPIRY_DATE >= TO_CHAR(SYSDATE, 'yyyyMMdd')
+				AND T.DATA_STATE = '1'
+			    AND T.CONTRACT_STATE = 1)T3
+			WHERE T1.PRODUCT_ID = T2.PRODUCT_ID
+			AND T2.PRODUCT_ID = T3.PRODUCT_ID
+			AND T1.PRODUCT_ID = T3.PRODUCT_ID
+	</select>
+	<!-- 根据调出机构和产品查询产品明细 -->
+	<select id="getFirstEntityStock" resultClass="java.util.HashMap"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql"/>
+		     SELECT   
+		 		T1.CARD_LAYOUT_ID as "cardLayoutId",
+   				T2.CARD_LAYOUT_NAME as "cardName",
+				T1.FACE_VALUE_TYPE as "faceValueType",
+				T1.FACE_VALUE/100 as "faceValue",
+				to_char(to_date(T1.CARD_VALID_DATE,'yyyy-MM-dd'),'YYYY-MM-DD') as "cardValidDate",
+				COUNT(*) as "countRecord"
+                FROM 		
+                TB_ENTITY_STOCK T1,
+   				TB_CARD_LAYOUT T2
+                WHERE
+			    T1.CARD_LAYOUT_ID = T2.CARD_LAYOUT_ID
+			    AND T1.ENTITY_ID = #firstEntityId:VARCHAR#
+			    AND T1.PRODUCT_ID = #productId:VARCHAR#
+			    AND T1.FUNCTION_ROLE_ID = 3
+			    AND T1.DATA_STATE='1'
+			    AND T1.STOCK_STATE=1
+			    AND T1.FLD_01_RES_DATA is null
+			    GROUP BY T1.CARD_LAYOUT_ID,
+			    T2.CARD_LAYOUT_NAME,
+			    T1.FACE_VALUE_TYPE ,
+			    T1.FACE_VALUE,
+			    T1.CARD_VALID_DATE
+			    order by T1.FACE_VALUE
+	   <include refid="Commons.suffixSql"/>
+   </select>
+   <!-- 根据订单号查询订单明细信息 -->
+   <select id="getStockTransferOrderList" resultClass="java.util.HashMap"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderListQueryDTO">
+		<include refid="Commons.prefixSql"/>
+		     SELECT 
+		        T1.ORDER_LIST_ID AS "orderListId",
+				T2.PRODUCT_NAME AS "productName",
+				T1.CARD_AMOUNT AS "cardAmount",
+				decode(T1.FACE_VALUE_TYPE,0,'固定',1,'非固定') AS "faceValueType",
+				T1.FACE_VALUE/100 AS "faceValue",
+                T1.REAL_AMOUNT AS "realAmount",
+                T1.VALIDITY_PERIOD as "validityPeriod"
+				FROM
+				TB_SELL_ORDER_LIST T1,
+				TB_PRODUCT T2
+				WHERE T1.PRODUCT_ID = T2.PRODUCT_ID
+				AND T1.ORDER_ID = #orderId#
+	   <include refid="Commons.suffixSql"/>
+   </select>
+   <!--调拨订单出库 -->
+   <select id="queryStockTransferOrderAtReady"  resultClass="java.util.HashMap"  
+	remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql"/>
+            select
+			t1.ORDER_ID as "orderId",
+			t5.SELLER_NAME as "createEntityName",  
+			t2.SELLER_NAME as "firstEntityName", 
+			t3.SELLER_NAME as "processEntityName", 
+			t1.ORDER_TYPE as "orderType",  
+			t1.CARD_QUANTITY as "cardQuantity", 
+			t1.ORDER_DATE as "orderDate", 
+			t4.USER_NAME as "createUser", 
+			t1.ORDER_STATE as "orderState"
+			from
+			TB_SELL_ORDER t1,
+			TB_SELLER t2, 
+			TB_SELLER t3,
+			TB_ENT_USER t4, 
+			TB_SELLER t5
+			where t1.FIRST_ENTITY_ID = t2.ENTITY_ID
+			and t1.PROCESS_ENTITY_ID = t3.ENTITY_ID
+			and t1.CREATE_USER = t4.USER_ID 
+			and t4.ENTITY_ID = t5.ENTITY_ID
+			and t1.ORDER_TYPE = '60000006'
+			and t2.ENTITY_ID = #entityId#
+			and t1.ORDER_STATE = '8'
+			<dynamic>
+		    <isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID=#orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				UPPER(t2.SELLER_NAME) like UPPER('%'||#firstEntityName#||'%')
+			</isNotEmpty>
+				<isNotEmpty prepend="and" property="processEntityName">
+				UPPER(t3.SELLER_NAME) like UPPER('%'||#processEntityName#||'%')
+			</isNotEmpty>
+		    <isNotEmpty prepend="and" property="orderDateStart">
+				T1.ORDER_DATE &gt;= to_char(#orderDateStart#,'YYYYMMDD')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderDateEnd">
+				T1.ORDER_DATE &lt;= to_char(#orderDateEnd#,'YYYYMMDD')
+			</isNotEmpty>
+		  </dynamic> 
+		<include refid="Commons.suffixSql"/>		
+	</select>
+	<select id="getStockTransferOrderCardList" resultClass="java.util.HashMap"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderCardListQueryDTO">
+		<include refid="Commons.prefixSql"/>
+		    SELECT 
+		        T1.ORDER_CARD_LIST_ID AS "orderCardListId",
+				T1.CARD_NO AS "cardNo",
+				T2.FACE_VALUE/100 AS "faceValue",
+				decode(T2.FACE_VALUE_TYPE,0,'固定',1,'非固定') AS "faceValueType",
+                T3.PRODUCT_NAME AS "productName"
+				FROM
+				TB_SELL_ORDER_CARD_LIST T1, 
+				TB_ENTITY_STOCK T2,
+                TB_PRODUCT T3
+				WHERE T1.CARD_NO = T2.CARD_NO
+                AND T2.PRODUCT_ID = T3.PRODUCT_ID
+				AND T1.ORDER_ID = #orderId#
+				AND T2.STOCK_STATE = '3'
+				order by T1.CARD_NO
+	   <include refid="Commons.suffixSql"/>
+   </select>
+	<!-- 根据订单号查询订单卡未接收明细信息 -->
+   <select id="getStockTransferOrderCardListOri" resultClass="java.util.HashMap"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderCardListQueryDTO">
+		<include refid="Commons.prefixSql"/>
+		    SELECT 
+		        T1.ORDER_CARD_LIST_ID AS "orderCardListId",
+				T1.CARD_NO AS "cardNo",
+				T2.FACE_VALUE/100 AS "faceValue",
+				decode(T2.FACE_VALUE_TYPE,0,'固定',1,'非固定') AS "faceValueType",
+                T3.PRODUCT_NAME AS "productName",
+                T4.ORDER_STATE AS "orderState"
+				FROM
+				TB_SELL_ORDER_CARD_LIST T1, 
+				TB_ENTITY_STOCK T2,
+                TB_PRODUCT T3,
+                TB_SELL_ORDER T4
+				WHERE T1.CARD_NO = T2.CARD_NO
+                AND T2.PRODUCT_ID = T3.PRODUCT_ID
+                AND T1.ORDER_ID = T4.ORDER_ID
+				AND T1.ORDER_ID = #orderId#
+				AND T1.LEG_CARD_NO = '3'
+				AND T4.ORDER_STATE IN ('10','11')
+				order by T1.CARD_NO
+	   <include refid="Commons.suffixSql"/>
+   </select>
+   <!-- 根据订单号查询订单卡接收明细信息 -->
+   <select id="getStockTransferOrderCardListRace" resultClass="java.util.HashMap"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.OrderReceiveCardListQueryDTO">
+		<include refid="Commons.prefixSql"/>
+		    SELECT 
+		        T1.ORDER_CARD_LIST_ID AS "orderCardListId",
+				T1.CARD_NO AS "cardNo",
+				T2.FACE_VALUE/100 AS "faceValue",
+				decode(T2.FACE_VALUE_TYPE,0,'固定',1,'非固定') AS "faceValueType",
+                T3.PRODUCT_NAME AS "productName",
+                T4.ORDER_STATE AS "orderState"
+				FROM
+				TB_SELL_ORDER_CARD_LIST T1, 
+				TB_ENTITY_STOCK T2,
+                TB_PRODUCT T3,
+                TB_SELL_ORDER T4
+				WHERE T1.CARD_NO = T2.CARD_NO
+                AND T2.PRODUCT_ID = T3.PRODUCT_ID
+                AND T1.ORDER_ID = T4.ORDER_ID
+				AND T1.ORDER_ID = #orderId#
+				AND T1.LEG_CARD_NO = '1'
+				AND T4.ORDER_STATE IN ('10','11')
+				order by T1.CARD_NO
+	   <include refid="Commons.suffixSql"/>
+   </select>
+   <!-- 根据订单号查询订单信息 -->
+   <select id="getStockTransferOrderMsg" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+		    select
+			t1.ORDER_ID as "orderId",
+			t5.SELLER_NAME as "createEntityName",
+			t1.FIRST_ENTITY_ID as "firstEntityId",  
+			t2.SELLER_NAME as "firstEntityName", 
+			t3.SELLER_NAME as "processEntityName", 
+			t1.ORDER_TYPE as "orderType",  
+			t1.CARD_QUANTITY as "cardQuantity", 
+			t1.ORDER_DATE as "orderDate", 
+			t4.USER_NAME as "createUser", 
+			t1.ORDER_STATE as "orderState"
+			from
+			TB_SELL_ORDER t1,
+			TB_SELLER t2, 
+			TB_SELLER t3,
+			TB_ENT_USER t4, 
+			TB_SELLER t5
+			where t1.FIRST_ENTITY_ID = t2.ENTITY_ID
+			and t1.PROCESS_ENTITY_ID = t3.ENTITY_ID
+			and t1.CREATE_USER = t4.USER_ID 
+			and t4.ENTITY_ID = t5.ENTITY_ID
+            and t1.ORDER_TYPE = '60000006'
+            and t1.ORDER_ID = #orderId#
+   </select>
+   <!-- 库存调拨订单准备 -->
+   <select id="queryCardforOrderReady"  resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.OrderReadyDTO">  
+				<include refid="Commons.prefixSql" />
+		SELECT    
+		 	tb.* , 
+		 	MAX(TB."cardNo") OVER(PARTITION BY TB."cardLayoutId") "max",
+       		MIN(TB."cardNo") OVER(PARTITION BY TB."cardLayoutId") "min"
+	   FROM (
+				SELECT  * FROM (
+		SELECT 
+	   		   DISTINCT
+		       T1.CARD_NO as "cardNo",
+		       T1.PRODUCT_ID as "productId",
+		       T1.CARD_LAYOUT_ID as "cardLayoutId",
+		       '非固定' as "faceValueType",
+		       T1.FACE_VALUE/100 as "faceValue",
+		       T1.CARD_VALID_DATE as "cardValidDate",
+		       T1.STOCK_STATE as "stockState",
+		       T3.CARD_LAYOUT_NAME as "cardLayoutName",
+		       rownumber() over(ORDER BY T1.card_no) as COUNTNUMBER
+		FROM 
+		       TB_ENTITY_STOCK T1,
+			   TB_SELL_ORDER_LIST T2,
+		       TB_CARD_LAYOUT T3,
+		       TB_SELL_ORDER T4
+		WHERE
+		       T1.DATA_STATE = '1'
+		AND 
+			   T1.FLD_01_RES_DATA is null
+		AND    
+			   T1.FUNCTION_ROLE_ID = '3'
+		AND 
+		       T2.DATA_STATE = '1'
+		AND 
+			   T1.STOCK_STATE = '1'
+		AND
+		       T2.CARD_LAYOUT_ID = T3.CARD_LAYOUT_ID
+		AND    
+		       T1.CARD_LAYOUT_ID = T2.CARD_LAYOUT_ID
+		AND	   T1.FACE_VALUE_TYPE = T2.FACE_VALUE_TYPE
+		AND    T1.FACE_VALUE_TYPE = '1'
+       	AND
+       		   T2.ORDER_ID = T4.ORDER_ID
+       	AND
+       		   T1.PRODUCT_ID = T2.PRODUCT_ID
+        <!--
+            AND
+       	(	   (T2.VALIDITY_PERIOD is not null
+       	 AND   <![CDATA[ 
+       		   to_date(T2.VALIDITY_PERIOD,'YYYY-MM-DD') <= to_date(T1.CARD_VALID_DATE,'YYYY-MM-DD')
+       		   ]]>) or  T2.VALIDITY_PERIOD is null)
+        -->
+       
+       	AND
+       		   T4.ORDER_ID = #orderId:VARCHAR#
+       	AND
+       		   T2.ORDER_LIST_ID=#orderListId:VARCHAR#
+       	 <isNotEmpty prepend="and" property="startCardNo">
+      		<isNotEmpty property="endCardNo">
+      			  t1.card_no between #startCardNo:varchar# and #endCardNo:varchar#
+      		</isNotEmpty>
+      	</isNotEmpty>
+      	 
+        AND
+			   T1.ENTITY_ID = #defaultEntityId#
+			      ORDER BY T1.card_no
+			  ) 
+			  <isEmpty property="startCardNo">
+      		<isEmpty property="endCardNo">
+      			<![CDATA[ 
+      				where COUNTNUMBER<=(select  to_number(o.Card_amount)-to_number(nvl(o.Real_amount,0)) from tb_sell_order_list o where o.order_list_id= #orderListId:VARCHAR#)
+      			]]>
+      		</isEmpty>
+      	</isEmpty>	     
+       	UNION
+       	SELECT * FROM (
+       	SELECT 
+       		   DISTINCT
+		       T1.CARD_NO as "cardNo",
+		       T1.PRODUCT_ID as "productId",
+		       T1.CARD_LAYOUT_ID as "cardLayoutId",
+		       '固定' as "faceValueType",
+		       T1.FACE_VALUE/100 as "faceValue",
+		       T1.CARD_VALID_DATE as "cardValidDate",
+		       T1.STOCK_STATE as "stockState",
+		       T3.CARD_LAYOUT_NAME as "cardLayoutName",
+		       rownumber() over(ORDER BY T1.card_no) as COUNTNUMBER
+		from 
+		       TB_ENTITY_STOCK T1,
+			   TB_SELL_ORDER_LIST T2,
+		       TB_CARD_LAYOUT T3,
+		       TB_SELL_ORDER T4
+		where
+		       T1.DATA_STATE = '1'
+		and 
+			   T1.FLD_01_RES_DATA is null
+		and    
+			   T1.FUNCTION_ROLE_ID = '3'
+		and 
+		       T2.DATA_STATE = '1'
+		and 
+			   T1.STOCK_STATE = '1'
+		and
+		       T2.CARD_LAYOUT_ID = T3.CARD_LAYOUT_ID
+		and    
+		       T1.CARD_LAYOUT_ID = T2.CARD_LAYOUT_ID
+		and	   T1.FACE_VALUE_TYPE= T2.FACE_VALUE_TYPE
+		and    T1.FACE_VALUE_TYPE = '0' 
+		and    T1.FACE_VALUE = T2.FACE_VALUE
+       	and
+       		   T2.ORDER_ID = T4.ORDER_ID
+       	and
+       		   T1.PRODUCT_ID = T2.PRODUCT_ID
+       	<!-- 	AND
+       	(	   (T2.VALIDITY_PERIOD is not null
+       	 AND   <![CDATA[ 
+       		   to_date(T2.VALIDITY_PERIOD,'YYYY-MM-DD') <= to_date(T1.CARD_VALID_DATE,'YYYY-MM-DD')
+       		   ]]>) or  T2.VALIDITY_PERIOD is null)
+       	-->
+      
+       	and
+       		   T4.ORDER_ID = #orderId:VARCHAR#
+        and
+        	   T2.ORDER_LIST_ID=#orderListId:VARCHAR#
+        <isNotEmpty prepend="and" property="startCardNo">
+      		<isNotEmpty property="endCardNo">
+      			  t1.card_no between #startCardNo:varchar# and #endCardNo:varchar#
+      		</isNotEmpty>
+      	</isNotEmpty>
+      	and  T1.ENTITY_ID = #defaultEntityId#
+      	 ORDER BY T1.card_no
+			     ) 
+			      <isEmpty property="startCardNo">
+      		<isEmpty property="endCardNo">
+      			<![CDATA[ 
+      				where COUNTNUMBER<=(select  to_number(o.Card_amount)-to_number(nvl(o.Real_amount,0)) from tb_sell_order_list o where o.order_list_id= #orderListId:VARCHAR#)
+      			]]>
+      		</isEmpty>
+      	</isEmpty>	    
+			     ) tb
+				<include refid="Commons.suffixSql" />
+	 </select>
+	 <!-- 非固定明细 -->
+	 <select id="selectCardDetailFororderReadyByNotFixDetail" resultClass="com.huateng.framework.ibatis.model.SellOrderCardList" parameterClass="com.allinfinance.univer.seller.order.dto.OrderReadyDTO">  
+		select 
+			SEQ_SELL_ORDER_CARD_LIST.NEXTVAL as "orderCardListId",
+		    T.card_no as "cardNO",
+			T.order_list_id as "orderListId",
+			T.face_value as "faceValue" 
+		from (
+			select cardList.*, rownumber() over() as countRowNumber from (
+			select 
+			         t1.card_no,
+			         t2.order_list_id,
+			         t2.face_value 
+			from tb_entity_stock t1,
+		         tb_sell_order_list t2
+		       where
+		       	NOT EXISTS (SELECT 1 FROM TB_SELL_ORDER_CARD_LIST T3 WHERE T3.CARD_NO= T1.CARD_NO AND T3.ORDER_ID=#orderId:varchar#)
+		       and   t1.face_value_type = t2.face_value_type
+		       and   t1.face_value_type = '1'
+		     <!--  AND
+		       	(	   (T2.VALIDITY_PERIOD is not null
+		       	 AND   <![CDATA[ 
+		       		   to_date(T2.VALIDITY_PERIOD,'YYYY-MM-DD') <= to_date(T1.CARD_VALID_DATE,'YYYY-MM-DD')
+		       		   ]]>) or  T2.VALIDITY_PERIOD is null)-->
+		       and   t2.order_list_id = #orderListId:varchar#
+		       and   t1.product_id = t2.product_id
+		       and   t1.entity_id = #firstEntityId:varchar#
+		       and   t1.stock_state = '1'
+		       and   T1.DATA_STATE = '1'
+		       and   T1.FLD_01_RES_DATA is null
+		       and   t2.data_state = '1'
+		      <isNotEmpty prepend="and" property="cardNoArray">
+		      		 t1.card_no 	in
+		      		 <iterate conjunction="," open="(" close=")" property="cardNoArray">
+		            		#cardNoArray[]#
+		      		  </iterate>
+		      </isNotEmpty>
+		      <isNotEmpty prepend="and" property="startCardNo">
+		      		<isNotEmpty property="endCardNo">
+		      					t1.card_no between #startCardNo:varchar# and #endCardNo:varchar#
+		      		</isNotEmpty>
+		      </isNotEmpty>
+		      order by t1.card_no) cardList ) T
+       <![CDATA[
+      	where countRowNumber<= (select ordlist.card_amount-nvl(ordlist.real_amount,0) from tb_sell_order_list ordlist where ordlist.order_list_id=#orderListId:varchar#)
+      	]]>
+	 </select>
+	
+	<!-- 固定明细 -->
+	 <select id="selectCardDetailFororderReadyByFixDetail" resultClass="com.huateng.framework.ibatis.model.SellOrderCardList" parameterClass="com.allinfinance.univer.seller.order.dto.OrderReadyDTO">  
+		select 
+			SEQ_SELL_ORDER_CARD_LIST.NEXTVAL as "orderCardListId",
+		    T.card_no as "cardNO",
+			T.order_list_id as "orderListId",
+			T.face_value as "faceValue" 
+		from (
+		
+		select cardList.*, rownumber() over() as countRowNumber  from (
+		select 
+	         t1.card_no,
+	         t2.order_list_id,
+	         t2.face_value  
+	    from tb_entity_stock t1,
+             tb_sell_order_list t2
+       where
+       	  NOT EXISTS (SELECT 1 FROM TB_SELL_ORDER_CARD_LIST T3 WHERE T3.CARD_NO= T1.CARD_NO AND  T3.ORDER_ID=#orderId:varchar#)
+       and   t1.face_value_type = t2.face_value_type
+       and   t1.face_value_type = '0'
+       and   t1.face_value = t2.face_value
+     <!--  AND
+       	(	   (T2.VALIDITY_PERIOD is not null
+       	 AND   <![CDATA[ 
+       		   to_date(T2.VALIDITY_PERIOD,'YYYY-MM-DD') <= to_date(T1.CARD_VALID_DATE,'YYYY-MM-DD')
+       		   ]]>) or  T2.VALIDITY_PERIOD is null)-->
+       and   t2.order_list_id = #orderListId:varchar#
+       and   t1.product_id = t2.product_id 
+       and   t1.entity_id = #firstEntityId:varchar#
+       and   t1.stock_state = '1'
+       and   T1.DATA_STATE = '1'
+       and   T1.FLD_01_RES_DATA is null
+       and t2.data_state = '1'
+        <isNotNull prepend="and" property="cardNoArray">
+      			 t1.card_no 	in
+      		 <iterate conjunction="," open="(" close=")" property="cardNoArray">
+            		#cardNoArray[]#
+      		  </iterate>
+     	</isNotNull>
+      <isNotEmpty prepend="and" property="startCardNo">
+      		<isNotEmpty property="endCardNo">
+      				t1.card_no between #startCardNo:varchar# and #endCardNo:varchar#
+      		</isNotEmpty>
+      </isNotEmpty>
+      order by t1.card_no) cardList ) T
+       <![CDATA[
+      where countRowNumber<= (select ordlist.card_amount-nvl(ordlist.real_amount,0) from tb_sell_order_list ordlist where ordlist.order_list_id=#orderListId:varchar#)
+      	]]>
+	 </select>
+	 <!-- 库存调拨订单入库 -->
+	 <select id="queryStockTransferOrderAtAccept"  resultClass="java.util.HashMap"  
+	remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql"/>
+            select
+			t1.ORDER_ID as "orderId",
+			t5.SELLER_NAME as "createEntityName",  
+			t2.SELLER_NAME as "firstEntityName", 
+			t3.SELLER_NAME as "processEntityName", 
+			t1.ORDER_TYPE as "orderType",  
+			t1.CARD_QUANTITY as "cardQuantity", 
+			t1.ORDER_DATE as "orderDate", 
+			t4.USER_NAME as "createUser", 
+			t1.ORDER_STATE as "orderState"
+			from
+			TB_SELL_ORDER t1,
+			TB_SELLER t2, 
+			TB_SELLER t3,
+			TB_ENT_USER t4, 
+			TB_SELLER t5
+			where t1.FIRST_ENTITY_ID = t2.ENTITY_ID
+			and t1.PROCESS_ENTITY_ID = t3.ENTITY_ID
+			and t1.CREATE_USER = t4.USER_ID 
+			and t4.ENTITY_ID = t5.ENTITY_ID
+			and t1.ORDER_TYPE = '60000006'
+			and t3.ENTITY_ID = #entityId#
+			and t1.ORDER_STATE in ('9','10')
+			<dynamic>
+		    <isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID=#orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				UPPER(t2.SELLER_NAME) like UPPER('%'||#firstEntityName#||'%')
+			</isNotEmpty>
+				<isNotEmpty prepend="and" property="processEntityName">
+				UPPER(t3.SELLER_NAME) like UPPER('%'||#processEntityName#||'%')
+			</isNotEmpty>
+		    <isNotEmpty prepend="and" property="orderDateStart">
+				T1.ORDER_DATE &gt;= to_char(#orderDateStart#,'YYYYMMDD')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderDateEnd">
+				T1.ORDER_DATE &lt;= to_char(#orderDateEnd#,'YYYYMMDD')
+			</isNotEmpty>
+		  </dynamic> 
+		<include refid="Commons.suffixSql"/>		
+	</select>
+	<select id="getCardNos" resultClass="java.lang.String"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+		    SELECT T1.CARD_NO AS "cardNo"
+			FROM 
+            TB_SELL_ORDER_CARD_LIST T1, 
+            TB_ENTITY_STOCK T2 
+			WHERE  ORDER_ID = #orderId#
+            AND T1.CARD_NO = T2.CARD_NO
+            AND T2.STOCK_STATE = '3'
+            AND T2.FLD_01_RES_DATA is null
+   </select>
+   <select id="getAcceptCardNos" resultClass="java.lang.String"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderCardListDTO">
+		    SELECT T1.CARD_NO AS "cardNo"
+			FROM 
+            TB_SELL_ORDER_CARD_LIST T1, 
+            TB_ENTITY_STOCK T2 
+			WHERE  ORDER_ID = #orderId#
+            AND T1.CARD_NO = T2.CARD_NO
+            AND T1.CARD_NO &gt;= #startCardNo#
+            AND T1.CARD_NO &lt;= #endCardNo#
+            AND T2.STOCK_STATE = '3'
+   </select>
+   
+   <select id="getAcceptCardNosForClose" resultClass="java.util.HashMap"
+	remapResults="true"	parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderInputDTO">
+			SELECT T1.CARD_NO AS "cardNo",
+			T2.FLD_01_RES_DATA as "isInValid"
+			FROM 
+            TB_SELL_ORDER_CARD_LIST T1, 
+            TB_ENTITY_STOCK T2 
+			WHERE  ORDER_ID = #orderId#
+            AND T1.CARD_NO = T2.CARD_NO
+            AND T2.STOCK_STATE = '3'
+   </select>
+   <!-- 调拨订单查询 -->
+   <select id="queryStockTransferOrderByCreater"  resultClass="java.util.HashMap"  
+	remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql"/>
+            select
+			t1.ORDER_ID as "orderId",
+			t5.SELLER_NAME as "createEntityName",  
+			t2.SELLER_NAME as "firstEntityName", 
+			t3.SELLER_NAME as "processEntityName", 
+			t1.ORDER_TYPE as "orderType",  
+			decode(t1.CARD_QUANTITY,null,0,'',0,t1.CARD_QUANTITY) as "cardQuantity", 
+			t1.ORDER_DATE as "orderDate", 
+			t4.USER_NAME as "createUser", 
+			t1.ORDER_STATE as "orderState"
+			from
+			TB_SELL_ORDER t1,
+			TB_SELLER t2, 
+			TB_SELLER t3,
+			TB_ENT_USER t4, 
+			TB_SELLER t5
+			where t1.FIRST_ENTITY_ID = t2.ENTITY_ID
+			and t1.PROCESS_ENTITY_ID = t3.ENTITY_ID
+			and t1.CREATE_USER = t4.USER_ID 
+			and t4.ENTITY_ID = t5.ENTITY_ID
+			and t1.ORDER_TYPE = '60000006'
+			and (t5.ENTITY_ID = #entityId# or t2.ENTITY_ID = #entityId# or t3.ENTITY_ID = #entityId#)
+			<dynamic>
+		    <isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID=#orderId#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				UPPER(t2.SELLER_NAME) like UPPER('%'||#firstEntityName#||'%')
+			</isNotEmpty>
+				<isNotEmpty prepend="and" property="processEntityName">
+				UPPER(t3.SELLER_NAME) like UPPER('%'||#processEntityName#||'%')
+			</isNotEmpty>
+		    <isNotEmpty prepend="and" property="orderDateStart">
+				T1.ORDER_DATE &gt;= to_char(#orderDateStart#,'YYYYMMDD')
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderDateEnd">
+				T1.ORDER_DATE &lt;= to_char(#orderDateEnd#,'YYYYMMDD')
+			</isNotEmpty>
+		  </dynamic> 
+		<include refid="Commons.suffixSql"/>		
+	</select>
+</sqlMap>

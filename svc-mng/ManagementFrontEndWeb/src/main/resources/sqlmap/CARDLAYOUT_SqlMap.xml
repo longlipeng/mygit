@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CARDLAYOUT">
+	<select id="selectCardLayout"  resultClass="java.util.HashMap"  remapResults="true" parameterClass="com.allinfinance.univer.issuer.dto.cardLayOut.CardLayoutQueryDTO">
+		<include refid="Commons.prefixSql"/>
+			  SELECT LAYOUT.CARD_LAYOUT_ID   as "cardLayoutId",
+                     LAYOUT.CARD_LAYOUT_NAME as "cardName",
+                     LAYOUT.VALID_FLAG       as "validFlag"
+              FROM TB_CARD_LAYOUT LAYOUT where LAYOUT.DATA_STATE='1'
+			<dynamic>
+      			<isNotEmpty prepend="and" property="cardLayoutId">
+      				LAYOUT.CARD_LAYOUT_ID =#cardLayoutId:DECIMAL#
+      			</isNotEmpty>
+      			<isNotEmpty prepend="and" property="defaultEntityId">
+      				LAYOUT.ENTITY_ID =#defaultEntityId:DECIMAL#
+      			</isNotEmpty>
+      			<isNotEmpty prepend="and" property="cardName">
+        			UPPER(LAYOUT.CARD_LAYOUT_NAME) like UPPER('%'||#cardName:VARCHAR#||'%')
+      			</isNotEmpty>
+      			<isNotEmpty prepend="and" property="validFlag">
+      				LAYOUT.VALID_FLAG=#validFlag#
+      			</isNotEmpty>
+      			<isNotNull prepend="and" property="productId">
+      				CARD_LAYOUT_ID
+      					NOT IN(
+      						SELECT CARD_LAYOUT_ID 
+      						  FROM TB_REL_PROD_LAYOUT 
+      						  WHERE
+      							PRODUCT_ID=#productId:DECIMAL#
+      					)
+      			</isNotNull>
+    		</dynamic>
+		<include refid="Commons.suffixSql"/>		
+	</select>
+</sqlMap>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	default-autowire="byName">
+
+	<!-- 系统管理action配置文件 -->
+	<!-- 用户action -->
+	<bean id="userAction" class="com.huateng.univer.system.user.UserAction" scope="prototype"></bean>
+	<!-- 角色action -->
+	<bean id="roleAction" class="com.huateng.univer.system.role.RoleAction" scope="prototype"></bean>
+	<!-- 系统参数action -->
+	<bean id="systemParameterAction" class="com.huateng.univer.system.sysparam.SystemParameterAction" scope="prototype"></bean>
+	<!-- 系统日志 action -->
+	<bean id="systemLogAction" class="com.huateng.univer.system.syslog.SystemLogAction" scope="prototype"></bean>
+	<!-- 数据字典（参考数据）action -->
+	<bean id="dictInfoAction" class="com.huateng.univer.system.dictinfo.DictInfoAction" scope="prototype"></bean>
+	<!-- 库存卡片管理action -->
+	<bean id="stockCardAction" class="com.huateng.univer.stockcard.StockCardAction" scope="prototype"></bean>
+	<!-- 临时处理 -->
+	<bean id="tempDealAction" class="com.suning.svc.temp.action.TempDealAction" scope="prototype"></bean>
+</beans>

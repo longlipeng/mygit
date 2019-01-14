@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ISSUERSTOCKCOUNT">
+  <select id="selectIssuerStockCountByDTO" parameterClass="com.huateng.accor.issuerStockCount.dto.IssuerStockCountQueryDTO" resultClass="java.util.HashMap" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+    select
+    	T1.STOCK_COUNT_ID as "stockCountId",
+        T1.STOCK_COUNT_NAME as "stockCountName",
+        T1.STOCK_COUNT_MEMO as "stockCountMemo",
+        DECODE(T1.FINISH_FLAG,0,'未完成','已完成')   as "finishFlag",
+        T2.USER_NAME      as   "operationUser",
+        TO_CHAR(T1.CREATE_TIME,'yyyy-MM-dd')      as   "createTime"
+    from
+     	TB_ENT_ISSUER_STOCK_COUNT T1,
+     	TB_ENT_USER               T2
+     where
+     	T1.DATA_STATE='1'
+     	and T1.CREATE_USER=T2.USER_ID(+)
+    <dynamic>
+     		<isNotNull prepend="and" property="stockCountId">
+       			 T1.STOCK_COUNT_ID = #stockCountId:DECIMAL#
+      		</isNotNull>
+      		<isNotEmpty prepend="and" property="stockCountName">
+       			 UPPER(T1.STOCK_COUNT_NAME) like UPPER('%'||#stockCountName:VARCHAR#||'%')
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="stockCountMemo">
+       			 UPPER(T1.STOCK_COUNT_MEMO) like UPPER('%'||#stockCountMemo:VARCHAR#||'%')
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="createTime">
+       			 T1.CREATE_TIME like '%'||#createTime:DATE#||'%'
+      		</isNotEmpty>
+			<isNotEqual prepend="and" property="defaultIssuerId" 
+					compareValue="0">
+					T1.ISSUER_ID = #defaultIssuerId:DECIMAL#
+			</isNotEqual>
+     		
+    	</dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

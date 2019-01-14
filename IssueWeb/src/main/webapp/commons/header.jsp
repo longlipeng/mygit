@@ -1,0 +1,4 @@
+
+<%
+	String basePath = request.getContextPath();
+%>

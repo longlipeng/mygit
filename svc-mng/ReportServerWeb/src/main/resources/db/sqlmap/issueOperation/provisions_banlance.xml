@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="provisions_banlance">
+	<select id="provisions_banlance"
+		resultClass="com.allinfinance.univer.report.dto.ProvisionsBanlanceDTO"
+		parameterClass="com.allinfinance.univer.report.dto.ProvisionsBanlanceDTO">
+    select
+	    case when (M.onymous_stat='1' or M.onymous_stat='3') then '记名'
+          	 when M.onymous_stat='2' then '不记名' 
+    		 end  as "productName",
+	    sum(M.soldCard) as "soldCard",
+	    sum(M.actCard) as "actCard",
+	    sum(M.lastPreFunds) as "lastPreFunds",
+	    sum(M.rechargeAmt) as "rechargeAmt",
+	    sum(M.soldAmtSum) as "soldAmtSum",
+	    sum(M.consumeAmt) as "consumeAmt",
+	    sum(M.reFundAmt) as "reFundAmt",
+	    sum(M.transAmt) as "transAmt",
+	    sum(M.transAmtSum) as "transAmtSum",
+		sum(M.preFundsSum) as "preFundsSum"
+    from	
+	 (select
+	    M1.onymous_stat,
+	    decode(M1.cardq1, null, 0, M1.cardq1) as soldCard,
+	    decode(M2.cardq2, null, 0, M2.cardq2) as actCard,
+	    trim(to_char(decode(M3.SUM_AMT_a3, null, 0, M3.SUM_AMT_a3) / 100 +
+	    (decode(M13.txnAmt, null, 0, M13.txnAmt) / 100 -
+	    decode(M14.txnAmt, null, 0, M14.txnAmt) / 100 +
+	    decode(M15.txnAmt, null, 0, M15.txnAmt) / 100),'9999999990.99'))   as lastPreFunds,
+	    
+	    decode(M1.total, null, 0, M1.total) / 100 as rechargeAmt,
+	    decode(M6.soldAmtSum, null, 0, M6.soldAmtSum) / 100 as soldAmtSum,
+	    decode(M4.TXN_AMT, null, 0, M4.TXN_AMT) / 100 as consumeAmt,
+	    decode(M5.TXN_AMT, null, 0, M5.TXN_AMT) / 100 as reFundAmt,
+	    decode(M4.TXN_AMT, null, 0, M4.TXN_AMT) / 100 - decode(M5.TXN_AMT, null, 0, M5.TXN_AMT) / 100 as transAmt,
+	    trim(to_char(decode(M7.txnAmt, null, 0, M7.txnAmt) / 100 - decode(M8.txnAmt, null, 0, M8.txnAmt) / 100,'9999999990.99')) as transAmtSum,
+		trim(to_char(decode(M9.SUM_AMT, null, 0, M9.SUM_AMT) / 100 +
+		(decode(M10.txnAmt, null, 0, M10.txnAmt) / 100 -
+	    decode(M11.txnAmt, null, 0, M11.txnAmt) / 100 +
+	    decode(M12.txnAmt, null, 0, M12.txnAmt) / 100),'9999999990.99'))  as preFundsSum		
+	from
+	<!-- M1是“已售卡数量（张）”和 “充值金额” 的汇总 -->
+	(select 
+	  a1.PRODUCT_ID,a1.PRODUCT_NAME,a1.onymous_stat,b.cardq1,b.total
+	from 
+	  (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a1	    
+	left join
+	(select 
+	   t1.PRODUCT_ID,sum(t1.CARD_QUANTITY) as cardq1,sum(t1.TOTAL_PRICE) as total
+	from 
+	    TB_SELL_ORDER t1,TB_SELL_ORDER_PAYMENT payment
+	where 
+	    t1.PAYMENT_STATE in('1', '2')
+	    and t1.ORDER_ID=payment.ORDER_ID 
+        and payment.DATA_STATE='1'
+        and t1.DATA_STATE='1' 
+	    and
+	    (t1.ORDER_TYPE ='10000012' or t1.ORDER_TYPE ='10000002'or t1.ORDER_TYPE ='10000011'
+		or t1.ORDER_TYPE ='10000001'or t1.ORDER_TYPE ='10000003')
+		<dynamic>
+		    <isNotEmpty prepend="and" property="startDate">
+				substr(to_date(payment.CREATE_TIME, 'yyyyMMddhh24miss'),1,10)
+				&gt;=#startDate:varchar#	
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endDate">
+				substr(to_date(payment.CREATE_TIME, 'yyyyMMddhh24miss'),1,10)
+				&lt;=#endDate:varchar#	
+			</isNotEmpty>
+		</dynamic>
+	group by t1.PRODUCT_ID) b on a1.PRODUCT_ID= b.PRODUCT_ID)  M1,
+	
+	<!-- M2是“激活数量（张）”汇总 -->
+	(select 
+	  a2.PRODUCT_ID,a2.PRODUCT_NAME,a2.onymous_stat,c.cardq2
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a2
+	    left join
+	(select 
+	   t2.PRODUCT_ID,sum(t2.CARD_QUANTITY) as cardq2
+	from 
+	    TB_SELL_ORDER t2
+	where 
+	    t2.INIT_ACT_STAT='1'
+	    <dynamic>
+		    <isNotEmpty prepend="and" property="startDate">
+				substr(to_date(t2.MODIFY_TIME, 'yyyyMMddhh24miss'),1,10)&gt;=#startDate:varchar#	
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endDate">
+				substr(to_date(t2.MODIFY_TIME, 'yyyyMMddhh24miss'),1,10)&lt;=#endDate:varchar#	
+			</isNotEmpty>
+		</dynamic>
+	group by t2.PRODUCT_ID) c on a2.PRODUCT_ID= c.PRODUCT_ID)  M2,
+	
+	<!-- M3是“上期沉淀资金”开始日期的2天前的余额汇总 -->
+	(select 
+	   a3.PRODUCT_ID,a3.PRODUCT_NAME,a3.onymous_stat,d.SUM_AMT_a3
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a3
+	 left join
+	(select 
+	   PRODUCT_ID,sum(SUM_AMT) SUM_AMT_a3
+	from 
+	    TB_ACC_SUMAMT 
+	where 
+	    TXN_TYPE = 1 and ISSUER_ID=#issuerId:varchar#
+	and 
+		to_char(to_date(TXN_DATE,'yyyymmdd'),'yyyyMMdd') = to_char(to_date(#startDate#,'yyyymmdd'),'yyyyMMdd') -2
+	    group by PRODUCT_ID) d on  a3.PRODUCT_ID= d.PRODUCT_ID) M3,
+	    
+	<!-- M4是"消费金额"汇总 -->
+	(select 
+	   a4.PRODUCT_ID,a4.PRODUCT_NAME,a4.onymous_stat,e.TXN_AMT
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a4
+	 left join
+	(
+	select 
+	    P.PRODUCT_ID, 
+	    sum(P.TXN_AMT1)-sum(P.TXN_AMT2)-sum(P.TXN_AMT3)+sum(P.TXN_AMT4)+sum(P.TXN_AMT5)-sum(P.TXN_AMT6)-sum(P.TXN_AMT7)+sum(P.TXN_AMT8) as TXN_AMT
+	from
+	(select 
+      T.PRODUCT_ID,
+      (case T.TXN_TYPE
+    	when '1105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT1,
+      (case T.TXN_TYPE
+    	when '2105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT2,
+        (case T.TXN_TYPE
+    	when '3105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT3,
+    (case T.TXN_TYPE
+    	when '4105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT4,
+     (case T.TXN_TYPE
+    	when '1095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT5,
+    (case T.TXN_TYPE
+    	when '2095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT6,
+    (case T.TXN_TYPE
+    	when '3095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT7,
+    (case T.TXN_TYPE
+    	when '4095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT8
+	from 
+	     TB_ACC_TXN_HIS T
+	where
+	     T.resp_code = '00' and  T.ISSUER_ID=#issuerId:varchar#
+	     <dynamic>
+   			<isNotEmpty prepend="and" property="startDate">
+   				 to_date(T.date_txn,'yyyyMMdd')&gt;=to_date(#startDate#,'yyyy-MM-dd')
+   			</isNotEmpty>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_date(T.date_txn,'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+   			</isNotEmpty>
+   		</dynamic>
+	     ) P
+	group by P.PRODUCT_ID
+	) e 
+	on  a4.PRODUCT_ID= e.PRODUCT_ID) M4,
+	
+	<!-- M5是“退货金额”汇总 -->
+	(select 
+	   a5.PRODUCT_ID,a5.PRODUCT_NAME,a5.onymous_stat,f.TXN_AMT
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a5
+	 left join
+	(select 
+	    PRODUCT_ID,sum(TXN_AMT) as TXN_AMT
+	from
+	    TB_ACC_TXN_HIS
+	where
+	     Txn_type='5105'and resp_code = '00' and ISSUER_ID=#issuerId:varchar#
+	    <dynamic>
+   			<isNotEmpty prepend="and" property="startDate">
+   				 to_date(date_txn,'yyyyMMdd')&gt;=to_date(#startDate#,'yyyy-MM-dd')
+   			</isNotEmpty>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_date(date_txn,'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+   			</isNotEmpty>
+   		</dynamic>
+	group by PRODUCT_ID) f 
+	on  a5.PRODUCT_ID= f.PRODUCT_ID) M5,
+	
+	<!-- M6是“累积销售金额”汇总 -->
+	(select 
+	  a6.PRODUCT_ID,a6.PRODUCT_NAME,a6.onymous_stat,g.soldAmtSum
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a6
+	 left join
+	(select 
+	   t3.PRODUCT_ID,sum(t3.TOTAL_PRICE) as soldAmtSum
+	from 
+	    TB_SELL_ORDER t3, TB_SELL_ORDER_PAYMENT payment
+	where 
+	    t3.PAYMENT_STATE in('1' ,'2')
+	    and t3.ORDER_ID=payment.ORDER_ID 
+   		and payment.DATA_STATE='1'
+   		and t3.Data_STATE='1'
+		and
+	    (t3.ORDER_TYPE ='10000012' or t3.ORDER_TYPE ='10000002'or t3.ORDER_TYPE ='10000011'
+		or t3.ORDER_TYPE ='10000001'or t3.ORDER_TYPE ='10000003')
+		<dynamic>
+			<isNotEmpty prepend="and" property="endDate">
+				substr(to_date(payment.CREATE_TIME, 'yyyyMMddhh24miss'),1,10)
+				&lt;=#endDate:varchar#	
+			</isNotEmpty>
+		</dynamic>
+	group by t3.PRODUCT_ID) g on a6.PRODUCT_ID= g.PRODUCT_ID)  M6,
+		
+	<!-- M7是“累积消费金额”汇总 -->	
+	(select 
+	   a7.PRODUCT_ID,a7.PRODUCT_NAME,a7.onymous_stat,h.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a7
+	left join
+	(
+	select 
+	    P.PRODUCT_ID, 
+	    sum(P.TXN_AMT1)-sum(P.TXN_AMT2)-sum(P.TXN_AMT3)+sum(P.TXN_AMT4)+sum(P.TXN_AMT5)-sum(P.TXN_AMT6)-sum(P.TXN_AMT7)+sum(P.TXN_AMT8) as txnAmt
+	from
+	(select 
+      T.PRODUCT_ID,
+      (case T.TXN_TYPE
+    	when '1105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT1,
+      (case T.TXN_TYPE
+    	when '2105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT2,
+        (case T.TXN_TYPE
+    	when '3105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT3,
+    (case T.TXN_TYPE
+    	when '4105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT4,
+     (case T.TXN_TYPE
+    	when '1095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT5,
+    (case T.TXN_TYPE
+    	when '2095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT6,
+    (case T.TXN_TYPE
+    	when '3095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT7,
+    (case T.TXN_TYPE
+    	when '4095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT8
+	from 
+	     TB_SUM_DALIY_TXN T
+	where
+	     1=1
+	     <dynamic>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_date(T.date_txn,'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+   			</isNotEmpty>
+   		</dynamic>
+	     ) P
+	group by P.PRODUCT_ID
+	
+	) h on a7.PRODUCT_ID= h.PRODUCT_ID) M7,
+	
+	<!-- M8是”累积退货金额“汇总 -->
+	(select 
+	   a8.PRODUCT_ID,a8.PRODUCT_NAME,a8.onymous_stat,k.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a8
+	  
+	left join
+	(SELECT 
+	    PRODUCT_ID,sum(TXN_AMT) txnAmt
+	FROM 
+	    TB_SUM_DALIY_TXN
+	where
+	    TXN_TYPE='5105'
+	     <dynamic>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_date(date_txn,'yyyyMMdd')&lt;=to_date(#endDate#,'yyyy-MM-dd')
+   			</isNotEmpty>
+   		</dynamic>
+	group by PRODUCT_ID) k on a8.PRODUCT_ID= k.PRODUCT_ID) M8,
+	
+	<!-- M9是”累积沉淀资金“结束日期的1天前的余额 汇总-->
+	(select 
+	   a9.PRODUCT_ID,a9.PRODUCT_NAME,a9.onymous_stat,h.SUM_AMT
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a9
+	    left join
+	(select 
+	   PRODUCT_ID,sum(SUM_AMT) SUM_AMT
+	from 
+	    TB_ACC_SUMAMT 
+	where 
+	    TXN_TYPE = 1
+	    and ISSUER_ID=#issuerId:varchar#
+	     and to_char(to_date(TXN_DATE,'yyyymmdd'),'yyyyMMdd') = to_char(to_date(#endDate#,'yyyymmdd'),'yyyyMMdd')-1 group by PRODUCT_ID) h
+	on  a9.PRODUCT_ID= h.PRODUCT_ID) M9,
+	
+	<!-- M10是”累积沉淀资金“结束日期的1天前的充值金额汇总 -->	
+	(select 
+	   a10.PRODUCT_ID,a10.PRODUCT_NAME,a10.onymous_stat,p.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a10
+	    left join
+	(SELECT 
+	    PRODUCT_ID,sum(TXN_AMT) txnAmt
+	FROM 
+	    TB_SUM_DALIY_TXN
+	where
+	    (TXN_TYPE='7105' or TXN_TYPE='0004')
+	    <dynamic>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_char(to_date(date_txn,'yyyyMMdd'),'yyyyMMdd') =to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')-1
+   			</isNotEmpty>
+   		</dynamic>
+	group by PRODUCT_ID) p on a10.PRODUCT_ID= p.PRODUCT_ID) M10,
+	
+	<!-- M11是”累积沉淀资金“结束日期的1天前的消费金额汇总 -->
+	(select 
+	   a11.PRODUCT_ID,a11.PRODUCT_NAME,a11.onymous_stat,q.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a11
+	    left join
+	(
+	select 
+	    P.PRODUCT_ID, 
+	    sum(P.TXN_AMT1)-sum(P.TXN_AMT2)-sum(P.TXN_AMT3)+sum(P.TXN_AMT4)+sum(P.TXN_AMT5)-sum(P.TXN_AMT6)-sum(P.TXN_AMT7)+sum(P.TXN_AMT8) as txnAmt
+	from
+	(
+	select 
+      T.PRODUCT_ID,
+      (case T.TXN_TYPE
+    	when '1105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT1,
+      (case T.TXN_TYPE
+    	when '2105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT2,
+        (case T.TXN_TYPE
+    	when '3105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT3,
+    (case T.TXN_TYPE
+    	when '4105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT4,
+     (case T.TXN_TYPE
+    	when '1095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT5,
+    (case T.TXN_TYPE
+    	when '2095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT6,
+    (case T.TXN_TYPE
+    	when '3095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT7,
+    (case T.TXN_TYPE
+    	when '4095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT8
+	from 
+	     TB_SUM_DALIY_TXN T
+	where
+	     1=1
+	      <dynamic>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_char(to_date(date_txn,'yyyyMMdd'),'yyyyMMdd')=to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd') - 1
+   			</isNotEmpty>
+   		</dynamic>
+	     ) P
+	group by P.PRODUCT_ID
+	
+	) q on a11.PRODUCT_ID= q.PRODUCT_ID) M11,
+	
+	<!-- M12是”累积沉淀资金“结束日期的1天前的退货金额汇总 -->
+	(select 
+	   a12.PRODUCT_ID,a12.PRODUCT_NAME,a12.onymous_stat,r.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a12
+	    left join
+	(SELECT 
+	    PRODUCT_ID,sum(TXN_AMT) txnAmt
+	FROM 
+	    TB_SUM_DALIY_TXN
+	where
+	    TXN_TYPE='5105'
+	     <dynamic>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_char(to_date(date_txn,'yyyyMMdd'),'yyyyMMdd')=to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')-1
+   			</isNotEmpty>
+   		</dynamic>
+	group by PRODUCT_ID) r on a12.PRODUCT_ID= r.PRODUCT_ID) M12,
+	
+	<!-- M13是”上期沉淀资金“开始日期的2天前的充值金额汇总 -->	
+	(select 
+	   a13.PRODUCT_ID,a13.PRODUCT_NAME,a13.onymous_stat,s1.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a13
+	    left join
+	(SELECT 
+	    PRODUCT_ID,sum(TXN_AMT) txnAmt
+	FROM 
+	    TB_SUM_DALIY_TXN
+	where
+	    (TXN_TYPE='7105' or TXN_TYPE='0004')
+	    <dynamic>
+   			<isNotEmpty prepend="and" property="startDate">
+     			 to_char(to_date(date_txn,'yyyyMMdd'),'yyyyMMdd') =to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd') - 2
+   			</isNotEmpty>
+   		</dynamic>
+	group by PRODUCT_ID) s1 on a13.PRODUCT_ID= s1.PRODUCT_ID) M13,
+	
+	<!-- M14是”上期沉淀资金“开始日期的2天前的消费金额汇总  -->
+	(select 
+	   a14.PRODUCT_ID,a14.PRODUCT_NAME,a14.onymous_stat,s2.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a14
+	    left join
+	(select 
+	    P.PRODUCT_ID, 
+	    sum(P.TXN_AMT1)-sum(P.TXN_AMT2)-sum(P.TXN_AMT3)+sum(P.TXN_AMT4)+sum(P.TXN_AMT5)-sum(P.TXN_AMT6)-sum(P.TXN_AMT7)+sum(P.TXN_AMT8) as txnAmt
+	from
+	(
+	select 
+      T.PRODUCT_ID,
+      (case T.TXN_TYPE
+    	when '1105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT1,
+      (case T.TXN_TYPE
+    	when '2105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT2,
+        (case T.TXN_TYPE
+    	when '3105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT3,
+    (case T.TXN_TYPE
+    	when '4105' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT4,
+     (case T.TXN_TYPE
+    	when '1095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT5,
+    (case T.TXN_TYPE
+    	when '2095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT6,
+    (case T.TXN_TYPE
+    	when '3095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT7,
+    (case T.TXN_TYPE
+    	when '4095' then T.TXN_AMT
+    	else 0
+  		end ) as TXN_AMT8
+	from 
+	     TB_SUM_DALIY_TXN T
+	where
+	     1=1
+	      <dynamic>
+   			<isNotEmpty prepend="and" property="endDate">
+     			 to_char(to_date(date_txn,'yyyyMMdd'),'yyyyMMdd')=to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd') - 2
+   			</isNotEmpty>
+   		</dynamic>
+	     ) P
+	group by P.PRODUCT_ID
+	
+	
+	) s2 on a14.PRODUCT_ID= s2.PRODUCT_ID) M14,
+	
+	<!-- M15是”上期沉淀资金“开始日期的2天前的退货金额汇总 -->
+	(select 
+	   a15.PRODUCT_ID,a15.PRODUCT_NAME,a15.onymous_stat,s3.txnAmt
+	from 
+	    (select PRODUCT_ID,PRODUCT_NAME,onymous_stat from TB_PRODUCT where Entity_id= #issuerId:varchar#) a15 
+	    left join
+	(SELECT 
+	    PRODUCT_ID,sum(TXN_AMT) txnAmt
+	FROM 
+	    TB_SUM_DALIY_TXN
+	where
+	    TXN_TYPE='5105'
+	     <dynamic>
+   			<isNotEmpty prepend="and" property="startDate">
+     			 to_char(to_date(date_txn,'yyyyMMdd'),'yyyyMMdd')=to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd') - 2
+   			</isNotEmpty>
+   		</dynamic>
+	group by PRODUCT_ID) s3 on a15.PRODUCT_ID= s3.PRODUCT_ID) M15
+	
+	where
+	   M1.PRODUCT_ID= M2.PRODUCT_ID
+	and
+	   M2.PRODUCT_ID= M3.PRODUCT_ID
+	and
+	   M3.PRODUCT_ID= M4.PRODUCT_ID
+	and
+	   M4.PRODUCT_ID= M5.PRODUCT_ID
+    and
+	   M5.PRODUCT_ID= M6.PRODUCT_ID
+	and
+	   M6.PRODUCT_ID= M7.PRODUCT_ID
+	and
+	   M7.PRODUCT_ID= M8.PRODUCT_ID
+	and
+	   M8.PRODUCT_ID= M9.PRODUCT_ID	
+	and
+	   M9.PRODUCT_ID= M10.PRODUCT_ID	  
+	and
+	   M10.PRODUCT_ID= M11.PRODUCT_ID	
+	and
+	   M11.PRODUCT_ID= M12.PRODUCT_ID	
+	and
+	   M12.PRODUCT_ID= M13.PRODUCT_ID	  
+	and
+	   M13.PRODUCT_ID= M14.PRODUCT_ID	
+	and
+	   M14.PRODUCT_ID= M15.PRODUCT_ID )  M
+	   
+	group by  
+	    case when (M.onymous_stat='1' or M.onymous_stat='3') then '记名'
+	         when M.onymous_stat='2' then '不记名' 
+	    end   
+	  
+  </select>
+</sqlMap>

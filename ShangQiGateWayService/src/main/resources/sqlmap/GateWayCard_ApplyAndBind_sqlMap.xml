@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ApplyAndBindCard">
+<resultMap class="com.huateng.framework.ibatis.model.EntityStock"  id="allOptions">
+	<result column="CARD_NO" jdbcType="VARCHAR" property="cardNo" />
+</resultMap>
+<resultMap class="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  id="CardNOs">
+	<result column="CARD_NO" jdbcType="VARCHAR" property="cardNo" />
+</resultMap>
+<resultMap class="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  id="ApplyAndBindCardDTO" >
+    <result column="ENTITY_ID" jdbcType="VARCHAR" property="entityId" />
+    <result column="LAST_NAME" jdbcType="VARCHAR" property="lastName" />
+    <result column="FIRST_NAME" jdbcType="VARCHAR" property="firstName" />
+    <result column="ID_TYPE" jdbcType="VARCHAR" property="idType" />
+    <result column="ID_NO" jdbcType="VARCHAR" property="idNo" />
+    <result column="CARDHOLDER_MOBILE" jdbcType="VARCHAR" property="cardholderMobile" />
+    <result column="CARDHOLDER_EMAIL" jdbcType="VARCHAR" property="cardholderEmail" />
+    <result column="EXTERNAL_ID" jdbcType="VARCHAR" property="externalId" />
+    <result column="DEPARTMENT_ID" jdbcType="VARCHAR" property="departmentId" />
+    <result column="CARDHOLDER_BIRTHDAY" jdbcType="CHAR" property="cardholderBirthday" />
+    <result column="CARDHOLDER_GENDER" jdbcType="VARCHAR" property="cardholderGender" />
+    <result column="CARDHOLDER_SALUTATION" jdbcType="VARCHAR" property="cardholderSalutation" />
+    <result column="CARDHOLDER_FUNCTION" jdbcType="VARCHAR" property="cardholderFunction" />
+    <result column="CARDHOLDER_SEGMENT" jdbcType="VARCHAR" property="cardholderSegment" />
+    <result column="CARDHOLDER_STATE" jdbcType="CHAR" property="cardholderState" />
+    <result column="CLOSE_DATE" jdbcType="CHAR" property="closeDate" />
+    <result column="CARDHOLDER_COMMENT" jdbcType="VARCHAR" property="cardholderComment" />
+    <!-- <result column="RECIPIENT_NAME" jdbcType="VARCHAR" property="recipient_name" />
+    <result column="RECIPIENT_ADDR" jdbcType="VARCHAR" property="recipient_addr" />
+    <result column="RECIPIENT_PHONE" jdbcType="VARCHAR" property="recipient_phone" />
+     <result column="APPLY_STATUS" jdbcType="CHAR" property="applyStatus" />
+     <result column="SALE_MAN"   jdbcType="VARCHAR" property="userId" />
+     <result column="CARD_NO"   jdbcType="VARCHAR" property="cardNo" /> -->
+</resultMap>
+
+<resultMap class="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  id="CheckMsg" >
+     <result column="PRODUCT_ID" jdbcType="VARCHAR" property="productId" />
+    <result column="ENTITY_ID" jdbcType="VARCHAR" property="entityId" />
+    <result column="LAST_NAME" jdbcType="VARCHAR" property="lastName" />
+    <result column="FIRST_NAME" jdbcType="VARCHAR" property="firstName" />
+    <result column="ID_TYPE" jdbcType="VARCHAR" property="idType" />
+    <result column="ID_NO" jdbcType="VARCHAR" property="idNo" />
+    <result column="CARDHOLDER_MOBILE" jdbcType="VARCHAR" property="cardholderMobile" />
+    <result column="CARDHOLDER_EMAIL" jdbcType="VARCHAR" property="cardholderEmail" />
+   <!--  <result column="EXTERNAL_ID" jdbcType="VARCHAR" property="externalId" /> -->
+    <!-- <result column="DEPARTMENT_ID" jdbcType="VARCHAR" property="departmentId" /> -->
+    <result column="CARDHOLDER_BIRTHDAY" jdbcType="CHAR" property="cardholderBirthday" />
+    <result column="CARDHOLDER_GENDER" jdbcType="VARCHAR" property="cardholderGender" />
+    <result column="CARDHOLDER_SALUTATION" jdbcType="VARCHAR" property="cardholderSalutation" />
+    <result column="CARDHOLDER_FUNCTION" jdbcType="VARCHAR" property="cardholderFunction" />
+    <result column="CARDHOLDER_SEGMENT" jdbcType="VARCHAR" property="cardholderSegment" />
+   <!--  <result column="CARDHOLDER_STATE" jdbcType="CHAR" property="cardholderState" /> -->
+    <!-- <result column="CLOSE_DATE" jdbcType="CHAR" property="closeDate" /> -->
+    <result column="CARDHOLDER_COMMENT" jdbcType="VARCHAR" property="cardholderComment" />
+    <result column="RECIPIENT_NAME" jdbcType="VARCHAR" property="recipient_name" />
+    <result column="RECIPIENT_ADDR" jdbcType="VARCHAR" property="recipient_addr" />
+    <result column="RECIPIENT_PHONE" jdbcType="VARCHAR" property="recipient_phone" />
+     <result column="APPLY_STATUS" jdbcType="CHAR" property="applyStatus" />
+    <!-- <result column="SALE_MAN"   jdbcType="VARCHAR" property="userId" />
+     <result column="CARD_NO"   jdbcType="VARCHAR" property="cardNo" /> -->
+     <result column="POST_CODE" jdbcType="VARCHAR" property="post_code" />
+     <result column="APPLY_DATE_SECONDS" jdbcType="VARCHAR" property="applyDateSeconds" />
+</resultMap>
+
+<resultMap class="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  id="StatusQuery" >
+    <result column="ID_TYPE" jdbcType="VARCHAR" property="idType" />
+    <result column="ID_NO" jdbcType="VARCHAR" property="idNo" />
+     <result column="APPLY_STATUS" jdbcType="CHAR" property="applyStatus" />
+     <result column="CARDHOLDER_COMMENT" jdbcType="VARCHAR" property="cardholderComment" />
+</resultMap>
+  <select id="selectCountByDTO" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" resultClass="java.lang.Integer" >
+    <!-- <include refid="Commons.prefixSql"/> -->
+    SELECT
+   count(*) as "count"
+   from
+   		tb_entity_stock
+ 	where 
+ 		1=1
+    <dynamic>
+    	<isNotEmpty prepend="and" property="productId">
+    		product_id = #productId:VARCHAR#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="stockStatus">
+    		stock_state = #stockStatus:VARCHAR#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="entityId">
+    		entity_id = #entityId:VARCHAR#
+    	</isNotEmpty>
+    	
+    </dynamic>
+    <!-- <dynamic>
+       <isNotEmpty prepend="and" property="fatherEntityId">
+        T1.father_entity_id = #fatherEntityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="entityId">
+        T1.ENTITY_ID = #entityId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantCode">
+        T1.MERCHANT_CODE = #merchantCode:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantName">
+        UPPER(T1.MERCHANT_NAME) like UPPER('%'||#merchantName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="externalId">
+        T1.EXTERNAL_ID= #externalId:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantState">
+        T1.MERCHANT_STATE = #merchantState:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantRealityName">
+        UPPER(T1.MERCHANT_REALITY_NAME) like UPPER('%'||#merchantRealityName:VARCHAR#||'%')
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="merchantAttribute">
+        T1.MERCHANT_ATTRIBUTE = #merchantAttribute:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="ePayIn">
+        T1.E_PAY_IN = #ePayIn:VARCHAR#
+      </isNotEmpty>
+      <isNotEmpty prepend="and" property="dataState">
+        T1.DATA_STATE = #dataState:VARCHAR#
+      </isNotEmpty> 
+    </dynamic> -->
+    <!-- <include refid="Commons.suffixSql"/> -->
+  </select> 
+  <select id="selectCardsByDTO" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" resultMap="allOptions">
+    <!-- <include refid="Commons.prefixSql"/> -->
+    SELECT
+   		CARD_NO
+   from
+   		tb_entity_stock
+ 	where 
+ 		1=1
+    <dynamic>
+    	<isNotEmpty prepend="and" property="productId">
+    		product_id = #productId:VARCHAR#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="stockStatus">
+    		stock_state = #stockStatus:VARCHAR#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="and" property="entityId">
+    		entity_id = #entityId:VARCHAR#
+    	</isNotEmpty>
+    </dynamic>
+  </select>
+  
+   <select id="selectCardsHoderByDTO" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" resultMap="ApplyAndBindCardDTO">
+    <!-- <include refid="Commons.prefixSql"/> -->
+    SELECT
+   		ENTITY_ID,FIRST_NAME,LAST_NAME,ID_TYPE,ID_NO,CARDHOLDER_MOBILE,CARDHOLDER_EMAIL,EXTERNAL_ID,DEPARTMENT_ID,CARDHOLDER_BIRTHDAY,
+   		CARDHOLDER_GENDER,CARDHOLDER_SALUTATION,CARDHOLDER_FUNCTION,CARDHOLDER_SEGMENT,CARDHOLDER_STATE,CLOSE_DATE,CARDHOLDER_COMMENT
+   FROM
+   		TB_CARDHOLDER 
+ 	WHERE 
+ 		CARDHOLDER_ID in 
+ 		(SELECT CARDHOLDER_ID
+ 		    FROM TB_SELL_ORDER_CARD_LIST
+ 		    WHERE   CARD_NO= #cardNo:VARCHAR#
+ 		      AND DATA_STATE='1'
+ 		     AND ORDER_ID in (
+ 		     	SELECT ORDER_ID 
+ 		     	FROM TB_SELL_ORDER
+ 		     	WHERE ORDER_TYPE in ('10000011','60000001')  <!-- 销售记名卡订单,换卡订单 -->
+ 		     )
+ 		    	
+ 		    )
+  </select>
+  <select id="queryOnlineOrInline"  parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  resultClass="java.lang.String" >
+  	SELECT
+    CHANNEL
+FROM
+    TB_CUSTOMER
+WHERE
+    ENTITY_ID IN
+    (
+        SELECT
+            FIRST_ENTITY_ID
+        FROM
+            tb_sell_order
+        WHERE
+            order_id IN
+            (
+                SELECT
+                    order_id
+                FROM
+                    tb_sell_order_card_list
+                WHERE
+                    card_no=#cardNo:VARCHAR#
+                    AND DATA_STATE='1')
+        AND order_type in ('10000011','60000001')
+         )
+  </select>
+  <select id="queryCardNosByCardHolder"  parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  resultMap="CardNOs"  >
+  	SELECT
+    CARD_NO
+FROM
+    tb_sell_order_card_list
+WHERE
+    cardholder_id IN
+    (
+        SELECT
+            cardholder_id
+        FROM
+            tb_cardholder
+        WHERE
+            id_type=#idType:VARCHAR#
+        AND id_no=#idNo:VARCHAR#
+        AND entity_id=#entityId:VARCHAR#)
+  </select>
+  <select id="listForCheckApplyMsg" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" resultClass="java.util.HashMap" remapResults="true">
+  		 <include refid="Commons.prefixSql"/> 
+  			select PRODUCT_ID,ENTITY_ID,FIRST_NAME,LAST_NAME,ID_TYPE,ID_NO,CARDHOLDER_MOBILE, CARDHOLDER_EMAIL,CARDHOLDER_BIRTHDAY,CARDHOLDER_GENDER,CARDHOLDER_SALUTATION,
+  						CARDHOLDER_FUNCTION,CARDHOLDER_SEGMENT,CARDHOLDER_COMMENT,RECIPIENT_NAME,RECIPIENT_ADDR,RECIPIENT_PHONE,APPLY_DATE_SECONDS
+  						decode(APPLY_STATUS,0,'审核中',1,'已审核','审核拒绝')      as   "APPLY_STATUS" 
+  						from TB_APPLYANDBIND_INFO
+  						where 
+  						ENTITY_ID=#entityId:VARCHAR#
+  						<dynamic>
+  						<isNotEmpty prepend="and" property="applyStatus">
+    						APPLY_STATUS=#applyStatus:CHAR# 
+    					</isNotEmpty>
+  						 <isNotEmpty prepend="and" property="startDate">
+  						 		<![CDATA[
+    						APPLY_DATE>=#startDate:CHAR#
+    						 ]]> 
+    					</isNotEmpty>
+    					<isNotEmpty prepend="and" property="endDate">
+    						<![CDATA[
+    						APPLY_DATE<=#startDate:CHAR# 
+    						 ]]> 
+    					</isNotEmpty>
+    					</dynamic>
+  		<include refid="Commons.suffixSql"/>
+  </select>
+  <select id="CheckApplyMsg" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" resultClass="java.util.HashMap" remapResults="true">
+  		 <include refid="Commons.prefixSql"/> 
+  			select PRODUCT_ID,ENTITY_ID,FIRST_NAME,LAST_NAME,ID_TYPE,ID_NO,CARDHOLDER_MOBILE, CARDHOLDER_EMAIL,CARDHOLDER_BIRTHDAY,CARDHOLDER_GENDER,CARDHOLDER_SALUTATION,
+  						CARDHOLDER_FUNCTION,CARDHOLDER_SEGMENT,CARDHOLDER_COMMENT,RECIPIENT_NAME,RECIPIENT_ADDR,RECIPIENT_PHONE
+  						
+  						from TB_APPLYANDBIND_INFO
+  						where 
+  						ID_TYPE=#idType:VARCHAR#
+  						<dynamic>
+    					<isNotEmpty prepend="and" property="applyDateSeconds">
+    						APPLY_DATE_SECONDS=#applyDateSeconds:VARCHAR#
+    					</isNotEmpty>
+    					<isNotEmpty prepend="and" property="idNo">
+    						ID_NO=#idNo:VARCHAR#
+    					</isNotEmpty>
+    					</dynamic>
+  		<include refid="Commons.suffixSql"/>
+  </select>
+  <select id="SinglePersonMessage" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  resultMap="CheckMsg">
+  		select PRODUCT_ID,ENTITY_ID,FIRST_NAME,LAST_NAME,ID_TYPE,ID_NO,CARDHOLDER_MOBILE, CARDHOLDER_EMAIL,CARDHOLDER_BIRTHDAY,CARDHOLDER_GENDER,CARDHOLDER_SALUTATION,
+  						CARDHOLDER_FUNCTION,CARDHOLDER_SEGMENT,CARDHOLDER_COMMENT,RECIPIENT_NAME,RECIPIENT_ADDR,RECIPIENT_PHONE,APPLY_STATUS,POST_CODE 
+  						from TB_APPLYANDBIND_INFO
+  						where ID_TYPE=#idType:VARCHAR#  and ID_NO=#idNo:VARCHAR# and ENTITY_ID=#entityId:VARCHAR#
+  </select>
+  <select id="lookApplyStatus"  parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  resultMap="StatusQuery">
+  		select APPLY_STATUS,CARDHOLDER_COMMENT,ID_TYPE,ID_NO from TB_APPLYANDBIND_INFO where ID_TYPE =#idType:VARCHAR# and ID_NO=#idNo:VARCHAR# and ENTITY_ID=#entityId:VARCHAR# 
+  		order by APPLY_DATE_SECONDS desc fetch first 1 rows only
+  </select>
+  <insert id="insert_ApplyAndBindInfo"  parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO">
+  			insert into TB_APPLYANDBIND_INFO (PRODUCT_ID,ENTITY_ID,FIRST_NAME,LAST_NAME,ID_TYPE,ID_NO,CARDHOLDER_MOBILE,CARDHOLDER_EMAIL,CARDHOLDER_BIRTHDAY,
+  							CARDHOLDER_GENDER,CARDHOLDER_SALUTATION,CARDHOLDER_FUNCTION,CARDHOLDER_SEGMENT,CARDHOLDER_STATE,CARDHOLDER_COMMENT,RECIPIENT_NAME,
+  							 RECIPIENT_ADDR,RECIPIENT_PHONE,APPLY_STATUS,APPLY_DATE,POST_CODE,VID,PLATE_NUMBER,DRIVER_LICENCE,SOURCE,APPLY_DATE_SECONDS) 
+  				values(#productId:VARCHAR#,#entityId:VARCHAR#,#firstName:VARCHAR#,#lastName:VARCHAR#,#idType:VARCHAR#,#idNo:VARCHAR#,#cardholderMobile:VARCHAR#,#cardholderEmail:VARCHAR#,#cardholderBirthday:CHAR#,
+  							#cardholderGender:VARCHAR#,#cardholderSalutation:VARCHAR#,#cardholderFunction:VARCHAR#,#cardholderSegment:VARCHAR#,#cardholderState:CHAR#,#cardholderComment:VARCHAR#,#recipient_name:VARCHAR#,
+  							#recipient_addr:VARCHAR#,#recipient_phone:VARCHAR#,#applyStatus:CHAR#,#startDate:CHAR#,#post_code:VARCHAR#,#vId:VARCHAR#,#plateNumber:VARCHAR#,#driverLicence:VARCHAR#,#source:CHAR#,#applyDateSeconds:CHAR#)
+  </insert>
+  <update id="update_ApplyAndBindInfo" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO">
+  	update TB_APPLYANDBIND_INFO
+  		set APPLY_STATUS=#applyStatus:CHAR#
+  	where ID_TYPE=#idType:VARCHAR#  and ID_NO=#idNo:VARCHAR#  and ENTITY_ID=#entityId:VARCHAR#
+  </update>
+  <update id="update_ApplyMsgInfo" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO">
+  update TB_APPLYANDBIND_INFO
+  	set PRODUCT_ID=#productId:VARCHAR#,
+  		ENTITY_ID=#entityId:VARCHAR#,
+  		FIRST_NAME=#firstName:VARCHAR#,
+  		LAST_NAME=#lastName:VARCHAR#,
+  		CARDHOLDER_MOBILE=#cardholderMobile:VARCHAR#,
+  		CARDHOLDER_EMAIL=#cardholderEmail:VARCHAR#,
+  		CARDHOLDER_BIRTHDAY=#cardholderBirthday:CHAR#,
+  		CARDHOLDER_GENDER=#cardholderGender:VARCHAR#,
+  		CARDHOLDER_SALUTATION=#cardholderSalutation:VARCHAR#,
+  		CARDHOLDER_FUNCTION=#cardholderFunction:VARCHAR#,
+  		CARDHOLDER_SEGMENT=#cardholderSegment:VARCHAR#,
+  		CARDHOLDER_COMMENT=#cardholderComment:VARCHAR#,
+  		RECIPIENT_NAME=#recipient_name:VARCHAR#,
+  		RECIPIENT_ADDR=#recipient_addr:VARCHAR#,
+  		RECIPIENT_PHONE=#recipient_phone:VARCHAR#,
+  		APPLY_STATUS=#applyStatus:CHAR#,
+  		APPLY_DATE=#startDate:CHAR#,
+  		POST_CODE=#post_code:VARCHAR#,
+  		VID=#vId:VARCHAR#,
+  		PLATE_NUMBER=#plateNumber:VARCHAR#,
+  		DRIVER_LICENCE=#driverLicence:VARCHAR#,
+  		SOURCE=#source:CHAR#
+  	where ID_TYPE=#idType:VARCHAR#  and ID_NO=#idNo:VARCHAR# and ENTITY_ID=#entityId:VARCHAR#
+  </update>
+  <select id="queryServiceId" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" resultClass="java.lang.String">
+  	select SERVICE_ID from TB_REL_PRODUCT_SERVICE where PRODUCT_ID=#productId:VARCHAR#
+  </select>
+  <select id="queryLayoutId" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" resultClass="java.lang.String">
+  	select CARD_LAYOUT_ID from TB_REL_PROD_LAYOUT where PRODUCT_ID=#productId:VARCHAR#
+  </select>
+  <update id="updateStockStatus" parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO" >
+  	update tb_entity_stock set stock_state=#stockStatus:VARCHAR# where card_no=#cardNo:VARCHAR#
+  </update>
+  <select id="queryApplyMsgByApplyDate"  parameterClass="com.allinfinance.shangqi.gateway.dto.ApplyAndBindCardDTO"  resultMap="CheckMsg">
+  		select PRODUCT_ID,ENTITY_ID,FIRST_NAME,LAST_NAME,ID_TYPE,ID_NO,CARDHOLDER_MOBILE, CARDHOLDER_EMAIL,CARDHOLDER_BIRTHDAY,CARDHOLDER_GENDER,CARDHOLDER_SALUTATION,
+  						CARDHOLDER_FUNCTION,CARDHOLDER_SEGMENT,CARDHOLDER_COMMENT,RECIPIENT_NAME,RECIPIENT_ADDR,RECIPIENT_PHONE,APPLY_DATE_SECONDS
+  						decode(APPLY_STATUS,0,'审核中',1,'已审核','审核拒绝')      as   "APPLY_STATUS" ,POST_CODE 
+  						from TB_APPLYANDBIND_INFO
+  						where  ENTITY_ID=#entityId:VARCHAR# and APPLY_DATE=#startDate:CHAR# and APPLY_STATUS=#applyStatus:CHAR#
+  </select>
+</sqlMap>

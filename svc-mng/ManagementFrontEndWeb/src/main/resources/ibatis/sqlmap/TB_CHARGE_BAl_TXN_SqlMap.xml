@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace=" TB_MNG_CHARGE_BAl_TXN">
+  <insert id="insertChargeBalTxn"  parameterClass="com.allinfinance.charagebalTxn.dto.ChargeTxnDTO">
+  	insert into  TB_MNG_CHARGE_BAl_TXN	(DATE_SETTLE,SEQ_NO,SYS_NO,DATE_TXN,TIME_TXN,TXN_TYPE,CARD_NO,CHARGE_AMT,CHARGE_FEE,CHARGE_STAT,
+  														CHARGE_MISC,RESP_CODE,TXN_STAT,TRANS_SEQ_NO1,TRANS_SEQ_NO2)
+  														values(#dateSettle:CHAR#,#seqNo:CHAR#,#sysNo:CHAR#,#dateTxn:CHAR#,#timeTxn:VARCHAR#,#txnType:CHAR#,#cardNo:VARCHAR#,#chargeAmt:VARCHAR#,
+  														#chargeFee:VARCHAR#,#chargeStat:VARCHAR#,#chargeMisc:VARCHAR#,#respCode:CHAR#,#txnStat:CHAR#,#transSeqNo1:VARCHAR#,#transSeqNo2:VARCHAR#)
+  </insert>
+  <select id="selectChargeBalTxn" parameterClass="com.allinfinance.charagebalTxn.dto.ChargeTxnDTO" resultClass="java.util.HashMap">
+<include refid="Commons.prefixSql"/>
+  select DATE_SETTLE,
+  			SEQ_NO,
+  			SYS_NO,
+  			DATE_TXN,
+  			TIME_TXN,
+  			TXN_TYPE,
+  			CARD_NO,
+  			CHARGE_AMT,
+  			CHARGE_FEE,
+  			CHARGE_STAT,
+  			CHARGE_MISC,
+  			RESP_CODE,
+  			TXN_STAT,
+  			TRANS_SEQ_NO1,
+  			TRANS_SEQ_NO2
+  		from TB_MNG_CHARGE_BAl_TXN
+  		where
+  		1=1
+  		and
+  		SYS_NO=#sysNo:CHAR#
+  		<dynamic>
+  			<isNotEmpty prepend="and" property="startDate">
+    			<![CDATA[
+           	 		DATE_TXN >= #startDate:CHAR#
+           		 ]]>
+    		</isNotEmpty>
+    		<isNotEmpty prepend="and" property="endDate">
+    		<![CDATA[
+           	 		DATE_TXN <= #endDate:CHAR#
+           		 ]]>
+    		</isNotEmpty>
+    		<isNotEmpty  prepend="and" property="cardNo">
+    		 CARD_NO=#cardNo:VARCHAR#
+    		</isNotEmpty>
+    		<isNotEmpty  prepend="and" property="transSeqNo1">
+    		 TRANS_SEQ_NO1=#transSeqNo1:VARCHAR#
+    		</isNotEmpty>
+    		<isNotEmpty  prepend="and" property="transSeqNo2">
+    		 TRANS_SEQ_NO2=#transSeqNo2:#
+    		</isNotEmpty>
+  		</dynamic> 
+  		<include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

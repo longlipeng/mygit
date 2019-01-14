@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>                    
+        	                                    
+    <package name="productWithAccount" extends="struts-global" namespace="/product">
+        <global-results>
+        	<result name="invalid.token">/commons/invalidToken.jsp</result>   
+            <result name="list">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+            <result name="add">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutAdd.jsp</result>
+            <result name="edit">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutEdit.jsp</result>
+        </global-results>
+                
+        <action name="cardLayoutInquery" class="cardLayoutAction" method="query">
+          <result name="input">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+        </action>
+        <action name="cardLayoutInsert" class="cardLayoutAction" method="layoutInsert"></action>
+        <action name="cardLayoutSave" class="cardLayoutAction" method="layoutSave">
+         <interceptor-ref name="token" />
+         <interceptor-ref name="defaultStack" />
+        <result name="invalid.token">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+          <result name="input">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutAdd.jsp</result>
+        </action>
+        <action name="cardLayoutLoad" class="cardLayoutAction" method="load">
+         <result name="input">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+        </action>
+        <action name="getCardLayOutImg" class="cardLayoutAction" method="getImg"></action>
+        <action name="updateCardLayout" class="cardLayoutAction" method="update">
+         <interceptor-ref name="token" />
+         <interceptor-ref name="defaultStack" />
+        <result name="invalid.token">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+        </action>
+        <action name="cardLayoutDelete" class="cardLayoutAction" method="delete">
+        <interceptor-ref name="token" />
+         <interceptor-ref name="defaultStack" />
+        <result name="invalid.token">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+        <result name="input">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+        </action>
+        <action name="cardLayoutView" class="cardLayoutAction" method="view">
+          <result name="view">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutView.jsp</result>
+          <result name="input">/WEB-INF/pages/univer/issuer/cardlayout/cardLayoutList.jsp</result>
+        </action>
+        
+        
+    </package>
+</struts>

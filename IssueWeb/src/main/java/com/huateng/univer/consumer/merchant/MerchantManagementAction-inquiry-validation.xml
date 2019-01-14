@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <field name="merchantQueryDTO.merchantCode">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">15</param>
+            <message>商户编号不能超过15个字符！</message>
+        </field-validator>
+    </field>
+    <field name="merchantQueryDTO.merchantName">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>商户注册名称不能超过128个字符！</message>
+        </field-validator>
+    </field> 
+    <field name="merchantQueryDTO.merchantRealityName">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>商户实际店名不能超过128个字符！</message>
+        </field-validator>
+    </field> 
+</validators>

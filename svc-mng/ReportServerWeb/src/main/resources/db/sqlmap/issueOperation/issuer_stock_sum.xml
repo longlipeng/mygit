@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="issuer_stock_sum">
+	<select id="issuer_stock_sum"
+		resultClass="com.allinfinance.service.issueOperation.issuerStockSum.dto.IssuerStockSumDTO"
+		parameterClass="com.allinfinance.service.issueOperation.issuerStockSum.dto.IssuerStockSumDTO">
+		<!--
+			select distinct to_char(t.date_time, 'yyyy-MM-dd') as "dateTime",
+			t1.product_name as "productName", decode(t1.onymous_stat, 1,
+			'记名个性化卡',2,'不记名','记名库存卡') as "onymousStat", decode(t1.CARD_TYPE, '1',
+			'IC卡', '磁条卡') as "cardType", to_number(decode(t2.cardNum, null, 0,
+			t2.cardNum)) as "incard", to_number(decode(t3.cardNum, null, 0,
+			t3.cardNum)) as "outcard", decode(t5.stockNum,null,0,t5.stockNum) as
+			"stockNumEnd", t1.product_id as "productId",
+			decode(t.face_value,null,0,t.face_value) as "faceValue",
+			decode(t4.stockNum,null,0,t4.stockNum) as "stockNumStart" from
+			tb_date_stock t left join (select sum(CARD_NUM) as cardNum,
+			to_char(date_time,'yyyyMMdd') as dateTime, t.face_value from
+			tb_date_stock t where t.stockstate=1 and t.entity_id = #issuerId# and
+			t.product_id = #productId# and to_date(to_char(t.date_time,
+			'yyyyMMdd'), 'yyyyMMdd') &gt;= to_date(#startDate#, 'yyyy-MM-dd') and
+			to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &lt;=
+			to_date(#endDate#, 'yyyy-MM-dd') and t.issuer_falg = 1 group by
+			to_char(date_time,'yyyyMMdd'),t.face_value ) t2 on
+			to_char(t.date_time,'yyyyMMdd')=t2.dateTime and
+			t.face_value=t2.face_value left join (select sum(CARD_NUM) as
+			cardNum, to_char(date_time,'yyyyMMdd') as dateTime, t.face_value from
+			tb_date_stock t where t.stockstate=3 and t.entity_id = #issuerId# and
+			t.product_id = #productId# and to_date(to_char(t.date_time,
+			'yyyyMMdd'), 'yyyyMMdd') &gt;= to_date(#startDate#, 'yyyy-MM-dd') and
+			to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &lt;=
+			to_date(#endDate#, 'yyyy-MM-dd') and t.issuer_falg = 1 group by
+			to_char(date_time,'yyyyMMdd'),t.face_value ) t3 on
+			to_char(t.date_time,'yyyyMMdd')=t3.dateTime and
+			t.face_value=t3.face_value left join (select max(t.stock_num) as
+			stockNum, to_char(t.date_time, 'yyyyMMdd') as dateTime, t.face_value
+			from tb_date_stock t where t.entity_id = #issuerId# and t.product_id =
+			#productId# and t.issuer_falg = 1 group by to_char(t.date_time,
+			'yyyyMMdd'),t.face_value )t4 on to_char(t.date_time,
+			'yyyyMMdd')-1=t4.dateTime and t.face_value=t4.face_value left join
+			(select max(t.stock_num) as stockNum, to_char(t.date_time,
+			'yyyyMMdd') as dateTime, t.face_value from tb_date_stock t where
+			t.entity_id = #issuerId# and t.product_id = #productId# and
+			t.issuer_falg = 1 group by to_char(t.date_time,
+			'yyyyMMdd'),t.face_value )t5 on t.face_value=t5.face_value and
+			to_char(t.date_time, 'yyyyMMdd')=t5.dateTime, tb_product t1 where
+			t.issuer_falg = 1 and t.product_id = t1.product_id and
+			to_date(#endDate#, 'yyyy-MM-dd')=to_date(t5.dateTime,'yyyyMMdd') and
+			t.entity_id = #issuerId# and t.product_id = #productId# and
+			to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &gt;=
+			to_date(#startDate#, 'yyyy-MM-dd') and to_date(to_char(t.date_time,
+			'yyyyMMdd'), 'yyyyMMdd') &lt;= to_date(#endDate#, 'yyyy-MM-dd') order
+			by to_char(t.date_time,'yyyy-MM-dd')
+		-->
+	
+	select
+		to_char(to_date(t.dateTime,'yyyyMMdd'),'yyyy-MM-dd') as "dateTime",
+		t4.product_name as "productName",
+		decode(t4.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡') as "onymousStat",
+		decode(t4.CARD_TYPE, '1', 'IC卡', '磁条卡') as "cardType",
+		t.faceValue as "faceValue",
+		t.allInSum as "stockNumStart",
+		decode(t1.cardInSum,null,0,t1.cardInSum) as "incard",
+		decode(t2.cardOutSum,null,0,t2.cardOutSum) as "outcard",
+        decode(t3.cardReadyOutSum,null,0,t3.cardReadyOutSum)  as "readyOutCard",
+		t.PRODUCT_ID as "productId",
+		t.allInSum + decode(t1.cardInSum,null,0,t1.cardInSum) 
+            - decode(t2.cardOutSum,null,0,t2.cardOutSum) 
+                + decode(t3.cardReadyOutSum,null,0,t3.cardReadyOutSum) as "stockNumEnd"
+		from
+        (select 
+        substr(a.CREATE_TIME,1,8) as dateTime, 
+        b.PRODUCT_ID, 
+        b.FACE_VALUE as faceValue, 
+        ((select
+		count(a1.CARD_NO) AS cardInSum
+		from
+		TB_ENTITY_STOCK_OPERATER a1,
+		TB_ENTITY_STOCK b1
+		WHERE a1.CARD_NO = b1.CARD_NO
+		AND a1.FUNCATION_ROLE_ID = '2'
+		AND (a1.STOCK_STATE = '1' or a1.STOCK_STATE = '2')
+		AND a1.DATA_STATE = '1'
+		AND a1.OPERATER_TYPE = '1'
+		AND a1.ENTITY_ID = #issuerId#
+		AND b1.PRODUCT_ID = #productId#
+		AND substr(a1.CREATE_TIME,1,8) &lt;
+		substr(a.CREATE_TIME,1,8))
+		-
+		(select
+		count(a1.CARD_NO) AS cardInSum
+		from
+		TB_ENTITY_STOCK_OPERATER a1,
+		TB_ENTITY_STOCK b1
+		WHERE a1.CARD_NO = b1.CARD_NO
+		AND a1.FUNCATION_ROLE_ID = '2'
+		AND a1.STOCK_STATE = '3'
+		AND a1.DATA_STATE = '1'
+		AND a1.OPERATER_TYPE = '1'
+		AND a1.ENTITY_ID = #issuerId#
+		AND b1.PRODUCT_ID = #productId#
+		AND substr(a1.CREATE_TIME,1,8) &lt;
+		substr(a.CREATE_TIME,1,8))) as allinsum
+        from
+        TB_ENTITY_STOCK_OPERATER a,
+        TB_ENTITY_STOCK b
+        WHERE a.CARD_NO = b.CARD_NO 
+        and a.FUNCATION_ROLE_ID = '2'
+		AND a.DATA_STATE = '1'
+		AND a.OPERATER_TYPE = '1'
+		AND a.ENTITY_ID = #issuerId#
+		AND b.PRODUCT_ID = #productId#
+		AND substr(a.CREATE_TIME,1,8) &gt;=
+		to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd')
+		AND substr(a.CREATE_TIME,1,8) &lt;=
+		to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')
+        GROUP BY substr(a.CREATE_TIME,1,8),b.PRODUCT_ID,b.FACE_VALUE
+        ) t
+        left join
+		(
+		select
+		substr(a.CREATE_TIME,1,8) AS dateTime,
+		b.PRODUCT_ID,
+		decode(b.FACE_VALUE,null,0,b.FACE_VALUE) as faceValue,
+		count(a.CARD_NO) AS cardInSum
+		from
+		TB_ENTITY_STOCK_OPERATER a,
+		TB_ENTITY_STOCK b
+		WHERE a.CARD_NO = b.CARD_NO 
+        and a.FUNCATION_ROLE_ID = '2'
+		AND a.STOCK_STATE = '1'
+		AND a.DATA_STATE = '1'
+		AND a.OPERATER_TYPE = '1'
+		AND a.ENTITY_ID = #issuerId#
+		AND b.PRODUCT_ID = #productId#
+		AND substr(a.CREATE_TIME,1,8) &gt;=
+		to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd')
+		AND substr(a.CREATE_TIME,1,8) &lt;=
+		to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')
+		GROUP BY substr(a.CREATE_TIME,1,8),b.PRODUCT_ID,b.FACE_VALUE
+		) t1 on t1.dateTime = t.dateTime and t1.PRODUCT_ID = t.PRODUCT_ID and t1.faceValue = t.faceValue
+        left join
+		(
+        select
+		substr(a.CREATE_TIME,1,8) AS dateTime,
+		b.PRODUCT_ID,
+		decode(b.FACE_VALUE,null,0,b.FACE_VALUE) as faceValue,
+		count(a.CARD_NO) AS cardOutSum
+		from
+		TB_ENTITY_STOCK_OPERATER a,
+		TB_ENTITY_STOCK b
+		WHERE a.CARD_NO = b.CARD_NO
+		AND a.FUNCATION_ROLE_ID = '2'
+		AND a.STOCK_STATE = '3'
+		AND a.DATA_STATE = '1'
+		AND a.OPERATER_TYPE = '1'
+		AND a.ENTITY_ID = #issuerId#
+		AND b.PRODUCT_ID = #productId#
+		AND substr(a.CREATE_TIME,1,8) &gt;=
+		to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd')
+		AND substr(a.CREATE_TIME,1,8) &lt;=
+		to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')
+		GROUP BY substr(a.CREATE_TIME,1,8),b.PRODUCT_ID,b.FACE_VALUE
+		) t2 on t.dateTime = t2.dateTime and t2.PRODUCT_ID = t.PRODUCT_ID and t2.faceValue = t.faceValue
+        left join
+        (
+        select
+		substr(a.CREATE_TIME,1,8) AS dateTime,
+		b.PRODUCT_ID,
+		decode(b.FACE_VALUE,null,0,b.FACE_VALUE) as faceValue,
+		count(a.CARD_NO) AS cardReadyOutSum
+		from
+		TB_ENTITY_STOCK_OPERATER a,
+		TB_ENTITY_STOCK b
+		WHERE a.CARD_NO = b.CARD_NO
+		AND a.FUNCATION_ROLE_ID = '2'
+		AND a.STOCK_STATE = '2'
+		AND a.DATA_STATE = '1'
+		AND a.OPERATER_TYPE = '1'
+		AND a.ENTITY_ID = #issuerId#
+		AND b.PRODUCT_ID = #productId#
+		AND substr(a.CREATE_TIME,1,8) &gt;=
+		to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd')
+		AND substr(a.CREATE_TIME,1,8) &lt;=
+		to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')
+		GROUP BY substr(a.CREATE_TIME,1,8),b.PRODUCT_ID,b.FACE_VALUE
+		) t3 on t.dateTime = t3.dateTime and t3.PRODUCT_ID = t.PRODUCT_ID and t3.faceValue = t.faceValue,
+		tb_product t4 
+		where  t.PRODUCT_ID = t4.product_id
+        order by to_char(to_date(t.dateTime,'yyyyMMdd'),'yyyy-MM-dd')
+	
+	
+
+	<!-- 
+	select distinct to_char(t.date_time, 'yyyy-MM-dd') "dateTime",
+                t.product_name "productName",
+                decode(t3.onymous_stat, 1, '记名个性化卡',2,'不记名','记名库存卡') as "onymousStat",
+				decode(t3.CARD_TYPE, '1', 'IC卡', '磁条卡') as "cardType",
+                decode(t1.cardNum, null, 0, t1.cardNum) "incard",
+                decode(t2.cardNum, null, 0, t2.cardNum) "outcard",
+                decode(t4.stockNum,null,0,t4.stockNum)-decode(t5.stockNum,null,0,t5.stockNum) "stockNumStart",
+                t.product_id "productId",
+                decode(t.face_value,null,0,t.face_value) "faceValue",
+                decode(t4.stockNum,null,0,t4.stockNum)
+                    -decode(t5.stockNum,null,0,t5.stockNum)
+                        +decode(t1.cardNum, null, 0, t1.cardNum)
+                            -decode(t2.cardNum, null, 0, t2.cardNum) "stockNumEnd"
+from
+tb_date_stock t
+left join
+(select sum(t.CARD_NUM) as cardNum,
+         to_char(t.date_time,'yyyyMMdd') as dateTime,
+         t.PRODUCT_ID,
+         t.face_value
+         from tb_date_stock t
+         where t.stockstate = '1'
+         and t.issuer_falg = '1'
+         and t.OPERTER_TYPE = '1'
+         and t.entity_id = #issuerId# 
+         and t.product_id = #productId#
+         and to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &gt;=
+             to_date(#startDate#, 'yyyy-MM-dd')
+         and to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &lt;=
+             to_date(#endDate#, 'yyyy-MM-dd')
+	     group by to_char(date_time,'yyyyMMdd'),t.PRODUCT_ID,t.face_value) t1 
+on to_char(t.date_time,'yyyyMMdd')=t1.dateTime 
+		and t.PRODUCT_ID = t1.PRODUCT_ID 
+				and t.FACE_VALUE = t1.FACE_VALUE
+left join
+(select sum(t.CARD_NUM) as cardNum,
+         to_char(t.date_time,'yyyyMMdd') as dateTime,
+         t.PRODUCT_ID,
+         t.face_value
+         from tb_date_stock t
+         where t.stockstate = '3'
+         and t.issuer_falg = '1'
+         and t.OPERTER_TYPE = '1'
+         and t.entity_id = #issuerId# 
+         and t.product_id = #productId#
+         and to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &gt;=
+             to_date(#startDate#, 'yyyy-MM-dd')
+         and to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &lt;=
+             to_date(#endDate#, 'yyyy-MM-dd')
+	     group by to_char(date_time,'yyyyMMdd'),t.PRODUCT_ID,t.face_value) t2
+on to_char(t.date_time,'yyyyMMdd')=t2.dateTime 
+		and t.PRODUCT_ID = t2.PRODUCT_ID 
+				and t.FACE_VALUE = t2.FACE_VALUE
+left join
+(select    (select decode(a.STOCK_NUM,null,0,a.STOCK_NUM)+decode(a.CARD_NUM,null,0,a.CARD_NUM) 
+             from tb_date_stock a 
+             where a.DATE_TIME &lt; tb.date_time
+              and  a.stockstate = '1'
+              and a.issuer_falg = '1'
+              and a.OPERTER_TYPE = '1'
+              and a.entity_id = #issuerId# 
+              and a.product_id = #productId#
+              and a.face_value = tb.face_value
+              and decode(a.STOCK_NUM,null,0,a.STOCK_NUM)+decode(a.CARD_NUM,null,0,a.CARD_NUM) &lt;&gt; 0
+              order by a.DATE_TIME desc fetch first 1 rows only) as stockNum, 
+             to_char(tb.date_time,'yyyyMMdd') as dateTime,
+             tb.PRODUCT_ID,
+             tb.face_value
+         from tb_date_stock tb
+         where  tb.issuer_falg = '1'
+         and tb.OPERTER_TYPE = '1'
+         and tb.entity_id = #issuerId# 
+         and tb.product_id = #productId#) t4
+on to_char(t.date_time,'yyyyMMdd')=t4.dateTime 
+		and t.PRODUCT_ID = t4.PRODUCT_ID 
+				and t.FACE_VALUE = t4.FACE_VALUE
+left join
+(select    (select decode(a.STOCK_NUM,null,0,a.STOCK_NUM)+decode(a.CARD_NUM,null,0,a.CARD_NUM) 
+             from tb_date_stock a 
+             where a.DATE_TIME &lt; tb.date_time
+              and  a.stockstate = '3'
+              and a.issuer_falg = '1'
+              and a.OPERTER_TYPE = '1'
+              and a.entity_id = #issuerId# 
+              and a.product_id = #productId#
+              and a.face_value = tb.face_value
+              and decode(a.STOCK_NUM,null,0,a.STOCK_NUM)+decode(a.CARD_NUM,null,0,a.CARD_NUM) &lt;&gt; 0
+              order by a.DATE_TIME desc fetch first 1 rows only) as stockNum, 
+             to_char(tb.date_time,'yyyyMMdd') as dateTime,
+             tb.PRODUCT_ID,
+             tb.face_value
+         from tb_date_stock tb
+         where  tb.issuer_falg = '1'
+         and tb.OPERTER_TYPE = '1'
+         and tb.entity_id = #issuerId# 
+         and tb.product_id = #productId#) t5
+on to_char(t.date_time,'yyyyMMdd')=t5.dateTime 
+		and t.PRODUCT_ID = t5.PRODUCT_ID 
+				and t.FACE_VALUE = t5.FACE_VALUE, 
+tb_product t3
+where t.issuer_falg = '1'
+   and t.product_id = t3.product_id
+   and t.entity_id = #issuerId#
+   and t.product_id = #productId#
+   and decode(t4.stockNum,null,0,t4.stockNum)
+                    +decode(t5.stockNum,null,0,t5.stockNum)
+                        +decode(t1.cardNum, null, 0, t1.cardNum)
+                            +decode(t2.cardNum, null, 0, t2.cardNum) &lt;&gt; 0
+   and to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &gt;=
+       to_date(#startDate#, 'yyyy-MM-dd')
+   and to_date(to_char(t.date_time, 'yyyyMMdd'), 'yyyyMMdd') &lt;=
+       to_date(#endDate#, 'yyyy-MM-dd')
+ order by to_char(t.date_time,'yyyy-MM-dd')
+ -->	
+	</select>
+</sqlMap>

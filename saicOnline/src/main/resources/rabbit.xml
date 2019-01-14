@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd
+		http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<rabbit:connection-factory id="connectionFactory" username="#{env.mqUser}" password="#{env.mqPassword}" 
+	    addresses="#{env.mqServer1}:#{env.mqPort1},#{env.mqServer2}:#{env.mqPort2}" />
+	
+	<rabbit:admin connection-factory="connectionFactory" auto-startup="true"/>
+	<!-- <rabbit:queue id="saicOnlineReply"  name="#{env.saicReplyQueue}">
+		<rabbit:queue-arguments>
+        	<entry key="x-ha-policy" value="all"/>
+		</rabbit:queue-arguments>
+	</rabbit:queue> -->
+	<rabbit:queue id="saicOnlineReq" name="#{env.saicReqQueue}">
+		<rabbit:queue-arguments>
+       		<entry key="x-ha-policy" value="all"/>
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	<rabbit:queue id="saicOnlineRCMReq" name="#{env.saicMrcQueue}">
+		<rabbit:queue-arguments>
+       		<entry key="x-ha-policy" value="all"/>
+		</rabbit:queue-arguments>
+	</rabbit:queue>
+	
+	
+	<rabbit:template id="amqpTemplate" queue="saicOnlineReq" connection-factory="connectionFactory" 
+		reply-timeout="10000" message-converter="icspMessageConverter">
+	</rabbit:template>
+	<rabbit:template id="crmAmqpTemplate" queue="saicOnlineRCMReq" connection-factory="connectionFactory" 
+		reply-timeout="10000" message-converter="icspMessageConverter">
+	</rabbit:template>
+	
+	<rabbit:listener-container concurrency="#{env.listenerConcurrency}" max-concurrency="#{env.maxListenerConcurrency}" connection-factory="connectionFactory" auto-startup="true" prefetch="200">
+		<rabbit:listener ref="icspReqListener" queues="saicOnlineReq"/>
+				<rabbit:listener ref="crmReqListener" queues="saicOnlineRCMReq"/>
+		
+	</rabbit:listener-container>	
+	
+	<bean id="icspReqListener" class="com.allinfinance.prepay.mq.IcspMessageListener">
+		<property name="template" ref="amqpTemplate"/>
+	</bean>
+	
+	<!-- <task:executor id="threadPool" pool-size="50-500" keep-alive="1000" queue-capacity="1000" rejection-policy="CALLER_RUNS"/> -->
+	
+	<bean id="icspMessageConverter" class="com.allinfinance.prepay.mq.IcspMessageConverter"/>
+	<bean id="crmReqListener" class="com.allinfinance.prepay.mq.CrmMessageListener">
+		<property name="crmTemplate" ref="crmAmqpTemplate"/>
+	</bean>  
+	 
+</beans>

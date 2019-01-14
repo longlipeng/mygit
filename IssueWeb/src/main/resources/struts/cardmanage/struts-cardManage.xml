@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="cardManages" extends="struts-global"  namespace="/cardManage">
+        <global-results>
+              <result name="succ">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+              
+        </global-results>
+		<action name="cardQueryInit" class="cardManageAction" method="cardQueryInit">
+		   <result name="init">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		</action>
+		<action name="cardQuery" class="cardManageAction" method="cardQuery">
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		</action>
+		<action name="cardQueryNo" class="cardManageAction" method="cardQueryNo">
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		</action>
+		<action name="cardQuerys" class="cardManageAction" method="cardQuerys">
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		</action>
+		<action name="comeback" class="cardManageAction" method="comeback">
+		</action>
+		<action name="hangInit" class="cardManageAction" method="hangInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="hangInit">/WEB-INF/pages/univer/cardmanage/hangAdd.jsp</result>
+		</action>
+		<action name="activeInit" class="cardManageAction" method="activeInit">
+			<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="activeInit">/WEB-INF/pages/univer/cardmanage/activeAdd.jsp</result>
+		</action>
+		<action name="activeCard" class="cardManageAction" method="activeCard">
+		  <result name="input">/WEB-INF/pages/univer/cardmanage/activeAdd.jsp</result>
+		</action>
+		<action name="rechargeInit" class="cardManageAction" method="rechargeInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="rechargeInit">/WEB-INF/pages/univer/cardmanage/recharge.jsp</result>
+		</action>
+		<action name="recharge" class="cardManageAction" method="recharge">
+		  <result name="input">/WEB-INF/pages/univer/cardmanage/recharge.jsp</result>
+		</action>
+		<action name="addCardHolder" class="cardManageAction" method="addCardHolder">
+		  <result name="addCardHolder">/WEB-INF/pages/univer/cardmanage/cardholderAddList.jsp</result>
+		</action>
+		
+		<action name="signCardRltCardHolder" class="cardManageAction" method="signCardRltCardHolder">
+		  <result name="input">/WEB-INF/pages/univer/cardmanage/cardholderAddList.jsp</result>
+		</action>
+		
+		<action name="insertHang" class="cardManageAction" method="insertHang">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		   <result name="succ">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/hangAdd.jsp</result>
+		</action>
+		<action name="nohangInit" class="cardManageAction" method="nohangInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="nohangInit">/WEB-INF/pages/univer/cardmanage/disengageAdd.jsp</result>
+		</action>
+		<action name="insertDisengage" class="cardManageAction" method="insertDisengage">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/disengageAdd.jsp</result>
+		</action>
+		<action name="lockInit" class="cardManageAction" method="lockInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="lockInit">/WEB-INF/pages/univer/cardmanage/cardLockAdd.jsp</result>
+		</action>
+		<action name="insertLock" class="cardManageAction" method="insertLock">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardLockAdd.jsp</result>
+		</action>
+		<action name="nolockInit" class="cardManageAction" method="nolockInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="nolockInit">/WEB-INF/pages/univer/cardmanage/cardNoLock.jsp</result>
+		</action>
+		<action name="cardNoLock" class="cardManageAction" method="cardNoLock">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardNoLock.jsp</result>
+		</action>
+		
+<!--		赎回-->
+		<action name="retrieveCardInit" class="cardManageAction" method="retrieveCardInit"> 
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="retrieveCardInitRansom">/WEB-INF/pages/univer/cardmanage/retrieveCardRansom.jsp</result>
+		</action>
+		<action name="redemptionCard" class="cardManageAction" method="redemptionCard">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result> 
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/retrieveCard.jsp</result>
+		    <result name="redemptionCard">/WEB-INF/pages/univer/cardmanage/retrieveCard.jsp</result>
+		</action>
+		<action name="enter" class="cardManageAction" method="enter"> 
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/retrieveCard.jsp</result>
+		    <result name="redemptionCard">/WEB-INF/pages/univer/cardmanage/retrieveCard.jsp</result>
+		</action>
+		<action name="distoryCard" class="cardManageAction" method="distoryCard">
+		    <result name="fail">/WEB-INF/pages/univer/cardmanage/retrieveCard.jsp</result>
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		</action>
+		<action name="passwordInit" class="cardManageAction" method="passwordInit"> 
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="passwordInit">/WEB-INF/pages/univer/cardmanage/cardPassword.jsp</result>
+		</action>
+		<action name="insertPassword" class="cardManageAction" method="insertPassword">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result> 
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardPassword.jsp</result>
+		</action>
+		<action name="setCardSecurityInfoInit" class="cardManageAction" method="setCardSecurityInfoInit"> 
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="cardSecurityInfoInit">/WEB-INF/pages/univer/cardmanage/cardSecurityInfo.jsp</result>
+		</action>
+		<action name="setCardSecurityInfo" class="cardManageAction" method="setCardSecurityInfo">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardSecurityInfo.jsp</result>
+		</action>
+		<action name="cardDelayInit" class="cardManageAction" method="cardDelayInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="cardDelayInit">/WEB-INF/pages/univer/cardmanage/cardDelay.jsp</result>
+		</action>
+		
+		
+		<action name="transferAccountInit" class="cardManageAction" method="transferAccountInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="transferAccountInit">/WEB-INF/pages/univer/cardmanage/transferAccount.jsp</result>
+		</action>
+			<action name="accountRltBalance" class="cardManageAction" method="accountRltBalance">
+		</action>
+		<action name="inCardRltAccount" class="cardManageAction" method="inCardRltAccount">
+		    <result name="selectSucc">/WEB-INF/pages/univer/cardmanage/transferAccount.jsp</result>
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/transferAccount.jsp</result>
+		    
+		</action>
+		<action name="newCardRltAccount" class="cardManageAction" method="newCardRltAccount">
+		  
+		     <result name="changSucc">/WEB-INF/pages/univer/cardmanage/changeCard.jsp</result>
+		     <result name="input">/WEB-INF/pages/univer/cardmanage/changeCard.jsp</result>
+		</action>
+		
+		<action name="transferAccount" class="cardManageAction" method="transferAccount">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/transferAccount.jsp</result>
+		</action>
+		<!-- 换卡 -->
+		<action name="changeCardInit" class="cardManageAction" method="changeCardInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="changeCardInit">/WEB-INF/pages/univer/cardmanage/changeCard.jsp</result>
+		</action>
+		<action name="changeCard" class="cardManageAction" method="changeCard">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/changeCard.jsp</result>
+		     <result name="succ">/WEB-INF/pages/univer/cardmanage/changeCard.jsp</result>
+		    
+		</action>
+		<action name="dealWithOldCard" class="cardManageAction" method="dealWithOldCard">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/changeCard.jsp</result>
+		    
+		</action>
+		
+		<action name="cardDelay" class="cardManageAction" method="cardDelay">
+			<interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardDelay.jsp</result>
+		</action>
+		<action name="cardMagnetismInit" class="cardManageAction" method="cardMagnetismInit">
+		    <result name="cardMagnetismInit">/WEB-INF/pages/univer/cardmanage/cardMagnetismAdd.jsp</result>
+		</action>
+		<action name="insertMagentism" class="cardManageAction" method="insertMagentism">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardMagnetismAdd.jsp</result>
+		</action>
+		<action name="cardFreezInit" class="cardManageAction" method="cardFreezInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="cardFreezInit">/WEB-INF/pages/univer/cardmanage/cardFreezInit.jsp</result>
+		</action>
+		<action name="cardFreez" class="cardManageAction" method="cardFreez">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardFreezInit.jsp</result>
+		</action>
+		<action name="noCardFreezInit" class="cardManageAction" method="noCardFreezInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="noCardFreezInit">/WEB-INF/pages/univer/cardmanage/cardNoFreez.jsp</result>
+		</action>
+		<action name="noCardFreez" class="cardManageAction" method="noCardFreez">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardNoFreez.jsp</result>
+		</action>
+		
+		<!-- 卡交易调整查询 -->
+		<action name="cardTxnSelectInit" class="cardManageAction" method="cardTxnSelectInit">
+		<result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		      <result name="cardTxnSelectInit">/WEB-INF/pages/univer/cardmanage/cardTxn.jsp</result>
+		      <result name="selectTxn">/WEB-INF/pages/univer/cardmanage/cardMoneyList.jsp</result>
+		</action>
+			
+		<!-- 卡交易调整 -->
+		<action name="addAdjustAcountView" class="cardManageAction" method="addAdjustAcountView">
+		      <result name="addAdjustAcountView">/WEB-INF/pages/univer/cardmanage/addAdjustAcount.jsp</result>
+		</action>
+		
+		<action name="addAdjustAcount" class="cardManageAction" method="addAcount">
+			  <interceptor-ref name="token" />
+			<interceptor-ref name="defaultStack" />
+			<result name="invalid.token">/WEB-INF/pages/univer/cardmanage/addAdjustAcount.jsp</result> 
+		      <result name="addAcount">/WEB-INF/pages/univer/cardmanage/addAdjustAcount.jsp</result>
+		</action>
+		
+		<action name="cardTxnSelect" class="cardManageAction" method="cardTxnSelect">
+		<result name="input">${error_jsp}</result>
+		    <result name="cardTxnSelect">/WEB-INF/pages/univer/cardmanage/cardTxn.jsp</result>
+		    <result name="selectTxn">/WEB-INF/pages/univer/cardmanage/cardMoneyList.jsp</result>
+		</action>
+		<!-- 卡交易调整查询 -->
+		<action name="queryAdjustAcount" class="cardManageAction" method="queryAdjustAcount">
+		    <result name="cardTxnSelect">/WEB-INF/pages/univer/cardmanage/cardTxn.jsp</result>
+		    <result name="queryAdjustAcount">/WEB-INF/pages/univer/cardmanage/queryAdjustAcount.jsp</result>
+		</action>
+		
+		<!-- 卡交易调整  进入卡片详细页面-->
+		<action name="cardTxnSelectDetail" class="cardManageAction" method="cardTxnSelectDetail">
+		    <result name="cardTxnSelectDetail">/WEB-INF/pages/univer/cardmanage/cardSelectView.jsp</result>
+		    <result name="txnDetail">/WEB-INF/pages/univer/cardmanage/cardMoneyUpdate.jsp</result>
+		</action>
+		<action name="viewCardSecurity" class="cardManageAction" method="viewCardSecurity">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		    <result name="serviceList">/WEB-INF/pages/univer/cardmanage/cardSecurity.jsp</result>
+		</action>
+		<action name="editCardSecurity" class="cardManageAction" method="editCardSecurity">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardSecurity.jsp</result>
+		</action>
+		<action name="updateCardSecurity" class="cardManageAction" method="updateCardSecurity">
+		    <result name="input">/WEB-INF/pages/univer/cardmanagement/cardSecurityEdit.jsp</result>
+		    <result name="serviceList">/WEB-INF/pages/univer/cardmanagement/cardSecurity.jsp</result>
+		</action>
+		<action name="selectCardOperation" class="cardManageAction" method="selectCardOperation">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardOperateSelect.jsp</result>
+		    <result name="select">/WEB-INF/pages/univer/cardmanage/cardOperateSelect.jsp</result>
+		</action>
+<!--		<action name="cardIsRltHolder" class="cardManageAction" method="cardIsRltHolder">-->
+<!--		  <result name="input">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>-->
+<!--		 <result name="querySucc">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>-->
+<!--		</action>-->
+		<!-- 目前单卡查询复用之前的卡查询页面和方法 -->
+<!-- 		<action name="selectSingleCardOperation" class="cardManageAction" method="selectSingleCardOperation"> -->
+			<action name="selectSingleCardOperation" class="cardManageAction" method="selectCardOperation">
+<!-- 		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardSingleOperateSelect.jsp</result> -->
+<!-- 		    <result name="select">/WEB-INF/pages/univer/cardmanage/cardSingleOperateSelect.jsp</result> -->
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardOperateSelect.jsp</result>
+		    <result name="select">/WEB-INF/pages/univer/cardmanage/cardOperateSelect.jsp</result>
+		</action>
+		
+		<action name="cardMoneyInquery" class="cardManageAction" method="cardMoneyInquery">
+		    <result name="input">/WEB-INF/pages/univer/cardmanagement/cardMoneyList.jsp</result>
+		    <result name="select">/WEB-INF/pages/univer/cardmanagement/cardMoneyList.jsp</result>
+		</action>
+		<action name="adjustmentAccounts" class="cardManageAction" method="adjustmentAccounts">
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/cardMoneyList.jsp</result>
+		    <result name="adjust">/WEB-INF/pages/univer/cardmanage/cardMoneyList.jsp</result>
+		</action>
+		
+		<!-- 卡生命周期查询  -->
+		<action name="cardLifeCycleQueryInit" class="cardLifeCycleQueryAction" method="cardLifeCycleQueryInit">
+		    <result name="input">/WEB-INF/pages/univer/cardmanagement/cardLifeCycleQuery.jsp</result>
+		    <result name="list">/WEB-INF/pages/univer/cardmanagement/cardLifeCycleQuery.jsp</result>
+		</action>
+		
+		<action name="queryCardLifeCycle" class="cardLifeCycleQueryAction" method="queryCardLifeCycle">
+		    <result name="input">/WEB-INF/pages/univer/cardmanagement/cardLifeCycleQuery.jsp</result>
+		    <result name="list">/WEB-INF/pages/univer/cardmanagement/cardLifeCycleQuery.jsp</result>
+		</action>
+		
+		<!-- 卡实时库存查询  -->
+		<action name="cardCurrentTimeStockQueryInit" class="cardCurrentTimeStockQueryAction" method="cardCurrentTimeStockQueryInit">
+		    <result name="issuerInput">/WEB-INF/pages/univer/cardmanagement/cardCurrentTimeStockQueryIssuer.jsp</result>
+		    <result name="sellerInput">/WEB-INF/pages/univer/cardmanagement/cardCurrentTimeStockQuerySeller.jsp</result>
+		</action>
+		
+		<action name="queryCardCurrentTimeStock" class="cardCurrentTimeStockQueryAction" method="queryCardCurrentTimeStock">
+		    <result name="issuerInput">/WEB-INF/pages/univer/cardmanagement/cardCurrentTimeStockQueryIssuer.jsp</result>
+		    <result name="sellerInput">/WEB-INF/pages/univer/cardmanagement/cardCurrentTimeStockQuerySeller.jsp</result>
+		    <result name="issuerList">/WEB-INF/pages/univer/cardmanagement/cardCurrentTimeStockQueryIssuer.jsp</result>
+		    <result name="sellerList">/WEB-INF/pages/univer/cardmanagement/cardCurrentTimeStockQuerySeller.jsp</result>
+		</action>
+		<!-- 卡作废查询 -->
+		<action name="cardInvalidQuery" class="cardInvalidInfoQueryAction">
+			<result name="init">/WEB-INF/pages/univer/cardinvalidinfoquery/cardInvalidQueryList.jsp</result>
+			<result name="list">/WEB-INF/pages/univer/cardinvalidinfoquery/cardInvalidQueryList.jsp</result>
+			<result name="view">/WEB-INF/pages/univer/cardinvalidinfoquery/invalidDetailed.jsp</result>	
+		</action>
+		   <!-- 发行机构卡批量处理 -->
+		<action name="batchCardManageInit" class="batchCardManageAction" method="batchCardManageInit">
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/batchCardManage.jsp</result>
+		   <result name="init">/WEB-INF/pages/univer/cardmanage/batchCardManage.jsp</result>
+		</action>
+		<action name="batchCardManageAction" class="batchCardManageAction" >
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/batchCardManageQuery.jsp</result>
+		   <result name="list">/WEB-INF/pages/univer/cardmanage/batchCardManageQuery.jsp</result>
+		    <result name="init">/WEB-INF/pages/univer/cardmanage/batchCardManage.jsp</result>
+		</action>
+		<action name="cardManageAction" class="cardManageAction" >
+		   <result name="list">/WEB-INF/pages/univer/cardmanage/cardOperater.jsp</result>
+		</action>
+		<action name="transactionQuery" class="cardManageAction" method="transactionQuery">
+		   <result name="list">/WEB-INF/pages/univer/cardmanage/transactionQuery.jsp</result>
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/transactionQuery.jsp</result>
+		</action>
+		<action name="stanStifQuery" class="cardManageAction" method="stanStifQuery">
+		   <result name="list">/WEB-INF/pages/univer/cardmanage/StanStifQueryList.jsp</result>
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/StanStifQueryList.jsp</result>
+		</action>
+		<action name="stanStifView" class="cardManageAction" method="stanStifView">
+		   <result name="view">/WEB-INF/pages/univer/cardmanage/stanStifView.jsp</result>
+		    <result name="input">/WEB-INF/pages/univer/cardmanage/StanStifQueryList.jsp</result>
+		</action>
+		
+		<!-- 备付金查询 -->
+		<action name="transactionBalanceQuery" class="cardManageAction" method="transactionBalanceQuery">
+		   <result name="list">/WEB-INF/pages/univer/cardmanage/transactionBalanceQuery.jsp</result>
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/transactionBalanceQuery.jsp</result>
+		</action>
+		
+		<action name="transactionQueryCardNoByIdNo" class="cardManageAction" method="cardQueryNo">
+		   <result name="succ">/WEB-INF/pages/univer/cardmanage/transactionQuery.jsp</result>
+		   <result name="input">/WEB-INF/pages/univer/cardmanage/transactionQuery.jsp</result>
+		</action>
+    </package>
+</struts>

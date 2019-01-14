@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+		"http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="cardLayoutDTO.cardName">
+		<field-validator type="requiredstring">
+			<message>请填写卡面名称(80位内)</message>
+		</field-validator>
+		<field-validator type="stringlength">
+			<param name="maxLength">80</param>
+			<message>请填写卡面名称(80位内)</message>
+		</field-validator>
+	</field>
+	<field name="cardLayoutDTO.memo">
+		<field-validator type="stringlength">
+			<param name="maxLength">1000</param>
+			<message>填写应少于1000字</message>
+		</field-validator>
+	</field>
+</validators>

@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+  http://www.springframework.org/schema/beans/spring-beans-2.0.xsd   
+  http://cxf.apache.org/jaxws http://cxf.apache.org/schema/jaxws.xsd">
+  
+	<bean id="manageService" class="com.huateng.framework.webservice.ManageService"
+		factory-bean="clientFactory" factory-method="create" />
+	<bean id="clientFactory"
+		class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean" >
+		<property name="serviceClass" value="${webservice.serviceClass}" />
+		<property name="address"
+			value="${webservice.address}" />
+	</bean>
+	<!-- 配置ireport的service -->
+<!--	<bean id="iReportService" class="com.huateng.framework.webservice.ReportService"-->
+<!--		factory-bean="reportClientFactory" factory-method="create" />-->
+<!--	<bean id="reportClientFactory"-->
+<!--		class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean" >-->
+<!--		<property name="serviceClass" value="${webservice.report.serviceClass}" />-->
+<!--		<property name="address"-->
+<!--			value="${webservice.report.address}" />-->
+<!--	</bean>-->
+</beans>

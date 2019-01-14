@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	default-autowire="byName">
+
+	<!-- 发行机构action配置文件 -->
+	<!-- 卡面管理 -->
+	<bean id="cardLayoutAction"
+		class="com.huateng.univer.issuer.productWithAccount.CardLayOut.CardLayoutAction"
+		scope="prototype">
+	</bean>
+	<!-- 包装管理 -->
+	<bean id="packageAction"
+		class="com.huateng.univer.issuer.productWithAccount.Package.PackageAction"
+		scope="prototype">
+	</bean>
+
+	<!-- 账户管理 -->
+	<bean id="accountAction"
+		class="com.huateng.univer.issuer.productWithAccount.Account.AccountAction"
+		scope="prototype">
+	</bean>
+
+	<!-- 产品管理 -->
+	<bean id="productAction"
+		class="com.huateng.univer.issuer.productWithAccount.Product.ProductAction"
+		scope="prototype">
+	</bean>
+	<!-- 有效期规则管理 -->
+	<bean id="validPeriodRuleAction"
+		class="com.huateng.univer.issuer.productWithAccount.ValidPeriodRule.ValidPeriodRuleAction"
+		scope="prototype">
+	</bean>
+
+	<!-- 发行机构管理 -->
+	<bean id="issuerAction"
+		class="com.huateng.univer.issuer.issuerManagerment.Issuer.IssuerAction"
+		scope="prototype">
+	</bean>
+
+
+	<!-- 发行机构合同管理 -->
+	<bean id="issuerContractAction"
+		class="com.huateng.univer.issuer.issuerManagerment.IssuerContract.IssuerContractAction"
+		scope="prototype">
+	</bean>
+
+
+	<!-- 营销机构合同管理 -->
+	<bean id="issuerSellerContractAction"
+		class="com.huateng.univer.issuer.sellerManagerment.IssuerSellerContractAction"
+		scope="prototype">
+	</bean>
+
+	<!-- 收单机构合同管理 -->
+	<bean id="consumerContractAction"
+		class="com.huateng.univer.issuer.consumerManagerment.consumerContract.ConsumerContractAction"
+		scope="prototype">
+	</bean>
+
+
+	<!-- 发行机构管理 -->
+	<bean id="consumerAction"
+		class="com.huateng.univer.issuer.consumerManagerment.consumer.ConsumerAction"
+		scope="prototype">
+	</bean>
+    <bean id="issuerSellerAction"
+		class="com.huateng.univer.issuer.sellerManagerment.IssuerSellerAction"
+		scope="prototype">
+	</bean>
+	<!-- 制卡商 -->
+	<bean id="cardCompanyAction" class="com.huateng.univer.issuer.cardcompary.CardCompanyAction"
+		scope="prototype">
+	</bean>
+   
+    <!-- 卡片管理 -->
+    <bean id="cardManageAction" class="com.huateng.univer.cardmanage.CardManageAction"
+		scope="prototype">
+	</bean>
+	
+	 <!-- 收单网关 -->
+	 <bean id="acqPayAction" class="com.huateng.univer.issuer.consumerManagerment.acqPay.AcqPayAction" scope="prototype"></bean>
+	 <!-- 库存调拨 -->
+	  <bean id="stockAllocateAction" class="com.huateng.univer.issuer.stockManagement.StockAllocateAction" scope="prototype"></bean>
+	   <!-- 交易系统信息管理 -->
+    <bean id="txnManagementAction" class="com.huateng.univer.issuer.txnManagement.TxnManagementAction"
+		scope="prototype">
+	</bean>
+	
+	<!-- 卡生命周期查询 -->
+    <bean id="cardLifeCycleQueryAction" class="com.huateng.univer.issuer.productWithAccount.CardLifeCycleQuery.CardLifeCycleQueryAction"
+		scope="prototype">
+	</bean>
+	
+	<!-- 卡实时库存查询 -->
+    <bean id="cardCurrentTimeStockQueryAction" class="com.huateng.univer.issuer.productWithAccount.cardCurrentTimeStockQuery.CardCurrentTimeStockQueryAction"
+		scope="prototype">
+	</bean>
+	<!-- 卡作废查询 -->
+	 <bean id="cardInvalidInfoQueryAction" class="com.huateng.univer.cardinvalidinfoquery.CardInvalidInfoQueryAction"
+		scope="prototype">
+	</bean>
+	<!-- 外部卡片管理 -->
+	 <bean id="extCardManageAction" class="com.huateng.univer.cardmanageext.ExtCardManageAction"
+		scope="prototype">
+	</bean>
+	<!-- 发行机构卡批量作废 -->
+	<bean id="batchCardManageAction" class="com.huateng.univer.cardmanage.BatchCardManageAction"
+		scope="prototype">
+	</bean>
+</beans>

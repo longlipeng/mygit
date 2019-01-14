@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="issueSellSum">
+ <select id="issueSellSum"
+   resultClass="com.allinfinance.service.sellOperation.sellerIssueSellSum.dto.SellerIssueSellSumDTO"
+   parameterClass="com.allinfinance.service.sellOperation.sellerIssueSellSum.dto.SellerIssueSellSumDTO">
+<!--select t4.entity_id as "sellerId",-->
+<!--       t4.seller_name as "sellerName",-->
+<!--       decode(t2.talCredit, null, 0, t2.talCredit) / 100 as "talCredit",-->
+<!--       decode(t2.creditNum,null,0,t2.creditNum) as "creditNum",-->
+<!--       decode(talAmt / 100, null, 0, talAmt / 100)as "talAmt",-->
+<!--       decode(talNum, null, 0, talNum) as "talNum",-->
+<!--       decode(t2.talCredit, null, 0, t2.talCredit) / 100 +-->
+<!--       decode(talAmt / 100, null, 0, talAmt / 100) as "tallAmt"-->
+<!--  from (select t1.first_entity_id as entityId,-->
+<!--               sum(decode(t1.total_price,-->
+<!--                          null,-->
+<!--                          t2.total_price,-->
+<!--                          t1.total_price)) as talAmt,-->
+<!--               sum(decode(t1.face_value,-->
+<!--                          null,-->
+<!--                          t2.card_amount,-->
+<!--                          t1.card_quantity)) as talNum-->
+<!--          from tb_sell_order t1, tb_sell_order_list t2-->
+<!--         where t1.order_id = t2.order_id(+)-->
+<!--           and t1.order_type in (30000001, 30000002)-->
+<!--           and t1.order_state = 27-->
+<!--           and t1.process_entity_id = #entityId#-->
+<!--           and t1.first_entity_id=#issuerId#-->
+<!--           and to_date(substr(t1.modify_time, 0, 8), 'yyyyMMdd') &gt;=-->
+<!--               to_date(#startDate#, 'yyyy-MM-dd')-->
+<!--           and to_date(substr(t1.modify_time, 0, 8), 'yyyyMMdd') &lt;=-->
+<!--               to_date(#endDate#, 'yyyy-MM-dd')-->
+<!--         group by t1.first_entity_id) t1,-->
+<!--       (select t3.seller_id,-->
+<!--               sum(t3.credit_amt) as talCredit,-->
+<!--               sum(t3.credit_num) as creditNum-->
+<!--          from tb_seller_credit t3-->
+<!--         where  t3.issuer_id=#entityId#-->
+<!--           and to_date(to_char(t3.credit_date, 'yyyyMMdd'), 'yyyyMMdd') &gt;=-->
+<!--               to_date(#startDate#, 'yyyy-MM-dd')-->
+<!--           and to_date(to_char(t3.credit_date, 'yyyyMMdd'), 'yyyyMMdd') &lt;=-->
+<!--               to_date(#endDate#, 'yyyy-MM-dd')-->
+<!--         group by t3.seller_id) t2,-->
+<!--       tb_seller t4-->
+<!-- where t2.seller_id(+) = t4.entity_id-->
+<!--   and t4.entity_id = t1.entityId(+)-->
+<!--   and (t4.entity_id in (select t.seller_id from tb_seller_credit t where t.FATHER_SELLER_ID=#issuerId#)  or t4.entity_id=#issuerId#)-->
+   <!-- 营销机构   发行运营汇总 -->
+select 
+       to_number(decode(sum(t1.amount),null, 0, sum(t1.amount)))  as TALAMT,
+       to_number(decode(sum(t1.num), null, 0, sum(t1.num)))+ to_number(decode(sum(t7.num),null, 0, sum(t7.num))) as TALNUM,
+       to_number(decode(sum(t3.amount), null, 0, sum(t3.amount))) as REDEMPTIONAMT,
+       to_number(decode(sum(t3.num), null, 0, sum(t3.num))) as REDEMPTIONNUM,
+       to_number(decode(sum(t2.amount), null, 0, sum(t2.amount)))  + to_number(DECODE(SUM(t5.amount), NULL, 0, SUM(t5.amount))) as TALCREDIT,
+       to_number(decode(sum(t4.num), null, 0, sum(t4.num)))    as CREDITCARDNUM,
+       to_number(decode(sum(t2.num), null, 0, sum(t2.num)))  + to_number(DECODE(SUM(t5.txnNum), NULL, 0, SUM(t5.txnNum)))   as CREDITNUM,
+       0 as DEBITAMT,
+       0 as DEBITNUM,
+       to_number(decode(sum(t1.serviceFee), null, 0, sum(t1.serviceFee)) +
+                 decode(sum(t2.serviceFee), null, 0, sum(t2.serviceFee)) +
+                 decode(sum(t3.serviceFee), null, 0, sum(t3.serviceFee))  + 
+                 DECODE(SUM(t5.fee), NULL, 0,SUM(t5.fee)) + 
+                DECODE(SUM(t6.fee), NULL, 0,SUM(t6.fee)) ) as OTHERFEE
+  from   tb_seller sel
+          left join
+          (select 
+               sel.entity_id,
+               sum(decode(sol.amount, null, 0, sol.amount)) +
+               sum(decode(cm.amount, null, 0, cm.amount)) as amount,
+               sum(decode(sol.num, null, 0, sol.num)) +
+               sum(decode(cm.num, null, 0, cm.num)) as num,
+               sum(decode(sol.fee, null, 0, sol.fee)) +
+               sum(decode(cm.fee, null, 0, cm.fee)) as serviceFee
+          from tb_seller sel
+                left join
+               (select tor.process_entity_id as sellerId,
+                       sum(decode(tor.face_value,
+                                  null,
+                                  sol.amount,
+                                  tor.face_value * tor.card_quantity)) / 100 as amount,
+                       sum(tor.card_quantity) as num,
+                       sum(tor.total_price) / 100 -
+                       sum(decode(tor.face_value,
+                                  null,
+                                  sol.amount,
+                                  tor.face_value * tor.card_quantity)) / 100 as fee
+                  from tb_sell_order tor
+                       left join
+                       (select t.order_id,
+                               sum(decode(t.REAL_AMOUNT,
+                                          null,
+                                          0,
+                                          t.REAL_AMOUNT) * FACE_VALUE) as amount
+                          from tb_sell_order_list t
+                         group by t.order_id) sol on tor.order_id = sol.order_id
+                         left join
+                            TB_SELL_ORDER_PAYMENT payment on payment.ORDER_ID= tor.ORDER_ID and payment.DATA_STATE='1'
+                 where  tor.order_type in ('10000001', 
+                        '10000011', '10000005', '10000006')
+                   and tor.PAYMENT_STATE in('1', '2')
+                   and to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')
+         		   AND tor.product_id NOT IN(select product_id from TB_PRODUCT_FOR_REPORT where PRODUCT_TYPE='0')
+                 group by tor.process_entity_id) sol on sel.entity_id = sol.sellerId
+               left join
+               (select t1.ENTITY_ID,
+                       count(t2.card_no) as num,
+                       sum(t2.adjust_amount) as amount,
+                       sum(t2.service_fee) / 100 as fee
+                  from tb_entity_stock t1, tb_ent_card_management t2
+                 where t1.card_no = t2.card_no
+                   and to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')
+                   and t2.operation_type = 'S41'
+                   and t2.memo = '00'
+                   and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                 group by t1.ENTITY_ID) cm on sel.entity_id = cm.ENTITY_ID,
+                 tb_seller_id tr
+         where  sel.entity_id = tr.seller_id
+           and tr.seller_id = #sellerId#
+         group by  sel.entity_id) t1 on sel.entity_id = t1.entity_id
+       left join
+       (select 
+               sel.entity_id,
+               sum(decode(sol.amount, null, 0, sol.amount)) +
+               sum(decode(cm.amount, null, 0, cm.amount)) as amount,
+               sum(decode(sol.num, null, 0, sol.num)) +
+               sum(decode(cm.num, null, 0, cm.num)) as num,
+               sum(decode(sol.fee, null, 0, sol.fee)) +
+               sum(decode(cm.fee, null, 0, cm.fee)) as serviceFee
+          from tb_seller sel
+               left join
+               (select tor.Process_Entity_Id as sellerId,
+                       sum(amount) / 100 as amount,
+                       count(tor.order_id) as num,
+                       sum(ocl.amount*tor.service_fee)/ 10000 as fee
+                  from tb_sell_order tor,
+                       (select t.order_id, sum(t.credit_amount) as amount
+                          from tb_sell_order_card_list t where t.data_state=1
+                         group by t.order_id)  ocl,TB_SELL_ORDER_PAYMENT payment
+                 where tor.order_id = ocl.order_id
+                    and tor.ORDER_ID = payment.ORDER_ID
+                   and payment.DATA_STATE='1'
+                   and tor.PAYMENT_STATE in('1', '2')
+                   and to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')
+                   and tor.order_type = '10000003'
+                   and tor.order_state = '16'
+                   AND tor.product_id NOT IN(select product_id from TB_PRODUCT_FOR_REPORT where PRODUCT_TYPE='0')
+                 group by tor.Process_Entity_Id) sol on sel.entity_id = sol.sellerId
+                left join 
+               (select t1.ENTITY_ID,
+                       count(t2.card_no) as num,
+                       sum(t2.adjust_amount) / 100 as amount,
+                       sum(t2.service_fee) / 100 as fee
+                  from tb_entity_stock t1, tb_ent_card_management t2
+                 where t1.card_no = t2.card_no
+                   and to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')
+                   and t2.operation_type = 'S32'
+                   and t2.memo = '00'
+                   and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                 group by t1.ENTITY_ID) cm on sel.entity_id = cm.ENTITY_ID,
+                tb_seller_id tr
+         where  sel.entity_id = tr.seller_id
+           and tr.seller_id = #sellerId#
+         group by  sel.entity_id) t2 on sel.entity_id = t2.entity_id
+       left join
+       (select 
+               sel.entity_id,
+               sum(decode(sol.amount, null, 0, sol.amount)) +
+               sum(decode(cm.amount, null, 0, cm.amount)) as amount,
+               sum(decode(sol.num, null, 0, sol.num)) +
+               sum(decode(cm.num, null, 0, cm.num)) as num,
+               sum(decode(sol.fee, null, 0, sol.fee)) +
+               sum(decode(cm.fee, null, 0, cm.fee)) as serviceFee
+          from tb_seller sel
+               left join
+               (select tor.Process_Entity_Id as sellerId,
+                       sum(amount) / 100 as amount,
+                       sum(ocl.num) as num,
+                       sum(tor.package_fee+tor.additional_fee)/100 as fee
+                  from tb_sell_order tor,
+                       (select t.order_id,
+                               sum(t.amount) as amount,
+                               count(t.card_no) as num
+                          from tb_sell_order_origcard_list t, tb_entity_stock t1
+                         where t.card_no = t1.card_no and t.data_state=1
+                          AND t.product_id not in (select product_id from TB_PRODUCT_FOR_REPORT where PRODUCT_TYPE='0') 
+                         group by t.order_id) ocl,TB_SELL_ORDER_PAYMENT payment
+                 where tor.order_id = ocl.order_id
+                   and tor.ORDER_ID = payment.ORDER_ID
+                   and payment.DATA_STATE='1'
+                   and tor.PAYMENT_STATE in('1', '2')
+                   and to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')
+                   and tor.order_type = '70000001'
+                   and tor.order_state = '35'
+                   AND ocl.amount is not null
+                 group by tor.Process_Entity_Id) sol on sel.entity_id = sol.sellerId
+                left join
+               (select t1.ENTITY_ID,
+                       count(t2.card_no) as num,
+                       sum(t2.balance/100) as amount,
+                       sum(t2.service_fee/100) as fee
+                  from tb_entity_stock t1, tb_ent_card_management t2
+                 where t1.card_no = t2.card_no
+                   and to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')
+                   and t2.operation_type = 'S60'
+                   and t2.memo = '00'
+                   and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                 group by t1.ENTITY_ID) cm on sel.entity_id = cm.ENTITY_ID,
+                tb_seller_id tr
+         where  sel.entity_id = tr.seller_id
+           and tr.seller_id = #sellerId#
+         group by  sel.entity_id) t3 on sel.entity_id = t3.entity_id
+       left join
+       (select t1.entity_id as sellerId, count(t2.card_no) as num
+          from tb_entity_stock t1,
+               (select t2.card_no
+                  from tb_sell_order t1, tb_sell_order_card_list t2, TB_SELL_ORDER_PAYMENT payment
+                 where t1.order_id = t2.order_id
+                      and payment.ORDER_ID = t1.ORDER_ID
+                   and payment.DATA_STATE='1'
+                   and t1.PAYMENT_STATE in('1', '2')
+                   and t1.order_type = '10000003'
+                   and t1.order_state = '16'
+                   and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                   and to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')
+                union
+                select ec.card_no
+                  from tb_ent_card_management ec left join tb_acc_card_info ci on ec.card_no = ci.card_no
+                 where 
+                   operation_type = 'S32'
+                   and  ci.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                   and to_date(substr(CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(CREATE_TIME,1,8),'yyyyMMdd')
+                   and memo = '00'
+                     UNION 
+                SELECT
+                   re.recharge_card_no as card_no
+                FROM
+                     tbl_recharge_batch_detail re left join tb_acc_card_info ci on re.recharge_card_no = ci.card_no
+             WHERE
+              to_date(SUBSTR(re.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+               and re.RECHARGE_TYPE!='02'
+            AND to_date(#endDate#,'yyyy-MM-dd')>=to_date(SUBSTR(re.CREATE_TIME,1,8),'yyyyMMdd')
+            AND ci.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                   ) t2
+         where t1.card_no = t2.card_no
+         group by t1.entity_id) t4 on sel.entity_id = t4.sellerId
+           LEFT JOIN
+    (
+        SELECT
+            en.ENTITY_ID,
+            COUNT(re.recharge_card_no)              AS num,
+            COUNT(DISTINCT(re.RECHARGE_TXN_SEQ_NO)) AS txnNum,
+            SUM(to_number(re.recharge_amt)/100)     AS amount,
+            SUM(to_number(re.recharge_fee)/100)     AS fee
+        FROM
+            tbl_recharge_batch_detail re,
+            tb_entity_stock en
+        WHERE
+            re.recharge_card_no=en.card_no
+            and  re.RECHARGE_TYPE!='02'
+              and re.RECHARGE_STATE='00'
+        AND to_date(SUBSTR(re.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+        AND to_date(#endDate#,'yyyy-MM-dd')>=to_date(SUBSTR(re.CREATE_TIME,1,8),'yyyyMMdd')
+        AND en.product_id NOT IN(select product_id from TB_PRODUCT_FOR_REPORT where PRODUCT_TYPE='0')
+        GROUP BY
+            en.ENTITY_ID )t5
+ON
+    sel.entity_id = t5.ENTITY_ID
+    
+         LEFT JOIN
+    (
+       SELECT
+                    t1.ENTITY_ID,
+                    COUNT(t2.card_no)       AS num,
+                    SUM(t2.balance/100)     AS amount,
+                    SUM(t2.service_fee/100) AS fee
+                FROM
+                    tb_entity_stock t1,
+                    tb_ent_card_management t2
+                WHERE
+                    t1.card_no = t2.card_no
+                AND t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                AND to_date(SUBSTR(t2.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd'
+                    )
+                AND to_date(#endDate#,'yyyy-MM-dd')>=to_date(SUBSTR(t2.CREATE_TIME,1,8),'yyyyMMdd'
+                    )
+                AND operation_type not in('S32','S60','S41')
+                AND t2.memo = '00'
+                GROUP BY
+                    t1.ENTITY_ID) t6
+ON
+    sel.entity_id = t6.ENTITY_ID
+        left join
+          (select 
+               sel.entity_id,
+              <!--  sum(decode(sol.amount, null, 0, sol.amount))  as amount, -->
+               sum(decode(sol.num, null, 0, sol.num)) +
+               sum(decode(cm.num, null, 0, cm.num)) as num
+              <!--  sum(decode(sol.CREDITCARDNUM, null, 0, sol.CREDITCARDNUM)) as creditCardNum -->
+          from tb_seller sel
+                left join
+               (select tor.process_entity_id as sellerId,
+                      <!-- sum(tt.recharge_amt)/100 as amount, -->
+                       sum(tor.card_quantity) as num
+                     <!--  count(tt.recharge_card_no) as CREDITCARDNUM -->
+                  from tb_sell_order tor
+                       
+                         left join
+                            TB_SELL_ORDER_PAYMENT payment on payment.ORDER_ID= tor.ORDER_ID 
+                            <!--  left join
+                           ( select t1.order_id as order_id,sum (t.RECHARGE_AMT)  as recharge_amt,count(t.RECHARGE_CARD_NO)  as recharge_card_no from TBL_RECHARGE_BATCH_DETAIL t 
+                           left join tb_sell_order_card_list t1 on t1.CARD_NO=t.RECHARGE_CARD_NO  where t.RECHARGE_TYPE='01'   group by t1.order_id) tt  on tt.ORDER_ID= tor.ORDER_ID -->
+                 where  tor.order_type in ('10000012', 
+                        '10000002')
+                   and tor.PAYMENT_STATE in('1', '2')
+                   and payment.DATA_STATE='1'
+                   and to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(payment.CREATE_TIME,1,8),'yyyyMMdd')
+         		   AND tor.product_id NOT IN(select product_id from TB_PRODUCT_FOR_REPORT where PRODUCT_TYPE='0')
+                 group by tor.process_entity_id) sol on sel.entity_id = sol.sellerId
+               left join
+               (select t1.ENTITY_ID,
+                       count(t2.card_no) as num,
+                       sum(t2.adjust_amount) as amount,
+                       sum(t2.service_fee) / 100 as fee
+                  from tb_entity_stock t1, tb_ent_card_management t2
+                 where t1.card_no = t2.card_no
+                   and to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')>=to_date(#startDate#,'yyyy-MM-dd')
+                   and to_date(#endDate#,'yyyy-MM-dd')>=to_date(substr(t2.CREATE_TIME,1,8),'yyyyMMdd')
+                   and t2.operation_type = 'S41'
+                   and t2.memo = '00'
+                   and t1.product_id not in (select product_id from tb_product_for_report where PRODUCT_TYPE='0')
+                 group by t1.ENTITY_ID) cm on sel.entity_id = cm.ENTITY_ID,
+                 tb_seller_id tr
+         where  sel.entity_id = tr.seller_id
+           and tr.seller_id = #sellerId#
+         group by  sel.entity_id) t7 on sel.entity_id = t7.entity_id ,
+        tb_seller_id tsi
+ where  sel.entity_id =tsi.seller_id
+   and tsi.seller_id = #sellerId#
+ </select>
+</sqlMap>

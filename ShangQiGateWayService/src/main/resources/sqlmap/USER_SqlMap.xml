@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="USER">
+
+		<resultMap id="find-user-result" class="com.allinfinance.univer.system.user.dto.UserDTO">
+			<result property="userId" column="userId"/>
+			<result property="entityId" column="entityId"/>
+			<result property="isSaleFlage" column="isSaleFlage"/>
+			<result property="userName" column="userName"/>
+			<result property="userPassword" column="userPassword"/>
+			<result property="userState" column="userState"/>
+			<result property="lockedState" column="lockedState"/>
+			<result property="consumerName" column="consumerName"/>
+			<result property="issuerName" column="issuerName"/>
+			<result property="tenantName" column="tenantName"/>
+			<result property="sellerName" column="sellerName"/>
+		</resultMap>
+		
+		<!-- <resultMap id="roleDatePurview" class="com.huateng.accor.role.dto.RoleDatePurviewDTO">
+			<result column="ROLE_ID" property="roleId"/>
+		    <result column="MODIFY_RATE" property="modifyRate"/>
+		    <result column="ORDER_PRIORITY" property="orderPriority"/>
+		    <result column="PAYMENT_TERM" property="paymentTerm"/>
+		    <result column="DISCOUNT_FEE" property="discountFee"/>
+		    <result column="MODIFY_SERVICE_FEE" property="modifyServiceFee"/>
+		    <result column="MODIFY_SERVICE_FEE2" property="modifyServiceFee2"/>
+		  	<result column="SENSITIVE_DATA" property="sensitiveData"/>
+		    <result column="CREATE_USER" property="createUser"/>
+		    <result column="CREATE_TIME" property="createTime"/>
+		    <result column="MODIFY_USER" property="modifyUser"/>
+		    <result column="MODIFY_TIME" property="modifyTime"/>
+		    <result column="DATA_STATE" property="dataState"/>
+		</resultMap> -->
+		
+		
+		<select id="findUser"  parameterClass="java.lang.String" resultMap="find-user-result" >
+	    	SELECT   T.USER_ID as userId,
+           			 T.ENTITY_ID as entityId,
+           			 T.IS_SALE_FLAGE  as isSaleFlage,
+             		 T.USER_NAME as userName,
+             		 T.USER_PASSWORD as userPassword,
+             		 T.USER_STATE    as  userState,
+             		 T.LOCKED_STATE  as lockedState,
+             		 T2.CONSUMER_NAME as consumerName,
+                  	 T3.issuer_name   as issuerName,
+                     T4.SELLER_NAME   as sellerName,
+                     T5.tenant_name   as tenantName   
+      	   FROM       TB_ENT_USER T left join
+      	   			 TB_CONSUMER T2 on T.ENTITY_ID = T2.ENTITY_ID left join
+                     TB_ISSUER   T3 on T.ENTITY_ID = T3.ENTITY_ID left join
+                     TB_SELLER   T4 on T.ENTITY_ID = T4.ENTITY_ID left join
+                     TB_TENANT   T5  on T.ENTITY_ID = T5.ENTITY_ID
+           WHERE          
+          			 T.USER_NAME =  #userName#
+           AND       T.DATA_STATE='1'
+	  	</select>
+	  	
+	  	<!-- 根据用户ID取得该用户下最大权限信息 -->
+	  	<!-- <select id="getRoleDatePurviewByUserId"  parameterClass="java.lang.Integer" resultMap="roleDatePurview" >
+		    select  rdp.ROLE_ID,
+		    	    rdp.MODIFY_RATE,
+				    rdp.ORDER_PRIORITY,
+				    rdp.PAYMENT_TERM,
+				    rdp.DISCOUNT_FEE,
+				    rdp.MODIFY_SERVICE_FEE,
+					rdp.MODIFY_SERVICE_FEE2,
+					rdp.CREATE_USER,
+					rdp.CREATE_TIME,
+					rdp.MODIFY_USER,
+					rdp.MODIFY_TIME,
+					rdp.SENSITIVE_DATA,
+					rdp.DATA_STATE
+	    	from TB_ENT_USER u,
+		 		 TB_REL_USER_ROLE ur,
+		 		 TB_ENT_ROLE r,
+		 		 TB_ENT_ROLE_DATE_PURVIEW rdp
+			where u.USER_ID = #userId#
+		  		  and u.USER_ID = ur.USER_ID
+		  		  and r.ROLE_ID = ur.ROLE_ID
+		  		  and rdp.ROLE_ID = r.ROLE_ID
+	  	</select> -->
+	  	
+		
+  
+		
+		
+		<select id="selectUser" resultClass="java.util.HashMap" parameterClass="com.allinfinance.univer.system.user.dto.UserQueryDTO" remapResults="true">
+			<include refid="Commons.prefixSql"/>
+			select
+          		T1.USER_ID as "userId",
+          		T1.ENTITY_ID as "entityId",
+          		T1.USER_NAME as "userName",
+          		T1.USER_STATE as "userState",
+          		T2.USER_NAME as "modifyUser",
+          		(case when length(trim(T1.MODIFY_TIME)) = 14 then to_date(T1.MODIFY_TIME,'YYYY-MM-DD HH24MISS') 
+                   when length(trim(T1.MODIFY_TIME)) = 8 then to_date(T1.MODIFY_TIME,'YYYY-MM-DD')    
+                 end) as "modifyTime",
+          		T1.DEPARTMENT_ID as "departmentId"
+        	from
+          		TB_ENT_USER T1 left join TB_ENT_USER T2 on T1.MODIFY_USER=T2.USER_ID
+        	where
+         	 	T1.DATA_STATE='1'
+		<dynamic>
+     		<isNotEmpty prepend="and" property="userId">
+       			 T1.USER_ID = #userId:DECIMAL#
+      		</isNotEmpty>
+      		<isNotEmpty prepend="and" property="userName">
+       			 UPPER(T1.USER_NAME) like UPPER('%'||#userName:VARCHAR#||'%')
+      		</isNotEmpty>
+			<isNotEmpty prepend="and" property="entityId">
+				T1.ENTITY_ID = #entityId:VARCHAR#
+			</isNotEmpty>
+    	</dynamic>
+		<include refid="Commons.suffixSql"/>
+		</select>
+		
+		
+		
+		<!-- 查询出下级营销机构-->
+		<select id="findNextSeller"  parameterClass="java.lang.String" resultClass="com.allinfinance.univer.seller.seller.dto.SellerDTO" >
+	    	select t1.entity_id as "entityId",
+	    		   t1.seller_name as "sellerName" 
+	    	from
+	    		 tb_seller t1
+            	where t1.father_entity_id=#fatherEntityId#
+	  	</select>
+	  	
+	  	<!-- 查询出下级发卡机构-->
+		<select id="findNextIssuer"  parameterClass="java.lang.String" resultClass="com.allinfinance.univer.issuer.dto.issuer.IssuerDTO" >
+	    	   select t1.entity_id as "entityId",
+          			  t1.issuer_name as "issuerName" 
+       		   from
+           				tb_issuer t1
+              		where t1.father_entity_id=#fatherEntityId#
+	  	</select>
+</sqlMap>

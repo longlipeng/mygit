@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="issuer_sell_summary">
+	<select id="issuer_sell_summary" resultClass="com.allinfinance.service.consumer.issuerSellSummary.dto.IssuerSellSummaryDTO"
+		parameterClass="com.allinfinance.service.consumer.issuerSellSummary.dto.IssuerSellSummaryDTO">
+<!--
+select
+	t2.entity_id as consumerId,
+   	t2.consumer_name as consumerName,
+    sum(t.trans_at_sum)/100 as transSum,
+    sum(num) as tranNum,
+    sum(TRANS_FEE_OUT)/100 as transFee,
+    sum(t.trans_at_sum-TRANS_FEE_OUT)/100 as transIn
+from tb_settl_bill t,tb_consumer t2,(select t1.settle_id,count(t2.txn_seq_no) as num from tb_settl_bill t1,tb_settle_trans_pre t2,tb_merchant t3
+where t1.settle_obj_1=t3.entity_id
+and   t2.mchnt_cd=t3.merchant_code
+and t2.SETTLE_FLAG='1'
+and t3.FATHER_ENTITY_ID=#issuerId# 
+and t1.SETTLE_OBJ_2=#issuerId# 
+
+and   t2.settle_dt>=t1.last_date
+and   t2.settle_dt &lt;= t1.settle_date
+
+ and to_date(t2.settle_dt, 'yyyyMMdd') &gt;=
+       to_date(#startDate#, 'yyyy-MM-dd')
+   and to_date(t2.settle_dt, 'yyyyMMdd') &lt;=
+       to_date(#endDate#, 'yyyy-MM-dd')
+group by t1.settle_id) t3
+where
+ 	t2.entity_id=t.settle_obj_2
+ 	and t.settle_id=t3.settle_id
+ 	and t2.father_entity_id = #issuerId# 
+ 	and to_char(to_date(substr(decode(t.last_date, '        ', '99991231',t.settle_date),1,8),'yyyyMMdd'),'yyyyMMdd')&gt;=to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd')+1
+ 	and to_char(to_date(substr(decode(t.settle_date, '        ', '20010101',t.settle_date),1,8),'yyyyMMdd'),'yyyyMMdd')&lt;=to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')+1
+ 	
+group by t2.entity_id,t2.consumer_name
+-->
+
+select
+	M.consumerId as consumerId,
+   	M.consumerName as consumerName,
+    sum( M.transSum) as transSum,
+   sum( M.tranNum) as tranNum,
+   sum( M.transFee) as transFee,
+    sum(M.transIn) as transIn
+from 
+(
+select
+	t2.entity_id as consumerId,
+   	t2.consumer_name as consumerName,
+    sum(t.TRANS_AT_SUM)/100 as transSum,
+    decode(t3.num,null,0,t3.num) as tranNum,
+     sum(t.TRANS_FEE_OUT)/100 as transFee,
+     sum(t.trans_at_sum-t.TRANS_FEE_OUT)/100 as transIn
+from 
+    tb_settl_bill t left join
+    tb_consumer t2 on t.settle_obj_2=t2.entity_id left join
+    (select t1.settle_id,count(t2.txn_seq_no) as num from tb_settl_bill t1,tb_settle_trans_pre t2,tb_merchant t3
+    where t1.settle_obj_1=t3.entity_id
+    and   t2.mchnt_cd=t3.merchant_code
+    and t2.SETTLE_FLAG='1'
+    and t3.FATHER_ENTITY_ID=#issuerId# 
+    and t1.SETTLE_OBJ_2=#issuerId# 
+    and to_date(t2.settle_dt, 'yyyyMMdd') &gt;=
+       to_date(#startDate#, 'yyyy-MM-dd')
+    and to_date(t2.settle_dt, 'yyyyMMdd') &lt;=
+       to_date(#endDate#, 'yyyy-MM-dd') 
+    group by t1.settle_id) t3 on t.settle_id=t3.settle_id
+where
+ 	t2.father_entity_id = #issuerId# 
+    and to_char(to_date(substr(decode(t.last_date, '        ', '99991231',t.settle_date),1,8),'yyyyMMdd'),'yyyyMMdd')&gt;=to_char(to_date(#startDate#,'yyyy-MM-dd'),'yyyyMMdd')+1
+ 	and to_char(to_date(substr(decode(t.settle_date, '        ', '20010101',t.settle_date),1,8),'yyyyMMdd'),'yyyyMMdd')&lt;=to_char(to_date(#endDate#,'yyyy-MM-dd'),'yyyyMMdd')+1
+
+group by t2.entity_id,t2.consumer_name,t3.num
+)  M
+group by M.consumerId,M.consumerName
+	</select>
+	
+	
+<select id="month_settle" resultClass="com.allinfinance.service.consumer.settle.dto.ConsumerMonthSettleDTO"
+		parameterClass="com.allinfinance.service.consumer.settle.dto.ConsumerMonthSettleDTO">
+select t4.merchant_code MERCHANT_ID,
+       decode(r2, null, '0.00', to_char(r2/100, '99999990.99')) BEGINTERM_AMT,
+       decode(r3, null, '0.00', to_char(r3/100, '99999990.99')) THISTERM_SETTLE_AMT,
+       decode(r4, null, '0.00', to_char(r4/100, '99999990.99')) THISTERM_CANCEL_AMT,
+       to_char((decode(r2, null, '0.00', r2) +
+       decode(r3, null, '0.00', r3) -
+       decode(r4, null, '0.00', r4))/100,'99999990.99') THISTERM_PAY_AMT,
+       decode(r5,null,'0.00',to_char(r5/100, '99999990.99')) THISTERM_REAL_AMT,
+       decode(r6,null,'0.00',to_char(r6/100, '99999990.99')) ENDTERM_NOSETTLE_AMT,
+       decode(r7,null,'0.00',to_char(r7/100, '99999990.99')) NOPAY_TRADE_AMT,
+       decode(r6,null,'0.00',to_char(r6/100, '99999990.99')) as NOPAY_SETTLE_AMT,
+       decode(r9,null,'0.00',to_char(r9/100, '99999990.99')) NOPAY_FEE_AMT,
+       t4.merchant_name
+  from tb_merchant t4
+        left join
+       (select settle_obj1, settle_obj2, settle_date, settle_at_add r2
+          from tb_settl_bill_accord
+         where to_char(to_date(settle_date, 'yyyyMMdd'),'yyyyMMdd') =
+               to_char(to_date(#startDate#, 'yyyy-MM-dd'),'yyyyMMdd') - 1
+         ) t1 on t4.entity_id = t1.settle_obj1 and t4.father_entity_id = t1.settle_obj2
+       left join
+       (select settle_obj1,
+               settle_obj2,
+               sum(day_trans_at_in) r3,
+               sum(day_trans_at_cancel) r4,
+               sum(day_trans_at_sure) r5
+          from tb_settl_bill_accord
+         where to_date(settle_date, 'yyyyMMdd') &gt;=
+               to_date(#startDate#, 'yyyy-MM-dd')
+           and to_date(settle_date, 'yyyyMMdd') &lt;=
+               to_date(#endDate#, 'yyyy-MM-dd')
+         group by settle_obj1, settle_obj2) t2 on t4.entity_id = t2.settle_obj1 and t4.father_entity_id = t2.settle_obj2
+        left join
+       (select settle_obj1,
+               settle_obj2,
+               settle_at_add r6,
+               settle_trans_add r7,
+               settle_fee_add r9
+          from tb_settl_bill_accord
+          where to_date(settle_date, 'yyyyMMdd') =
+               to_date(#endDate#, 'yyyy-MM-dd')
+        ) t3 on t4.entity_id = t3.settle_obj1 and t4.father_entity_id = t3.settle_obj2
+       
+ where  t4.father_entity_id = #issuerId#
+
+	</select>
+</sqlMap>

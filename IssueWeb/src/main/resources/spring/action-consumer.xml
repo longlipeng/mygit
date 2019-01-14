@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	default-autowire="byName">
+
+	<!-- 收单机构action配置文件 -->
+	 <bean id="merchantManagementAction" class="com.huateng.univer.consumer.merchant.MerchantManagementAction" scope="prototype"> </bean>
+	 <bean id="merchantVerifierAction" class="com.huateng.univer.consumer.merchantverifier.MerchantVerifierAction" scope="prototype"> </bean>
+	 <bean id="shopManagementAction" class="com.huateng.univer.consumer.shop.ShopManagementAction" scope="prototype"> </bean>
+	 <bean id="mchntContractManagementAction" class="com.huateng.univer.consumer.mchntcontract.MchntContractManagementAction" scope="prototype"> </bean>
+	 <bean id="terminalManagementAction" class="com.huateng.univer.consumer.pos.TerminalManagementAction" scope="prototype"> </bean>
+	 <bean id="terParameterAction" class="com.huateng.univer.consumer.posparameter.TerminalParameterManagementAction" scope="prototype"> </bean>
+	<bean id="blackListManagementAction" class="com.huateng.univer.consumer.blacklist.BlackListAction" scope="prototype"> </bean>
+	<bean id="blackListMchntManagementAction" class="com.huateng.univer.consumer.blacklistmchnt.BlackListMchntAction" scope="prototype"> </bean>
+	<!-- 证件有限期管理 -->
+	<bean id="certifincatevalidityAction" class="com.huateng.univer.seller.certifincatevalidity.CertifincateValidityAction" scope="prototype"> </bean>
+	<!-- 结算周期action配置文件 -->
+	 <bean id="settlePeriodRuleAction" class="com.huateng.univer.settleperiodrule.SettlePeriodRuleAction" scope="prototype"> </bean>
+	 <!-- 服务计算规则action配置文件 -->
+	 <!-- <bean id="serviceFeeRuleAction" class="com.huateng.univer.servicefeerule.ServiceFeeRuleAction" scope="prototype"> </bean> -->
+	 <bean id="caclInfAction" class="com.huateng.univer.servicefeerule.CaclInfAction" scope="prototype"></bean>
+	 <!-- 商户结算action配置文件 -->
+	 <bean id="merchantSettleAction" class="com.huateng.univer.consumer.merchantsettle.MerchantSettleAction" scope="prototype"> </bean>
+	 <!-- 清结算下载 -->
+	<bean id="clearingFileDownloaAction" class="com.huateng.univer.consumer.merchantsettle.ClearingFileDownloaAction" scope="prototype" ></bean>
+	 <!-- 退货审核 -->
+	 <bean id="refundAction" class="com.huateng.univer.consumer.refund.RefundAction" scope="prototype"></bean>
+</beans>

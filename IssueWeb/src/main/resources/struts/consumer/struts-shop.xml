@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <package name="shop" extends="struts-global"  namespace="/shopManagement">
+        <global-results>
+            <result name="list">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+            <result name="add">/WEB-INF/pages/univer/consumer/shop/shopManagementAdd.jsp</result>
+            <result name="edit">/WEB-INF/pages/univer/consumer/shop/shopManagementEdit.jsp</result>
+            <result name="view">/WEB-INF/pages/univer/consumer/shop/shopManagementDetail.jsp</result>            
+            <result name="error">/commons/error.jsp</result>
+            <result name="blank">/WEB-INF/pages/univer/entitybaseinfo/blank.jsp</result>
+            <result name="addContact">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementAdd.jsp</result>
+            <result name="editContact">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementEdit.jsp</result>
+            <result name="viewContact">/WEB-INF/pages/contact/contactManagementDetail.jsp</result>
+            <result name="addPos">/WEB-INF/pages/pos/posManagementAdd.jsp</result>
+            <result name="editPos">/WEB-INF/pages/pos/posManagementEdit.jsp</result>
+            <result name="viewPos">/WEB-INF/pages/pos/posManagementDetail.jsp</result>
+            <result name="addAuthorityCard">/WEB-INF/pages/authoritycard/authorityCardAdd.jsp</result>
+         	<result name="smslist">/WEB-INF/pages/shop/shopSmsList.jsp</result>
+         	<result name="choose">/WEB-INF/pages/univer/consumer/merchant/merchantChoose.jsp</result>  
+         </global-results>
+        <action name="add" class="shopManagementAction" method="add">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="edit" class="shopManagementAction" method="edit">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="view" class="shopManagementAction" method="view">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="inquiry" class="shopManagementAction" method="inquiry">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="shopList" class="shopManagementAction" method="shopList">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="sendSms" class="shopManagementAction" method="sendSms">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+        </action>
+        
+        <action name="insertShop" class="shopManagementAction" method="insertShop">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementAdd.jsp</result>
+        </action>
+        <action name="update" class="shopManagementAction" method="update">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementEdit.jsp</result>
+        </action>
+        <action name="delete" class="shopManagementAction" method="delete">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="addContact" class="shopManagementAction" method="addContact">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementEdit.jsp</result>
+        </action>
+        <action name="insertContact" class="shopManagementAction" method="insertContact">
+          <result name="input">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementAdd.jsp</result>
+        </action>
+        <action name="editContact" class="shopManagementAction" method="editContact">
+          <result name="input">/WEB-INF/pages/univer/consumer/shop/shopManagementEdit.jsp</result>
+        </action>
+        <action name="updateContact" class="shopManagementAction" method="updateContact">
+          <result name="input">/WEB-INF/pages/univer/entitybaseinfo/contact/contactManagementEdit.jsp</result>
+        </action>
+        <action name="viewContact" class="shopManagementAction" method="viewContact">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="deleteContact" class="shopManagementAction" method="deleteContact">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+
+        <action name="addPos" class="shopManagementAction" method="addPos">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="insertPos" class="shopManagementAction" method="insertPos">
+          <result name="input">/WEB-INF/pages/pos/posManagementAdd.jsp</result>
+        </action>
+        <action name="editPos" class="shopManagementAction" method="editPos">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="updatePos" class="shopManagementAction" method="updatePos">
+          <result name="input">/WEB-INF/pages/pos/posManagementEdit.jsp</result>
+        </action>
+        <action name="viewPos" class="shopManagementAction" method="viewPos">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="deletePos" class="shopManagementAction" method="deletePos">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="addAuthorityCard" class="shopManagementAction" method="addAuthorityCard">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="insertAuthorityCard" class="shopManagementAction" method="insertAuthorityCard">
+          <result name="input">/WEB-INF/pages/authoritycard/authorityCardAdd.jsp</result>
+        </action>
+        <action name="deleteAuthorityCard" class="shopManagementAction" method="deleteAuthorityCard">
+          <result name="input">/WEB-INF/pages/shop/shopManagementList.jsp</result>
+        </action>
+        <action name="inquerySms" class="shopManagementAction" method="inquerySms">
+          <result name="input">/WEB-INF/pages/shop/shopSmsList.jsp</result>
+        </action>
+    </package>
+</struts>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration >      
+  <context id="MySqlTables" targetRuntime="MyBatis3">
+   <!--   <jdbcConnection driverClass="com.mysql.jdbc.Driver" 
+    	connectionURL="jdbc:mysql://localhost:3306/ics_ec?characterEncoding=UTF-8" 
+    	userId="root" password="lixing" />-->
+  <jdbcConnection driverClass="com.ibm.db2.jcc.DB2Driver" 
+    	connectionURL="jdbc:db2://10.250.5.221:50000/svcdb" 
+    	userId="svc_mng" password="svc_mng" />
+
+	<javaModelGenerator targetPackage="com.allinfinance.prepay.model"
+		targetProject="src/main/java">
+		<property name="enableSubPackages" value="false" />
+		<property name="trimStrings" value="true" />
+	</javaModelGenerator>
+	
+    <sqlMapGenerator targetPackage="com.allinfinance.prepay.mapper" targetProject="src/main/java" >
+    	<property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+    
+    <javaClientGenerator targetPackage="com.allinfinance.prepay.mapper" targetProject="src/main/java" type="XMLMAPPER" >
+    	<property name="enableSubPackages" value="true" />
+    </javaClientGenerator>
+    
+	<!-- <table tableName="TB_CARDHOLDER" domainObjectName="CardHolder" enableSelectByExample="true" schema="svc_mng"/>
+	<table tableName="TB_CUSTOMER" domainObjectName="Customer" enableSelectByExample="true" schema="svc_mng"/>
+	<table tableName="TB_PRODUCT" domainObjectName="Product" enableSelectByExample="true" schema="svc_mng"/>
+	<table tableName="TB_REL_PROD_LAYOUT" domainObjectName="ProdLayout" enableSelectByExample="true" schema="svc_mng"/>
+	<table tableName="TB_REL_PRODUCT_PACKAGE" domainObjectName="ProductPackage" enableSelectByExample="true" schema="svc_mng"/>
+	快递点信息 
+	<table tableName="TB_ENTITY_DELIVERY" domainObjectName="EntityDelivery" enableSelectByExample="true" schema="svc_mng"/>
+	默认快递点联系人信息 
+	<table tableName="TB_DELIVERY_CONTACT" domainObjectName="DeliveryContact" enableSelectByExample="true" schema="svc_mng"/>
+	默认联系人信息 
+	<table tableName="TB_ENTITY_CONTACT" domainObjectName="EntityContact" enableSelectByExample="true" schema="svc_mng"/>-->
+	<!-- 默认发票地址信息 -->
+	<!-- <table tableName="TB_ENTITY_INVOICE_ADDRESS" domainObjectName="EntityInvoiceAddress" enableSelectByExample="true" schema="svc_mng"/> -->
+	<!-- 默认发票公司信息  -->
+	<!-- <table tableName="TB_INVOICE_COMPANY" domainObjectName="InvoiceCompany" enableSelectByExample="true" schema="svc_mng"/> -->
+	<!-- 客户合同 
+	<table tableName="TB_SELL_CONTRACT" domainObjectName="Contract" enableSelectByExample="true" schema="svc_mng"/> 
+	<table tableName="TB_TABLE_SERIAL_NUMBER" domainObjectName="TableSerialNumber" enableSelectByExample="true" schema="svc_mng"/>
+	部门信息
+	<table tableName="TB_ENTITY_DEPARTMENT" domainObjectName="Department" enableSelectByExample="true" schema="svc_mng"/> -->
+	<!-- 联系人信息 -->
+	<!-- <table tableName="TB_ENTITY_CONTACT" domainObjectName="EntityContact" enableSelectByExample="true" schema="svc_mng"/> -->
+	<!-- <table tableName="TB_ENTITY_DELIVERY" domainObjectName="EntityDelivery" enableSelectByExample="true" schema="svc_mng"/> -->
+	<!-- 客户合同 -->
+	<!-- <table tableName="TB_SELL_CONTRACT" domainObjectName="SellContract" enableSelectByExample="true" schema="svc_mng"/> -->
+	<!-- 库存 -->
+	<!-- <table tableName="TB_ENTITY_STOCK" domainObjectName="EntityStock" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- 卡产品 -->
+ 	<!-- <table tableName="TB_PRODUCT" domainObjectName="Product" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- 账户默认计算规则 -->
+ 	<!-- <table tableName="TBL_CACL_DSP" domainObjectName="CaclDsp" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- 客户合同明细 -->
+ 	<!-- <table tableName="TB_SELL_PROD_CONTRACT" domainObjectName="SellProdContract" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- 客户合同 服务明细 -->
+ 	<!-- <table tableName="TB_SELL_ACCTYPE_CONTRACT" domainObjectName="SellAcctypeContract" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- 订单 -->
+ 	<!-- <table tableName="TB_SELL_ORDER" domainObjectName="SellOrder" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- 订单流程 -->
+ 	<!-- <table tableName="TB_SELL_ORDER_FLOW" domainObjectName="SellOrderFlow" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_SELL_ORDER_CARD_LIST" domainObjectName="SellOrderCardList" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_BANK" domainObjectName="Bank" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_ENT_USER" domainObjectName="User" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- 记录库存操作日志信息-->
+ 	<!-- <table tableName="TB_ENTITY_STOCK_OPERATER" domainObjectName="EntityStockOperater" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- 付款方式 -->
+ 	<!-- <table tableName="TB_SELL_ORDER_PAYMENT" domainObjectName="SellOrderPayment" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_ACC_REL_CARD_ACCOUNT" domainObjectName="AccRelCardAccount" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TBL_ACC_BATCH_DETAIL" domainObjectName="BatchFileDetail" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TBL_ACC_BATCH_SUM" domainObjectName="BatchSum" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TBL_BAT_ACT_TXN" domainObjectName="ActBatch" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_SELLER" domainObjectName="Seller" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_TERM_SELL_ORDER" domainObjectName="TermSellOrder" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_SELL_ORDER_LIST" domainObjectName="SellOrderList" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_SELL_ORDER_ORIGCARD_LIST" domainObjectName="SellOrderOrigCardList" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_PROD_FACE_VALUE" domainObjectName="ProdFaceValue" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_ACC_ACCOUNT_INFO" domainObjectName="AccountInfo" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_CARDHOLDER_TMP" domainObjectName="CardHolderTmp" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	 <!-- <table tableName="TB_PEOPLE_ATTACH_INFO" domainObjectName="AttachInfo" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TB_PRODUCT_CARD_BIN" domainObjectName="ProductCardBin" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	<!-- <table tableName="TBL_ACCOUNT_INFO" domainObjectName="MngAccountInfo" enableSelectByExample="true" schema="svc_mng"/> --> 
+ 	
+ 	
+ 	<!-- <table tableName="TBL_CARDHODLER_REL_ACCOUNT" domainObjectName="CardholderRelAcc" enableSelectByExample="true" schema="svc_mng"/>--> 
+ 	
+ 	<!-- <table tableName="TBL_CARD_REL_ACCOUNT" domainObjectName="CardRelAccount" enableSelectByExample="true" schema="svc_mng"/> --> 
+ 	
+ 	<!-- <table tableName="TBL_SAICONLINE_BATCH_INFO" domainObjectName="SaicOnlineBatchInfo" enableSelectByPrimaryKey="true" enableSelectByExample="true" schema="svc_mng"/> --> 
+ 	
+ 	
+ 	<!-- <table tableName="TB_ENTITY_DICT_INFO" domainObjectName="EntityDictInfo" enableSelectByPrimaryKey="true" enableSelectByExample="true" schema="svc_mng"/>-->
+ 	
+ 	<!-- 同步CRM -->
+ 	<!-- <table tableName="TB_PEOPLE_ATTACH_INFO" domainObjectName="AttachInfo" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_COMPANY_INFO" domainObjectName="CompanyInfo" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_CARDHOLDER_PERSONAL" domainObjectName="CardholderPersonal" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_CARDHOLDER_ENTERPRISE" domainObjectName="CardholderEnterPrise" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<!-- <table tableName="TB_UNIQUE_USER_ID" domainObjectName="UniqueUserId" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	<table tableName="TB_CUSTOMER_PERSONAL" domainObjectName="CustomerPersonal" enableSelectByExample="true" schema="svc_mng"/>
+ 	<!-- <table tableName="TB_CUSTOMER_ENTERPRISE" domainObjectName="CustomerEnterPrise" enableSelectByExample="true" schema="svc_mng"/> -->
+ 	
+ 	
+ 	
+ 	
+ 	
+  </context>
+  
+</generatorConfiguration>

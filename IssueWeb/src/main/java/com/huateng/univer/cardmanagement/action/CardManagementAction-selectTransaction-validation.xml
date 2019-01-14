@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="cardManagementDTO.cardNo">
+		<field-validator type="requiredstring">
+			<message>请填写卡号</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">[0-9]{19}</param>
+			
+			<message>请正确填写卡号</message>
+		</field-validator>
+	</field>
+</validators>

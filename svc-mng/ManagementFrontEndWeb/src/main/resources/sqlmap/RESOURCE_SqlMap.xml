@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RESOURCE">
+	
+	<resultMap id="resourceResult" class="com.allinfinance.univer.system.role.dto.ResourceDTO" >
+	    <result column="RESOURCE_ID" property="resourceId"/>
+	    <result column="RESOURCE_NAME" property="resourceName"/>
+	    <result column="RESOURCE_URL" property="resourceUrl"/>
+	    <result column="RESOURCE_TYPE" property="resourceType"/>
+	    <result column="RESOURCE_TXN_CODE" property="resourceTxnCode"/>
+	    <result column="FATHER_RESOURCE_ID" property="fatherResourceId"/>
+	    <result column="CREATE_USER" property="createUser"/>
+	    <result column="CREATE_TIME" property="createTime"/>
+	    <result column="MODIFY_USER" property="modifyUser"/>
+	    <result column="MODIFY_TIME" property="modifyTime"/>
+	    <result column="DATA_STATE" property="dataState"/>
+    </resultMap>
+    
+    <!-- 根据用户ID取得该用户下所有资源信息 -->
+	<select id="getResourceByUserId"  parameterClass="com.allinfinance.univer.system.user.dto.UserDTO" resultMap="resourceResult" >
+	 <!-- SELECT t.RESOURCE_ID,
+           t.RESOURCE_NAME,
+           t.RESOURCE_URL,
+           t.RESOURCE_TYPE,
+           t.RESOURCE_TXN_CODE,
+           t.FATHER_RESOURCE_ID,
+           t.CREATE_USER,
+           t.CREATE_TIME,
+           t.MODIFY_USER,
+           t.MODIFY_TIME,
+           t.DATA_STATE,
+           LEVEL
+      FROM TB_RESOURCE t
+    WHERE t.RESOURCE_ID in (
+      select DISTINCT re.RESOURCE_ID
+        from TB_ENT_USER u,
+          TB_REL_USER_ROLE ur,
+          TB_ROLE r,
+          TB_REL_ROLE_RESOURCE rre,
+          TB_RESOURCE re
+      where u.USER_ID = #userId#
+          AND u.DATA_STATE = '1'
+            AND u.USER_ID = ur.USER_ID
+            AND r.ROLE_ID = ur.ROLE_ID
+          AND r.DATA_STATE = '1'
+            AND rre.ROLE_ID = r.ROLE_ID
+		  		  AND rre.RESOURCE_ID = re.RESOURCE_ID
+		  		  <isNotNull prepend="and" property="functionRoleId">
+				    re.function_role_id in
+				     <iterate property="functionRoleId" conjunction="," open="("
+					    close=")">
+				    	#functionRoleId[]#
+				    </iterate>
+			      </isNotNull>
+				  AND re.DATA_STATE = '1')
+			  
+	CONNECT BY PRIOR  
+			t.RESOURCE_ID = t.FATHER_RESOURCE_ID
+	START WITH 
+     		t.FATHER_RESOURCE_ID= 0
+    ORDER BY LEVEL,t.RESOURCE_ORDER -->
+    
+    
+      with TB_RESOURCE_TEMP(
+           RESOURCE_ID,
+           RESOURCE_NAME,
+           RESOURCE_URL,
+           RESOURCE_TYPE,
+           RESOURCE_TXN_CODE,
+           FATHER_RESOURCE_ID,
+           CREATE_USER,
+           CREATE_TIME,
+           MODIFY_USER,
+           MODIFY_TIME,
+           DATA_STATE,
+           RESOURCEORDER,
+           level) AS
+	      (
+	        select 
+              RESOURCE_ID,
+              RESOURCE_NAME,
+              RESOURCE_URL,
+              RESOURCE_TYPE,
+           RESOURCE_TXN_CODE,
+           FATHER_RESOURCE_ID,
+           CREATE_USER,
+           CREATE_TIME,
+           MODIFY_USER,
+           MODIFY_TIME,
+           DATA_STATE,
+           RESOURCE_ORDER,
+            1
+	        from TB_RESOURCE where FATHER_RESOURCE_ID= '0'
+	        union all
+	        select 
+                tb_re.RESOURCE_ID,
+                tb_re.RESOURCE_NAME,
+                tb_re.RESOURCE_URL,
+                tb_re.RESOURCE_TYPE,
+                tb_re.RESOURCE_TXN_CODE,
+                tb_re.FATHER_RESOURCE_ID,
+                tb_re.CREATE_USER,
+                tb_re.CREATE_TIME,
+                tb_re.MODIFY_USER,
+                tb_re.MODIFY_TIME,
+                tb_re.DATA_STATE,
+                tb_re.RESOURCE_ORDER,
+                TB_RESOURCE_TEMP.level + 1
+	        from TB_RESOURCE tb_re, TB_RESOURCE_TEMP
+	        where  tb_re.FATHER_RESOURCE_ID = TB_RESOURCE_TEMP.RESOURCE_ID
+	        )
+		select 
+		   RESOURCE_ID,
+           RESOURCE_NAME,
+           RESOURCE_URL,
+           RESOURCE_TYPE,
+           RESOURCE_TXN_CODE,
+           FATHER_RESOURCE_ID,
+           CREATE_USER,
+           CREATE_TIME,
+           MODIFY_USER,
+           MODIFY_TIME,
+           DATA_STATE,
+           level from  TB_RESOURCE_TEMP
+           where RESOURCE_ID in(
+             select DISTINCT re.RESOURCE_ID
+                    from TB_ENT_USER u,
+                      TB_REL_USER_ROLE ur,
+                      TB_ROLE r,
+                      TB_REL_ROLE_RESOURCE rre,
+                      TB_RESOURCE re
+                  where u.USER_ID = #userId#
+                      AND u.DATA_STATE = '1'
+                        AND u.USER_ID = ur.USER_ID
+                        AND r.ROLE_ID = ur.ROLE_ID
+                      AND r.DATA_STATE = '1'
+                        AND rre.ROLE_ID = r.ROLE_ID
+                              AND rre.RESOURCE_ID = re.RESOURCE_ID
+                              <isNotNull prepend="and" property="functionRoleId">
+							    re.function_role_id in
+							     <iterate property="functionRoleId" conjunction="," open="("
+								    close=")">
+							    	#functionRoleId[]#
+							    </iterate>
+						      </isNotNull>
+                              AND re.DATA_STATE = '1'
+            )
+            ORDER BY LEVEL,RESOURCEORDER
+    
+   
+	  	</select>
+</sqlMap>

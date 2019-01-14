@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ORDERLIST">
+     <select id="selectOrderList" resultClass="java.util.HashMap" parameterClass="com.huateng.accor.cardorder.dto.OrderListQueryDTO" remapResults="true">
+    <include refid="Commons.prefixSql"/>
+        select
+            ORDER_LIST_ID as "orderListId",
+            CARDHOLDER_NAME as "cardholderName",
+            EXTERNAL_ID as "externalId",
+            CARD_STATE as "cardState",
+            CREDIT_PRICE/100 as "creditPrice",
+            CARD_LAYOUT_ID as "cardlayoutId",
+            FACE_VALUE_TYPE as "faceValueType",
+            FACE_VALUE/100 as "faceValue",
+            VALIDITY_PERIOD as "validityPeriod",
+            CARD_AMOUNT as "cardAmount",
+            CARD_ISSUE_FEE/100 as "cardIssueFee",
+            CARD_NO as "cardNo",
+            CARD_PIN_STATE as "cardPinState",
+            LEG_CARD_NO as "legCardNo"
+        from
+            TB_ENT_ORDER_LIST
+        where
+            ORDER_ID = #orderId:DECIMAL#
+        and
+            DATA_STATE = 1
+    <dynamic>
+      <isNotEmpty prepend="and" property="externalId">
+        EXTERNAL_ID = #externalId:VARCHAR#
+      </isNotEmpty>
+
+      <isNotEmpty prepend="and" property="cardholderName">
+        CARDHOLDER_NAME like '%'||#cardholderName:VARCHAR#||'%'
+      </isNotEmpty>
+
+    </dynamic>
+    <include refid="Commons.suffixSql"/>
+  </select>
+</sqlMap>

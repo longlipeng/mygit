@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+    <field name="invoiceAddressDTO.invoiceAddress">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>发票地址不能为空！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>发票地址不能超过128个字符！</message>
+        </field-validator>
+    </field>
+    <field name="invoiceAddressDTO.addressPostcode">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>邮编不能为空！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>邮编不能超过32个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^\d{6}$</param>
+            <message>邮编格式不正确！</message>
+        </field-validator>
+    </field>
+    <field name="invoiceAddressDTO.invoiceRecipient">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>收件人不能为空！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>收件人不能超过32个字符！</message>
+        </field-validator>
+    </field>
+</validators>

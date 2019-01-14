@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<package name="tradeItemTemp" extends="struts-global"
+		namespace="/tradeItemTemp">
+
+		<global-results>
+			<result name="list">/WEB-INF/pages/univer/coupon/tradeItemTempList.jsp
+			</result>
+			<result name="input">/WEB-INF/pages/univer/coupon/tradeItemTempList.jsp
+			</result>
+		</global-results>
+
+		<action name="inquiry" class="tradeItemTempAction" method="list">
+		</action>
+
+		<action name="delete" class="tradeItemTempAction" method="delete">
+		</action>
+
+	</package>
+</struts>

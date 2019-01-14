@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN"
+        "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+   
+    <field name="merchantDTO.merchantName">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>商户注册名称必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>商户注册名称不能超过128个字符！</message>
+        </field-validator>
+    </field> 
+    <field name="merchantDTO.externalId">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>外部系统代码不能超过64个字符！</message>
+        </field-validator>
+    </field>
+    <field name="merchantDTO.legacyMerchantId">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">64</param>
+            <message>老系统商户号不能超过64个字符！</message>
+        </field-validator>
+    </field>
+    <field name="merchantDTO.merchantAddress">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>地址必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>地址不能超过128个字符！</message>
+        </field-validator>
+    </field>
+<!--    <field name="merchantDTO.merchantEnglishAddress">-->
+<!--        <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>英文地址必须输入！</message>-->
+<!--        </field-validator>-->
+<!--        <field-validator type="stringlength" short-circuit="true">-->
+<!--            <param name="maxLength">128</param>-->
+<!--            <message>英文地址不能超过128个字符！</message>-->
+<!--        </field-validator>-->
+<!--        <field-validator type="regex" short-circuit="true">-->
+<!--            <param name="expression">^[\x00-\xFF]+$</param>-->
+<!--            <message>英文地址只能输入英文</message>-->
+<!--        </field-validator>-->
+<!--    </field>-->
+
+<!-- 
+    <field name="merchantDTO.merchantPostcode">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>邮编必须输入！</message>
+        </field-validator> 
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^\d{6}$</param>
+            <message>邮编格式不正确 </message>
+        </field-validator>
+    </field>
+
+    <field name="merchantDTO.merchantTelephone">
+                <field-validator type="requiredstring" short-circuit="true">
+            <message>电话必须输入！</message>
+        </field-validator> 
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>电话不能超过32个字符！</message>
+        </field-validator>
+    </field>
+
+    <field name="merchantDTO.merchantFax">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>传真必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">32</param>
+            <message>传真不能超过32个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+             <param name="expression">^([0-9]|[0-9\-])+$</param>
+            <message>传真格式不正确！</message>
+        </field-validator>
+    </field>
+ -->
+    
+    <field name="merchantDTO.merchantWebsite">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>网址不能超过128个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression"><![CDATA[^(http[s]?:\/\/)?[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@\[\]\':+!]*([^\"\"])*$]]></param>
+            <message>网址格式不正确！</message>
+        </field-validator>
+    </field>
+    
+    <field name="merchantDTO.mchntURL">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">128</param>
+            <message>商户网站返回URL超过128个字符！</message>
+        </field-validator>
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression"><![CDATA[^(http[s]?:\/\/)?[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@\[\]\':+!]*([^\"\"])*$]]></param>
+            <message>商户网站返回URL不正确！</message>
+        </field-validator>
+    </field>
+    <field name="merchantDTO.dnInfo">
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">240</param>
+            <message>证书信息不能超过240个字符！</message>
+        </field-validator>
+    </field>
+     <field name="merchantDTO.txnQryTimes">
+        <field-validator type="regex" short-circuit="true">
+             <param name="expression">^[0-9]{0,8}$</param>
+            <message>交易查询次数必须是数字,且长度不能超过8位</message>
+        </field-validator>
+    </field>
+    
+    <field name="merchantDTO.salesmanId">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>市场代表必须选择！</message>
+        </field-validator>
+    </field>
+    <field name="merchantDTO.joinDate">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>加盟日期必须选择！</message>
+        </field-validator>
+    </field>
+    <field name="merchantDTO.merchantType">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>商户类型必须选择！</message>
+        </field-validator>
+    </field>
+<!--    <field name="merchantDTO.invoiceName">-->
+<!--    	<field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>发票名称必须输入！</message>-->
+<!--        </field-validator>-->
+<!--        <field-validator type="stringlength" short-circuit="true">-->
+<!--            <param name="maxLength">128</param>-->
+<!--            <message>发票名称不能超过128个字符！</message>-->
+<!--        </field-validator>-->
+<!--    </field>-->
+    
+
+    
+    
+<!--    <field name="merchantDTO.merchantLegalPerson">-->
+<!--         <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>商户法人必须输入！</message>-->
+<!--        </field-validator>-->
+<!--    </field>    -->
+<!--    <field name="merchantDTO.businessLicenseFrom">-->
+<!--         <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>请选择日期！</message>-->
+<!--        </field-validator>-->
+<!--    </field>    -->
+<!--    <field name="merchantDTO.businessLicenseTo">-->
+<!--         <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>请选择日期！</message>-->
+<!--        </field-validator>-->
+<!--    </field>    -->
+    <field name="merchantDTO.legalPersonIdno">
+<!--         <field-validator type="requiredstring" short-circuit="true">-->
+<!--            <message>法人身份证号必须输入！</message>-->
+<!--        </field-validator>-->
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^\d{17}[\d|X]|^\d{15}$</param>
+            <message>身份证号格式不正确！</message>
+        </field-validator>
+    </field>  
+     <field name="merchantDTO.merchantCode">
+        <field-validator type="requiredstring" short-circuit="true">
+            <message>商户号必须输入！</message>
+        </field-validator>
+        <field-validator type="stringlength" short-circuit="true">
+            <param name="maxLength">16</param>
+            <message>商户号不能超过16个字符！</message>
+        </field-validator>
+    </field>  
+    
+    <field name="merchantDTO.customerManagerTelephone1"> 
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^(\d{3,4}-?\d{7,9})|(((1[0-9]{2}))+\d{8})$</param>
+            <message>电话格式不正确！</message>
+        </field-validator>
+    </field>
+    <field name="merchantDTO.customerManagerTelephone2"> 
+        <field-validator type="regex" short-circuit="true">
+            <param name="expression">^(\d{3,4}-?\d{7,9})|(((1[0-9]{2}))+\d{8})$</param>
+            <message>电话格式不正确！</message>
+        </field-validator>
+    </field>
+</validators>

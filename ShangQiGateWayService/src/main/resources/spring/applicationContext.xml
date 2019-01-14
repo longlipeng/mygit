@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<!-- 数据库配置 -->
+	<import resource="applicationContext-dataAccess.xml" />
+
+	<!-- service配置 -->
+	<import resource="applicationContext-service.xml" />
+
+	<!-- DAO配置 -->
+	<import resource="applicationContext-dao.xml" />
+
+	<!-- CXF配置 -->
+	<import resource="applicationContext-cxf.xml" />
+
+	<!-- 订单 -->
+	<import resource="applicationContext-order.xml" />
+
+	<!-- 定时任务 -->
+	<!-- <import resource="applicationContext-batch-quartz.xml" /> -->
+	<import resource="applicationContext-batch.xml" />
+	<!--0元购配置 
+	<import resource="applicationContext-coupon-service.xml" />
+	<import resource="applicationContext-coupon-dao.xml" />
+-->
+	<!-- seam必要的配置
+	<import resource="classpath:datasync/datasync-bean-context.xml" />
+	<import resource="classpath:datasync/esb-anno-application.xml" />
+ -->	
+
+</beans>

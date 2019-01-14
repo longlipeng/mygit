@@ -1,0 +1,829 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="STOCK_ORDER">
+
+	<select id="selectStockOrderList" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		SELECT
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			TO_DATE(T1.ORDER_DATE,'yyyy-MM-dd') as "orderDate",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T4.ISSUER_NAME as "firstEntityName",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			T4.ISSUER_NAME as "processEntityName",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			T1.TOTAL_PRICE/100 as "totalPrice",
+			T1.FACE_VALUE/100 as "faceValue",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			TO_DATE(T1.CREATE_TIME,'yyyy-MM-dd hh24miss') as "createTime",
+			T1.DATA_STATE as "dataState" ,
+			T2.PRODUCT_NAME as "productName",
+			T3.USER_NAME as "createUserName"
+		FROM
+			TB_SELL_ORDER T1 left join
+			TB_PRODUCT T2 on T1.PRODUCT_ID = T2.PRODUCT_ID left join
+			TB_ENT_USER T3 on T1.CREATE_USER = T3.USER_ID left join
+			TB_ISSUER T4 on T1.PROCESS_ENTITY_ID = T4.ENTITY_ID
+		WHERE
+			
+			T1.DATA_STATE = '1'
+		AND 
+			T1.ORDER_STATE = '2'
+    	AND
+      		T1.ORDER_TYPE not IN ('30000001','30000002')
+		AND 
+			(T1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR# OR T1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#)
+		<dynamic>
+			<isNotEmpty prepend="and" property="createUserName">
+				T1.CREATE_USER LIKE '%'||#createUserName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE = #orderState:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderType">
+				T1.ORDER_TYPE = #orderType:VARCHAR#
+			</isNotEmpty>
+			<!--by youy 20150213 用foreach 语句
+			<isNotEmpty prepend="and" property="orderStateArray">
+				T1.ORDER_STATE IN ($orderStateArray$)
+            </isNotEmpty>
+            -->
+            <isNotEmpty prepend="and" property="orderStateArray">
+				<iterate property="orderStateArray" open="(" conjunction="OR" close=")">
+                    T1.ORDER_STATE = #orderStateArray[]:VARCHAR#
+                </iterate>
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="orderStateWithoutArray">
+				T1.ORDER_STATE NOT IN ($orderStateWithoutArray$)
+            </isNotEmpty>
+			<!--<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE IN ($orderTypeArray$)
+            </isNotEmpty>
+            -->
+            <isNotEmpty prepend="and" property="orderTypeArray">
+				<iterate property="orderTypeArray" open="(" conjunction="OR" close=")">
+                    T1.ORDER_TYPE = #orderTypeArray[]:VARCHAR#
+                </iterate>
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>	
+		</dynamic>
+		
+		UNION
+		
+		select
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			to_date(T1.ORDER_DATE,'yyyy-MM-dd') as "orderDate",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T4.ISSUER_NAME as "firstEntityName",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			T4.ISSUER_NAME as "processEntityName",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			T1.TOTAL_PRICE/100 as "totalPrice",
+			T1.FACE_VALUE/100 as "faceValue",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			TO_DATE(T1.CREATE_TIME,'yyyy-MM-dd hh24miss') as "createTime",
+			T1.DATA_STATE as "dataState" ,
+			T2.PRODUCT_NAME as "productName",
+			T3.USER_NAME as "createUserName"
+		FROM
+			TB_SELL_ORDER T1 left join
+			TB_PRODUCT T2 on T1.PRODUCT_ID = T2.PRODUCT_ID left join
+			TB_ENT_USER T3 on T1.CREATE_USER = T3.USER_ID left join
+			TB_ISSUER T4 on T1.PROCESS_ENTITY_ID = T4.ENTITY_ID
+		WHERE
+			T1.DATA_STATE = '1'
+		AND 
+			T1.ORDER_STATE != '2'
+		AND 
+			(T1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR# OR T1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#)
+		<dynamic>
+			<isNotEmpty prepend="and" property="createUserName">
+				T1.CREATE_USER LIKE '%'||#createUserName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE = #orderState:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderType">
+				T1.ORDER_TYPE = #orderType:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderStateArray">
+				T1.ORDER_STATE IN ($orderStateArray$)
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="orderStateWithoutArray">
+				T1.ORDER_STATE NOT IN ($orderStateWithoutArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE IN ($orderTypeArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>	
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="selectStockOrders" resultClass="java.util.HashMap"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderQueryDTO">
+		<include refid="Commons.prefixSql" />
+		<!-- 营销机构采购订单 -->
+		SELECT
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			TO_DATE(T1.ORDER_DATE,'yyyy-MM-dd') as "orderDate",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T5.SELLER_NAME as "firstEntityName",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			T4.ISSUER_NAME as "processEntityName",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			trim(char(bigint(T1.TOTAL_PRICE)/100)) as "totalPrice",
+			trim(char(bigint(T1.FACE_VALUE)/100)) as "faceValue",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			T6.USER_NAME as "createCardFileUserName",
+			TO_DATE(T1.CREATE_TIME,'yyyy-MM-dd hh24miss') as "createTime",
+			T1.DATA_STATE as "dataState" ,
+			T2.PRODUCT_NAME as "productName",
+			T3.USER_NAME as "createUserName",
+			T1.IS_CHECK_CARD as "isCheckCard",
+			T1.BATCH_NO as "batchNo"
+		FROM
+			TB_SELL_ORDER T1 left join
+			TB_PRODUCT T2 on T1.PRODUCT_ID = T2.PRODUCT_ID left join
+			TB_ENT_USER T3 on T1.CREATE_USER = T3.USER_ID left join
+            TB_ENT_USER T6 on T1.IS_CREATE_CARD_FILE = T6.USER_ID left join
+			TB_ISSUER T4 on T1.FIRST_ENTITY_ID = T4.ENTITY_ID left join
+			TB_SELLER T5 on T1.PROCESS_ENTITY_ID = T5.ENTITY_ID
+		WHERE
+			T1.DATA_STATE = '1'
+		AND 
+			T1.ORDER_STATE IN ('3','4','6','21','23','26','29','33','34')
+		AND 
+			(T1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR# OR T1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#)
+		AND
+			(T1.ORDER_TYPE='30000002' OR T1.ORDER_TYPE='30000001')
+		<dynamic>
+			<isNotEmpty prepend="and" property="firstEntityId">
+				T1.FIRST_ENTITY_ID = #firstEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				T5.SELLER_NAME LIKE '%'||#firstEntityName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				T3.USER_NAME LIKE '%'||#createUserName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE = #orderState:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderType">
+				T1.ORDER_TYPE = #orderType:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderStateArray">
+				T1.ORDER_STATE IN ($orderStateArray$)
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="orderStateWithoutArray">
+				T1.ORDER_STATE NOT IN ($orderStateWithoutArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE IN ($orderTypeArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="cardNo">
+				T1.ORDER_ID in (select order_id from TB_SELL_ORDER_CARD_LIST
+	                    where card_no=#cardNo#)
+			</isNotEmpty>
+		</dynamic>
+		UNION
+		<!-- 库存订单 -->
+		select
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			to_date(T1.ORDER_DATE,'yyyy-MM-dd') as "orderDate",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T4.ISSUER_NAME as "firstEntityName",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			T5.ISSUER_NAME as "processEntityName",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			trim(char(bigint(T1.TOTAL_PRICE)/100)) as "totalPrice",
+			trim(char(bigint(T1.FACE_VALUE)/100)) as "faceValue",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			T6.USER_NAME as "createCardFileUserName",
+			TO_DATE(T1.CREATE_TIME,'yyyy-MM-dd hh24miss') as "createTime",
+			T1.DATA_STATE as "dataState" ,
+			T2.PRODUCT_NAME as "productName",
+			T3.USER_NAME as "createUserName",
+			T1.IS_CHECK_CARD as "isCheckCard",
+			T1.BATCH_NO as "batchNo"
+		FROM
+			TB_SELL_ORDER T1 left join
+			TB_PRODUCT T2 on T1.PRODUCT_ID = T2.PRODUCT_ID left join
+			TB_ENT_USER T3 on T1.CREATE_USER = T3.USER_ID left join
+            TB_ENT_USER T6 on T1.IS_CREATE_CARD_FILE = T6.USER_ID left join
+			TB_ISSUER T4 on T1.FIRST_ENTITY_ID = T4.ENTITY_ID left join
+			TB_ISSUER T5 on T1.PROCESS_ENTITY_ID = T5.ENTITY_ID
+		WHERE
+			T1.DATA_STATE = '1'
+		AND
+      		T1.ORDER_TYPE = '50000001'
+		AND 
+			T1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<dynamic>
+			<isNotEmpty prepend="and" property="firstEntityId">
+				T1.FIRST_ENTITY_ID = #firstEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				T5.ISSUER_NAME LIKE '%'||#firstEntityName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				T3.USER_NAME LIKE '%'||#createUserName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE = #orderState:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderType">
+				T1.ORDER_TYPE = #orderType:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderStateArray">
+				T1.ORDER_STATE IN ($orderStateArray$)
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="orderStateWithoutArray">
+				T1.ORDER_STATE NOT IN ($orderStateWithoutArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE IN ($orderTypeArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>	
+			<isNotEmpty prepend="and" property="cardNo">
+				T1.ORDER_ID in (select order_id from TB_SELL_ORDER_CARD_LIST
+	                    where card_no=#cardNo#)
+			</isNotEmpty>
+		</dynamic>
+		
+		
+		UNION
+		<!-- 代发卡订单 -->
+		select
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			to_date(T1.ORDER_DATE,'yyyy-MM-dd') as "orderDate",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T4.ISSUER_NAME as "firstEntityName",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			T5.ISSUER_NAME as "processEntityName",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			trim(char(bigint(T1.TOTAL_PRICE)/100)) as "totalPrice",
+			trim(char(bigint(T1.FACE_VALUE)/100)) as "faceValue",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			T6.USER_NAME as "createCardFileUserName",
+			TO_DATE(T1.CREATE_TIME,'yyyy-MM-dd hh24miss') as "createTime",
+			T1.DATA_STATE as "dataState" ,
+			T2.PRODUCT_NAME as "productName",
+			T3.USER_NAME as "createUserName",
+			T1.IS_CHECK_CARD as "isCheckCard",
+			T1.BATCH_NO as "batchNo"
+		FROM
+			TB_SELL_ORDER T1 left join
+			TB_PRODUCT T2 on T1.PRODUCT_ID = T2.PRODUCT_ID left join
+			TB_ENT_USER T3 on T1.CREATE_USER = T3.USER_ID left join
+            TB_ENT_USER T6 on T1.IS_CREATE_CARD_FILE = T6.USER_ID left join
+			TB_ISSUER T4 on T1.FIRST_ENTITY_ID = T4.ENTITY_ID left join
+			TB_ISSUER T5 on T1.PROCESS_ENTITY_ID = T5.ENTITY_ID
+		WHERE
+			T1.DATA_STATE = '1'
+		 AND 
+			 T1.ORDER_STATE NOT IN ('3','4','6','21','23','26','29','33','34')
+		AND
+      		T1.ORDER_TYPE IN ('40000001','40000002')
+		AND 
+			T1.FIRST_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<dynamic>
+			<isNotEmpty prepend="and" property="firstEntityId">
+				T1.FIRST_ENTITY_ID = #firstEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				T5.ISSUER_NAME LIKE '%'||#firstEntityName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				T3.USER_NAME LIKE '%'||#createUserName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE = #orderState:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderType">
+				T1.ORDER_TYPE = #orderType:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderStateArray">
+				T1.ORDER_STATE IN ($orderStateArray$)
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="orderStateWithoutArray">
+				T1.ORDER_STATE NOT IN ($orderStateWithoutArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE IN ($orderTypeArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>	
+			<isNotEmpty prepend="and" property="cardNo">
+				T1.ORDER_ID in (select order_id from TB_SELL_ORDER_CARD_LIST
+	                    where card_no=#cardNo#)
+			</isNotEmpty>
+		</dynamic>
+		
+		UNION
+		<!-- 代发卡订单 -->
+		select
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			to_date(T1.ORDER_DATE,'yyyy-MM-dd') as "orderDate",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T4.ISSUER_NAME as "firstEntityName",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			T5.ISSUER_NAME as "processEntityName",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			trim(char(bigint(T1.TOTAL_PRICE)/100)) as "totalPrice",
+			trim(char(bigint(T1.FACE_VALUE)/100)) as "faceValue",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			T6.USER_NAME as "createCardFileUserName",
+			TO_DATE(T1.CREATE_TIME,'yyyy-MM-dd hh24miss') as "createTime",
+			T1.DATA_STATE as "dataState" ,
+			T2.PRODUCT_NAME as "productName",
+			T3.USER_NAME as "createUserName",
+			T1.IS_CHECK_CARD as "isCheckCard",
+			T1.BATCH_NO as "batchNo"
+		FROM
+			TB_SELL_ORDER T1 left join
+			TB_PRODUCT T2 on T1.PRODUCT_ID = T2.PRODUCT_ID left join
+			TB_ENT_USER T3 on T1.CREATE_USER = T3.USER_ID left join
+            TB_ENT_USER T6 on T1.IS_CREATE_CARD_FILE = T6.USER_ID left join
+			TB_ISSUER T4 on T1.FIRST_ENTITY_ID = T4.ENTITY_ID left join
+			TB_ISSUER T5 on T1.PROCESS_ENTITY_ID = T5.ENTITY_ID
+			
+		WHERE
+			T1.DATA_STATE = '1'
+		AND
+      		T1.ORDER_TYPE IN ('40000001','40000002')
+      	 AND 
+      		 T1.ORDER_STATE NOT IN ('2','30','1')
+		AND 
+			T1.PROCESS_ENTITY_ID = #defaultEntityId:VARCHAR#
+		<dynamic>
+			<isNotEmpty prepend="and" property="firstEntityId">
+				T1.FIRST_ENTITY_ID = #firstEntityId:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="firstEntityName">
+				T5.ISSUER_NAME LIKE '%'||#firstEntityName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="createUserName">
+				T3.USER_NAME LIKE '%'||#createUserName:VARCHAR#||'%'
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderState">
+				T1.ORDER_STATE = #orderState:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderType">
+				T1.ORDER_TYPE = #orderType:VARCHAR#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="orderStateArray">
+				T1.ORDER_STATE IN ($orderStateArray$)
+            </isNotEmpty>
+             <isNotEmpty prepend="and" property="orderStateWithoutArray">
+				T1.ORDER_STATE NOT IN ($orderStateWithoutArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderTypeArray">
+				T1.ORDER_TYPE IN ($orderTypeArray$)
+            </isNotEmpty>
+			<isNotEmpty prepend="and" property="orderId">
+				T1.ORDER_ID = #orderId:VARCHAR#
+			</isNotEmpty>	
+			<isNotEmpty prepend="and" property="cardNo">
+				T1.ORDER_ID in (select order_id from TB_SELL_ORDER_CARD_LIST
+	                    where card_no=#cardNo#)
+			</isNotEmpty>
+		</dynamic>
+		
+		
+		<include refid="Commons.suffixSql" />
+	</select>
+	
+	
+	<select id="selectStockOrderForView" resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO"
+		remapResults="true" parameterClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+		SELECT
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			TO_CHAR(TO_DATE(T1.ORDER_DATE,'yyyy-MM-dd'),'yyyy-MM-dd') as "orderDate",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			$dynamicFirstEntitycolumn$ as "firstEntityName",
+         	$dynamicprocessEntitycolumn$  as "processEntityName",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			TO_CHAR(TO_DATE(T1.VALIDITY_PERIOD,'yyyy-MM-dd'),'yyyy-MM-dd') as "validityPeriod",
+			TO_CHAR(TO_DATE(decode(trim(T1.INVOICE_DATE),'',null,T1.INVOICE_DATE),'yyyyMMdd'),'yyyy-MM-dd') as "invoiceDate",
+			trim(char(bigint(T1.CARD_ISSUE_FEE)/100)) as "cardIssueFee",trim(char(bigint(T1.ANNUAL_FEE)/100)) as "annualFee",
+			T1.DELIVERY_MEANS as "deliveryMeans",
+			T1.DELIVERY_FEE as "deliveryFee",
+			trim(char(bigint(T1.TOTAL_PRICE)/100)) as "totalPrice",
+			trim(char(bigint(T1.FACE_VALUE)/100)) as "faceValue",
+			trim(char(bigint(T1.DISCOUNT_FEE)/100)) as "discountFee",
+			trim(char(bigint(T1.ADDITIONAL_FEE)/100)) as "additionalFee",
+			T1.INVOICE_ITEM_ID as "invoiceItemId",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.MEMO as "memo" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.ORIGCARD_QUANTITY as "origCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			T1.DATA_STATE as "dataState" ,
+			T1.CREATE_USER as "createUser",
+			TO_CHAR(TO_DATE(T1.CREATE_TIME,'yyyyMMddhh24miss'),'yyyy-MM-dd') as "createTime" ,
+			T1.MODIFY_USER as "modifyUser",
+			T1.MODIFY_TIME as "modifyTime",
+			T2.PRODUCT_NAME as "productName",
+			T3.USER_NAME as "createUserName",
+			T4.SERVICE_NAME as "serviceName",
+			T5.CARD_LAYOUT_NAME as "cardLayoutName",
+			T8.DELIVERY_CONTACT  as "orderContact",
+			T9.DELIVERY_NAME as "deliveryPoint",
+			T10.INVOICE_ADDRESS as "invoiceAddresses",
+			T11.INVOICE_COMPANY_NAME as "invoiceCompanyName"
+		FROM
+			TB_SELL_ORDER T1 left join
+			TB_PRODUCT T2 on T1.PRODUCT_ID = T2.PRODUCT_ID left join
+            TB_SERVICE T4 on T1.SERVICE_ID = T4.SERVICE_ID left join
+			TB_ENT_USER T3 on T1.CREATE_USER = T3.USER_ID left join
+			
+			TB_CARD_LAYOUT T5 on T1.CARD_LAYOUT_ID = T5.CARD_LAYOUT_ID join
+			$dynamicFirstEntityTable$ T6 on T1.FIRST_ENTITY_ID = T6.ENTITY_ID join
+			$dynamicProcessEntityTable$ T7 on T1.PROCESS_ENTITY_ID = T7.ENTITY_ID left join
+			TB_DELIVERY_CONTACT T8 on T1.ORDER_CONTACT = T8.DELIVERY_CONTACT_ID left join
+			TB_ENTITY_DELIVERY T9 on T1.DELIVERY_POINT = T9.DELIVERY_ID left join
+			TB_ENTITY_INVOICE_ADDRESS T10 on T1.INVOICE_ADDRESSES = T10.INVOICE_ADDRESS_ID left join
+			TB_INVOICE_COMPANY T11 on T1.INVOICE_COMPANY_NAME = T11.INVOICE_COMPANY_ID
+		where 
+			T1.ORDER_ID = #orderId:VARCHAR#
+	</select>
+	
+		<select id="getsellOrderView" parameterClass="java.lang.String"
+		resultClass="com.allinfinance.univer.seller.order.dto.SellOrderDTO">
+			    
+    	select
+			    T.ORDER_ID as "orderId",
+			    T.ORDER_TYPE as "orderType",
+			    to_char(to_date(T.ORDER_DATE,'yyyyMMdd'),'yyyy-MM-dd') as "orderDate",
+    	    	T.FIRST_ENTITY_ID as "firstEntityId",
+			    T3.CUSTOMER_NAME  as "firstEntityName",
+			    T.PROCESS_ENTITY_ID as "processEntityId",
+			    T7.CARD_LAYOUT_NAME as "cardLayoutName",
+			    T.ORDER_STATE as "orderState",
+			    T.PRODUCT_ID as "productId",
+			    to_char(to_date(T.VALIDITY_PERIOD,'yyyyMMdd'),'yyyy-MM-dd') as "validityPeriod",
+			    T.CARD_LAYOUT_ID as "cardLayoutId",
+			    T.CHANGE_CARD_FEE/100 as "changeCardFee",
+			    T.SALE_MAN as "saleMan",
+			    T.CARD_ISSUE_FEE/100 as "cardIssueFee",
+			    T.ANNUAL_FEE/100 as "annualFee",
+			    T.DELIVERY_MEANS as "deliveryMeans",
+			    T.DELIVERY_FEE/100 as "deliveryFee" ,
+			    T5.DELIVERY_NAME as "deliveryPoint",
+			    T4.DELIVERY_CONTACT  as "orderContact",
+			    T6.INVOICE_ADDRESS as "invoiceAddresses",
+			    t8.invoice_company_name as "invoiceCompanyName",
+			    T.INVOICE_ITEM_ID as "invoiceItemId" ,
+			    T.INVOICE_ITEM as "invoiceItem" ,
+			    to_char(to_date(decode(trim(T.INVOICE_DATE),'',null,T.INVOICE_DATE),'yyyyMMdd'),'yyyy-MM-dd') as "invoiceDate",
+			    T.PAYMENT_TERM as "paymentTerm",
+			    T.PAYMENT_DELAY as "paymentDelay",
+			    T.PAYMENT_STATE as "paymentState",
+			    to_char(to_date(T.PAYMENT_DATE,'yyyyMMdd'),'yyyy-MM-dd') as "paymentDate",
+			    T.DISCOUNT_FEE/100 as "discountFee",
+			    T.ADDITIONAL_FEE/100 as "additionalFee",
+			    T.TOTAL_PRICE/100 as "totalPrice",
+			    T.FACE_VALUE_TYPE as "faceValueType",
+			    T.FACE_VALUE/100 as "faceValue",
+			    T12.SERVICE_NAME as "serviceName",
+			    T.SERVICE_FEE as "serviceFee",
+			    to_char(to_date(T.FORECAST_CREDIT_DATE,'yyyyMMdd'),'yyyy-MM-dd') as "forecastCreditDate" ,
+			    to_char(to_date(T.REAL_CREDIT_DATE,'yyyyMMdd'),'yyyy-MM-dd') as "realCreditDate",
+			    T.MEMO as "memo",
+			    T.MAKE_CARD_REASON as "makeCardReason",
+			    T.IS_INNER_DEDUCT as "isInnerDeduct",
+			    T.ORDER_SOURCE as "orderSource",
+			    T.REF_ORDER as "refOrder",
+			    T.EXTERNAL_ID as "externalId",
+			    T.CARD_QUANTITY as "cardQuantity" ,
+			    T.REAL_CARD_QUANTITY as "realCardQuantity",
+			    T.CARD_COMPANY_ID as "cardCompanyId",
+			    T.CARD_TYPE as "cardType " ,
+			    T.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			    T.IS_CREATE_CARD_FILE as "isCreateCardFile" ,
+			    T.IS_CREATE_PIN_FILE as "isCreatePinFile" ,
+			    T.ORDER_BARCODE as "orderBarcode" ,
+			    T9.USER_NAME as "createUser",
+			    to_char(to_date(T.CREATE_TIME,'yyyyMMddhh24miss'),'yyyy-MM-dd') as "createTime" ,
+			    T.MODIFY_USER as "modifyUser" ,
+			    to_char(to_date(T.MODIFY_TIME,'yyyyMMddhh24miss'),'yyyy-MM-dd') as "modifyTime" ,
+			    T.DATA_STATE as "dataState" ,
+			    T11.PACKAGE_NAME as "packageName",
+			    T.PACKAGE_ID as "packageId" ,
+			    T.PACKAGE_FEE/100 as "packageFee",
+			    T2.PRODUCT_NAME as "productName",
+			    T10.USER_NAME  AS "saleManName"
+			    FROM
+			      TB_SELL_ORDER T join
+				    TB_PRODUCT T2 on T.PRODUCT_ID = T2.PRODUCT_ID left join
+				    TB_CUSTOMER T3 on T.FIRST_ENTITY_ID = T3.ENTITY_ID  left join
+				    TB_CARD_LAYOUT T7 on T.CARD_LAYOUT_ID = T7.CARD_LAYOUT_ID left join
+	                TB_DELIVERY_CONTACT T4 on T.ORDER_CONTACT = T4.DELIVERY_CONTACT_ID left join
+				    TB_ENTITY_DELIVERY T5 on T.DELIVERY_POINT = T5.DELIVERY_ID left join
+	                TB_ENTITY_INVOICE_ADDRESS T6 on  T.INVOICE_ADDRESSES = T6.INVOICE_ADDRESS_ID left join
+				    TB_INVOICE_COMPANY T8 on  T.INVOICE_COMPANY_NAME = T8.INVOICE_COMPANY_ID  join
+				    TB_ENT_USER T9 on T.CREATE_USER = T9.USER_ID  join
+				    tb_ent_user t10 on T.SALE_MAN  = T10.USER_ID left join
+				    TB_PACKAGE T11 on T.PACKAGE_ID = T11.PACKAGE_ID left join
+				    TB_SERVICE T12 on T.SERVICE_ID =T12.SERVICE_ID
+				    AND   T.ORDER_ID=#ORDERID:VARCHAR2#
+	</select>
+	
+	<!--锁定要准备的卡 -->
+	<select id="selectCardStockForUpdate" resultClass="com.huateng.framework.ibatis.model.EntityStock"
+			parameterClass="com.allinfinance.univer.entity.stock.dto.EntityStockDTO"
+			remapResults="true"> 
+	    select 
+	    	   T1.ENTITY_ID as "entityId",
+		       T1.CARD_NO as "cardNo",
+		       T1.PRODUCT_ID as "productId",
+		       T1.CARD_LAYOUT_ID as "cardLayoutId",
+		       T1.FACE_VALUE_TYPE as "faceValueType",
+		       T1.FACE_VALUE as "faceValue",
+		       T1.CARD_VALID_DATE as "cardValidDate",
+		       T1.STOCK_STATE as "stockState"
+		from 
+		       TB_ENTITY_STOCK T1
+		where
+		       T1.STOCK_STATE = '1'
+		and    T1.ENTITY_ID = #defaultEntityId#
+		and    T1.PRODUCT_ID = #productId#
+	    and    T1.FLD_01_RES_DATA is null
+	    and    T1.FUNCTION_ROLE_ID='2'
+       	<dynamic>
+       		<isNotEmpty prepend="and" property="cardNoArray">
+       			T1.CARD_NO in ($cardNoArray$)
+       		</isNotEmpty>
+       			<isNotEmpty prepend="and" property="startCardNo">
+		       		<isNotEmpty property="endCardNo">
+		      			<![CDATA[
+		      				T1.CARD_NO between to_number(#startCardNo:VARCHAR#) and to_number(#endCardNo:VARCHAR#)
+						]]>
+			      	</isNotEmpty>
+	      		</isNotEmpty>
+       	</dynamic>
+       	order by t1.CARD_NO
+       	FOR UPDATE with RS
+  	</select> 
+	
+	<!-- 查找符合 订单明细条件 的卡库存 -->
+	<select id="selectCardStockForReady" resultClass="java.util.HashMap"
+			parameterClass="com.allinfinance.univer.entity.stock.dto.EntityStockQueryDTO"
+			remapResults="true"> 
+	   <include refid="Commons.prefixSql" />
+	     select
+	   <isEqual compareValue="all" property="lastRowNum">
+	   		*
+	   </isEqual>
+	    <isEqual compareValue="min" property="lastRowNum">
+	   		min("cardNo") as "cardNo"
+	   </isEqual>
+	    <isEqual compareValue="max" property="lastRowNum">
+	   		max("cardNo") as "cardNo"
+	   </isEqual>
+	   from (
+	  	SELECT  
+	  		*
+	  	FROM (
+	   SELECT 
+	   		   DISTINCT
+		       T1.CARD_NO as "cardNo",
+		       T1.PRODUCT_ID as "productId",
+		       T1.CARD_LAYOUT_ID as "cardLayoutId",
+		       T1.FACE_VALUE_TYPE as "faceValueType",
+		       T1.FACE_VALUE/100 as "faceValue",
+		       T1.CARD_VALID_DATE as "cardValidDate",
+		       T1.STOCK_STATE as "stockState",
+		       T3.CARD_LAYOUT_NAME as "cardLayoutName",
+		       rownumber() over(ORDER BY T1.card_no) as numb
+		FROM 
+		       TB_ENTITY_STOCK T1,
+			   TB_SELL_ORDER_LIST T2,
+		       TB_CARD_LAYOUT T3,
+		       TB_SELL_ORDER T4
+		WHERE
+		       T1.DATA_STATE = '1'
+		AND 
+		       T2.DATA_STATE = '1'
+		AND 
+			   T1.STOCK_STATE = '1'
+	    AND
+	           T1.FUNCTION_ROLE_ID='2'
+		AND
+		       T1.CARD_LAYOUT_ID = T3.CARD_LAYOUT_ID
+		AND    
+		       T1.CARD_LAYOUT_ID = T2.CARD_LAYOUT_ID
+		AND	   T1.FACE_VALUE_TYPE = T2.FACE_VALUE_TYPE
+		AND    T1.FACE_VALUE_TYPE = '1'
+       	AND
+       		   T2.ORDER_ID = T4.ORDER_ID
+       	AND
+       		   T1.PRODUCT_ID = T4.PRODUCT_ID
+        and    T1.FLD_01_RES_DATA is null
+       <!--	AND
+       	(	   (T2.VALIDITY_PERIOD is not null
+       	 AND   <![CDATA[ 
+       		   to_date(T2.VALIDITY_PERIOD,'YYYY-MM-DD') <= to_date(T1.CARD_VALID_DATE,'YYYY-MM-DD')
+       		   ]]>) or  T2.VALIDITY_PERIOD is null)-->
+       	AND
+       		   T4.ORDER_ID = #orderId:VARCHAR#
+        AND
+			   T1.ENTITY_ID = #defaultEntityId#
+       		 <isNotEmpty prepend="and" property="startCardNo">
+	      		<isNotEmpty property="endCardNo">
+	      			  t1.card_no between to_number(#startCardNo:varchar#) and to_number(#endCardNo:varchar#)
+	      		</isNotEmpty>
+      		</isNotEmpty>
+      		 
+      		  ORDER BY
+			    T1.card_no   ) 
+			      <isEmpty property="startCardNo">
+      		<isEmpty property="endCardNo">
+      			<![CDATA[ 
+      				where numb<=(select to_number(nvl(o.Real_Card_Quantity,0)) from tb_sell_order o where o.order_id= #orderId:VARCHAR#)
+      			]]>
+      		</isEmpty>
+      	</isEmpty>	    
+       	UNION
+			SELECT  * FROM (
+       	SELECT 
+       		   DISTINCT
+		       T1.CARD_NO as "cardNo",
+		       T1.PRODUCT_ID as "productId",
+		       T1.CARD_LAYOUT_ID as "cardLayoutId",
+		       T1.FACE_VALUE_TYPE as "faceValueType",
+		       T1.FACE_VALUE/100 as "faceValue",
+		       T1.CARD_VALID_DATE as "cardValidDate",
+		       T1.STOCK_STATE as "stockState",
+		       T3.CARD_LAYOUT_NAME as "cardLayoutName",
+		       rownumber()  over( ORDER BY T1.card_no) as numb
+		from 
+		       TB_ENTITY_STOCK T1,
+			   TB_SELL_ORDER_LIST T2,
+		       TB_CARD_LAYOUT T3,
+		       TB_SELL_ORDER T4
+		where
+		       T1.DATA_STATE = '1'
+		and 
+		       T2.DATA_STATE = '1'
+		and 
+			   T1.STOCK_STATE = '1'
+	    AND
+	           T1.FUNCTION_ROLE_ID='2'
+		and
+		       T1.CARD_LAYOUT_ID = T3.CARD_LAYOUT_ID
+		and    
+		       T1.CARD_LAYOUT_ID = T2.CARD_LAYOUT_ID
+		and	   T1.FACE_VALUE_TYPE= T2.FACE_VALUE_TYPE
+		and    T1.FACE_VALUE_TYPE = '0' 
+		and    T1.FACE_VALUE = T2.FACE_VALUE
+       	and
+       		   T2.ORDER_ID = T4.ORDER_ID
+       	and
+       		   T1.PRODUCT_ID = T4.PRODUCT_ID
+       	and    T1.FLD_01_RES_DATA is null
+       	<!--AND
+       	(	   (T2.VALIDITY_PERIOD is not null
+       	 AND   <![CDATA[ 
+       		   to_date(T2.VALIDITY_PERIOD,'YYYY-MM-DD') <= to_date(T1.CARD_VALID_DATE,'YYYY-MM-DD')
+       		   ]]>) or  T2.VALIDITY_PERIOD is null)-->
+       	and
+       		   T4.ORDER_ID = #orderId:VARCHAR#
+      	and
+			   T1.ENTITY_ID = #defaultEntityId#
+       	 <isNotEmpty prepend="and" property="startCardNo">
+      		<isNotEmpty property="endCardNo">
+      			  t1.card_no between #startCardNo:varchar# and #endCardNo:varchar#
+      		</isNotEmpty>
+      	</isNotEmpty>
+      	 ORDER BY
+			    T1.card_no
+			     )
+			      <isEmpty  property="startCardNo">
+      		<isEmpty property="endCardNo">
+      			<![CDATA[ 
+      				where numb<=(select to_number(nvl(o.Real_Card_Quantity,0)) from tb_sell_order o where o.order_id= #orderId:VARCHAR#)
+      			]]>
+      		</isEmpty>
+      	</isEmpty>	    
+			   )  
+	   	<include refid="Commons.suffixSql" />
+  	</select> 
+
+	<!-- 查找订单并锁定-->
+	<select id="getOrderForUpdate" 
+			parameterClass="java.lang.String"
+			resultClass="com.huateng.framework.ibatis.model.SellOrder">
+		select
+			T1.ORDER_ID as "orderId",
+			T1.ORDER_TYPE as "orderType",
+			T1.FIRST_ENTITY_ID as "firstEntityId",
+			T1.PROCESS_ENTITY_ID as "processEntityId",
+			T1.ORDER_STATE as "orderState",
+			T1.PRODUCT_ID as "productId",
+			T1.FACE_VALUE as "faceValue",
+			T1.VALIDITY_PERIOD as "validityPeriod",
+			T1.CARD_QUANTITY as "cardQuantity" ,
+			T1.REAL_CARD_QUANTITY as "realCardQuantity",
+			T1.IS_CREATE_CARD_FILE as "isCreateCardFile",
+			T1.IS_CREATE_PIN_FILE as "isCreatePinFile",
+			T1.IS_IMPORT_CARD_FILE as "isImportCardFile",
+			T1.DATA_STATE as "dataState"
+		FROM
+			TB_SELL_ORDER T1
+		WHERE 
+			T1.ORDER_ID = #orderId:VARCHAR#
+      	FOR UPDATE with RS
+	</select>
+
+	<!-- 查找订单对应的文件批次号 -->
+	<select id="selectBatchNumberByOrderId" resultClass="java.lang.String"
+			parameterClass="java.lang.String"
+			remapResults="true"> 
+	    SELECT 
+			T.BATCH_NUMBER
+		FROM 
+       		TB_ORDER_BATCH_FILE T
+		WHERE
+			T.DATA_STATE = '1'
+		AND
+			T.ORDER_ID=#orderId:VARCHAR#
+  	</select> 
+
+	<!-- 锁定卡号生成流水表 ,行级锁-->
+	<select id="getCardSerialNumberForLock" 
+			parameterClass="com.huateng.framework.ibatis.model.CardSerialNumber"
+			resultClass="com.huateng.framework.ibatis.model.CardSerialNumber">
+		SELECT 
+	        T.CARD_BIN as "cardBin",
+	        T.ISSUER_CODE as "issuerCode",
+	        T.ISSUER_ID as "issuerId",
+	        T.SERIAL_NUMBER as "serialNumber",
+	        T.DATA_STATE as "dataState"
+  		FROM 	TB_CARD_SERIAL_NUMBER T
+   		WHERE T.CARD_BIN = #cardBin:VARCHAR#
+      	AND T.ISSUER_ID = #issuerId:VARCHAR#
+      	FOR UPDATE with RS
+	</select>
+</sqlMap>

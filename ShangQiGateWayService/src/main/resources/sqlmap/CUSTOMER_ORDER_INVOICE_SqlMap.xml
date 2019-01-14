@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="CUSTOMERORDERINVOICE">
+	<select id="selectCustomerOrderInvoice" resultClass="java.util.HashMap"
+		remapResults="true"
+		parameterClass="com.huateng.accor.customerOrderInvoice.dto.CustomerOrderInvoiceQueryDTO">
+		<include refid="Commons.prefixSql" />
+		SELECT t.order_invoice_id as "invoiceId",
+       	t.order_id         as "orderId",
+      	t.invoice_name     as "invoiceName",
+      	t.invoice_amount/100   as "invoiceAmount",
+      	t.payment_type     as "paymentType" 
+ 		FROM TB_ENT_CUSTOMER_ORDER_INVOICE t
+ 		where t.data_state=1
+		<dynamic>
+			<isNotNull prepend="and" property="orderId">
+      		  t.order_id = #orderId:DECIMAL#
+     		</isNotNull>
+     		<isNotNull prepend="and" property="paymentType">
+      		  t.payment_type = #paymentType:DECIMAL#
+     		</isNotNull>
+     		
+     		
+		</dynamic>
+		<include refid="Commons.suffixSql" />
+	</select>	
+</sqlMap>

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="heartBeatProc" class="org.springframework.aop.framework.ProxyFactoryBean" singleton="true">
+		<property name="proxyTargetClass" value="true" />
+		<property name="target">
+			<ref local="heartBeatProcImpl" />
+		</property>
+	</bean>	
+	<bean id="heartBeatProcImpl" class="com.huateng.hstserver.communicate.mina.comm.common.quartz.HeartBeatJob" factory-method="getInstance">
+		<property name="java2ACCBusinessService">
+			<ref bean="java2ACCBusinessService" />
+		</property>
+		<property name="java2TXNBusinessService">
+			<ref bean="java2TXNBusinessService" />
+		</property>
+		<property name="java2STLBusinessService">
+			<ref bean="java2STLBusinessService" />
+		</property>
+	</bean>
+
+	<bean id="connectionMaintain" class="org.springframework.aop.framework.ProxyFactoryBean" singleton="true">
+		<property name="proxyTargetClass" value="true" />
+		<property name="target">
+			<ref local="connectionMaintainImpl" />
+		</property>
+	</bean>	
+	<bean id="connectionMaintainImpl" class="com.huateng.hstserver.communicate.mina.comm.common.quartz.ConnectionMaintainJob" factory-method="getInstance">
+		<property name="connectionProcessor">
+			<ref bean="connectionProcessor" />
+		</property>
+	</bean>	
+</beans>

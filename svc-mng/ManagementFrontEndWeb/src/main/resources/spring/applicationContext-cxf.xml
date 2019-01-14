@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://cxf.apache.org/jaxws 
+	http://cxf.apache.org/schemas/jaxws.xsd">
+    <import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<bean id="manageServiceImpl"
+		class="org.springframework.aop.framework.ProxyFactoryBean" >
+		<property name="targetSource">
+			<ref bean="poolTargetSource"/>
+		</property>
+		
+	</bean>
+	
+	
+	<bean id="manageServiceTarget"
+		class="com.huateng.framework.webservice.ManageServiceImpl" scope="prototype">
+		<property name="webServiceInvoke">
+			<ref bean="webServiceInvoke" />
+		</property>
+		<property name="systemInfoBO">
+			<ref bean="systemInfoBO" />
+		</property>
+		
+	</bean>
+	
+	
+	<bean id="poolTargetSource" class="org.springframework.aop.target.CommonsPoolTargetSource">
+		<property name="targetBeanName">
+			<value>manageServiceTarget</value>
+		</property>
+		<property name="maxSize">
+			<value>50</value>
+		</property>
+	</bean>
+	
+	<jaxws:endpoint id="manageService" implementor="#manageServiceImpl"
+		address="/manageService">
+	</jaxws:endpoint>
+</beans>
