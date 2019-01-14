@@ -69,6 +69,21 @@ public class TblOprInfo implements Serializable {
 	private java.lang.String oprDegreeRsc;
 	private java.lang.String oprLogSta;
 	private java.lang.String setOprId;
+	
+	//保留域    作用:判断新建用户时首次登陆需强制修改密码
+	private java.lang.String Resv2;
+	
+	
+
+	public java.lang.String getResv2() {
+		return Resv2;
+	}
+
+
+	public void setResv2(java.lang.String resv2) {
+		Resv2 = resv2;
+	}
+
 
 	/**
 	 * Return the unique identifier of this class
