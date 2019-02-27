@@ -37,7 +37,7 @@ import com.huateng.system.util.SysParamUtil;
  * 
  * Copyright: Copyright (c) 2010-6-6
  * 
- * Company: Shanghai Huateng Software Systems Co., Ltd.
+ * Company: Shanghai Huateng Software Systems Co., Ltd....
  * 
  */
 public class GridConfigMethod {
