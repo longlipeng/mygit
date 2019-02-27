@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
-<sqlMap namespace="tableSerialNumber">
-	<select id="selectSerialNumber" resultClass="java.lang.Long" parameterClass="java.lang.String" remapResults="true">
-		select trim(t.serial_number) from tb_table_serial_number t where t.table_name =#tableName# WITH RS USE AND KEEP UPDATE LOCKS
-	</select>
-</sqlMap>
