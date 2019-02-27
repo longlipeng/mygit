@@ -52,9 +52,13 @@ public class ContextLoaderListener implements ServletContextListener {
 	public void contextDestroyed(ServletContextEvent arg0) {
 		
 	}
-
+	
+	/**
+	 * tomcat启动时,调用该方法
+	 */
 	public void contextInitialized(ServletContextEvent event) {
 		ServletContext context = event.getServletContext();
+		//通过Spring提供的工具类获取ApplicationContext对象
 		WebApplicationContext ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(context);
 		ContextUtil.setContext(ctx);
 		/*if (applicationContext == null) {

@@ -212,8 +212,10 @@
 
 	<!-- 事务代理工厂 -->
 	<!-- 生成事务代理对象 -->
+	<!-- 事务拦截器bean -->
 	<bean id="transactionInterceptor"
 		class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<!-- 事务拦截器bean需要依赖注入一个事务管理器-->
 		<property name="transactionManager">
 			<ref bean="transactionManager" />
 		</property>
@@ -232,6 +234,7 @@
 	
 	<bean class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
 		<property name="beanNames">
+			<!--下面是所有需要自动创建事务代理的bean-->
 			<list>
 				<value>*Target</value>
                 <value>*BO</value>

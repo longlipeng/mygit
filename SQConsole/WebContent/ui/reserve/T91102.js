@@ -35,18 +35,24 @@ Ext.onReady(function(){
     	{header: '收款方开户行行号',dataIndex: 'rosterBankCard',align: 'center',
     		editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/^[0-9]*$/,
+				regexText:'开户行行号只能是数字',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
     	{header: '收款方账号',dataIndex: 'rosterAccount',align: 'center',
     		editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/^[0-9]*$/,
+				regexText:'收款方账号只能是数字',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
     	{header: '收款方账户名称',dataIndex: 'rosterAccountName',align: 'center',
     		editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+				regexText:'账户名称有误重新输入',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
@@ -315,6 +321,8 @@ Ext.onReady(function(){
 			allowBlank: false,
 			blankText: '开户行行号不能为空',
 			emptyText: '请输入开户行行号',
+			regex:/^[0-9]*$/,
+			regexText:'开户行行号只能是数字',
 			width: 150,
 			id: 'rosterBankCard',
 			name: 'rosterBankCard',
@@ -323,7 +331,9 @@ Ext.onReady(function(){
 			width: 150,
 			allowBlank: false,
 			blankText: '白名单账号不能为空',
-			emptyText: '请输入白名单账号',			
+			emptyText: '请输入白名单账号',	
+			regex:/^[0-9]*$/,
+			regexText:'账号只能是数字',
 			vtype: 'isOverMax',
 			id: 'rosterAccount',
 			name: 'rosterAccount'
@@ -332,7 +342,9 @@ Ext.onReady(function(){
 			width: 150,
 			allowBlank: false,
 			blankText: '白名单账户名称不能为空',
-			emptyText: '请输入白名单账户名称',			
+			emptyText: '请输入白名单账户名称',		
+			regex:/^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+			regexText:'账户名称有误重新输入',
 			vtype: 'isOverMax',
 			id: 'rosterAccountName',
 			name: 'rosterAccountName'

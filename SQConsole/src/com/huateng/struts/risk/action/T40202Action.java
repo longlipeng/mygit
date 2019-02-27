@@ -579,20 +579,29 @@ public class T40202Action extends BaseAction {
 			if(cMessage[0].equals("1.0")){
 				flag = 13;
 				insrtSql ="insert into TBL_BLACKLIST_REGION(BLACK_REGION_ID,BLACK_REGION_TYPE,BLACK_REGION_NO,BLACK_REGION_NAME,BLACK_REGION_HOME,UPDATETIME) "
-						+ "values('"+ 1 +"','"+cMessage[3]+"','"+ cMessage[4] +"','"+ cMessage[6] +"','"+ cMessage[1] +"','"+ time +"') ";
+						+ "values('"+ 1 +"','"+cMessage[1]+"','"+ cMessage[2] +"','"+ cMessage[3] +"',' ','"+ time +"') ";
 			}
 //			if (cMessage.length == 13) {
 //				flag = 13;
 //				insrtSql ="insert into TBL_BLACKLIST_REGION(BLACK_REGION_ID,BLACK_REGION_TYPE,BLACK_REGION_NO,BLACK_REGION_NAME,BLACK_REGION_HOME,UPDATETIME) "
 //						+ "values('"+ 1 +"','"+cMessage[3]+"','"+ cMessage[4] +"','"+ cMessage[5] +"','"+ cMessage[1] +"','"+ time +"') ";
 //			}
+			
 			//观察
 			if(cMessage[0].equals("2.0")){
 				flag = 14;
-				String da = cMessage[5].replace('\'','*');//将单引号转换为*，在sql中将*转换为单引号
-				insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
-						+ "values('"+ 2 +"',REPLACE('"+da+"','*',''''),'"+ " " +"','"+ " " +"','"+ " " +"','"
-						+ " " +"','"+cMessage[4]+"','"+ cMessage[3] +"','"+ " " +"','"+ " " +"','"+ cMessage[2] +"','"+ time +"') ";
+				String da = cMessage[1].replace('\'','*');//将单引号转换为*，在sql中将*转换为单引号
+				
+				if(cMessage.length == 9){
+					insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
+							+ "values('"+ 2 +"',REPLACE('"+da+"','*',''''),'"+ cMessage[2] +"','"+ cMessage[3] +"','"+ cMessage[4] +"','"
+							+ cMessage[5] +"','"+cMessage[6]+"','"+ cMessage[7] +"','"+ cMessage[8] +"',' ',' ','"+ time +"') ";
+				}else{
+					insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
+							+ "values('"+ 2 +"',REPLACE('"+da+"','*',''''),'"+ cMessage[2] +"','"+ cMessage[3] +"','"+ cMessage[4] +"','"
+							+ cMessage[5] +"','"+cMessage[6]+"','"+ cMessage[7] +"','"+ cMessage[8] +"','"+ cMessage[9] +"','"+ cMessage[10] +"','"+ time +"') ";
+				}
+				
 			}
 //			if (cMessage.length == 14) {
 //				flag = 14;

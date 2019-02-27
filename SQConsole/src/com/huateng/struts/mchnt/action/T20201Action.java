@@ -85,6 +85,8 @@ public class T20201Action extends BaseAction {
 			rspCode = back();
 		}else if("acceptAdd".equals(method)){
 			rspCode = acceptAdd();
+		}else if("back1".equals(method)){
+			rspCode = back1();
 		}
 		return rspCode;
 	}
@@ -115,6 +117,10 @@ public class T20201Action extends BaseAction {
 	 */
 	private String back() throws Exception {
 		return service.back2(mchntId, oprInfo);
+	}
+	
+	private String back1() throws Exception {
+		return "经系统比对,判定该新增商户触碰反洗钱机构黑名单,违反人行反洗钱监管要求,黑名单拒绝成功!";
 	}
 	
 	public ITblMchtBaseInfTmpDAO tblMchtBaseInfTmpDAO;

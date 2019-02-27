@@ -43,6 +43,11 @@
             		  data: {'oprid':oprid,'password':password},
             		  success: function(data){
             			  if (data) {
+            				  
+            				  //编码
+//             				  var s = escape("<script>嘿嘿嘿</>");
+//             				  alert(s);
+            				  
             				  window.location.href = 'redirect.asp';
             			  }else{
             				  alert("账户或密码有误");

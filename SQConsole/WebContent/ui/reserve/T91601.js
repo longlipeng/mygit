@@ -55,18 +55,24 @@ Ext.onReady(function() {
  		{header: '回款账户',dataIndex: 'paymentAccount',width: 100,align: 'center',
  			editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/^[0-9]*$/,
+				regexText:'回款账户只能是数字,不能包含特殊字符',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
  		{header: '回款账户名称',dataIndex: 'paymentAccountName',width: 100,align: 'center',
  			editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+				regexText:'回款账户名称有误重新输入,不能包含特殊字符',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
   		{header: '回款金额',dataIndex: 'paymentMoney',width: 100,align: 'center',
   			editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+				regexText:'回款金额不正确或者包含特殊字符',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},

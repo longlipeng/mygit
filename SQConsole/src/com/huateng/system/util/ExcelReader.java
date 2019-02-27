@@ -4,12 +4,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -106,7 +109,13 @@ public class ExcelReader {
         case HSSFCell.CELL_TYPE_NUMERIC:
 //        	DecimalFormat df = new DecimalFormat("0.00");
 //        	strCell = df.format(cell.getNumericCellValue());
-            strCell = String.valueOf(cell.getNumericCellValue());
+        	if(HSSFDateUtil.isCellDateFormatted(cell)){
+        		Date d = cell.getDateCellValue();
+        		DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd");//HH:mm:ss
+        		strCell = df2.format(d);
+        	}else{
+				strCell = String.valueOf(cell.getNumericCellValue());	
+			}
             break;  
 //        	throw new Exception("excel 中格式有误，请设置单元格为文本格式！");
         case HSSFCell.CELL_TYPE_BOOLEAN:      

@@ -509,6 +509,8 @@ Ext.onReady(function() {
 			allowBlank: false,
 			blankText: '操作员姓名不能为空',
 			emptyText: '请输入操作员姓名',
+			regex:/^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+			regexText:'操作员姓名不能包含特殊字符',
 			maxLength: 40,
 			width: 160,
 			id: 'oprName',

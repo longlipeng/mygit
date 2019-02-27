@@ -12581,5 +12581,45 @@ public class GridConfigMethod {
 		return ret;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static Object[] getlstEntitys111(int begin,HttpServletRequest request) {
+		Object[] ret = new Object[2];
+		StringBuffer sb = new StringBuffer();
+		
+		String mchtNm = request.getParameter("mchtNm");
+		String cttp = request.getParameter("cttp");
+		String nationality = request.getParameter("nationality");
+		
+		if(nationality=="86" || nationality.equals("86")){
+			nationality = "中国";
+		}else if(nationality=="800" || nationality.equals("800")){
+			nationality = "外籍";
+		}else if(nationality=="852" || nationality.equals("852")){
+			nationality = "港澳台";
+		}
+		
+		String identityNo = request.getParameter("identityNo");
+		String manager = request.getParameter("manager");
+		String province = request.getParameter("province");
+		String lstp = request.getParameter("lstp");
+		
+		List<Object[]> dataList = new ArrayList<Object[]>();
+		
+		Object[] mchntObject = new Object[7];
+		mchntObject[0] = mchtNm;
+		mchntObject[1] = cttp;
+		mchntObject[2] = nationality;
+		mchntObject[3] = identityNo;
+		mchntObject[4] = manager;
+		mchntObject[5] = province;
+		mchntObject[6] = lstp;
+		
+		dataList.add(mchntObject);
+		
+		ret[0] = dataList;
+		ret[1] = 1;
+		return ret;
+	}
+	
 
 }

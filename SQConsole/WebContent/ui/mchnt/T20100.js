@@ -4358,7 +4358,29 @@ Ext.onReady(function() {
             id: 'save',
             name: 'save',
             handler : function() {
-            	subSave();
+//            	subSave();
+            	mchntRiskStore.load({
+            		params: {
+            			start: 0,
+            			ctnm: mchntForm.findById('mchtNm').getValue()
+            		}
+            	});
+            	mchntRiskStore1.load({
+            		params: {
+            			start: 0,
+            			mchtNm: mchntForm.findById('mchtNm').getValue(),
+            			cttp: 1,
+            			nationality: mchntForm.getForm().findField('nationality').getValue(),
+        				identityNo: mchntForm.findById('identityNo').getValue(),
+    					manager: mchntForm.findById('manager').getValue(),
+						province: mchntForm.getForm().findField('province').getValue(),
+						lstp: 1,
+            		}
+            	});
+            	redempWindow.show();
+				redempWindow.center();
+				Ext.getCmp('mchtNm1').setValue('恐怖嫌疑分子名单');
+				redempCodeForm1.getForm().loadRecord(mchntRiskStore1.getAt(0));
             }
         },{
             text: '重置',
@@ -4569,7 +4591,6 @@ Ext.onReady(function() {
 							hasSub = false;
 							Ext.getCmp('verifyButton').disable();
 							if (action.result.msg.substr(0,2) == 'CZ') {
-								
 								Ext.MessageBox.show({
 									msg: action.result.msg.substr(2) + '<br><h1>是否继续保存吗？</h1>',
 									title: '确认提示',
@@ -4586,7 +4607,27 @@ Ext.onReady(function() {
 									}
 								});
 							} else {
-								showErrorMsg(action.result.msg,mchntForm);
+								mchntRiskStore.load({
+				            		params: {
+				            			start: 0,
+				            			ctnm: mchntForm.findById('mchtNm').getValue()
+				            		}
+				            	});
+				            	mchntRiskStore1.load({
+				            		params: {
+				            			start: 0,
+				            			mchtNm: mchntForm.findById('mchtNm').getValue(),
+				            			cttp: 1,
+				            			nationality: mchntForm.getForm().findField('nationality').getValue(),
+				        				identityNo: mchntForm.findById('identityNo').getValue(),
+				    					manager: mchntForm.findById('manager').getValue(),
+										province: mchntForm.getForm().findField('province').getValue(),
+										lstp: 1,
+				            		}
+				            	});
+				            	redempWindow.show();
+								redempWindow.center();
+//								showErrorMsg(action.result.msg,mchntForm);
 								Ext.getCmp('verifyButton').enable();
 							}
 					},
@@ -4619,7 +4660,371 @@ Ext.onReady(function() {
     	}
     );
 	}}
-
+    
+    
+ // 商户黑名单数据集
+	var mchntRiskStore = new Ext.data.Store({
+		proxy: new Ext.data.HttpProxy({
+			url: 'gridPanelStoreAction.asp?storeId=lstEntitys'
+		}),
+		reader: new Ext.data.JsonReader({
+			root: 'data',
+			totalProperty: 'totalCount'
+		},[
+			{name: 'id',mapping: 'id'},              
+			{name: 'cttp',mapping: 'cttp'},              
+			{name: 'ctcr',mapping: 'ctcr'},       
+			{name: 'ctnm',mapping: 'ctnm'},  
+			{name: 'ciid',mapping: 'ciid'},  
+			{name: 'cleg',mapping: 'cleg'},        
+			{name: 'clid',mapping: 'clid'},         
+			{name: 'care',mapping: 'care'},         
+			{name: 'lstp',mapping: 'lstp'},         
+			{name: 'create_time',mapping: 'create_time'},     
+			{name: 'creator',mapping: 'creator'},   
+			{name: 'update_time',mapping: 'update_time'},   
+			{name: 'updator',mapping: 'updator'},
+			{name: 'ckstatus',mapping: 'ckstatus'}
+		])
+	});
+	
+	var mchntRiskStore1 = new Ext.data.Store({
+		proxy: new Ext.data.HttpProxy({
+			url: 'gridPanelStoreAction.asp?storeId=lstEntitys111'
+		}),
+		reader: new Ext.data.JsonReader({
+			root: 'data',
+			totalProperty: 'totalCount'
+		},[
+			{name: 'mchtNm',mapping: 'mchtNm'},              
+			{name: 'cttp',mapping: 'cttp'},              
+			{name: 'nationality',mapping: 'nationality'},       
+			{name: 'identityNo',mapping: 'identityNo'},  
+			{name: 'manager',mapping: 'manager'},  
+			{name: 'province',mapping: 'province'},   
+			{name: 'lstp',mapping: 'lstp'},      
+		])
+	});
+	
+	
+	var mchntRiskColModel = new Ext.grid.ColumnModel([
+	  new Ext.grid.RowNumberer(),
+	    {header: 'id',dataIndex: 'id',width: 10,hidden:true},
+		{header: '商户类型',dataIndex: 'cttp',width: 120,renderer:tenantType},
+		{header: '商户国籍',dataIndex: 'ctcr',width: 80},
+		{header: '商户名称',dataIndex: 'ctnm',width: 120},
+		{header: '证件号码',dataIndex: 'ciid',width: 120},
+		{header: '法人代表',dataIndex: 'cleg',width: 120},
+		{header: '法人证件号码',dataIndex: 'clid',width: 120},
+		{header: '所属地区',dataIndex: 'care',width: 120},
+		{header: '名单类别',dataIndex: 'lstp',width: 120,renderer:lstpType},//0:黑名单,1:白名单,2:关注名单
+		{header: '创建时间',dataIndex: 'create_time',width: 120,renderer: formatTs,hidden:true},
+		{header: '创建人',dataIndex: 'creator',width: 120,hidden:true},
+		{header: '更新时间',dataIndex: 'update_time',width: 120,renderer: formatTs,hidden:true},
+		{header: '更新人',dataIndex: 'updator',width: 100,hidden:true},
+		{header: '审核状态',dataIndex: 'ckstatus',width: 100,renderer: checkState,hidden:true}
+	]);
+	
+	var mchntRiskColModel1 = new Ext.grid.ColumnModel([
+	  new Ext.grid.RowNumberer(),
+	    {header: 'id',dataIndex: 'id',width: 10,hidden:true},
+		{header: '商户类型',dataIndex: 'cttp',width: 120,renderer:tenantType1},
+		{header: '商户国籍',dataIndex: 'nationality',width: 80},
+		{header: '商户名称',dataIndex: 'mchtNm',width: 120},
+		{header: '证件号码',dataIndex: 'identityNo',width: 120},
+		{header: '法人代表',dataIndex: 'manager',width: 120},
+		{header: '法人证件号码',dataIndex: 'identityNo',width: 120},
+		{header: '所属地区',dataIndex: 'province',width: 120},
+		{header: '名单类别',dataIndex: 'lstp',width: 120,renderer:lstpType1},//0:黑名单,1:白名单,2:关注名单
+//		{header: '创建时间',dataIndex: 'create_time',width: 120,renderer: formatTs,hidden:true},
+//		{header: '创建人',dataIndex: 'creator',width: 120,hidden:true},
+//		{header: '更新时间',dataIndex: 'update_time',width: 120,renderer: formatTs,hidden:true},
+//		{header: '更新人',dataIndex: 'updator',width: 100,hidden:true},
+//		{header: '审核状态',dataIndex: 'ckstatus',width: 100,renderer: checkState,hidden:true}
+	]);
+	
+	function tenantType(val){
+		if(val == '1')
+            return "<font color='gray'>个人</font>";
+    	if(val == '2')
+            return "<font color='red'>机构</font>";
+	}
+	
+	function tenantType1(val){
+        return "<font color='red'>机构</font>";
+	}
+	
+	function lstpType(val){
+		if(val == '0')
+            return "<font color='gray'>黑名单</font>";
+    	if(val == '1')
+            return "<font color='red'>白名单</font>";
+    	if(val == '2')
+            return "<font color='green'>关注名单</font>";
+	}
+	
+	function lstpType1(val){
+        return "<font color='gray'>黑名单</font>";
+	}
+	
+	function checkState(val){
+		if(val == '0')
+            return "<font color='gray'>新增待审核</font>";
+    	if(val == '1')
+            return "<font color='red'>已删除</font>";
+    	if(val == '2')
+            return "<font color='green'>正常</font>";
+    	if(val == '3')
+            return "<font color='gray'>修改审核拒绝</font>";
+    	if(val == '4')
+    		return "<font color='gray'>删除审核拒绝</font>";
+    	if(val == '5')
+    		return "<font color='gray'>新增审核拒绝</font>";
+    	if(val == '6')
+    		return "<font color='gray'>新增删除</font>";
+    	if(val == '7')
+    		return "<font color='gray'>修改待审核</font>";
+	}
+	
+	var auditGridPanel = new Ext.grid.GridPanel({
+		title: '库存商户黑名单',
+		frame: true,
+		border: true,
+		height: 160,
+		columnLines: true,
+		stripeRows: true,
+//		autoExpandColumn: 'oprInfo',
+		store: mchntRiskStore,
+		sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+		cm: mchntRiskColModel,
+		forceValidation: true,
+		loadMask: {
+			msg: '正在加载商户黑名单列表......'
+		},
+		bbar: new Ext.PagingToolbar({
+			store: mchntRiskStore,
+			pageSize: System[QUERY_RECORD_COUNT],
+			displayInfo: true,
+			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
+			emptyMsg: '没有找到符合条件的记录'
+		})
+	});
+	
+	var auditGridPanel1 = new Ext.grid.GridPanel({
+		title: '新增商户黑名单',
+		frame: true,
+		border: true,
+		height: 160,
+		columnLines: true,
+		stripeRows: true,
+//		autoExpandColumn: 'oprInfo',
+		store: mchntRiskStore1,
+		sm: new Ext.grid.RowSelectionModel({singleSelect: true}),
+		cm: mchntRiskColModel1,
+		forceValidation: true,
+		loadMask: {
+			msg: '正在加载新增商户黑名单列表......'
+		},
+		bbar: new Ext.PagingToolbar({
+			store: mchntRiskStore1,
+			pageSize: System[QUERY_RECORD_COUNT],
+			displayInfo: true,
+			displayMsg: '显示第{0}-{1}条记录，共{2}条记录',
+			emptyMsg: '没有找到符合条件的记录'
+		})
+	});
+	
+    
+//	//回款信息form表单
+//	var redempCodeForm = new Ext.form.FormPanel({
+//		region: 'center',
+//		iconCls: 'mchnt',
+//		frame: true,
+//		labelWidth: 100,
+//		waitMsgTarget: true,
+////		autoHeight: true,
+////		width: 300,
+////		labelWidth: 100,
+//		items: [{
+//			xtype: 'displayfield',
+//			//label文本值
+//			fieldLabel: '商户类型*',
+//			id: 'cttp',
+//			hiddenName: 'cttp',
+//		},{
+//			xtype: 'displayfield',
+//			//label文本值
+//			fieldLabel: '商户国籍*',
+//			id: 'ctcr',
+//			hiddenName: 'ctcr',
+//		},{
+//			xtype: 'textfield',
+//			//label文本值
+//			fieldLabel: '商户名称*',
+//			id: 'ctnm',
+//			hiddenName: 'ctnm',
+//		}]
+//	});
+	
+	//回款信息form表单
+	var redempCodeForm1 = new Ext.form.FormPanel({
+		region: 'center',
+		iconCls: 'mchnt',
+		frame: true,
+		labelWidth: 100,
+		waitMsgTarget: true,
+//		autoHeight: true,
+//		width: 300,
+//		labelWidth: 100,
+		items: [{
+	    	xtype: 'tabpanel',
+	    	id: 'tab',
+	    	frame: true,
+	        plain: false,
+	        activeTab: 0,
+	        height: 200,
+	        deferredRender: false,
+	        enableTabScroll: true,
+	        labelWidth: 150,
+	        items: [{
+	        	title:'审核',
+                id: 'audit',
+                frame: true,
+                layout: 'border',
+                autoScroll: true,
+                items: [{
+                	region: 'center',
+                	items:[auditGridPanel1]
+                }]
+		    }]
+		}]
+	});
+	
+	
+	
+	//回款信息form表单
+	var redempCodeForm = new Ext.form.FormPanel({
+		region: 'center',
+		iconCls: 'mchnt',
+		frame: true,
+		labelWidth: 100,
+		waitMsgTarget: true,
+//		autoHeight: true,
+//		width: 300,
+//		labelWidth: 100,
+		items: [{
+	    	xtype: 'tabpanel',
+	    	id: 'tab',
+	    	frame: true,
+	        plain: false,
+	        activeTab: 0,
+	        height: 380,
+	        deferredRender: false,
+	        enableTabScroll: true,
+	        labelWidth: 150,
+	        items: [{
+	        	title:'审核',
+                id: 'audit',
+                frame: true,
+                layout: 'border',
+                autoScroll: true,
+                items: [{
+                	region: 'center',
+                	items:[auditGridPanel]
+                },{
+                    id:'auditForm',
+                    region: 'south',
+//                  height: 75,
+                    autoHeight: true,
+                    layout: 'column',
+                    items: [{
+		        		columnWidth: .5,
+			        	xtype: 'panel',
+//    			        labelWidth: 70,
+			        	layout: 'form',
+//    			        hidden:true,
+		       			items: [{
+			        		xtype: 'displayfield',
+			        		labelStyle: 'padding-left: 5px',
+		        			id: 'mchtNm1',
+		        			style: 'color: red',
+		        			fieldLabel: '黑名单类别',
+		        			maxLength: 60,
+		        			anchor: '90%'
+		       			},{
+			       			xtype: 'textarea',
+			   			    labelStyle: 'padding-left: 5px',
+			   			    fieldLabel: '事由说明',
+			   			    allowBlank: false,
+							blankText: '审核事由说明不能为空',
+			   			    id: 'oprInfo',
+			   			    name: 'oprInfo',
+			   			    maxLength: 60,
+			   			    anchor: '90%'
+	       				}]	
+					}]
+                ,buttonAlign: 'center',
+					buttons: [{
+						text: '通过',
+						handler: function() {
+							subAccept();
+						}
+					}, {
+						text: '拒绝',
+						handler: function() {
+							subBack();
+						}
+					}]     					
+                }]
+		    }]
+		}]
+	});
+	
+	//审核退回
+	function subBack(){
+		if(redempCodeForm.getForm().isValid()) {
+			redempCodeForm.getForm().submit({
+				url: 'T20201Action.asp?method=back1',
+				waitMsg: '正在审核商户信息，请稍候......',
+				params: {
+//					mchntId: mchntId,
+//					oprInfo: Ext.getCmp('oprInfo').getValue(),
+					txnId: '20201',
+					subTxnId: '02'
+				},
+				success: function(form,action) {
+					showSuccessMsg(action.result.msg,El);
+					redempWindow.close();
+					// 重新加载商户待审核信息
+					El.getStore().reload();
+				},
+				failure: function(form,action) {
+					showErrorMsg(action.result.msg,redempCodeForm);
+				}
+			});
+		}		
+	}
+	
+	
+	
+	
+	//黑名单预警人工审核
+	var redempWindow = new Ext.Window({
+		title: '黑名单预警人工审核',
+		initHidden: true,
+		header: true,
+		frame: true,
+		modal: true,
+		width: 980,
+		autoHeight: true,
+		items: [redempCodeForm1,redempCodeForm],
+		buttonAlign: 'center',
+		closable: true,
+		resizable: false
+	});
+	
+	
+	
     mchntForm.getForm().findField('acqInstId').setValue(brhId);
 
     //mchntForm.getForm().findField('signInstId').setValue(cupBrhId);

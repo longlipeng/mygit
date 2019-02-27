@@ -331,8 +331,11 @@ Ext.onReady(function() {
 				blankText: '客户账户名称不能为空',
 				//可观输入信息是什么
 				emptyText: '请输入客户账户名称',
+				regex:/^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+				regexText:'账户名称有误重新输入,不能包含特殊字符',
 				//text文本输入框宽度
 				width:150,
+				vtype: 'isOverMax'
 			},{
 				//输入框类型
 				xtype: 'textfield',
@@ -363,8 +366,11 @@ Ext.onReady(function() {
 				blankText: '赎回金额不能为空',
 				//可观输入信息是什么
 				emptyText: '请输入赎回金额',
+				regex:/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+				regexText:'赎回金额不正确或者包含特殊字符',
 				//text文本输入框宽度
-				width:150
+				width:150,
+				vtype: 'isOverMax'
 			},{
 				//输入框类型
 				xtype: 'textfield',
@@ -404,27 +410,29 @@ Ext.onReady(function() {
 			buttons: [{
 				text: '确定',
 				handler: function() {
-					redempCodeForm.getForm().submit({
-						url: 'T80601Action_redempAdd.asp',
-						waitMsg: '正在提交，请稍后......',
-						success: function(form,action) {
-							showSuccessMsg(action.result.msg,redempCodeForm);
-							//添加成功后窗口关闭
-							redempWindow.hide();
-							var redempAccount = redempCodeForm.getForm().findField('redempTionAccount').getValue();
-							//baseParams: 
-							redempGridStore.baseParams.redempTionAccount = redempTionAccount;
-							//重新加载参数
-							redempGridStore.reload();
-						},
-						failure: function(form,action) {
-							showErrorMsg(action.result.msg,redempCodeForm);
-						},
-						params: {
-							txnId: '80601',
-							subTxnId: '01'
-						}
-					});
+					if(redempCodeForm.getForm().isValid()) {
+						redempCodeForm.getForm().submit({
+							url: 'T80601Action_redempAdd.asp',
+							waitMsg: '正在提交，请稍后......',
+							success: function(form,action) {
+								showSuccessMsg(action.result.msg,redempCodeForm);
+								//添加成功后窗口关闭
+								redempWindow.hide();
+								var redempAccount = redempCodeForm.getForm().findField('redempTionAccount').getValue();
+								//baseParams: 
+								redempGridStore.baseParams.redempTionAccount = redempTionAccount;
+								//重新加载参数
+								redempGridStore.reload();
+							},
+							failure: function(form,action) {
+								showErrorMsg(action.result.msg,redempCodeForm);
+							},
+							params: {
+								txnId: '80601',
+								subTxnId: '01'
+							}
+						});
+					}
 				}
 			},{
 				text: '重置',

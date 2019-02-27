@@ -90,13 +90,14 @@ public class ResetPwdAction extends BaseAction {
 		String sql = "delete from TBL_OPR_INFO_TMP where OPR_ID = '" + tblOprInfo.getId() + "'";
 		commQueryDAO.excute(sql);
 		
-		if(tblOprInfo.getOprTel() == null || tblOprInfo.getOprTel().isEmpty() && 
-		   tblOprInfo.getOprMobile() == null || tblOprInfo.getOprMobile().isEmpty()){
+		if(tblOprInfo.getOprTel() == null || tblOprInfo.getOprTel().isEmpty() || 
+		   tblOprInfo.getOprMobile() == null || tblOprInfo.getOprMobile().isEmpty() ||
+		   tblOprInfo.getOprEmail() == null || tblOprInfo.getOprEmail().isEmpty()){
 			String sql1 = "insert into TBL_OPR_INFO_TMP(OPR_ID, BRH_ID, OPR_DEGREE, OPR_DEGREE_RSC, OPR_STA, OPR_LOG_STA, OPR_NAME, OPR_GENDER, REGISTER_DT, OPR_PWD, OPR_TEL, OPR_MOBILE, "
 					   + "OPR_EMAIL, PWD_WR_TM, PWD_WR_TM_TOTAL, PWD_WR_LAST_DT, PWD_OUT_DATE, SET_OPR_ID, LAST_UPD_OPR_ID, LAST_UPD_TXN_ID, LAST_UPD_TS, RESV2, AUDIT_STAT, ADD_OPR_ID) "
 					   + "values ('" + tblOprInfo.getId() + "','" + tblOprInfo.getBrhId() + "','" + tblOprInfo.getOprDegree() + "','" + tblOprInfo.getOprDegreeRsc() + "','" + tblOprInfo.getOprSta() + "','"
 					   + "" + tblOprInfo.getOprLogSta() + "','" + tblOprInfo.getOprName() + "','" + tblOprInfo.getOprGender() + "','" + tblOprInfo.getRegisterDt() + "','" + tblOprInfo.getOprPwd() + "'"
-					   + ",null,null,'" + tblOprInfo.getOprEmail() + "','" + tblOprInfo.getPwdWrTm() + "','" + tblOprInfo.getPwdWrTmTotal() + "','"
+					   + ",null,null,null,'" + tblOprInfo.getPwdWrTm() + "','" + tblOprInfo.getPwdWrTmTotal() + "','"
 					   + "" + tblOprInfo.getPwdWrLastDt() + "','" + tblOprInfo.getPwdOutDate() + "','" + tblOprInfo.getSetOprId() + "','" + tblOprInfo.getLastUpdOprId() + "','"
 					   + "" + tblOprInfo.getLastUpdTxnId() + "','" + tblOprInfo.getLastUpdTs() + "','" + tblOprInfo.getResv2() + "','0','" + operator.getOprId() + "')";
 			commQueryDAO.excute(sql1);

@@ -2261,4 +2261,15 @@
 	</Grid>
 	
 	
+	<!--黑名单-->
+	<Grid id="lstEntitys111" type="sync">
+		<Columns>
+			<![CDATA[mchtNm,cttp,nationality,identityNo,manager,province,lstp]]>
+		</Columns>
+		<SyncMode>
+			<Method value="getlstEntitys111" />
+		</SyncMode>
+	</Grid>
+	
+	
 </Grids>

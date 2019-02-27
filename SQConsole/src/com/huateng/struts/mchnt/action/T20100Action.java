@@ -151,7 +151,7 @@ public class T20100Action extends BaseSupport{
 			System.out.println("授权人身份证号有效日期linkTelDate：" + linkTelDate);
 			
 			
-			/*blockListURL=BlackListAndRiskGradeConfig.getBlackListRUL();
+			blockListURL=BlackListAndRiskGradeConfig.getBlackListRUL();
 			// 黑名单校验----只做黑名单
 	        Map<String, String> parameters = new HashMap<String,String>();
 			if(!StringUtil.isEmpty(mchtNm)) {
@@ -161,7 +161,7 @@ public class T20100Action extends BaseSupport{
 			if(!StringUtil.isEmpty(foreignName)) {
 				System.out.println("3位字母国家代码foreignName："+foreignName);
 				parameters.put("Country", foreignName);   //证件号码
-			}*/
+			}
 			/*if(!StringUtil.isEmpty(nationality)) {
 				System.out.println("法定代表人/负责人国籍nationality"+nationality);
 				parameters.put("Country", nationality);  //国籍
@@ -171,8 +171,8 @@ public class T20100Action extends BaseSupport{
 				parameters.put("Gender", legalGender);  //性别
 			}*/
 			//parameters.put("Birthday", "");  //出生日期/注册日期
-//			blackResult =sendGet(blockListURL,parameters);
-//			String resultNum = analysisBlackListResult(blackResult);    
+			blackResult =sendGet(blockListURL,parameters);
+			String resultNum = analysisBlackListResult(blackResult);    
 					
 			//	        返回状态	Result	Y	Int	
 			//			1匹配上黑名单
@@ -182,7 +182,7 @@ public class T20100Action extends BaseSupport{
 			//	        -1匹配校验或计算出错
 			
 			//???请完善
-			/*if(resultNum.equals("1")){
+			if(resultNum.equals("1")){
 				log("匹配上黑名单");
 				return returnService("匹配上黑名单");
 			}else if(resultNum.equals("2")) {
@@ -197,7 +197,7 @@ public class T20100Action extends BaseSupport{
 			}else if(resultNum.equals("-1")) {
 				log("匹配校验或计算出错");;
 				return returnService("匹配校验或计算出错");
-			}*/
+			}
 	
 	
 			/*String unionBrhId = "";

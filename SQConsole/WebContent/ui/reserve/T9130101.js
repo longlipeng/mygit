@@ -45,6 +45,8 @@ Ext.onReady(function(){
 		{header: '备款金额',dataIndex: 'reserveMoney',width: 100,align: 'center',
 			editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+				regexText:'备款金额不正确或者包含特殊字符',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},

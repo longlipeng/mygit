@@ -84,6 +84,9 @@
 			com.huateng.startup.listener.OnlineTransMonitorListener
 		</listener-class>
   </listener>
+  
+  
+  <!-- 过滤器 -->
   <filter>
     <filter-name>EncodeFilter</filter-name>
     <filter-class>
@@ -98,10 +101,27 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
+  
+  
   <filter-mapping>
     <filter-name>EncodeFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  
+  
+  <!--解决XSS漏洞-->
+  <filter>
+	<filter-name>XssFilter</filter-name>
+  	<filter-class>com.huateng.system.util.XssFilter</filter-class>
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>XssFilter</filter-name>
+  	<!--“/*”表示拦截所有的请求 -->
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
   <filter>
     <filter-name>RoleFilter</filter-name>
     <filter-class>
@@ -112,6 +132,8 @@
     <filter-name>RoleFilter</filter-name>
     <url-pattern>*.jsp</url-pattern>
   </filter-mapping>
+  
+  
   <error-page>
     <error-code>404</error-code>
     <location>/page/system/error404.jsp</location>

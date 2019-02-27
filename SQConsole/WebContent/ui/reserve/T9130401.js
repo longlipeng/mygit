@@ -44,18 +44,24 @@ Ext.onReady(function(){
  		{header: '备款账户',dataIndex: 'focusAccount',width: 100,align: 'center',
  			editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/^[0-9]*$/,
+				regexText:'备款账户只能是数字,不能包含特殊字符',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
  		{header: '备款账户名称',dataIndex: 'focusAccountName',width: 100,align: 'center',
  			editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/^[a-zA-Z0-9\u4e00-\u9fa5]+$/,
+				regexText:'备款账户名称有误重新输入',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
   		{header: '备款金额',dataIndex: 'focusMoney',width: 100,align: 'center',
   			editor: new Ext.form.TextField({
 				allowBlank: false,
+				regex:/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+				regexText:'备款金额不正确或者包含特殊字符',
 				maxLength: 50,
 				vtype: 'isOverMax'
 			})},
@@ -292,6 +298,9 @@ Ext.onReady(function(){
 			blankText: '备款金额不能为空',
 			//可观输入信息是什么
 			emptyText: '请输入备款金额',
+			regex:/(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/,
+			regexText:'备款金额不正确或者包含特殊字符',
+			vtype: 'isOverMax',
 			//text文本输入框宽度
 			width:150
 		}]
@@ -317,29 +326,31 @@ Ext.onReady(function(){
 		buttons: [{
 			text: '确定',
 			handler: function() {
-				redempCodeForm.getForm().submit({
-					url: 'T91301Action_focusAdd.asp',
-					waitMsg: '正在提交，请稍后......',
-					success: function(form,action) {
-						showSuccessMsg(action.result.msg,redempCodeForm);
-						//添加成功后窗口关闭
-						redempWindow.hide();
-//						var focusAccount = redempCodeForm.getForm().findField('focusAccount').getValue();
-//						//baseParams: 
-//						redempGridStore.baseParams.focusAccount = focusAccount;
-//						//重新加载参数
-//						redempGridStore.reload();
-						redempGridStore.load();
-					},
-					failure: function(form,action) {
-						showErrorMsg(action.result.msg,redempCodeForm);
-					},
-					params: {
-						date: date,
-						txnId: '91301',
-						subTxnId: '01'
-					}
-				});
+				if(redempCodeForm.getForm().isValid()) {
+					redempCodeForm.getForm().submit({
+						url: 'T91301Action_focusAdd.asp',
+						waitMsg: '正在提交，请稍后......',
+						success: function(form,action) {
+							showSuccessMsg(action.result.msg,redempCodeForm);
+							//添加成功后窗口关闭
+							redempWindow.hide();
+	//						var focusAccount = redempCodeForm.getForm().findField('focusAccount').getValue();
+	//						//baseParams: 
+	//						redempGridStore.baseParams.focusAccount = focusAccount;
+	//						//重新加载参数
+	//						redempGridStore.reload();
+							redempGridStore.load();
+						},
+						failure: function(form,action) {
+							showErrorMsg(action.result.msg,redempCodeForm);
+						},
+						params: {
+							date: date,
+							txnId: '91301',
+							subTxnId: '01'
+						}
+					});
+				}
 			}
 		},{
 			text: '重置',
