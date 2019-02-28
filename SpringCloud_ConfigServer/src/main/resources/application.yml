@@ -3,14 +3,16 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8081/eureka/
 server:
-  port: 8050
+  port: 8888
 
 spring:
   cloud:
     config:
       server:
         git:
-          uri: https://github.com/longlipeng/mygit/tree/dev
-          searchPaths: SpringCloud_Resources
+          uri: https://github.com/longlipeng/mygit.git
+          username: longlipeng
+          password: YzL15317627609.
+          searchPaths: '{profile}'
   application:
     name: config-server
