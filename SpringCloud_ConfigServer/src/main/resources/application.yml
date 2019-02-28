@@ -1,0 +1,16 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka/
+server:
+  port: 8050
+
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/longlipeng/mygit/tree/dev
+          searchPaths: SpringCloud_Resources
+  application:
+    name: config-server
