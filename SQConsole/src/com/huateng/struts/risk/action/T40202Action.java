@@ -60,6 +60,7 @@ public class T40202Action extends BaseAction {
 	public static String NORMAL = "2";
 	public static String MODIFY_TO_CHECK = "3";
 	public static String DELETE_TO_CHECK = "4";
+	
 	/* (non-Javadoc)
 	 * @see com.huateng.struts.system.action.BaseAction#subExecute()
 	 */
@@ -364,7 +365,20 @@ public class T40202Action extends BaseAction {
 	 * @throws Exception
 	 */
 	private String batchImportFile() throws Exception{	
+		
+		String sql = "select count(1) from TBL_BLACKLIST_OBSERVE";
+		String sql1 = "select count(1) from TBL_BLACKLIST_REGION";
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql);
+		String count1 = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
+		//两个表数据不为空时清空所有数据
+		if(!count.equals("0") && !count1.equals("0")){
+			//导表之前清空观察表地区表所有数据
+			truncate1();
+			truncate2();
+		}
+		
 		batchCardImportIssue2(files.get(0), filesFileName.get(0));
+		
 		return Constants.SUCCESS_CODE;
 	}
 	
