@@ -94,6 +94,7 @@ Ext.onReady(function() {
 		};
 	menuArr.add(queryConditionMebu); // [0]
 	menuArr.add('-');
+	
 	var grid = new Ext.grid.GridPanel({
 		title: '反洗钱-观察黑名单操作信息查询',
 		region: 'center',

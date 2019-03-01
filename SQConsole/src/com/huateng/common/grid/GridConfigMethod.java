@@ -2760,16 +2760,16 @@ public class GridConfigMethod {
 		}
 
 		sql += whereSql;
-		sql += " order by BLACK_OBSERVE_UPDATETIME desc ";
-		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
-				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
+		//解决分页查询数据重复bug   BLACK_OBSERVE_UPDATETIME长度14位  值太大,不能进行降序排列
+//		sql += " order by BLACK_OBSERVE_UPDATETIME desc ";
+		sql += " order by BLACK_OBSERVE_ID desc ";
+		List<Object[]> dataList = CommonFunction.getCommQueryDAO().findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
 			dataList.set(i, data);
 		}
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(
-				countSql + whereSql);
+		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(countSql + whereSql);
 		ret[0] = dataList;
 		ret[1] = count;
 		return ret;
