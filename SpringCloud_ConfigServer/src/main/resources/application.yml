@@ -10,9 +10,11 @@ spring:
     config:
       server:
         git:
+          #配置git仓库地址
           uri: https://github.com/longlipeng/mygit.git
           username: longlipeng
           password: YzL15317627609.
+          #配置仓库路径 –这里写成’{profile}’是为了能让后面的服务在不同环境下动态的去获得相对应的目录下的配置环境
           searchPaths: '{profile}'
   application:
     name: config-server
