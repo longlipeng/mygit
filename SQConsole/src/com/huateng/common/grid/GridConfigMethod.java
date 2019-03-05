@@ -2706,7 +2706,8 @@ public class GridConfigMethod {
 		}
 
 		sql += whereSql;
-		sql += " order by UPDATETIME desc ";
+		sql += " order by BLACK_REGION_NO desc ";
+//		sql += " order by UPDATETIME desc ";
 		List<Object[]> dataList = CommonFunction.getCommQueryDAO()
 				.findBySQLQuery(sql, begin, Constants.QUERY_RECORD_COUNT);
 		Object[] data;

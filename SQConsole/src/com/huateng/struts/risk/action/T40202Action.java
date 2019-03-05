@@ -366,16 +366,16 @@ public class T40202Action extends BaseAction {
 	 */
 	private String batchImportFile() throws Exception{	
 		
-		String sql = "select count(1) from TBL_BLACKLIST_OBSERVE";
-		String sql1 = "select count(1) from TBL_BLACKLIST_REGION";
-		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql);
-		String count1 = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
-		//两个表数据不为空时清空所有数据
-		if(!count.equals("0") && !count1.equals("0")){
-			//导表之前清空观察表地区表所有数据
-			truncate1();
-			truncate2();
-		}
+//		String sql = "select count(1) from TBL_BLACKLIST_OBSERVE";
+//		String sql1 = "select count(1) from TBL_BLACKLIST_REGION";
+//		String count = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql);
+//		String count1 = CommonFunction.getCommQueryDAO().findCountBySQLQuery(sql1);
+//		//两个表数据不为空时清空所有数据
+//		if(!count.equals("0") && !count1.equals("0")){
+//			//导表之前清空观察表地区表所有数据
+//			truncate1();
+//			truncate2();
+//		}
 		
 		batchCardImportIssue2(files.get(0), filesFileName.get(0));
 		
@@ -610,6 +610,10 @@ public class T40202Action extends BaseAction {
 					insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
 							+ "values('"+ 2 +"',REPLACE('"+da+"','*',''''),'"+ cMessage[2] +"','"+ cMessage[3] +"','"+ cMessage[4] +"','"
 							+ cMessage[5] +"','"+cMessage[6]+"','"+ cMessage[7] +"','"+ cMessage[8] +"',' ',' ','"+ time +"') ";
+				}else if(cMessage.length == 8){
+					insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
+							+ "values('"+ 2 +"',REPLACE('"+da+"','*',''''),'"+ cMessage[2] +"','"+ cMessage[3] +"','"+ cMessage[4] +"','"
+							+ cMessage[5] +"','"+cMessage[6]+"','"+ cMessage[7] +"',' ',' ',' ','"+ time +"') ";
 				}else{
 					insrtSql ="INSERT INTO TBL_BLACKLIST_OBSERVE (BLACK_OBSERVE_ID, BLACK_OBSERVE_NAME, BLACK_OBSERVE_SEX, BLACK_OBSERVE_BIR, BLACK_OBSERVE_COUNTRY, BLACK_OBSERVE_NO, BLACK_OBSERVE_TYPE, BLACK_OBSERVE_HOME, BLACK_OBSERVE_ENTITY, BLACK_OBSERVE_ADDRESS, BLACK_OBSERVE_CON, BLACK_OBSERVE_UPDATETIME) "  
 							+ "values('"+ 2 +"',REPLACE('"+da+"','*',''''),'"+ cMessage[2] +"','"+ cMessage[3] +"','"+ cMessage[4] +"','"
