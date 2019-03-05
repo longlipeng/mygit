@@ -1,0 +1,12 @@
+spring:
+  application:
+  	#对应远程git配置前缀名
+    name: config-server
+  cloud:
+    config:
+      label: master
+      uri: http://localhost:8888/
+      #对应远程git配置环境标识
+      profile: dev
+server:
+  port: 8881
