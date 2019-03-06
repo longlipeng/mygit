@@ -1,6 +1,6 @@
 spring:
   application:
-  	#对应远程git配置前缀名   根据name和profile指定远程git配置文件
+  	#对应远程git配置前缀名   根据name和profile组合配置文件名指定远程git配置文件
     name: config-server
   cloud:
     config:
