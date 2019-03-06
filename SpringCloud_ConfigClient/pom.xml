@@ -33,9 +33,16 @@
       <artifactId>spring-cloud-starter-config</artifactId>
     </dependency>
     
+   	<!-- 使用HTTP调用的方式 -->
     <dependency>
   		<groupId>org.springframework.boot</groupId>
   		<artifactId>spring-boot-starter-web</artifactId>
+	</dependency>
+	
+	<!-- 监控功能,可以监控程序在运行时的状态,包含/refresh功能,用于配置的刷新 -->
+	<dependency>
+  	  <groupId>org.springframework.boot</groupId>
+  	  <artifactId>spring-boot-starter-actuator</artifactId>
 	</dependency>
 	
     <!-- spring boot test-->

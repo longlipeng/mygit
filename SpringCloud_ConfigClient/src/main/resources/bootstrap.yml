@@ -1,14 +1,14 @@
 spring:
   application:
-  	#对应远程git配置前缀名   根据name和profile组合配置文件名指定远程git配置文件
-    name: config-server
+    name: config-server  #对应远程git配置前缀名,根据name和profile组合配置文件名指定远程git配置文件
   cloud:
     config:
-      #远程git分支	
-      label: master
-      #指定服务配置中心地址
-      uri: http://localhost:8888/
-      #对应远程git配置环境标识
-      profile: dev
+      label: master  #远程git分支
+      uri: http://localhost:8888/  #指定服务配置中心地址
+      profile: dev  #对应远程git配置环境标识
 server:
   port: 8881
+  
+management:
+  security:
+    enabled: false  #忽略权限拦截
