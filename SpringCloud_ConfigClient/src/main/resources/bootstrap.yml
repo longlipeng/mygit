@@ -1,11 +1,19 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8081/eureka/   #注册到eureka server服务中心
+
 spring:
   application:
-    name: config-server  #对应远程git配置前缀名,根据name和profile组合配置文件名指定远程git配置文件
+    name: config-client  #对应远程git配置前缀名,根据name和profile组合配置文件名指定远程git配置文件
   cloud:
     config:
       label: master  #远程git分支
-      uri: http://localhost:8888/  #指定服务配置中心地址
+#      uri: http://localhost:8888/  #指定服务配置中心地址
       profile: dev  #对应远程git配置环境标识
+      discovery:
+        enabled: true  #开启自动发现机制
+        serviceId: config-server  #配置服务名自动从服务中心发现相对应服务并调用地址
 server:
   port: 8881
   
