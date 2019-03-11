@@ -22,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 //向服务中心注册，并且注册了一个叫restTemplate的bean,开启服务自动发现
 @EnableDiscoveryClient
 //@ComponentScan("service")
+//断路器注解
 @EnableCircuitBreaker
 public class ServiceRibbonApplication {
 
