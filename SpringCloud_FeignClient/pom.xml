@@ -28,6 +28,12 @@
 
   <dependencies>
   
+  	<!-- hystrix库支持断路器 -->
+  	<dependency>
+	    <groupId>org.springframework.cloud</groupId>
+	    <artifactId>spring-cloud-starter-hystrix</artifactId>
+	</dependency>
+  
     <!-- 使用Apache HttpClient替换Feign原生httpclient -->
 <!--     <dependency> -->
 <!--         <groupId>org.apache.httpcomponents</groupId> -->
