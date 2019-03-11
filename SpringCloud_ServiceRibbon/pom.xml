@@ -27,6 +27,12 @@
   </properties>
 
   <dependencies>
+  
+  	<!-- hystrix库支持断路器 -->
+  	<dependency>
+	    <groupId>org.springframework.cloud</groupId>
+	    <artifactId>spring-cloud-starter-hystrix</artifactId>
+	</dependency>
     
     <!--eureka server -->
     <dependency>
